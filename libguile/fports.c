@@ -437,6 +437,8 @@ scm_i_fdes_to_port (int fdes, long mode_bits, SCM name)
   int flags;
 
   /* test that fdes is valid.  */
+  /*
+   * // todo
 #ifdef __MINGW32__
   flags = getflags (fdes);
 #else
@@ -451,7 +453,7 @@ scm_i_fdes_to_port (int fdes, long mode_bits, SCM name)
     {
       SCM_MISC_ERROR ("requested file mode not available on fdes", SCM_EOL);
     }
-
+*/
   scm_i_scm_pthread_mutex_lock (&scm_i_port_table_mutex);
 
   port = scm_new_port_table_entry (scm_tc16_fport);
@@ -556,7 +558,7 @@ fport_print (SCM exp, SCM port, scm_print_state *pstate SCM_UNUSED)
   return 1;
 }
 
-#ifndef __MINGW32__
+#if 0
 /* thread-local block for input on fport's fdes.  */
 static void
 fport_wait_for_input (SCM port)
@@ -594,7 +596,7 @@ fport_fill_input (SCM port)
   scm_t_port *pt = SCM_PTAB_ENTRY (port);
   scm_t_fport *fp = SCM_FSTREAM (port);
 
-#ifndef __MINGW32__
+#if 0
   fport_wait_for_input (port);
 #endif /* !__MINGW32__ */
   SCM_SYSCALL (count = read (fp->fdes, pt->read_buf, pt->read_buf_size));
@@ -695,12 +697,15 @@ scm_i_fport_seek (SCM port, SCM offset, int how)
     (fport_seek_or_seek64 (port, scm_to_off_t_or_off64_t (offset), how));
 }
 
+
+int truncate_fd (int fd, off_t length);
+
 static void
 fport_truncate (SCM port, off_t length)
 {
   scm_t_fport *fp = SCM_FSTREAM (port);
 
-  if (ftruncate (fp->fdes, length) == -1)
+  if (truncate_fd (fp->fdes, length) == -1)
     scm_syserror ("ftruncate");
 }
 
@@ -708,7 +713,7 @@ int
 scm_i_fport_truncate (SCM port, SCM length)
 {
   scm_t_fport *fp = SCM_FSTREAM (port);
-  return ftruncate_or_ftruncate64 (fp->fdes, scm_to_off_t_or_off64_t (length));
+  return truncate_fd (fp->fdes, scm_to_off_t_or_off64_t (length));
 }
 
 /* helper for fport_write: try to write data, using multiple system

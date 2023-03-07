@@ -20,7 +20,7 @@
 #endif
 
 #include <stdio.h>
-#include <gmp.h>
+#include <mini-gmp.h>
 
 #include "libguile/_scm.h"
 #include "libguile/eval.h"

@@ -24,8 +24,6 @@
 
 #include "libguile/__scm.h"
 
-#include <unistd.h>  /* for sysconf */
-
 
 
 /* This should be figured out by autoconf.

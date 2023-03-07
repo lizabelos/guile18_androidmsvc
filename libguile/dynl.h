@@ -1,5 +1,5 @@
 /* classes: h_files */
-
+#ifdef USE_LTDL
 #ifndef SCM_DYNL_H
 #define SCM_DYNL_H
 
@@ -42,3 +42,4 @@ SCM_API void scm_init_dynamic_linking (void);
   c-file-style: "gnu"
   End:
 */
+#endif

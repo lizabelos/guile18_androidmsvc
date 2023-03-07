@@ -106,6 +106,7 @@ SCM_API int gdb_output_length;
 
 SCM_API int gdb_maybe_valid_type_p (GDB_TYPE value);
 
+#if 0
 /* Parse expression in string STR.  Store result in GDB_RESULT, then
    return 0 to indicate success.  On error, return -1 to indicate
    failure.  An error string can be passed in GDB_OUTPUT and
@@ -114,6 +115,7 @@ SCM_API int gdb_maybe_valid_type_p (GDB_TYPE value);
    be protected against garbage collection. */
 
 SCM_API int gdb_read (char *str);
+#endif
 
 /* Evaluate expression EXP.  Store result in GDB_RESULT, then return 0
    to indicate success.  On error, return -1 to indicate failure.  Any
@@ -124,6 +126,8 @@ SCM_API int gdb_read (char *str);
 
 SCM_API int gdb_eval (GDB_TYPE exp);
 
+
+#if 0
 /* Print VALUE.  Store output in GDB_OUTPUT and GDB_OUTPUT_LENGTH.
    Return 0 to indicate success.  On error, return -1 to indicate
    failure.  GDB will not look at GDB_OUTPUT or GDB_OUTPUT_LENGTH on
@@ -131,6 +135,7 @@ SCM_API int gdb_eval (GDB_TYPE exp);
    values.  It could in fact be passed any kind of value. */
 
 SCM_API int gdb_print (GDB_TYPE value);
+#endif
 
 /* Bind NAME to VALUE in interpreter.  (GDB has previously obtained
    NAME by passing a string to gdb_read.)  Return 0 to indicate

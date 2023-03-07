@@ -54,11 +54,11 @@ long
 scm_stack_size (SCM_STACKITEM *start)
 {
   SCM_STACKITEM stack;
-#if SCM_STACK_GROWS_UP
-  return &stack - start;
-#else
-  return start - &stack;
-#endif /* SCM_STACK_GROWS_UP */
+if (SCM_STACK_GROWS_UP) {
+    return &stack - start;
+} else {
+    return start - &stack;
+}
 }
 
 

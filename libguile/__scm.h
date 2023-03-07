@@ -141,7 +141,7 @@
 
 /* Random options (not yet supported or in final form). */
 
-#define STACK_CHECKING
+//#undef STACK_CHECKING
 #undef NO_CEVAL_STACK_CHECKING
 
 

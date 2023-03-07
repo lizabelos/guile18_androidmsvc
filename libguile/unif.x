@@ -1,6 +1,6 @@
- scm_sym_s = scm_permanent_object (scm_from_locale_symbol ("s")) ;
- scm_sym_l = scm_permanent_object (scm_from_locale_symbol ("l")) ;
- scm_c_define_gsubr (s_scm_array_p, 1, 1, 0, (SCM (*)()) scm_array_p); ;
+// scm_sym_s = scm_permanent_object (scm_from_locale_symbol ("s")) ;
+// scm_sym_l = scm_permanent_object (scm_from_locale_symbol ("l")) ;
+// scm_c_define_gsubr (s_scm_array_p, 1, 1, 0, (SCM (*)()) scm_array_p); ;
  scm_c_define_gsubr (s_scm_typed_array_p, 2, 0, 0, (SCM (*)()) scm_typed_array_p); ;
  scm_c_define_gsubr (s_scm_array_rank, 1, 0, 0, (SCM (*)()) scm_array_rank); ;
  scm_c_define_gsubr (s_scm_array_dimensions, 1, 0, 0, (SCM (*)()) scm_array_dimensions); ;
@@ -9,7 +9,7 @@
  scm_c_define_gsubr (s_scm_shared_array_increments, 1, 0, 0, (SCM (*)()) scm_shared_array_increments); ;
  scm_c_define_gsubr (s_scm_make_typed_array, 2, 0, 1, (SCM (*)()) scm_make_typed_array); ;
  scm_c_define_gsubr (s_scm_make_array, 1, 0, 1, (SCM (*)()) scm_make_array); ;
- scm_c_define_gsubr (s_scm_dimensions_to_uniform_array, 2, 1, 0, (SCM (*)()) scm_dimensions_to_uniform_array); ;
+// scm_c_define_gsubr (s_scm_dimensions_to_uniform_array, 2, 1, 0, (SCM (*)()) scm_dimensions_to_uniform_array); ;
  scm_c_define_gsubr (s_scm_make_shared_array, 2, 0, 1, (SCM (*)()) scm_make_shared_array); ;
  scm_c_define_gsubr (s_scm_transpose_array, 1, 0, 1, (SCM (*)()) scm_transpose_array); ;
  scm_c_define_gsubr (s_scm_enclose_array, 1, 0, 1, (SCM (*)()) scm_enclose_array); ;
@@ -36,6 +36,6 @@
  scm_c_define_gsubr (s_scm_array_to_list, 1, 0, 0, (SCM (*)()) scm_array_to_list); ;
  scm_c_define_gsubr (s_scm_list_to_typed_array, 3, 0, 0, (SCM (*)()) scm_list_to_typed_array); ;
  scm_c_define_gsubr (s_scm_list_to_array, 2, 0, 0, (SCM (*)()) scm_list_to_array); ;
- scm_c_define_gsubr (s_scm_list_to_uniform_array, 3, 0, 0, (SCM (*)()) scm_list_to_uniform_array); ;
+// scm_c_define_gsubr (s_scm_list_to_uniform_array, 3, 0, 0, (SCM (*)()) scm_list_to_uniform_array); ;
  scm_c_define_gsubr (s_scm_array_type, 1, 0, 0, (SCM (*)()) scm_array_type); ;
- scm_c_define_gsubr (s_scm_array_prototype, 1, 0, 0, (SCM (*)()) scm_array_prototype); ;
+// scm_c_define_gsubr (s_scm_array_prototype, 1, 0, 0, (SCM (*)()) scm_array_prototype); ;

@@ -448,11 +448,11 @@ guilify_self_1 (SCM_STACKITEM *base)
   t->sleep_object = SCM_BOOL_F;
   t->sleep_fd = -1;
 
-  if (pipe (t->sleep_pipe) != 0)
-    /* FIXME: Error conditions during the initialization phase are handled
+  /*if (pipe (t->sleep_pipe) != 0)
+    // FIXME: Error conditions during the initialization phase are handled
        gracelessly since public functions such as `scm_init_guile ()'
-       currently have type `void'.  */
-    abort ();
+       currently have type `void'.
+    abort ();*/
 
   scm_i_pthread_mutex_init (&t->heap_mutex, NULL);
   t->clear_freelists_p = 0;
@@ -512,8 +512,8 @@ do_thread_exit (void *v)
   scm_i_scm_pthread_mutex_lock (&thread_admin_mutex);
 
   t->exited = 1;
-  close (t->sleep_pipe[0]);
-  close (t->sleep_pipe[1]);
+  //close (t->sleep_pipe[0]);
+  //close (t->sleep_pipe[1]);
   while (scm_is_true (unblock_from_queue (t->join_queue)))
     ;
 
@@ -569,9 +569,30 @@ init_thread_key (void)
    return 1.
 */
 
+int SCM_STACK_GROWS_UP;
+
+int stack_direction()
+{
+    // return 1 if stack grows up
+    int a = 1;
+    int b = 2;
+    if (&a < &b) {
+        return 1;
+    }
+    else {
+        return 0;
+    }
+}
+
 static int
 scm_i_init_thread_for_guile (SCM_STACKITEM *base, SCM parent)
 {
+
+    {
+        SCM_STACK_GROWS_UP = stack_direction();
+        printf("SCM_STACK_GROWS_UP = %d" , SCM_STACK_GROWS_UP);
+    }
+
   scm_i_thread *t;
 
   scm_i_pthread_once (&init_thread_key_once, init_thread_key);
@@ -610,13 +631,13 @@ scm_i_init_thread_for_guile (SCM_STACKITEM *base, SCM parent)
          happen from anywhere on the stack, and in particular lower on the
          stack than when it was when this thread was first guilified.  Thus,
          `base' must be updated.  */
-#if SCM_STACK_GROWS_UP
-      if (base < t->base)
-         t->base = base;
-#else
-      if (base > t->base)
-         t->base = base;
-#endif
+if (SCM_STACK_GROWS_UP) {
+    if (base < t->base)
+        t->base = base;
+} else {
+    if (base > t->base)
+        t->base = base;
+}
 
       scm_enter_guile ((scm_t_guile_ticket) t);
       return 1;
@@ -659,11 +680,11 @@ get_thread_stack_base ()
   else
 #endif
     {
-#if SCM_STACK_GROWS_UP
+if (SCM_STACK_GROWS_UP) {
       return start;
-#else
+} else {
       return end;
-#endif
+}
     }
 }
 
@@ -1404,71 +1425,18 @@ scm_threads_mark_stacks (void)
 
       scm_gc_mark (t->handle);
 
-#if SCM_STACK_GROWS_UP
-      scm_mark_locations (t->base, t->top - t->base);
-#else
-      scm_mark_locations (t->top, t->base - t->top);
-#endif
+if (SCM_STACK_GROWS_UP) {
+    scm_mark_locations(t->base, t->top - t->base);
+}
+else {
+    scm_mark_locations(t->top, t->base - t->top);
+}
       scm_mark_locations ((void *) &t->regs,
 			  ((size_t) sizeof(t->regs)
 			   / sizeof (SCM_STACKITEM)));
     }
 
   SCM_MARK_BACKING_STORE ();
-}
-
-/*** Select */
-
-int
-scm_std_select (int nfds,
-		SELECT_TYPE *readfds,
-		SELECT_TYPE *writefds,
-		SELECT_TYPE *exceptfds,
-		struct timeval *timeout)
-{
-  fd_set my_readfds;
-  int res, eno, wakeup_fd;
-  scm_i_thread *t = SCM_I_CURRENT_THREAD;
-  scm_t_guile_ticket ticket;
-
-  if (readfds == NULL)
-    {
-      FD_ZERO (&my_readfds);
-      readfds = &my_readfds;
-    }
-
-  while (scm_i_setup_sleep (t, SCM_BOOL_F, NULL, t->sleep_pipe[1]))
-    SCM_TICK;
-
-  wakeup_fd = t->sleep_pipe[0];
-  ticket = scm_leave_guile ();
-  FD_SET (wakeup_fd, readfds);
-  if (wakeup_fd >= nfds)
-    nfds = wakeup_fd+1;
-  res = select (nfds, readfds, writefds, exceptfds, timeout);
-  t->sleep_fd = -1;
-  eno = errno;
-  scm_enter_guile (ticket);
-
-  scm_i_reset_sleep (t);
-
-  if (res > 0 && FD_ISSET (wakeup_fd, readfds))
-    {
-      char dummy;
-      size_t count;
-
-      count = read (wakeup_fd, &dummy, 1);
-
-      FD_CLR (wakeup_fd, readfds);
-      res -= 1;
-      if (res == 0)
-	{
-	  eno = EINTR;
-	  res = -1;
-	}
-    }
-  errno = eno;
-  return res;
 }
 
 /* Convenience API for blocking while in guile mode. */
@@ -1518,26 +1486,6 @@ scm_pthread_cond_timedwait (scm_i_pthread_cond_t *cond,
 }
 
 #endif
-
-unsigned long
-scm_std_usleep (unsigned long usecs)
-{
-  struct timeval tv;
-  tv.tv_usec = usecs % 1000000;
-  tv.tv_sec = usecs / 1000000;
-  scm_std_select (0, NULL, NULL, NULL, &tv);
-  return tv.tv_sec * 1000000 + tv.tv_usec;
-}
-
-unsigned int
-scm_std_sleep (unsigned int secs)
-{
-  struct timeval tv;
-  tv.tv_usec = 0;
-  tv.tv_sec = secs;
-  scm_std_select (0, NULL, NULL, NULL, &tv);
-  return tv.tv_sec;
-}
 
 /*** Misc */
 

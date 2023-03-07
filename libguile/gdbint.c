@@ -142,6 +142,7 @@ gdb_maybe_valid_type_p (SCM value)
 }
 
 
+#if 0
 int
 gdb_read (char *str)
 {
@@ -202,6 +203,7 @@ exit:
   SCM_END_FOREIGN_BLOCK;
   return status;
 }
+#endif
 
 
 int
@@ -223,6 +225,7 @@ gdb_eval (SCM exp)
 }
 
 
+#if 0
 int
 gdb_print (SCM obj)
 {
@@ -247,6 +250,7 @@ gdb_print (SCM obj)
     }
   return 0;
 }
+#endif
 
 
 int

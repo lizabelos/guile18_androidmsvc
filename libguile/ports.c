@@ -1417,11 +1417,13 @@ SCM_DEFINE (scm_seek, "seek", 3, 0, 0,
   if (how != SEEK_SET && how != SEEK_CUR && how != SEEK_END)
     SCM_OUT_OF_RANGE (3, whence);
 
+#if USE_FILESYS
   if (SCM_OPFPORTP (fd_port))
     {
       /* go direct to fport code to allow 64-bit offsets */
       return scm_i_fport_seek (fd_port, offset, how);
     }
+#endif
   else if (SCM_OPPORTP (fd_port))
     {
       scm_t_ptob_descriptor *ptob = scm_ptobs + SCM_PTOBNUM (fd_port);
@@ -1451,28 +1453,44 @@ SCM_DEFINE (scm_seek, "seek", 3, 0, 0,
 #define O_BINARY 0
 #endif
 
-/* Mingw has ftruncate(), perhaps implemented above using chsize, but
-   doesn't have the filename version truncate(), hence this code.  */
-#if HAVE_FTRUNCATE && ! HAVE_TRUNCATE
-static int
-truncate (const char *file, off_t length)
-{
-  int ret, fdes;
+// use _chsize_s on Windows
+#if defined _WIN32 && ! defined __CYGWIN__
+#include <sys/stat.h>
+int
+truncate (const char *file, off_t length) {
+    int fd;
+    _sopen_s(&fd, file, O_WRONLY | O_BINARY, _SH_DENYNO, _S_IREAD | _S_IWRITE);
+    int rv;
+    if (fd == -1)
+        return -1;
+    rv = _chsize_s (fd, length);
+    _close (fd);
+    return rv;
+}
 
-  fdes = open (file, O_BINARY | O_WRONLY);
-  if (fdes == -1)
-    return -1;
+int
+truncate_fd (int fd, off_t length) {
+    int rv;
+    rv = _chsize_s (fd, length);
+    return rv;
+}
+#else
+int
+truncate (const char *file, off_t length) {
+    int fd = open (file, O_WRONLY | O_BINARY);
+    int rv;
+    if (fd == -1)
+        return -1;
+    rv = ftruncate (fd, length);
+    close (fd);
+    return rv;
+}
 
-  ret = ftruncate (fdes, length);
-  if (ret == -1)
-    {
-      int save_errno = errno;
-      close (fdes);
-      errno = save_errno;
-      return -1;
-    }
-
-  return close (fdes);
+int
+truncate_fd (int fd, off_t length) {
+    int rv;
+    rv = ftruncate (fd, length);
+    return rv;
 }
 #endif /* HAVE_FTRUNCATE && ! HAVE_TRUNCATE */
 
@@ -1512,7 +1530,7 @@ SCM_DEFINE (scm_truncate_file, "truncate-file", 1, 1, 0,
   if (scm_is_integer (object))
     {
       off_t_or_off64_t c_length = scm_to_off_t_or_off64_t (length);
-      SCM_SYSCALL (rv = ftruncate_or_ftruncate64 (scm_to_int (object),
+      SCM_SYSCALL (rv = truncate_fd (scm_to_int (object),
                                                   c_length));
     }
   else if (SCM_OPOUTFPORTP (object))
@@ -1541,7 +1559,7 @@ SCM_DEFINE (scm_truncate_file, "truncate-file", 1, 1, 0,
       off_t_or_off64_t c_length = scm_to_off_t_or_off64_t (length);
       char *str = scm_to_locale_string (object);
       int eno;
-      SCM_SYSCALL (rv = truncate_or_truncate64 (str, c_length));
+      SCM_SYSCALL (rv = truncate (str, c_length));
       eno = errno;
       free (str);
       errno = eno;

@@ -299,12 +299,15 @@ scm_i_dbl2num (double u)
 double
 scm_i_big2dbl (SCM b)
 {
+#ifndef USE_REAL_GMP
+    abort();
+#else
   double result;
   size_t bits;
 
   bits = mpz_sizeinbase (SCM_I_BIG_MPZ (b), 2);
 
-#if 1
+#if 0
   {
     /* Current GMP, eg. 4.1.3, force truncation towards zero */
     mpz_t  tmp;
@@ -339,6 +342,7 @@ scm_i_big2dbl (SCM b)
 
   scm_remember_upto_here_1 (b);
   return result;
+#endif
 }
 
 SCM
@@ -4858,10 +4862,14 @@ scm_i_divide (SCM x, SCM y, int inexact)
                      but one or both x and y be too big to fit a double,
                      hence the use of mpq_get_d rather than converting and
                      dividing.  */
+#ifdef USE_REAL_GMP
                   mpq_t q;
                   *mpq_numref(q) = *SCM_I_BIG_MPZ (x);
                   *mpq_denref(q) = *SCM_I_BIG_MPZ (y);
                   return scm_from_double (mpq_get_d (q));
+#else
+                  abort();
+#endif
                 }
               else
                 {
@@ -5621,6 +5629,9 @@ SCM_DEFINE (scm_inexact_to_exact, "inexact->exact", 1, 0, 0,
 	SCM_OUT_OF_RANGE (1, z);
       else
 	{
+#ifndef USE_REAL_GMP
+          abort();
+#else
 	  mpq_t frac;
 	  SCM q;
 	  
@@ -5634,6 +5645,7 @@ SCM_DEFINE (scm_inexact_to_exact, "inexact->exact", 1, 0, 0,
 	   */
 	  mpq_clear (frac);
 	  return q;
+#endif
 	}
     }
   else if (SCM_FRACTIONP (z))

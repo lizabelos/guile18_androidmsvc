@@ -22,7 +22,7 @@
 
 
 
-#include <gmp.h>
+#include <mini-gmp.h>
 
 #include "libguile/__scm.h"
 #include "libguile/print.h"
@@ -333,7 +333,6 @@ SCM_API SCM          scm_from_uint64 (scm_t_uint64 x);
 
 SCM_API void scm_to_mpz (SCM x, mpz_t rop);
 SCM_API SCM  scm_from_mpz (mpz_t rop);
-
 
 /* The conversion functions for other types are aliased to the
    appropriate ones from above.  We pick the right one based on the

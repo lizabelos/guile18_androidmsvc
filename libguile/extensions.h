@@ -1,4 +1,5 @@
 /* classes: h_files */
+#ifdef USE_LTDL
 
 #ifndef SCM_EXTENSIONS_H
 #define SCM_EXTENSIONS_H
@@ -41,3 +42,5 @@ SCM_API void scm_init_extensions (void);
   c-file-style: "gnu"
   End:
 */
+
+#endif

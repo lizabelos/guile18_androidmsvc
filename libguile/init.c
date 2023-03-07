@@ -27,7 +27,7 @@
 #include <stdio.h>
 #include <sys/stat.h>
 #include <fcntl.h>
-#include <gmp.h>
+#include <mini-gmp.h>
 
 #include "libguile/_scm.h"
 
@@ -160,13 +160,12 @@ check_config (void)
   if (HEAP_SEG_SIZE != j)
     fixconfig ("reduce", "size of HEAP_SEG_SIZE", 0);
 
-#if SCM_STACK_GROWS_UP
+if (SCM_STACK_GROWS_UP) {
   if (((SCM_STACKITEM *) & j - stack_start_ptr) < 0)
     fixconfig (remsg, "SCM_STACK_GROWS_UP", 1);
-#else
+} else {
   if ((stack_start_ptr - (SCM_STACKITEM *) & j) < 0)
     fixconfig (addmsg, "SCM_STACK_GROWS_UP", 1);
-#endif
 }
 #endif
 
@@ -242,8 +241,8 @@ scm_init_standard_ports ()
      and scsh, read stdin unbuffered.  Applications that can tolerate
      buffered input on stdin can reset \ex{(current-input-port)} to
      block buffering for higher performance.  */
-
-  scm_set_current_input_port 
+/*
+  scm_set_current_input_port
     (scm_standard_stream_to_port (0, 
 				  isatty (0) ? "r0" : "r",
 				  "standard input"));
@@ -255,6 +254,20 @@ scm_init_standard_ports ()
     (scm_standard_stream_to_port (2,
 				  isatty (2) ? "w0" : "w",
 				  "standard error"));
+				  */
+  // We are never in the console
+    scm_set_current_input_port
+            (scm_standard_stream_to_port (0,
+                                          "r",
+                                          "standard input"));
+    scm_set_current_output_port
+            (scm_standard_stream_to_port (1,
+                                          "w",
+                                          "standard output"));
+    scm_set_current_error_port
+            (scm_standard_stream_to_port (2,
+                                          "w",
+                                          "standard error"));
 }
 
 
@@ -467,7 +480,7 @@ scm_i_init_guile (SCM_STACKITEM *base)
   scm_init_fluids ();
   scm_init_feature ();          /* Requires fluids */
   scm_init_backtrace ();	/* Requires fluids */
-  scm_init_fports ();
+//  scm_init_fports ();
   scm_init_strports ();
   scm_init_gdbint ();           /* Requires strports */
   scm_init_hash ();
@@ -477,8 +490,8 @@ scm_i_init_guile (SCM_STACKITEM *base)
   scm_init_properties ();
   scm_init_hooks ();            /* Requires smob_prehistory */
   scm_init_gc ();		/* Requires hooks, async */
-  scm_init_i18n ();
-  scm_init_ioext ();
+//  scm_init_i18n ();
+//  scm_init_ioext ();
   scm_init_keywords ();
   scm_init_list ();
   scm_init_macros ();
@@ -532,7 +545,7 @@ scm_i_init_guile (SCM_STACKITEM *base)
   scm_init_simpos ();
   scm_init_load_path ();
   scm_init_standard_ports ();  /* Requires fports */
-  scm_init_dynamic_linking ();
+//  scm_init_dynamic_linking ();
 #if SCM_ENABLE_ELISP
   scm_init_lang ();
 #endif /* SCM_ENABLE_ELISP */
@@ -559,7 +572,7 @@ scm_i_init_guile (SCM_STACKITEM *base)
 
   scm_init_rdelim ();
   scm_init_rw ();
-  scm_init_extensions ();
+ // scm_init_extensions ();
 
   atexit (cleanup_for_exit);
   scm_load_startup_files ();

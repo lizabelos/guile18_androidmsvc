@@ -26,7 +26,7 @@
  scm_c_define_gsubr (s_scm_unread_char, 1, 1, 0, (SCM (*)()) scm_unread_char); ;
  scm_c_define_gsubr (s_scm_unread_string, 2, 0, 0, (SCM (*)()) scm_unread_string); ;
  scm_c_define_gsubr (s_scm_seek, 3, 0, 0, (SCM (*)()) scm_seek); ;
- scm_c_define_gsubr (s_scm_truncate_file, 1, 1, 0, (SCM (*)()) scm_truncate_file); ;
+// scm_c_define_gsubr (s_scm_truncate_file, 1, 1, 0, (SCM (*)()) scm_truncate_file); ;
  scm_c_define_gsubr (s_scm_port_line, 1, 0, 0, (SCM (*)()) scm_port_line); ;
  scm_c_define_gsubr (s_scm_set_port_line_x, 2, 0, 0, (SCM (*)()) scm_set_port_line_x); ;
  scm_c_define_gsubr (s_scm_port_column, 1, 0, 0, (SCM (*)()) scm_port_column); ;

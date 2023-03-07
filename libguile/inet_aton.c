@@ -30,6 +30,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  */
+#ifdef USE_SOCKETS
 
 #ifdef HAVE_CONFIG_H
 # include <config.h>
@@ -172,3 +173,5 @@ inet_aton(const char *cp_arg, struct in_addr *addr)
   c-file-style: "gnu"
   End:
 */
+
+#endif

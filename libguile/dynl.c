@@ -57,6 +57,7 @@ maybe_drag_in_eprintf ()
 #include "libguile/validate.h"
 #include "libguile/dynwind.h"
 
+#ifdef USE_LTDL
 #include <ltdl.h>
 
 /*
@@ -339,3 +340,4 @@ scm_init_dynamic_linking ()
   c-file-style: "gnu"
   End:
 */
+#endif

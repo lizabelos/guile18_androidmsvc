@@ -1,4 +1,5 @@
 /* classes: h_files */
+#if 0
 
 #ifndef SCM_I18N_H
 #define SCM_I18N_H
@@ -39,3 +40,5 @@ SCM_API void scm_init_i18n (void);
   c-file-style: "gnu"
   End:
 */
+
+#endif

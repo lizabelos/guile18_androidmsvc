@@ -76,6 +76,10 @@
 # endif
 #endif
 
+#if defined(_MSC_VER)
+#include <windows.h>
+#endif
+
 
 
 /* take_signal is installed as the C signal handler whenever a Scheme
@@ -502,6 +506,7 @@ SCM_DEFINE (scm_restore_signals, "restore-signals", 0, 0, 0,
 }
 #undef FUNC_NAME
 
+#if 0
 SCM_DEFINE (scm_alarm, "alarm", 1, 0, 0,
            (SCM i),
 	    "Set a timer to raise a @code{SIGALRM} signal after the specified\n"
@@ -517,6 +522,7 @@ SCM_DEFINE (scm_alarm, "alarm", 1, 0, 0,
   return scm_from_uint (alarm (scm_to_uint (i)));
 }
 #undef FUNC_NAME
+#endif
 
 #ifdef HAVE_SETITIMER
 SCM_DEFINE (scm_setitimer, "setitimer", 5, 0, 0,
@@ -624,7 +630,15 @@ SCM_DEFINE (scm_sleep, "sleep", 1, 0, 0,
 	    "See also @code{usleep}.")
 #define FUNC_NAME s_scm_sleep
 {
-  return scm_from_uint (scm_std_sleep (scm_to_uint (i)));
+// Sleep for the given number of seconds. Must be compatible with MSVC and Linux.
+// Returns the number of seconds remaining.
+#if defined(_MSC_VER)
+    Sleep(scm_to_uint(i) * 1000);
+    return scm_from_uint(0);
+#else
+    return scm_from_uint(sleep(scm_to_uint(i)));
+#endif
+  //return scm_from_uint (scm_std_sleep (scm_to_uint (i)));
 }
 #undef FUNC_NAME
 
@@ -643,7 +657,15 @@ SCM_DEFINE (scm_usleep, "usleep", 1, 0, 0,
 	    "See also @code{sleep}.")
 #define FUNC_NAME s_scm_usleep
 {
-  return scm_from_ulong (scm_std_usleep (scm_to_ulong (i)));
+// Sleep for the given number of microseconds. Must be compatible with MSVC and Linux.
+// Returns the number of microseconds remaining.
+#if defined(_MSC_VER)
+    Sleep(scm_to_uint(i) / 1000);
+    return scm_from_uint(0);
+#else
+    return scm_from_uint(usleep(scm_to_uint(i)));
+#endif
+//  return scm_from_ulong (scm_std_usleep (scm_to_ulong (i)));
 }
 #undef FUNC_NAME
 

@@ -20,6 +20,15 @@
 #define SCM_HAVE_NAN_H 0 /* 0 or 1 */
 #define SCM_HAVE_WINSOCK2_H 0 /* 0 or 1 */
 
+
+// Declare ssize_t if it's not defined
+#ifdef _MSC_VER
+#include <BaseTsd.h>
+typedef SSIZE_T ssize_t;
+#else
+#include <unistd.h>
+#endif
+
 /* Define to include various undocumented debugging functions. */
 /* #undef GUILE_DEBUG */
 
@@ -38,7 +47,7 @@
 #define SCM_ENABLE_ELISP 0 /* 0 or 1 */
 
 /* Set to 1 if the stack grows up, 0 otherwise. */
-#define SCM_STACK_GROWS_UP 1 /* 0 or 1 */
+extern int SCM_STACK_GROWS_UP; /* 0 or 1 */
 
 /* C compiler's syntax for inline functions if any,
    otherwise undefined. */

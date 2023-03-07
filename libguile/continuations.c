@@ -121,9 +121,9 @@ scm_make_continuation (int *first)
   src = thread->continuation_base;
   SCM_NEWSMOB (cont, scm_tc16_continuation, continuation);
 
-#if ! SCM_STACK_GROWS_UP
-  src -= stack_size;
-#endif
+if (!SCM_STACK_GROWS_UP) {
+    src -= stack_size;
+}
   continuation->offset = continuation->stack - src;
   memcpy (continuation->stack, src, sizeof (SCM_STACKITEM) * stack_size);
 
@@ -262,14 +262,15 @@ scm_dynthrow (SCM cont, SCM val)
       abort ();
     }
 
-#if SCM_STACK_GROWS_UP
-  if (dst + continuation->num_stack_items >= &stack_top_element)
-    grow_stack (cont, val);
-#else
-  dst -= continuation->num_stack_items;
-  if (dst <= &stack_top_element)
-    grow_stack (cont, val);
-#endif /* def SCM_STACK_GROWS_UP */
+ if (SCM_STACK_GROWS_UP) {
+     if (dst + continuation->num_stack_items >= &stack_top_element)
+         grow_stack(cont, val);
+ }
+ else {
+     dst -= continuation->num_stack_items;
+     if (dst <= &stack_top_element)
+         grow_stack(cont, val);
+ }
 
   SCM_FLUSH_REGISTER_WINDOWS;
   copy_stack_and_call (continuation, val, dst);

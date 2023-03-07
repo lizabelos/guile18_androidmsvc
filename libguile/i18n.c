@@ -1,3 +1,4 @@
+#if 0
 /* Copyright (C) 2004, 2006, 2008 Free Software Foundation, Inc.
  *
  * This library is free software; you can redistribute it and/or
@@ -324,3 +325,5 @@ scm_init_i18n ()
   c-file-style: "gnu"
   End:
 */
+
+#endif

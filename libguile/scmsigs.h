@@ -30,7 +30,9 @@ SCM_API SCM scm_sigaction (SCM signum, SCM handler, SCM flags);
 SCM_API SCM scm_sigaction_for_thread (SCM signum, SCM handler, SCM flags,
 				      SCM thread);
 SCM_API SCM scm_restore_signals (void);
+#if 0
 SCM_API SCM scm_alarm (SCM i);
+#endif
 SCM_API SCM scm_setitimer (SCM which_timer,
 			   SCM interval_seconds, SCM interval_microseconds,
 			   SCM value_seconds, SCM value_microseconds);

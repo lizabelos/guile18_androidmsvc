@@ -1307,12 +1307,6 @@ scm_get_stack_base ()
 #   define DATASTART ((ptr_t)(&__data_start != 0? &__data_start : &data_start))
 #endif
 
-# if SCM_STACK_GROWS_UP
-#   define STACK_GROWS_DOWN 0
-# else
-#   define STACK_GROWS_DOWN 1
-#endif
-
 # ifndef CPP_WORDSZ
 #   define CPP_WORDSZ 32
 # endif

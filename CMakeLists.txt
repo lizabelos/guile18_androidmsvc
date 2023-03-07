@@ -1,9 +1,10 @@
 cmake_minimum_required(VERSION 3.16)
-project(guile VERSION 1.8.8 LANGUAGES C)
+project(guile VERSION 1.8.8 LANGUAGES C CXX)
 set(GUILE_MAJOR_VERSION ${guile_VERSION_MAJOR})
 set(GUILE_MINOR_VERSION ${guile_VERSION_MINOR})
 set(GUILE_MICRO_VERSION ${guile_VERSION_PATCH})
 set(CMAKE_C_STANDARD 90)
+set(CMAKE_CXX_STANDARD 11)
 set (CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
 
 include(cmake/AutotoolCheck.cmake)
@@ -21,6 +22,11 @@ configure_file (${CMAKE_CURRENT_SOURCE_DIR}/cmake/config.h.cmake                
 configure_file (${CMAKE_CURRENT_SOURCE_DIR}/cmake/libguile/gen-scmconfig.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/libguile/gen-scmconfig.h)
 configure_file (${CMAKE_CURRENT_SOURCE_DIR}/cmake/libguile/version.h.cmake       ${CMAKE_CURRENT_BINARY_DIR}/libguile/version.h)
 configure_file (${CMAKE_CURRENT_SOURCE_DIR}/cmake/libguile/libpath.h.cmake       ${CMAKE_CURRENT_BINARY_DIR}/libguile/libpath.h)
+
+
+add_library(minigmp INTERFACE)
+target_sources(minigmp INTERFACE ${CMAKE_CURRENT_SOURCE_DIR}/mini-gmp/mini-gmp.c)
+target_include_directories(minigmp INTERFACE ${CMAKE_CURRENT_SOURCE_DIR}/mini-gmp)
 
 add_library(guile STATIC)
 
@@ -160,8 +166,10 @@ if (WIN32)
 endif ()
 target_include_directories(guile PUBLIC ${CMAKE_CURRENT_BINARY_DIR} ${CMAKE_CURRENT_SOURCE_DIR})
 
-target_link_libraries(guile PUBLIC Threads::Threads)
+target_link_libraries(guile PUBLIC Threads::Threads minigmp)
 
 set(common_options "-DHAVE_CONFIG_H -I${CMAKE_CURRENT_SOURCE_DIR} -I${CMAKE_CURRENT_BINARY_DIR}")
 target_compile_definitions(guile PRIVATE ${common_options})
 
+add_executable(guile-test test.cpp)
+target_link_libraries(guile-test guile)

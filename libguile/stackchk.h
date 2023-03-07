@@ -53,7 +53,7 @@
 # define SCM_CHECK_STACK /**/
 #endif /* STACK_CHECKING */
 
-SCM_API int scm_stack_checking_enabled_p;
+//SCM_API int scm_stack_checking_enabled_p;
 
 
 

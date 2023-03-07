@@ -17,6 +17,7 @@
 
 
 
+#if 0 // no posix
 
 /* regex-posix.c -- POSIX regular expression support.
 
@@ -315,3 +316,5 @@ scm_init_regex_posix ()
   c-file-style: "gnu"
   End:
 */
+
+#endif

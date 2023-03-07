@@ -17,13 +17,14 @@
 
 
 
+#if USE_SOCKET
 
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
 #endif
 
 #include <errno.h>
-#include <gmp.h>
+#include <mini-gmp.h>
 
 #include "libguile/_scm.h"
 #include "libguile/unif.h"
@@ -1801,7 +1802,7 @@ scm_init_socket ()
 #include "libguile/socket.x"
 }
 
-
+#endif
 /*
   Local Variables:
   c-file-style: "gnu"

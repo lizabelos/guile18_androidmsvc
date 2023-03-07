@@ -47,9 +47,9 @@
  scm_sym_setter = scm_permanent_object (scm_from_locale_symbol ("setter")) ;
  sym_atslot_ref = scm_permanent_object (scm_from_locale_symbol ("@slot-ref")) ;
  sym_atslot_set_x = scm_permanent_object (scm_from_locale_symbol ("@slot-set!")) ;
- scm_make_synt (s_nil_cond, scm_i_makbimacro, scm_m_nil_cond) ;
- scm_make_synt (s_atfop, scm_i_makbimacro, scm_m_atfop) ;
- scm_make_synt (s_undefine, scm_makacro, scm_m_undefine) ;
+// scm_make_synt (s_nil_cond, scm_i_makbimacro, scm_m_nil_cond) ;
+// scm_make_synt (s_atfop, scm_i_makbimacro, scm_m_atfop) ;
+// scm_make_synt (s_undefine, scm_makacro, scm_m_undefine) ;
  scm_sym_enter_frame = scm_permanent_object (scm_from_locale_symbol ("enter-frame")) ;
  scm_sym_apply_frame = scm_permanent_object (scm_from_locale_symbol ("apply-frame")) ;
  scm_sym_exit_frame = scm_permanent_object (scm_from_locale_symbol ("exit-frame")) ;
