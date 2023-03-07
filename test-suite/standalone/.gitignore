@@ -1,0 +1,12 @@
+/test-conversion
+/test-gh
+/test-list
+/test-num2integral
+/test-round
+/test-unwind
+/test-with-guile-module
+/test-use-srfi
+/test-scm-with-guile
+/test-scm-c-read
+/test-fast-slot-ref
+/test-scm-take-locale-symbol
