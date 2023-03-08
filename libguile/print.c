@@ -17,9 +17,7 @@
 
 
 
-#ifdef HAVE_CONFIG_H
-# include <config.h>
-#endif
+#include <config.h>
 
 #include <errno.h>
 
@@ -78,19 +76,19 @@ scm_t_option scm_print_opts[] = {
     "Hook for printing closures (should handle macros as well)." },
   { SCM_OPTION_BOOLEAN, "source", 0,
     "Print closures with source." },
-#ifdef __MINGW64__
+#if USE_64IMPL
   { SCM_OPTION_SCM, "highlight-prefix", (unsigned long long)SCM_BOOL_F,
 #else
   { SCM_OPTION_SCM, "highlight-prefix", (unsigned long)SCM_BOOL_F,
 #endif
     "The string to print before highlighted values." },
-#ifdef __MINGW64__    
+#if USE_64IMPL
   { SCM_OPTION_SCM, "highlight-suffix", (unsigned long long)SCM_BOOL_F,
 #else  
   { SCM_OPTION_SCM, "highlight-suffix", (unsigned long)SCM_BOOL_F,
 #endif  
     "The string to print after highlighted values." },
-#ifdef __MINGW64__       
+#if USE_64IMPL
   { SCM_OPTION_SCM, "quote-keywordish-symbols", (unsigned long long)SCM_BOOL_F,
 #else  
   { SCM_OPTION_SCM, "quote-keywordish-symbols", (unsigned long)SCM_BOOL_F,

@@ -18,9 +18,7 @@
 
 
 
-#ifdef HAVE_CONFIG_H
-#  include <config.h>
-#endif
+#include <config.h>
 
 #include <fcntl.h>      /* for mingw */
 #include <signal.h>
@@ -340,7 +338,7 @@ SCM_DEFINE (scm_sigaction_for_thread, "sigaction", 1, 3, 0,
   else if (scm_is_integer (handler))
     {
       long handler_int = scm_to_long (handler);
-#ifdef __MINGW64__
+#if USE_64IMPL
       if (handler_int == (long long) SIG_DFL || handler_int == (long long) SIG_IGN)
 #else      
       if (handler_int == (long) SIG_DFL || handler_int == (long) SIG_IGN)
@@ -349,7 +347,7 @@ SCM_DEFINE (scm_sigaction_for_thread, "sigaction", 1, 3, 0,
 #ifdef HAVE_SIGACTION
 	  action.sa_handler = (SIGRETTYPE (*) (int)) handler_int;
 #else
-#ifdef __MINGW64__
+#if USE_64IMPL
 	  chandler = (SIGRETTYPE (*) (int))(long long) handler_int;
 #else    
 	  chandler = (SIGRETTYPE (*) (int)) handler_int;
@@ -464,7 +462,7 @@ SCM_DEFINE (scm_sigaction_for_thread, "sigaction", 1, 3, 0,
 	orig_handlers[csig] = old_chandler;
     }
   if (old_chandler == SIG_DFL || old_chandler == SIG_IGN)
-#ifdef __MINGW64__  
+#if USE_64IMPL
     old_handler = scm_from_long ((long long) old_chandler);
 #else    
     old_handler = scm_from_long ((long) old_chandler);
@@ -707,7 +705,7 @@ scm_init_scmsigs ()
     }
 
   scm_c_define ("NSIG", scm_from_long (NSIG));
-#ifdef __MINGW64__  
+#if USE_64IMPL
   scm_c_define ("SIG_IGN", scm_from_long ((long long) SIG_IGN));
   scm_c_define ("SIG_DFL", scm_from_long ((long long) SIG_DFL));
 #else  

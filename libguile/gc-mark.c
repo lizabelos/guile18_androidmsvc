@@ -17,9 +17,7 @@
 
 
 
-#ifdef HAVE_CONFIG_H
-#  include <config.h>
-#endif
+#include <config.h>
 
 #include <stdio.h>
 #include <errno.h>
@@ -64,6 +62,19 @@ extern unsigned long * __libc_ia64_register_backing_store_base;
 #include <unistd.h>
 #endif
 
+#ifdef _WIN32
+#include <windows.h>
+#endif
+
+int check_ptr(void *ptr) {
+    // IsBadReadPtr on Windows or mprotect on Linux
+#ifdef _WIN32
+    return IsBadReadPtr(ptr, 1);
+#else
+    return 0;
+#endif
+}
+
 /*
   Entry point for this file.
  */
@@ -93,12 +104,17 @@ scm_mark_all (void)
 	SCM l = SCM_HASHTABLE_BUCKET (scm_gc_registered_roots, i);
 	for (; !scm_is_null (l); l = SCM_CDR (l))
 	  {
-#ifdef __MINGW64__      
+#if USE_64IMPL
 	    SCM *p = (SCM *) (scm_to_ulong_long (SCM_CAAR (l)));
 #else
 	    SCM *p = (SCM *) (scm_to_ulong (SCM_CAAR (l)));
-#endif      
-	    scm_gc_mark (*p);
+#endif
+          if (check_ptr(p) == 0) {
+              scm_gc_mark(*p);
+          } else {
+              printf("Error: scm_mark_all: %p\n", p);
+              abort();
+          }
 	  }
       }
   }

@@ -120,7 +120,7 @@ typedef struct scm_t_cell
 
 #define SCM_GC_CARD_SIZE_MASK  (SCM_GC_SIZEOF_CARD-1)
 #define SCM_GC_CARD_ADDR_MASK  (~SCM_GC_CARD_SIZE_MASK)
-#ifdef __MINGW64__
+#if USE_64IMPL
 #define SCM_GC_CELL_CARD(x)    ((scm_t_cell *) ((long long) (x) & SCM_GC_CARD_ADDR_MASK))
 #define SCM_GC_CELL_OFFSET(x)  (((long long) (x) & SCM_GC_CARD_SIZE_MASK) >> SCM_CELL_SIZE_SHIFT)
 #else
@@ -246,7 +246,7 @@ void scm_i_expensive_validation_check (SCM cell);
 #endif
 
 SCM_API scm_i_pthread_mutex_t scm_i_gc_admin_mutex;
-#ifdef __MINGW64__
+#if USE_64IMPL
 SCM_API int scm_i_terminating;
 #endif
 #define scm_gc_running_p (SCM_I_CURRENT_THREAD->gc_running_p)
@@ -401,7 +401,7 @@ SCM_API void scm_gc_register_roots (SCM *b, unsigned long n);
 SCM_API void scm_gc_unregister_roots (SCM *b, unsigned long n);
 SCM_API void scm_storage_prehistory (void);
 SCM_API int scm_init_storage (void);
-SCM_API void *scm_get_stack_base (void);
+//SCM_API void *scm_get_stack_base (void);
 SCM_API void scm_init_gc (void);
 
 #if SCM_ENABLE_DEPRECATED == 1

@@ -21,9 +21,7 @@
  * and modified for Guile by Marius Vollmer.
  */
 
-#ifdef HAVE_CONFIG_H
-#  include <config.h>
-#endif
+#include <config.h>
 
 #include <ctype.h>
 #include "libguile/gc.h"
@@ -1645,7 +1643,7 @@ void *scm_get_stack_base()
         GetSystemInfo(&sysinfo);
         GC_page_size = sysinfo.dwPageSize;
     }
-#ifdef __MINGW64__	
+#if USE_64IMPL
     trunc_sp = (ptr_t)((long long)sp & ~(GC_page_size - 1));
 #else
     trunc_sp = (ptr_t)((word)sp & ~(GC_page_size - 1));

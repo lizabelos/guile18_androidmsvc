@@ -16,9 +16,7 @@
  */
 
 
-#ifdef HAVE_CONFIG_H
-# include <config.h>
-#endif
+#include <config.h>
 
 #include "libguile/_scm.h"
 #include "libguile/alist.h"
@@ -1227,7 +1225,7 @@ eval_environment_folder (SCM extended_data, SCM symbol, SCM value, SCM tail)
   if (!SCM_ENVIRONMENT_BOUND_P (local, symbol))
     {
       SCM proc_as_nr = SCM_CADR (extended_data);
-#ifdef __MINGW64__
+#if USE_64IMPL
       scm_environment_folder proc = (scm_environment_folder) scm_to_ulong_long (proc_as_nr);
 #else
       unsigned long int proc_as_ul = scm_to_ulong (proc_as_nr);
@@ -1249,7 +1247,7 @@ eval_environment_fold (SCM env, scm_environment_folder proc, SCM data, SCM init)
 {
   SCM local = EVAL_ENVIRONMENT (env)->local;
   SCM imported = EVAL_ENVIRONMENT (env)->imported;
-#ifdef __MINGW64__
+#if USE_64IMPL
   SCM proc_as_nr = scm_from_ulong_long ((unsigned long long) proc);
 #else
   SCM proc_as_nr = scm_from_ulong ((unsigned long) proc);
@@ -1640,7 +1638,7 @@ import_environment_folder (SCM extended_data, SCM symbol, SCM value, SCM tail)
   SCM imported_env = SCM_CADR (extended_data);
   SCM owner = import_environment_lookup (import_env, symbol);
   SCM proc_as_nr = SCM_CADDR (extended_data);
-#ifdef __MINGW64__
+#if USE_64IMPL
   scm_environment_folder proc = (scm_environment_folder) scm_to_ulong_long (proc_as_nr);
 #else
   unsigned long int proc_as_ul = scm_to_ulong (proc_as_nr);
@@ -1662,7 +1660,7 @@ import_environment_folder (SCM extended_data, SCM symbol, SCM value, SCM tail)
 static SCM
 import_environment_fold (SCM env, scm_environment_folder proc, SCM data, SCM init)
 {
-#ifdef __MINGW64__
+#if USE_64IMPL
   SCM proc_as_nr = scm_from_ulong ((unsigned long long) proc);
 #else
   SCM proc_as_nr = scm_from_ulong ((unsigned long) proc);

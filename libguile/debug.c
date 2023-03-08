@@ -17,9 +17,7 @@
  */
 
 
-#ifdef HAVE_CONFIG_H
-# include <config.h>
-#endif
+#include <config.h>
 
 #include "libguile/_scm.h"
 #include "libguile/async.h"
@@ -486,7 +484,7 @@ static int
 debugobj_print (SCM obj, SCM port, scm_print_state *pstate SCM_UNUSED)
 {
   scm_puts ("#<debug-object ", port);
-#ifdef __MINGW64__
+#if USE_64IMPL
   scm_intprint ((long long) SCM_DEBUGOBJ_FRAME (obj), 16, port);
 #else
   scm_intprint ((long) SCM_DEBUGOBJ_FRAME (obj), 16, port);

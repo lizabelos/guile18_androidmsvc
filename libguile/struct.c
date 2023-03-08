@@ -16,9 +16,7 @@
  */
 
 
-#ifdef HAVE_CONFIG_H
-#  include <config.h>
-#endif
+#include <config.h>
 
 #include "libguile/_scm.h"
 #include "libguile/async.h"
@@ -809,7 +807,7 @@ SCM_DEFINE (scm_struct_vtable_tag, "struct-vtable-tag", 1, 0, 0,
 #define FUNC_NAME s_scm_struct_vtable_tag
 {
   SCM_VALIDATE_VTABLE (1, handle);
-#ifdef __MINGW64__  
+#if USE_64IMPL
   return scm_from_ulong (((unsigned long long)SCM_STRUCT_DATA (handle)) >> 3);
 #else
   return scm_from_ulong (((unsigned long)SCM_STRUCT_DATA (handle)) >> 3);

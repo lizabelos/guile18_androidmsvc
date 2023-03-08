@@ -17,9 +17,7 @@
 
 
 
-#ifdef HAVE_CONFIG_H
-# include <config.h>
-#endif
+#include <config.h>
 
 #include <stdio.h>
 #include "libguile/_scm.h"
@@ -232,12 +230,12 @@ static scm_t_bits tc16_pre_unwind_data;
 static int
 pre_unwind_data_print (SCM closure, SCM port, scm_print_state *pstate SCM_UNUSED)
 {
-#ifdef __MINGW64__  
+#if USE_64IMPL
 #else
   struct pre_unwind_data *c = (struct pre_unwind_data *) SCM_CELL_WORD_1 (closure);
 #endif  
   char buf[200];
-#ifdef __MINGW64__  
+#if USE_64IMPL
 #else
   sprintf (buf, "#<pre-unwind-data 0x%lx 0x%lx>",
 	   (long) c->handler, (long) c->handler_data);

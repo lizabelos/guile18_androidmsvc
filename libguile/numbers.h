@@ -57,7 +57,7 @@
  */
 
 #define SCM_I_FIXNUM_BIT         (SCM_LONG_BIT - 2)
-#ifdef __MINGW64__
+#if USE_64IMPL
 #define SCM_MOST_POSITIVE_FIXNUM (signed long)((SCM_T_SIGNED_BITS_MAX-3)/4)
 #define SCM_MOST_NEGATIVE_FIXNUM (signed long)(-SCM_MOST_POSITIVE_FIXNUM-1)
 #else
