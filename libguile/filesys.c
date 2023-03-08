@@ -28,9 +28,7 @@
 # define _REENTRANT   /* ask Interix for readdir_r prototype */
 #endif
 
-#ifdef HAVE_CONFIG_H
-#  include <config.h>
-#endif
+#include <config.h>
 
 /* This blob per the Autoconf manual (under "Particular Functions"), updated
    to match that of Gnulib.  */
@@ -114,7 +112,7 @@ void *alloca (size_t);
 #include <pwd.h>
 #endif
 
-#ifdef __MINGW64__
+#if USE_64IMPL
 #if HAVE_DIRENT_H
 # include <dirent.h>
 # define NAMLEN(dirent) strlen((dirent)->d_name)
@@ -1770,7 +1768,7 @@ scm_init_filesys ()
 #include "libguile/filesys.x"
 }
 
-#endif USE_FILESYS
+#endif //USE_FILESYS
 /*
   Local Variables:
   c-file-style: "gnu"

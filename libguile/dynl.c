@@ -20,9 +20,7 @@
 
 
 
-#ifdef HAVE_CONFIG_H
-# include <config.h>
-#endif
+#include <config.h>
 
 /* "dynl.c" dynamically link&load object files.
    Author: Aubrey Jaffer
@@ -233,7 +231,7 @@ SCM_DEFINE (scm_dynamic_func, "dynamic-func", 2, 0, 0,
     func = (void (*) ()) sysdep_dynl_func (chars, DYNL_HANDLE (dobj), 
 					   FUNC_NAME);
     scm_dynwind_end ();
-#ifdef __MINGW64__
+#if USE_64IMPL
     return scm_from_ulong ((unsigned long long) func);
 #else
     return scm_from_ulong ((unsigned long) func);
@@ -267,7 +265,7 @@ SCM_DEFINE (scm_dynamic_call, "dynamic-call", 2, 0, 0,
   
   if (scm_is_string (func))
     func = scm_dynamic_func (func, dobj);
-#ifdef __MINGW64__
+#if USE_64IMPL
   fptr = (void (*) ()) scm_to_ulong_long (func);
 #else
   fptr = (void (*) ()) scm_to_ulong (func);
@@ -307,7 +305,7 @@ SCM_DEFINE (scm_dynamic_args_call, "dynamic-args-call", 3, 0, 0,
 
   if (scm_is_string (func))
     func = scm_dynamic_func (func, dobj);
-#ifdef __MINGW64__
+#if USE_64IMPL
   fptr = (int (*) (int, char **)) scm_to_ulong_long (func);
 #else
   fptr = (int (*) (int, char **)) scm_to_ulong (func);
