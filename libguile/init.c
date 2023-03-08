@@ -20,9 +20,7 @@
 /* Include the headers for just about everything.
    We call all their initialization functions.  */
 
-#ifdef HAVE_CONFIG_H
-#  include <config.h>
-#endif
+#include <config.h>
 
 #include <stdio.h>
 #include <sys/stat.h>
@@ -258,15 +256,15 @@ scm_init_standard_ports ()
   // We are never in the console
     scm_set_current_input_port
             (scm_standard_stream_to_port (0,
-                                          "r",
+                                          "r0",
                                           "standard input"));
     scm_set_current_output_port
             (scm_standard_stream_to_port (1,
-                                          "w",
+                                          "w0",
                                           "standard output"));
     scm_set_current_error_port
             (scm_standard_stream_to_port (2,
-                                          "w",
+                                          "w0",
                                           "standard error"));
 }
 
@@ -356,6 +354,13 @@ scm_boot_guile (int argc, char ** argv,
                                    char **argv),
                 void *closure)
 {
+
+#if USE_64IMPL
+    printf("Booting Guile using 64 bit implementation");
+#else
+    printf("Booting Guile using 32 bit implementation");
+#endif
+
   void *res;
   struct main_func_closure c;
 
@@ -545,7 +550,7 @@ scm_i_init_guile (SCM_STACKITEM *base)
   scm_init_simpos ();
   scm_init_load_path ();
   scm_init_standard_ports ();  /* Requires fports */
-//  scm_init_dynamic_linking ();
+  //scm_init_dynamic_linking ();
 #if SCM_ENABLE_ELISP
   scm_init_lang ();
 #endif /* SCM_ENABLE_ELISP */
@@ -572,7 +577,7 @@ scm_i_init_guile (SCM_STACKITEM *base)
 
   scm_init_rdelim ();
   scm_init_rw ();
- // scm_init_extensions ();
+  //scm_init_extensions ();
 
   atexit (cleanup_for_exit);
   scm_load_startup_files ();
