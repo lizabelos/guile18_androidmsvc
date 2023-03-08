@@ -1,6 +1,4 @@
 /* classes: h_files */
-#if 0
-
 #ifndef SCM_I18N_H
 #define SCM_I18N_H
 
@@ -23,6 +21,11 @@
 
 #include "libguile/__scm.h"
 
+
+SCM_API void scm_init_i18n (void);
+
+#if 0
+
 SCM_API SCM scm_gettext (SCM msgid, SCM domainname, SCM category);
 SCM_API SCM scm_ngettext (SCM msgid, SCM msgid_plural, SCM n, SCM domainname, SCM category);
 SCM_API SCM scm_textdomain (SCM domainname);
@@ -31,7 +34,6 @@ SCM_API SCM scm_bind_textdomain_codeset (SCM domainname, SCM encoding);
 
 SCM_API int scm_i_to_lc_category (SCM category, int allow_lc_all);
 
-SCM_API void scm_init_i18n (void);
 
 #endif  /* SCM_I18N_H */
 

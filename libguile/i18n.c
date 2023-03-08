@@ -1,4 +1,3 @@
-#if 0
 /* Copyright (C) 2004, 2006, 2008 Free Software Foundation, Inc.
  *
  * This library is free software; you can redistribute it and/or
@@ -16,9 +15,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#ifdef HAVE_CONFIG_H
-# include <config.h>
-#endif
+#include <config.h>
 
 #include "libguile/_scm.h"
 #include "libguile/feature.h"
@@ -81,6 +78,8 @@ scm_i_to_lc_category (SCM category, int allow_lc_all)
     }
   scm_wrong_type_arg (0, 0, category);
 }
+
+#if 0
 
 SCM_DEFINE (scm_gettext, "gettext", 1, 2, 0,
 	    (SCM msgid, SCM domain, SCM category),
