@@ -38,9 +38,7 @@
 #define _POSIX_C_SOURCE 199506L  /* for gmtime_r prototype */
 #endif
 
-#ifdef HAVE_CONFIG_H
-#  include <config.h>
-#endif
+#include <config.h>
 
 #include <stdio.h>
 #include <errno.h>
@@ -97,8 +95,6 @@ extern char *strptime ();
 #else
 # define timet long
 #endif
-
-extern char ** environ;
 
 /* On Apple Darwin in a shared library there's no "environ" to access
    directly, instead the address of that variable must be obtained with
