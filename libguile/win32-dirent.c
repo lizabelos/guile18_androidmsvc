@@ -15,9 +15,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#ifdef HAVE_CONFIG_H
-# include <config.h>
-#endif
+#include <config.h>
 
 #include "libguile/__scm.h"
 
@@ -52,7 +50,7 @@ opendir (const char * name)
 
   dir = malloc (sizeof (DIR));
   dir->mask = file;
-  dir->fd = (int) hnd;
+  dir->fd = hnd;
   dir->data = malloc (sizeof (WIN32_FIND_DATA));
   dir->allocation = sizeof (WIN32_FIND_DATA);
   dir->size = dir->allocation;
@@ -102,7 +100,7 @@ rewinddir (DIR * dir)
 
   FindClose (hnd);
   hnd = FindFirstFile (dir->mask, find);
-  dir->fd = (int) hnd;
+  dir->fd = hnd;
   dir->filepos = 0;
 }
 
@@ -125,7 +123,7 @@ telldir (DIR * dir)
   return dir->filepos;
 }
 
-int 
+HANDLE
 dirfd (DIR * dir)
 {
   return dir->fd;
