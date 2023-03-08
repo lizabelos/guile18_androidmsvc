@@ -21,9 +21,7 @@
 
 #define _LARGEFILE64_SOURCE      /* ask for stat64 etc */
 
-#ifdef HAVE_CONFIG_H
-#  include <config.h>
-#endif
+#include <config.h>
 
 #include <stdio.h>
 #include <errno.h>
@@ -1454,7 +1452,7 @@ SCM_DEFINE (scm_seek, "seek", 3, 0, 0,
 #endif
 
 // use _chsize_s on Windows
-#if defined _WIN32 && ! defined __CYGWIN__
+#if defined _WIN32 && ! defined __CYGWIN__ && ! defined __MINGW32__
 #include <sys/stat.h>
 int
 truncate (const char *file, off_t length) {
