@@ -22,18 +22,14 @@
    based on the list of installed, statically linked libraries on the
    system.  For now, please don't put interesting code in here.  */
 
-#ifdef HAVE_CONFIG_H
-#  include <config.h>
-#endif
+#include <config.h>
 
 #ifdef __MINGW32__
 # define SCM_IMPORT 1
 #endif
 #include <libguile.h>
 
-#ifdef HAVE_CONFIG_H
 #include <libguile/scmconfig.h>
-#endif
 #include <ltdl.h>
 
 #ifdef HAVE_WINSOCK2_H

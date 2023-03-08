@@ -17,9 +17,7 @@
 
 /* data initialization and C<->Scheme data conversion */
 
-#ifdef HAVE_CONFIG_H
-#  include <config.h>
-#endif
+#include <config.h>
 
 #include "libguile/gh.h"
 #ifdef HAVE_STRING_H

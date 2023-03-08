@@ -27,9 +27,7 @@
    libraries which do not agree with the Spencer implementation may
    produce varying behavior.  Sigh. */
 
-#ifdef HAVE_CONFIG_H
-#  include <config.h>
-#endif
+#include <config.h>
 
 #include <sys/types.h>
 

@@ -18,9 +18,7 @@
 /* Exercise `scm_c_read ()' and the port type API.  Verify assumptions that
    can be made by port type implementations.  */
 
-#ifdef HAVE_CONFIG_H
-# include <config.h>
-#endif
+#include <config.h>
 
 #include <libguile.h>
 #include <assert.h>

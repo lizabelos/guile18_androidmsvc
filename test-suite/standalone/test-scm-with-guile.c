@@ -24,9 +24,7 @@
    See http://lists.gnu.org/archive/html/guile-devel/2008-11/msg00037.html
    for a detailed report.  */
 
-#ifdef HAVE_CONFIG_H
-# include <config.h>
-#endif
+#include <config.h>
 
 #include <libguile.h>
 

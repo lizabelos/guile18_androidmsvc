@@ -17,9 +17,7 @@
 /* "script.c" argv tricks for `#!' scripts.
    Authors: Aubrey Jaffer and Jim Blandy */
 
-#ifdef HAVE_CONFIG_H
-#  include <config.h>
-#endif
+#include <config.h>
 
 #include <stdio.h>
 #include <errno.h>

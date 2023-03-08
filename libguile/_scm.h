@@ -34,9 +34,7 @@
 # define __ia64__
 #endif
 
-#if HAVE_CONFIG_H
-#  include <config.h>
-#endif
+#include <config.h>
 
 /* Undefine HAVE_STRUCT_TIMESPEC, because the libguile C code doesn't
    need it anymore, and because on MinGW:

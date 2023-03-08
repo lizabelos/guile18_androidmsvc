@@ -23,9 +23,7 @@
    since people might still be linking with it.
 */
 
-#ifdef HAVE_CONFIG_H
-# include <config.h>
-#endif
+#include <config.h>
 
 #include <srfi/srfi-13.h>
 

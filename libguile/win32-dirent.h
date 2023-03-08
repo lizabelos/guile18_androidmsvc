@@ -28,7 +28,7 @@
 
 struct dirstream
 {
-  int fd;		/* File descriptor.  */
+  HANDLE fd;		/* File descriptor.  */
   char *data;		/* Directory block.  */
   size_t allocation;	/* Space allocated for the block.  */
   size_t size;		/* Total valid data in the block.  */
@@ -59,6 +59,6 @@ int closedir (DIR * dir);
 void rewinddir (DIR * dir);
 void seekdir (DIR * dir, off_t offset);
 off_t telldir (DIR * dir);
-int dirfd (DIR * dir);
+HANDLE dirfd (DIR * dir);
 
 #endif /* SCM_WIN32_DIRENT_H */

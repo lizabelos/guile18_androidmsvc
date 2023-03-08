@@ -19,9 +19,7 @@
 
 /* This is the C part of the (ice-9 rw) module.  */
 
-#ifdef HAVE_CONFIG_H
-#  include <config.h>
-#endif
+#include <config.h>
 
 #include <errno.h>
 #include <string.h>

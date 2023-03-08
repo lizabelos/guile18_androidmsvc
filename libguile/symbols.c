@@ -17,9 +17,7 @@
 
 
 
-#ifdef HAVE_CONFIG_H
-#  include <config.h>
-#endif
+#include <config.h>
 
 #include "libguile/_scm.h"
 #include "libguile/chars.h"
@@ -90,7 +88,12 @@ lookup_interned_symbol (const char *name, size_t len,
 {
   /* Try to find the symbol in the symbols table */
   SCM l;
-  unsigned long hash = raw_hash % SCM_HASHTABLE_N_BUCKETS (symbols);
+  unsigned long n_buckets = SCM_HASHTABLE_N_BUCKETS (symbols);
+  if (n_buckets == 0) {
+      printf("Error, trying to lookup symbol in empty symbol table");
+      return SCM_BOOL_F;
+  }
+  unsigned long hash = raw_hash % n_buckets;
 
   for (l = SCM_HASHTABLE_BUCKET (symbols, hash);
        !scm_is_null (l);

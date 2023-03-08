@@ -18,9 +18,7 @@
 /* Exercise `scm_take_locale_symbol ()', making sure it returns an interned
    symbol.  See https://savannah.gnu.org/bugs/index.php?25865 .  */
 
-#ifdef HAVE_CONFIG_H
-# include <config.h>
-#endif
+#include <config.h>
 
 #include <libguile.h>
 
