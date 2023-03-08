@@ -246,13 +246,9 @@ scm_double_cell (scm_t_bits car, scm_t_bits cbr,
      by Guile users.  Instead, the following statements prevent the
      reordering.
    */
-#ifdef __GNUC__
-  __asm__ volatile ("" : : : "memory");
-#else
-  /* portable version, just in case any other compiler does the same
-     thing.  */
+
   scm_remember_upto_here_1 (z);
-#endif
+
 
   return z;
 }
