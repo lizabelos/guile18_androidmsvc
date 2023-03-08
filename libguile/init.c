@@ -549,11 +549,11 @@ scm_i_init_guile (SCM_STACKITEM *base)
   scm_init_unif ();
   scm_init_simpos ();
   scm_init_load_path ();
-  scm_init_standard_ports ();  /* Requires fports */
+  /*scm_init_standard_ports ();  // Requires fports
   //scm_init_dynamic_linking ();
 #if SCM_ENABLE_ELISP
   scm_init_lang ();
-#endif /* SCM_ENABLE_ELISP */
+#endif // SCM_ENABLE_ELISP
   scm_init_script ();
   scm_init_srfi_4 ();
 
@@ -580,7 +580,7 @@ scm_i_init_guile (SCM_STACKITEM *base)
   //scm_init_extensions ();
 
   atexit (cleanup_for_exit);
-  scm_load_startup_files ();
+  scm_load_startup_files ();*/
 }
 
 /*

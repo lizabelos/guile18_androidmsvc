@@ -24,6 +24,13 @@ configure_file (${CMAKE_CURRENT_SOURCE_DIR}/cmake/libguile/version.h.cmake      
 configure_file (${CMAKE_CURRENT_SOURCE_DIR}/cmake/libguile/libpath.h.cmake       ${CMAKE_CURRENT_BINARY_DIR}/libguile/libpath.h)
 
 
+if (NOT MSVC AND NOT MINGW)
+    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -O0 -g -fsanitize=address -fno-omit-frame-pointer")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O0 -g -fsanitize=address -fno-omit-frame-pointer")
+else()
+
+endif()
+
 add_library(minigmp INTERFACE)
 target_sources(minigmp INTERFACE ${CMAKE_CURRENT_SOURCE_DIR}/mini-gmp/mini-gmp.c)
 target_include_directories(minigmp INTERFACE ${CMAKE_CURRENT_SOURCE_DIR}/mini-gmp)

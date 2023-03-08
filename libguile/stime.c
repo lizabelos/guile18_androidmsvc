@@ -31,6 +31,8 @@
    what it takes away, and decide from that whether to use it, instead of
    hard coding __hpux.  */
 
+extern char ** environ;
+
 #ifndef _REENTRANT
 # define _REENTRANT   /* ask solaris for gmtime_r prototype */
 #endif

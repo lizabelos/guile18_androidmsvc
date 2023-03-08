@@ -1371,12 +1371,13 @@ scm_threads_mark_stacks (void)
       int test = stack_direction(NULL);
       printf("scm_threads_mark_stacks; stack direction: %d\n" , test);
 
-if (SCM_STACK_GROWS_UP) {
-    scm_mark_locations(t->base, t->top - t->base);
-}
-else {
-    scm_mark_locations(t->top, t->base - t->top);
-}
+      if (SCM_STACK_GROWS_UP) {
+          scm_mark_locations(t->base, t->top - t->base);
+      }
+      else {
+          scm_mark_locations(t->top, t->base - t->top);
+      }
+
       scm_mark_locations ((void *) &t->regs,
 			  ((size_t) sizeof(t->regs)
 			   / sizeof (SCM_STACKITEM)));

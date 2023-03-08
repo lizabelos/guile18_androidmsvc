@@ -38,7 +38,9 @@
 #include "libguile/posix.h"
 #include "libguile/i18n.h"
 #include "libguile/threads.h"
-
+
+
+extern char ** environ;
 
 #ifdef HAVE_STRING_H
 #include <string.h>

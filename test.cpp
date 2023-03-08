@@ -3,6 +3,7 @@
 static void inner_main(void *closure, int argc, char **argv) {
     /* module initializations would go here */
    // scm_shell(argc, argv);
+   printf("Hello World");
 }
 
 int main(int argc, char **argv) {
