@@ -19,9 +19,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#ifdef HAVE_CONFIG_H
-# include <config.h>
-#endif
+#include <config.h>
 
 #include "libguile/_scm.h"
 #include "libguile/async.h"
@@ -83,7 +81,7 @@ scm_wta (SCM arg, const char *pos, const char *s_subr)
 {
   if (!s_subr || !*s_subr)
     s_subr = NULL;
-#ifdef __MINGW64__
+#if USE_64IMPL
   if ((~0x1fL) & (long long) pos)
 #else
   if ((~0x1fL) & (long) pos)
@@ -192,7 +190,7 @@ SCM_DEFINE (scm_registered_modules, "c-registered-modules", 0, 0, 0,
   res = SCM_EOL;
   for (md = registered_mods; md; md = md->link)
     res = scm_cons (scm_cons (scm_from_locale_string (md->module_name),
-#ifdef __MINGW64__
+#if USE_64IMPL
 			      scm_from_ulong ((unsigned long long) md->init_func)),
 #else
 			      scm_from_ulong ((unsigned long) md->init_func)),
