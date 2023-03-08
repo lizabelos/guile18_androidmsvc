@@ -503,6 +503,7 @@ scm_gc_for_newcell (scm_t_cell_type_statistics *freelist, SCM *free_cells)
 
       //did_gc = 1;
       //scm_i_gc ("cells");
+      // todo : this code cause problems
 
       *free_cells = scm_i_sweep_some_segments (freelist);
     }
