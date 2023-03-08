@@ -1,8 +1,11 @@
 #include <libguile.h>
 
-int main(int argc, char *argv[])
-{
-    scm_init_guile();
+static void inner_main(void *closure, int argc, char **argv) {
+    /* module initializations would go here */
+   // scm_shell(argc, argv);
+}
 
-    return 0;
+int main(int argc, char **argv) {
+    scm_boot_guile(argc, argv, inner_main, 0);
+    return 0; /* never reached */
 }

@@ -825,3 +825,5 @@ See GUILE_HEADER_LIBC_WITH_UNISTD in aclocal.m4. */
 
 /* The size of `__int64', as computed by sizeof. */
 #define SIZEOF___INT64 @SIZEOF___INT64@
+
+#define USE_64IMPL 1

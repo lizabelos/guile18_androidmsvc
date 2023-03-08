@@ -29,7 +29,8 @@ target_sources(minigmp INTERFACE ${CMAKE_CURRENT_SOURCE_DIR}/mini-gmp/mini-gmp.c
 target_include_directories(minigmp INTERFACE ${CMAKE_CURRENT_SOURCE_DIR}/mini-gmp)
 
 add_library(guile STATIC)
-
+# use -fno-strict-aliasing
+target_compile_options(guile PRIVATE -fno-strict-aliasing)
 add_definitions(-DHAVE_CONFIG_H)
 target_sources(guile
         PRIVATE
@@ -167,9 +168,15 @@ endif ()
 target_include_directories(guile PUBLIC ${CMAKE_CURRENT_BINARY_DIR} ${CMAKE_CURRENT_SOURCE_DIR})
 
 target_link_libraries(guile PUBLIC Threads::Threads minigmp)
+# Fix undefined reference to `__imp_WSAGetLastError' with mingw
+if (MINGW)
+    target_link_libraries(guile PUBLIC ws2_32)
+endif ()
 
 set(common_options "-DHAVE_CONFIG_H -I${CMAKE_CURRENT_SOURCE_DIR} -I${CMAKE_CURRENT_BINARY_DIR}")
 target_compile_definitions(guile PRIVATE ${common_options})
 
+
+
 add_executable(guile-test test.cpp)
-target_link_libraries(guile-test guile)
+target_link_libraries(guile-test PUBLIC guile)
