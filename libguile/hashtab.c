@@ -17,9 +17,7 @@
 
 
 
-#ifdef HAVE_CONFIG_H
-# include <config.h>
-#endif
+#include <config.h>
 
 #include <stdio.h>
 
@@ -110,6 +108,12 @@ make_hash_table (int flags, unsigned long k, const char *func_name)
     }
   else
     SCM_NEWSMOB3 (table, scm_tc16_hashtable, vector, t, SCM_EOL);
+
+    int n_buckets = SCM_HASHTABLE_N_BUCKETS (table);
+    if (n_buckets != n) {
+        abort();
+    }
+
   return table;
 }
 
