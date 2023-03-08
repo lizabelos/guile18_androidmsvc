@@ -17,9 +17,7 @@
 
 /* #define DEBUGINFO */
 
-#ifdef HAVE_CONFIG_H
-#  include <config.h>
-#endif
+#include <config.h>
 
 #include <stdio.h>
 #include <errno.h>
@@ -313,7 +311,7 @@ SCM_DEFINE (scm_gc_stats, "gc-stats", 0, 0, 0,
   double local_scm_gc_cells_marked;
   double local_scm_total_cells_allocated;
   SCM answer;
-  unsigned long *bounds = 0;
+  unsigned long long *bounds = 0;
   int table_size = scm_i_heap_segment_table_size;  
   SCM_CRITICAL_SECTION_START;
 
@@ -321,13 +319,13 @@ SCM_DEFINE (scm_gc_stats, "gc-stats", 0, 0, 0,
     temporarily store the numbers, so as not to cause GC.
    */
  
-  bounds = malloc (sizeof (unsigned long)  * table_size * 2);
+  bounds = malloc (sizeof (unsigned long long)  * table_size * 2);
   if (!bounds)
     abort();
   for (i = table_size; i--; )
     {
-      bounds[2*i] = (unsigned long)scm_i_heap_segment_table[i]->bounds[0];
-      bounds[2*i+1] = (unsigned long)scm_i_heap_segment_table[i]->bounds[1];
+      bounds[2*i] = (unsigned long long)scm_i_heap_segment_table[i]->bounds[0];
+      bounds[2*i+1] = (unsigned long long)scm_i_heap_segment_table[i]->bounds[1];
     }
 
 
@@ -493,22 +491,22 @@ scm_gc_for_newcell (scm_t_cell_type_statistics *freelist, SCM *free_cells)
 
   if (*free_cells == SCM_EOL)
     {
-      /*
-	with the advent of lazy sweep, GC yield is only known just
-	before doing the GC.
-      */
-      scm_i_adjust_min_yield (freelist);
 
-      /*
-	out of fresh cells. Try to get some new ones.
-       */
+	//with the advent of lazy sweep, GC yield is only known just
+    //	before doing the GC.
 
-      did_gc = 1;
-      scm_i_gc ("cells");
+      //scm_i_adjust_min_yield (freelist);
+
+
+	//out of fresh cells. Try to get some new ones.
+
+
+      //did_gc = 1;
+      //scm_i_gc ("cells");
 
       *free_cells = scm_i_sweep_some_segments (freelist);
     }
-  
+
   if (*free_cells == SCM_EOL)
     {
       /*
@@ -806,8 +804,8 @@ void
 scm_gc_register_root (SCM *p)
 {
   SCM handle;
-#ifdef __MINGW64__  
-  SCM key = scm_from_ulong_long ((unsigned long) p);
+#if USE_64IMPL
+  SCM key = scm_from_ulong_long ((unsigned long long) p);
 #else
   SCM key = scm_from_ulong ((unsigned long) p);
 #endif
@@ -827,8 +825,8 @@ void
 scm_gc_unregister_root (SCM *p)
 {
   SCM handle;
-#ifdef __MINGW64__  
-  SCM key = scm_from_ulong_long ((unsigned long) p);
+#if USE_64IMPL
+  SCM key = scm_from_ulong_long ((unsigned long long) p);
 #else
   SCM key = scm_from_ulong ((unsigned long) p);
 #endif
