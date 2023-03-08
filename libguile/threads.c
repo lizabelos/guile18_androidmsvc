@@ -17,9 +17,7 @@
 
 
 
-#ifdef HAVE_CONFIG_H
-# include <config.h>
-#endif
+#include <config.h>
 
 #include "libguile/_scm.h"
 
@@ -178,7 +176,7 @@ static size_t
 thread_free (SCM obj)
 {
   scm_i_thread *t = SCM_I_THREAD_DATA (obj);
-  assert (t->exited);
+  //assert (t->exited);
   scm_gc_free (t, sizeof (*t), "thread");
   return 0;
 }
@@ -448,11 +446,8 @@ guilify_self_1 (SCM_STACKITEM *base)
   t->sleep_object = SCM_BOOL_F;
   t->sleep_fd = -1;
 
-  /*if (pipe (t->sleep_pipe) != 0)
-    // FIXME: Error conditions during the initialization phase are handled
-       gracelessly since public functions such as `scm_init_guile ()'
-       currently have type `void'.
-    abort ();*/
+  //if (pipe (t->sleep_pipe) != 0)
+  //  abort ();
 
   scm_i_pthread_mutex_init (&t->heap_mutex, NULL);
   t->clear_freelists_p = 0;
@@ -571,10 +566,32 @@ init_thread_key (void)
 
 int SCM_STACK_GROWS_UP;
 
-int stack_direction()
+// If not windows or mingw
+#if defined(__MINGW32__) || (!defined(_WIN32) && !defined(__WIN32__) && !defined(__WIN32) && !defined(__CYGWIN__))
+#include <pthread.h>
+int stack_direction(int *a)
 {
-    // return 1 if stack grows up
-    int a = 1;
+    pthread_attr_t attr;
+    void* stack_addr;
+    size_t stack_size;
+
+    pthread_attr_init(&attr);
+    pthread_attr_getstack(&attr, &stack_addr, &stack_size);
+
+    int local_var;
+    if ((intptr_t)&local_var > (intptr_t)stack_addr) {
+        return 0;
+    } else {
+        return 1;
+    }
+}
+#else
+int stack_direction(int *a)
+{
+    if (a == NULL) {
+        int b;
+        return stack_direction(&b);
+    }
     int b = 2;
     if (&a < &b) {
         return 1;
@@ -583,14 +600,15 @@ int stack_direction()
         return 0;
     }
 }
+#endif
 
 static int
 scm_i_init_thread_for_guile (SCM_STACKITEM *base, SCM parent)
 {
 
     {
-        SCM_STACK_GROWS_UP = stack_direction();
-        printf("SCM_STACK_GROWS_UP = %d" , SCM_STACK_GROWS_UP);
+        SCM_STACK_GROWS_UP = stack_direction(NULL);
+        printf("SCM_STACK_GROWS_UP = %d\n" , SCM_STACK_GROWS_UP);
     }
 
   scm_i_thread *t;
@@ -649,81 +667,6 @@ if (SCM_STACK_GROWS_UP) {
       return 0;
     }
 }
-
-#if SCM_USE_PTHREAD_THREADS
-
-#if HAVE_PTHREAD_ATTR_GETSTACK && HAVE_PTHREAD_GETATTR_NP
-/* This method for GNU/Linux and perhaps some other systems.
-   It's not for MacOS X or Solaris 10, since pthread_getattr_np is not
-   available on them.  */
-#define HAVE_GET_THREAD_STACK_BASE
-
-static SCM_STACKITEM *
-get_thread_stack_base ()
-{
-  pthread_attr_t attr;
-  void *start, *end;
-  size_t size;
-
-  pthread_getattr_np (pthread_self (), &attr);
-  pthread_attr_getstack (&attr, &start, &size);
-  end = (char *)start + size;
-
-  /* XXX - pthread_getattr_np from LinuxThreads does not seem to work
-     for the main thread, but we can use scm_get_stack_base in that
-     case.
-  */
-
-#ifndef PTHREAD_ATTR_GETSTACK_WORKS
-  if ((void *)&attr < start || (void *)&attr >= end)
-    return scm_get_stack_base ();
-  else
-#endif
-    {
-if (SCM_STACK_GROWS_UP) {
-      return start;
-} else {
-      return end;
-}
-    }
-}
-
-#elif HAVE_PTHREAD_GET_STACKADDR_NP
-/* This method for MacOS X.
-   It'd be nice if there was some documentation on pthread_get_stackaddr_np,
-   but as of 2006 there's nothing obvious at apple.com.  */
-#define HAVE_GET_THREAD_STACK_BASE
-static SCM_STACKITEM *
-get_thread_stack_base ()
-{
-  return pthread_get_stackaddr_np (pthread_self ());
-}
-
-#elif defined (__MINGW32__)
-/* This method for mingw.  In mingw the basic scm_get_stack_base can be used
-   in any thread.  We don't like hard-coding the name of a system, but there
-   doesn't seem to be a cleaner way of knowing scm_get_stack_base can
-   work.  */
-#define HAVE_GET_THREAD_STACK_BASE
-static SCM_STACKITEM *
-get_thread_stack_base ()
-{
-  return scm_get_stack_base ();
-}
-
-#endif /* pthread methods of get_thread_stack_base */
-
-#else /* !SCM_USE_PTHREAD_THREADS */
-
-#define HAVE_GET_THREAD_STACK_BASE
-
-static SCM_STACKITEM *
-get_thread_stack_base ()
-{
-  return scm_get_stack_base ();
-}
-
-#endif /* !SCM_USE_PTHREAD_THREADS */
 
 #ifdef HAVE_GET_THREAD_STACK_BASE
 
@@ -1424,6 +1367,9 @@ scm_threads_mark_stacks (void)
       assert (t->top);
 
       scm_gc_mark (t->handle);
+
+      int test = stack_direction(NULL);
+      printf("scm_threads_mark_stacks; stack direction: %d\n" , test);
 
 if (SCM_STACK_GROWS_UP) {
     scm_mark_locations(t->base, t->top - t->base);
