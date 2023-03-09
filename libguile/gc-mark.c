@@ -65,18 +65,27 @@ extern unsigned long * __libc_ia64_register_backing_store_base;
 #ifdef _WIN32
 #include <windows.h>
 #else
+#include <fcntl.h>
 #include <sys/mman.h>
 #endif
 
 int check_ptr(void *ptr) {
     // IsBadReadPtr on Windows or mprotect on Linux
 #ifdef _WIN32
-    return IsBadReadPtr(ptr, 1) + IsBadWritePtr(ptr, 1);
+    return IsBadReadPtr(ptr, 1);
 #else
-    // get page start
     ptr = (void *)(((size_t)ptr) & ~(getpagesize() - 1));
-    int val = mprotect(ptr, 1, PROT_READ | PROT_WRITE);
-    return val;
+    int val = mprotect(ptr, 1, PROT_READ);
+    if (val != 0) {
+        return 1;
+    }
+    int nullfd = open("/dev/random", O_WRONLY);
+    if (write(nullfd, ptr, 1) < 0)
+    {
+        return 1;
+    }
+    close(nullfd);
+    return 0;
 #endif
 }
 
@@ -458,17 +467,13 @@ scm_mark_locations (SCM_STACKITEM x[], unsigned long n)
 
   for (m = 0; m < n; ++m)
     {
-        if (check_ptr(x) != 0) {
-            abort();
-        }
-        if (check_ptr(&x[m]) != 0) {
-            abort();
+        if (check_ptr(x + m) != 0) {
+            continue;
         }
       SCM obj = * (SCM *) &x[m];
       long int segment = scm_i_find_heap_segment_containing_object (obj);
       if (segment >= 0) scm_gc_mark (obj);
     }
-  printf("scm_mark_locations: %d\n", n);
 }
 
 
