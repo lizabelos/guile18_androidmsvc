@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.16)
-project(guile VERSION 1.8.8 LANGUAGES C CXX)
+project(guile_liza VERSION 1.8.8 LANGUAGES C CXX)
 set(GUILE_MAJOR_VERSION ${guile_VERSION_MAJOR})
 set(GUILE_MINOR_VERSION ${guile_VERSION_MINOR})
 set(GUILE_MICRO_VERSION ${guile_VERSION_PATCH})
@@ -9,13 +9,9 @@ set (CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
 
 include(cmake/AutotoolCheck.cmake)
 
-set(GEN_DOT_X_PY ${CMAKE_CURRENT_SOURCE_DIR}/cmake/gen_dot_x.py)
-
 find_package(Threads REQUIRED)
 find_package(Math REQUIRED)
 
-string(TIMESTAMP BUILDSTAMP "%Y-%m-%d %H:%M")
-set(PREFIX "/usr/local")
 include_directories(${CMAKE_BINARY_DIR})
 include_directories(${CMAKE_SOURCE_DIR})
 configure_file (${CMAKE_CURRENT_SOURCE_DIR}/cmake/config.h.cmake                 ${CMAKE_CURRENT_BINARY_DIR}/config.h)
@@ -23,13 +19,6 @@ configure_file (${CMAKE_CURRENT_SOURCE_DIR}/cmake/libguile/gen-scmconfig.h.cmake
 configure_file (${CMAKE_CURRENT_SOURCE_DIR}/cmake/libguile/version.h.cmake       ${CMAKE_CURRENT_BINARY_DIR}/libguile/version.h)
 configure_file (${CMAKE_CURRENT_SOURCE_DIR}/cmake/libguile/libpath.h.cmake       ${CMAKE_CURRENT_BINARY_DIR}/libguile/libpath.h)
 
-
-if (NOT MSVC AND NOT MINGW)
-    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -O0 -g -fsanitize=address -fno-omit-frame-pointer")
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O0 -g -fsanitize=address -fno-omit-frame-pointer")
-else()
-
-endif()
 
 add_library(minigmp INTERFACE)
 target_sources(minigmp INTERFACE ${CMAKE_CURRENT_SOURCE_DIR}/mini-gmp/mini-gmp.c)
@@ -164,6 +153,8 @@ target_sources(guile
         ${CMAKE_CURRENT_SOURCE_DIR}/libguile/version.c
         ${CMAKE_CURRENT_SOURCE_DIR}/libguile/vports.c
         ${CMAKE_CURRENT_SOURCE_DIR}/libguile/weaks.c
+
+        ${CMAKE_CURRENT_SOURCE_DIR}/libguile/eval.cpp
         )
 if (WIN32)
     target_sources(guile PRIVATE
@@ -179,10 +170,6 @@ target_link_libraries(guile PUBLIC Threads::Threads minigmp)
 if (MINGW)
     target_link_libraries(guile PUBLIC ws2_32)
 endif ()
-
-set(common_options "-DHAVE_CONFIG_H -I${CMAKE_CURRENT_SOURCE_DIR} -I${CMAKE_CURRENT_BINARY_DIR}")
-target_compile_definitions(guile PRIVATE ${common_options})
-
 
 
 add_executable(guile-test test.cpp)
