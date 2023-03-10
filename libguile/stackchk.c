@@ -11,7 +11,7 @@
  * Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public
- * License along with this library; if not, write to the Free Software
+ * License with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
@@ -48,7 +48,7 @@ scm_report_stack_overflow ()
 
 #endif
 
-long
+int64_t
 scm_stack_size (SCM_STACKITEM *start)
 {
   SCM_STACKITEM stack;

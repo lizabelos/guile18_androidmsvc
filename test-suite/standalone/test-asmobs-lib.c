@@ -11,7 +11,7 @@
  * Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public
- * License along with this library; if not, write to the Free Software
+ * License with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
@@ -19,22 +19,22 @@
 
 #include <libguile.h>
 
-long asmob000;
-long asmob100;
-long asmob010;
-long asmob001;
-long asmob200;
-long asmob110;
-long asmob020;
-long asmob101;
-long asmob011;
-long asmob300;
-long asmob210;
-long asmob120;
-long asmob030;
-long asmob201;
-long asmob021;
-long asmob111;
+int64_t asmob000;
+int64_t asmob100;
+int64_t asmob010;
+int64_t asmob001;
+int64_t asmob200;
+int64_t asmob110;
+int64_t asmob020;
+int64_t asmob101;
+int64_t asmob011;
+int64_t asmob300;
+int64_t asmob210;
+int64_t asmob120;
+int64_t asmob030;
+int64_t asmob201;
+int64_t asmob021;
+int64_t asmob111;
 
 /* since we don't have SCM_DEFINE_STATIC or similar */
 SCM scm_make_asmob000 (void);

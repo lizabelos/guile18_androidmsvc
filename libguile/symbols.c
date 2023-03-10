@@ -11,7 +11,7 @@
  * Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public
- * License along with this library; if not, write to the Free Software
+ * License with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
@@ -76,24 +76,24 @@ SCM_DEFINE (scm_sys_symbols, "%symbols", 0, 0, 0,
  * abstraction if the API in hashtab.c is improved.
  */
 
-unsigned long
-scm_i_hash_symbol (SCM obj, unsigned long n, void *closure)
+uint64_t
+scm_i_hash_symbol (SCM obj, uint64_t n, void *closure)
 {
   return scm_i_symbol_hash (obj) % n;
 }
 
 static SCM
 lookup_interned_symbol (const char *name, size_t len,
-			unsigned long raw_hash)
+			uint64_t raw_hash)
 {
   /* Try to find the symbol in the symbols table */
   SCM l;
-  unsigned long n_buckets = SCM_HASHTABLE_N_BUCKETS (symbols);
+  uint64_t n_buckets = SCM_HASHTABLE_N_BUCKETS (symbols);
   if (n_buckets == 0) {
       printf("Error, trying to lookup symbol in empty symbol table");
       return SCM_BOOL_F;
   }
-  unsigned long hash = raw_hash % n_buckets;
+  uint64_t hash = raw_hash % n_buckets;
 
   for (l = SCM_HASHTABLE_BUCKET (symbols, hash);
        !scm_is_null (l);
@@ -127,7 +127,7 @@ static void
 intern_symbol (SCM symbol)
 {
   SCM slot, cell;
-  unsigned long hash;
+  uint64_t hash;
 
   hash = scm_i_symbol_hash (symbol) % SCM_HASHTABLE_N_BUCKETS (symbols);
   slot = SCM_HASHTABLE_BUCKET (symbols, hash);
@@ -401,7 +401,7 @@ SCM
 scm_take_locale_symboln (char *sym, size_t len)
 {
   SCM res;
-  unsigned long raw_hash;
+  uint64_t raw_hash;
 
   if (len == (size_t)-1)
     len = strlen (sym);

@@ -49,7 +49,7 @@ SCM_TO_TYPE_PROTO (SCM val)
 	{
 	  if (mpz_fits_slong_p (SCM_I_BIG_MPZ (val)))
 	    {
-	      long n = mpz_get_si (SCM_I_BIG_MPZ (val));
+	      int64_t n = mpz_get_si (SCM_I_BIG_MPZ (val));
 #if SIZEOF_TYPE != 0 && SIZEOF_TYPE > SCM_SIZEOF_LONG
 	      return n;
 #else

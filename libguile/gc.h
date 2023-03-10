@@ -16,7 +16,7 @@
  * Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public
- * License along with this library; if not, write to the Free Software
+ * License with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
@@ -99,7 +99,7 @@ typedef struct scm_t_cell
 #define SCM_GC_CARD_BVEC(card)  ((scm_t_c_bvec_long *) ((card)->word_0))
 #define SCM_GC_SET_CARD_BVEC(card, bvec) \
     ((card)->word_0 = (SCM) (bvec))
-#define SCM_GC_GET_CARD_FLAGS(card) ((long) ((card)->word_1))
+#define SCM_GC_GET_CARD_FLAGS(card) ((int64_t) ((card)->word_1))
 #define SCM_GC_SET_CARD_FLAGS(card, flags) \
     ((card)->word_1 = (SCM) (flags))
 
@@ -124,8 +124,8 @@ typedef struct scm_t_cell
 #define SCM_GC_CELL_CARD(x)    ((scm_t_cell *) ((int64_t) (x) & SCM_GC_CARD_ADDR_MASK))
 #define SCM_GC_CELL_OFFSET(x)  (((int64_t) (x) & SCM_GC_CARD_SIZE_MASK) >> SCM_CELL_SIZE_SHIFT)
 #else
-#define SCM_GC_CELL_CARD(x)    ((scm_t_cell *) ((long) (x) & SCM_GC_CARD_ADDR_MASK))
-#define SCM_GC_CELL_OFFSET(x)  (((long) (x) & SCM_GC_CARD_SIZE_MASK) >> SCM_CELL_SIZE_SHIFT)
+#define SCM_GC_CELL_CARD(x)    ((scm_t_cell *) ((int64_t) (x) & SCM_GC_CARD_ADDR_MASK))
+#define SCM_GC_CELL_OFFSET(x)  (((int64_t) (x) & SCM_GC_CARD_SIZE_MASK) >> SCM_CELL_SIZE_SHIFT)
 #endif
 #define SCM_GC_CELL_BVEC(x)    SCM_GC_CARD_BVEC (SCM_GC_CELL_CARD (x))
 #define SCM_GC_SET_CELL_BVEC(x, bvec)    SCM_GC_SET_CARD_BVEC (SCM_GC_CELL_CARD (x), bvec)
@@ -137,7 +137,7 @@ typedef struct scm_t_cell
 #define SCM_GC_CARD_DOWN       SCM_GC_CELL_CARD
 
 /* low level bit banging aids */
-typedef unsigned long scm_t_c_bvec_long;
+typedef uint64_t scm_t_c_bvec_long;
 
 #if (SCM_SIZEOF_UNSIGNED_LONG == 8)
 #       define SCM_C_BVEC_LONG_BITS    64
@@ -289,16 +289,16 @@ SCM_API struct scm_t_cell_type_statistics *scm_i_master_freelist_ptr;
 SCM_API struct scm_t_cell_type_statistics *scm_i_master_freelist2_ptr;
 #endif
 
-SCM_API unsigned long scm_gc_cells_swept;
-SCM_API unsigned long scm_gc_cells_collected;
-SCM_API unsigned long scm_gc_malloc_collected;
-SCM_API unsigned long scm_gc_ports_collected;
-SCM_API unsigned long scm_cells_allocated;
-SCM_API unsigned long scm_last_cells_allocated;
+SCM_API uint64_t scm_gc_cells_swept;
+SCM_API uint64_t scm_gc_cells_collected;
+SCM_API uint64_t scm_gc_malloc_collected;
+SCM_API uint64_t scm_gc_ports_collected;
+SCM_API uint64_t scm_cells_allocated;
+SCM_API uint64_t scm_last_cells_allocated;
 SCM_API int scm_gc_cell_yield_percentage;
 SCM_API int scm_gc_malloc_yield_percentage;
-SCM_API unsigned long scm_mallocated;
-SCM_API unsigned long scm_mtrigger;
+SCM_API uint64_t scm_mallocated;
+SCM_API uint64_t scm_mtrigger;
 SCM_API double scm_gc_cells_allocated_acc;
 
 
@@ -341,7 +341,7 @@ SCM_API SCM scm_gc_for_newcell (struct scm_t_cell_type_statistics *master, SCM *
 SCM_API void scm_i_gc (const char *what);
 SCM_API void scm_gc_mark (SCM p);
 SCM_API void scm_gc_mark_dependencies (SCM p);
-SCM_API void scm_mark_locations (SCM_STACKITEM x[], unsigned long n);
+SCM_API void scm_mark_locations (SCM_STACKITEM x[], uint64_t n);
 SCM_API int scm_in_heap_p (SCM value);
 SCM_API void scm_gc_sweep (void);
 
@@ -397,8 +397,8 @@ SCM_API SCM scm_gc_protect_object (SCM obj);
 SCM_API SCM scm_gc_unprotect_object (SCM obj);
 SCM_API void scm_gc_register_root (SCM *p);
 SCM_API void scm_gc_unregister_root (SCM *p);
-SCM_API void scm_gc_register_roots (SCM *b, unsigned long n);
-SCM_API void scm_gc_unregister_roots (SCM *b, unsigned long n);
+SCM_API void scm_gc_register_roots (SCM *b, uint64_t n);
+SCM_API void scm_gc_unregister_roots (SCM *b, uint64_t n);
 SCM_API void scm_storage_prehistory (void);
 SCM_API int scm_init_storage (void);
 //SCM_API void *scm_get_stack_base (void);
@@ -420,8 +420,8 @@ SCM_API void * scm_must_realloc (void *where,
 				 const char *what);
 SCM_API char *scm_must_strdup (const char *str);
 SCM_API char *scm_must_strndup (const char *str, size_t n);
-SCM_API void scm_done_malloc (long size);
-SCM_API void scm_done_free (long size);
+SCM_API void scm_done_malloc (int64_t size);
+SCM_API void scm_done_free (int64_t size);
 SCM_API void scm_must_free (void *obj);
 
 #endif

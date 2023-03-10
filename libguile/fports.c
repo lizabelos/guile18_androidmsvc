@@ -11,7 +11,7 @@
  * Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public
- * License along with this library; if not, write to the Free Software
+ * License with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
@@ -91,7 +91,7 @@ static const size_t default_buffer_size = 1024;
 /* create FPORT buffer with specified sizes (or -1 to use default size or
    0 for no buffer.  */
 static void
-scm_fport_buffer_add (SCM port, long read_size, int write_size)
+scm_fport_buffer_add (SCM port, int64_t read_size, int write_size)
 #define FUNC_NAME "scm_fport_buffer_add"
 {
   scm_t_port *pt = SCM_PTAB_ENTRY (port);
@@ -161,7 +161,7 @@ SCM_DEFINE (scm_setvbuf, "setvbuf", 2, 1, 0,
 #define FUNC_NAME s_scm_setvbuf
 {
   int cmode;
-  long csize;
+  int64_t csize;
   scm_t_port *pt;
 
   port = SCM_COERCE_OUTPORT (port);
@@ -222,7 +222,7 @@ SCM_DEFINE (scm_setvbuf, "setvbuf", 2, 1, 0,
 void
 scm_evict_ports (int fd)
 {
-  long i;
+  int64_t i;
 
   scm_i_scm_pthread_mutex_lock (&scm_i_port_table_mutex);
 
@@ -427,7 +427,7 @@ static int getflags (int fdes)
    NAME is a string to be used as the port's filename.
 */
 SCM
-scm_i_fdes_to_port (int fdes, long mode_bits, SCM name)
+scm_i_fdes_to_port (int fdes, int64_t mode_bits, SCM name)
 #define FUNC_NAME "scm_fdes_to_port"
 {
   SCM port;
@@ -590,7 +590,7 @@ static void fport_flush (SCM port);
 static int
 fport_fill_input (SCM port)
 {
-  long count;
+  int64_t count;
   scm_t_port *pt = SCM_PTAB_ENTRY (port);
   scm_t_fport *fp = SCM_FSTREAM (port);
 
@@ -803,19 +803,19 @@ fport_flush (SCM port)
   scm_t_port *pt = SCM_PTAB_ENTRY (port);
   scm_t_fport *fp = SCM_FSTREAM (port);
   unsigned char *ptr = pt->write_buf;
-  long init_size = pt->write_pos - pt->write_buf;
-  long remaining = init_size;
+  int64_t init_size = pt->write_pos - pt->write_buf;
+  int64_t remaining = init_size;
 
   while (remaining > 0)
     {
-      long count;
+      int64_t count;
 
       SCM_SYSCALL (count = write (fp->fdes, ptr, remaining));
       if (count < 0)
 	{
 	  /* error.  assume nothing was written this call, but
 	     fix up the buffer for any previous successful writes.  */
-	  long done = init_size - remaining;
+	  int64_t done = init_size - remaining;
 	      
 	  if (done > 0)
 	    {

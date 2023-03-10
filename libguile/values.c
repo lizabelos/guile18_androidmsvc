@@ -11,7 +11,7 @@
  * Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public
- * License along with this library; if not, write to the Free Software
+ * License with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
@@ -55,7 +55,7 @@ SCM_DEFINE (scm_values, "values", 0, 0, 1,
 	    "were not created by @code{call-with-values} is unspecified.")
 #define FUNC_NAME s_scm_values
 {
-  long n;
+  int64_t n;
   SCM result;
 
   SCM_VALIDATE_LIST_COPYLEN (1, args, n);

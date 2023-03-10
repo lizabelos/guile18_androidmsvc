@@ -11,7 +11,7 @@
  * Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public
- * License along with this library; if not, write to the Free Software
+ * License with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
@@ -79,19 +79,19 @@ scm_t_option scm_print_opts[] = {
 #if USE_64IMPL
   { SCM_OPTION_SCM, "highlight-prefix", (uint64_t)SCM_BOOL_F,
 #else
-  { SCM_OPTION_SCM, "highlight-prefix", (unsigned long)SCM_BOOL_F,
+  { SCM_OPTION_SCM, "highlight-prefix", (uint64_t)SCM_BOOL_F,
 #endif
     "The string to print before highlighted values." },
 #if USE_64IMPL
   { SCM_OPTION_SCM, "highlight-suffix", (uint64_t)SCM_BOOL_F,
 #else  
-  { SCM_OPTION_SCM, "highlight-suffix", (unsigned long)SCM_BOOL_F,
+  { SCM_OPTION_SCM, "highlight-suffix", (uint64_t)SCM_BOOL_F,
 #endif  
     "The string to print after highlighted values." },
 #if USE_64IMPL
   { SCM_OPTION_SCM, "quote-keywordish-symbols", (uint64_t)SCM_BOOL_F,
 #else  
-  { SCM_OPTION_SCM, "quote-keywordish-symbols", (unsigned long)SCM_BOOL_F,
+  { SCM_OPTION_SCM, "quote-keywordish-symbols", (uint64_t)SCM_BOOL_F,
 #endif  
     "How to print symbols that have a colon as their first or last character. "
     "The value '#f' does not quote the colons; '#t' quotes them; "
@@ -137,7 +137,7 @@ do						\
 #define ENTER_NESTED_DATA(pstate, obj, label)			\
 do								\
 {								\
-  register unsigned long i;					\
+  register uint64_t i;					\
   for (i = 0; i < pstate->top; ++i)				\
     if (scm_is_eq (PSTATE_STACK_REF (pstate, i), (obj)))	\
       goto label;						\
@@ -256,7 +256,7 @@ grow_ref_stack (scm_print_state *pstate)
   size_t old_size = SCM_SIMPLE_VECTOR_LENGTH (old_vect);
   size_t new_size = 2 * pstate->ceiling;
   SCM new_vect = scm_c_make_vector (new_size, SCM_UNDEFINED);
-  unsigned long int i;
+  uint64_t i;
 
   for (i = 0; i != old_size; ++i)
     SCM_SIMPLE_VECTOR_SET (new_vect, i, SCM_SIMPLE_VECTOR_REF (old_vect, i));
@@ -271,8 +271,8 @@ grow_ref_stack (scm_print_state *pstate)
 static void
 print_circref (SCM port, scm_print_state *pstate, SCM ref)
 {
-  register long i;
-  long self = pstate->top - 1;
+  register int64_t i;
+  int64_t self = pstate->top - 1;
   i = pstate->top - 1;
   if (scm_is_pair (PSTATE_STACK_REF (pstate, i)))
     {
@@ -441,7 +441,7 @@ iprin1 (SCM exp, SCM port, scm_print_state *pstate)
     case scm_tc3_imm24:
       if (SCM_CHARP (exp))
 	{
-	  long i = SCM_CHAR (exp);
+	  int64_t i = SCM_CHAR (exp);
 
 	  if (SCM_WRITINGP (pstate))
 	    {
@@ -629,8 +629,8 @@ iprin1 (SCM exp, SCM port, scm_print_state *pstate)
 	  scm_puts ("#(", port);
 	common_vector_printer:
 	  {
-	    register long i;
-	    long last = SCM_SIMPLE_VECTOR_LENGTH (exp) - 1;
+	    register int64_t i;
+	    int64_t last = SCM_SIMPLE_VECTOR_LENGTH (exp) - 1;
 	    int cutp = 0;
 	    if (pstate->fancyp
 		&& SCM_SIMPLE_VECTOR_LENGTH (exp) > pstate->length)
@@ -701,7 +701,7 @@ iprin1 (SCM exp, SCM port, scm_print_state *pstate)
 	  break;
 	case scm_tc7_port:
 	  {
-	    register long i = SCM_PTOBNUM (exp);
+	    register int64_t i = SCM_PTOBNUM (exp);
 	    if (i < scm_numptob
 		&& scm_ptobs[i].print
 		&& (scm_ptobs[i].print) (exp, port, pstate))
@@ -824,7 +824,7 @@ void
 scm_iprlist (char *hdr, SCM exp, int tlr, SCM port, scm_print_state *pstate)
 {
   register SCM hare, tortoise;
-  long floor = pstate->top - 2;
+  int64_t floor = pstate->top - 2;
   scm_puts (hdr, port);
   /* CHECK_INTS; */
   if (pstate->fancyp)
@@ -849,7 +849,7 @@ scm_iprlist (char *hdr, SCM exp, int tlr, SCM port, scm_print_state *pstate)
   scm_iprin1 (SCM_CAR (exp), port, pstate);
   for (exp = SCM_CDR (exp); scm_is_pair (exp); exp = SCM_CDR (exp))
     {
-      register long i;
+      register int64_t i;
 
       for (i = floor; i >= 0; --i)
 	if (scm_is_eq (PSTATE_STACK_REF(pstate, i), exp))
@@ -872,13 +872,13 @@ end:
   
 fancy_printing:
   {
-    long n = pstate->length;
+    int64_t n = pstate->length;
     
     scm_iprin1 (SCM_CAR (exp), port, pstate);
     exp = SCM_CDR (exp); --n;
     for (; scm_is_pair (exp); exp = SCM_CDR (exp))
       {
-	register unsigned long i;
+	register uint64_t i;
 
 	for (i = 0; i < pstate->top; ++i)
 	  if (scm_is_eq (PSTATE_STACK_REF(pstate, i), exp))

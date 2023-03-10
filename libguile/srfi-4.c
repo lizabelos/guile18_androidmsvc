@@ -13,7 +13,7 @@
  * Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public
- * License along with this library; if not, write to the Free Software
+ * License with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
@@ -458,8 +458,8 @@ list_to_uvec (int type, SCM list)
 {
   SCM uvec;
   void *base;
-  long idx;
-  long len = scm_ilength (list);
+  int64_t idx;
+  int64_t len = scm_ilength (list);
   if (len < 0)
     scm_wrong_type_arg_msg (NULL, 0, list, "proper list");
 

@@ -1489,7 +1489,7 @@
 	platform.
 
 	* gc.c (scm_gc_stats): Bugfix: Measure size of the type we are
-	mallocating for (unsigned long *bounds).
+	mallocating for (uint64_t *bounds).
 
 	* hashtab.c (scm_i_rehash): Cast SCM_HASHTABLE_FLAGS (table) to
 	scm_t_bits before storing them in the type word.
@@ -9771,7 +9771,7 @@
         declarations of {get,set}context() functions used in the ia64 port.
 
         * continuations.h, gc.c: `__libc_ia64_register_backing_store_base'
-        is meant to be a `unsigned long *'.
+        is meant to be a `uint64_t *'.
 
         * filesys.c: Include `direct.h' if possible.  Use local
 	`win32-dirent.h' for the native M$-Windows port.  Define S_IS*()
@@ -10004,7 +10004,7 @@
 	needed for `int64_t's.
 
 	* numbers.c: Define NO_PREPRO_MAGOC when including
-	num2integral.c.i for `int64_t' and `signed int64_t'.
+	num2integral.c.i for `int64_t' and `int64_t'.
 
 2001-10-06  Mikael Djurfeldt  <mdj@linnaeus>
 
@@ -11258,7 +11258,7 @@
 
 	* tags.h: Include <stdint.h> when we have it.
 	(scm_bits_t): Changed to be a unsigned type.  Use uintptr_t when
-	available.  Else use "unsigned long".
+	available.  Else use "uint64_t".
 	(scm_signed_bits_t): New.
 
 	* numbers.h (SCM_SRS): Cast shiftee to scm_signed_bits_t.
@@ -11322,7 +11322,7 @@
 	bitvector base address using SCM_BITVECTOR_BASE.
 
 	* unif.h (SCM_BITVECTOR_BASE):  Return the base address as an
-	unsigned long*.
+	uint64_t*.
 
 2001-06-08  Dirk Herrmann  <D.Herrmann@tu-bs.de>
 
@@ -11731,13 +11731,13 @@
 	scm_subr_entry -> scm_subr_entry_t
 	the old name is deprecated, all in-Guile uses changed.
 
-	* options.h (scm_option_t.val): unsigned long -> scm_bits_t.
+	* options.h (scm_option_t.val): uint64_t -> scm_bits_t.
 	type renaming:
 	scm_option -> scm_option_t
 	the old name is deprecated, all in-Guile uses changed.
 
 	* objects.c: various long -> scm_bits_t changes.
-	(scm_i_make_class_object): flags: unsigned long -> scm_ubits_t
+	(scm_i_make_class_object): flags: uint64_t -> scm_ubits_t
 
 	* numbers.h (SCM_FIXNUM_BIT): deprecated, renamed to
 	SCM_I_FIXNUM_BIT.
@@ -11783,8 +11783,8 @@
 	(gh_{get,set}_substr): start: int -> scm_bits_t,
 	len: int -> size_t
 	(gh_<num>2scm): n: int -> scm_bits_t
-	(gh_*vector_length): return scm_[u]size_t, not unsigned long.
-	(gh_length): return scm_bits_t, not unsigned long.
+	(gh_*vector_length): return scm_[u]size_t, not uint64_t.
+	(gh_length): return scm_bits_t, not uint64_t.
 
 	* gc.[hc]: various small changes relating to many things stopping
 	being long and starting being scm_[u]bits_t instead.

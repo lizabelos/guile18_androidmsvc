@@ -11,7 +11,7 @@
  * Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public
- * License along with this library; if not, write to the Free Software
+ * License with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
@@ -276,13 +276,13 @@ scm_swap_bindings (SCM vars, SCM vals)
 }
 
 void
-scm_dowinds (SCM to, long delta)
+scm_dowinds (SCM to, int64_t delta)
 {
   scm_i_dowinds (to, delta, NULL, NULL);
 }
 
 void 
-scm_i_dowinds (SCM to, long delta, void (*turn_func) (void *), void *data)
+scm_i_dowinds (SCM to, int64_t delta, void (*turn_func) (void *), void *data)
 {
  tail:
   if (scm_is_eq (to, scm_i_dynwinds ()))

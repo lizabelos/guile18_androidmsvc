@@ -15,7 +15,7 @@
 #ifndef QT_ARM_H
 #define QT_ARM_H
 
-typedef unsigned long qt_word_t;
+typedef uint64_t qt_word_t;
 
 #define QT_GROW_DOWN
 

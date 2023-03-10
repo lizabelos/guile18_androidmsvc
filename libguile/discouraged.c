@@ -15,7 +15,7 @@
  * Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public
- * License along with this library; if not, write to the Free Software
+ * License with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
@@ -51,13 +51,13 @@ scm_uint2num (unsigned int x)
 }
 
 SCM
-scm_long2num (long x)
+scm_long2num (int64_t x)
 {
   return scm_from_int64 (x);
 }
 
 SCM
-scm_ulong2num (unsigned long x)
+scm_ulong2num (uint64_t x)
 {
   return scm_from_uint64 (x);
 }
@@ -75,49 +75,49 @@ scm_ptrdiff2num (ptrdiff_t x)
 }
 
 short
-scm_num2short (SCM x, unsigned long pos, const char *s_caller)
+scm_num2short (SCM x, uint64_t pos, const char *s_caller)
 {
   return scm_to_short (x);
 }
 
 unsigned short
-scm_num2ushort (SCM x, unsigned long pos, const char *s_caller)
+scm_num2ushort (SCM x, uint64_t pos, const char *s_caller)
 {
   return scm_to_ushort (x);
 }
 
 int
-scm_num2int (SCM x, unsigned long pos, const char *s_caller)
+scm_num2int (SCM x, uint64_t pos, const char *s_caller)
 {
   return scm_to_int (x);
 }
 
 unsigned int
-scm_num2uint (SCM x, unsigned long pos, const char *s_caller)
+scm_num2uint (SCM x, uint64_t pos, const char *s_caller)
 {
   return scm_to_uint (x);
 }
 
-long
-scm_num2long (SCM x, unsigned long pos, const char *s_caller)
+int64_t
+scm_num2long (SCM x, uint64_t pos, const char *s_caller)
 {
   return scm_to_int64 (x);
 }
 
-unsigned long
-scm_num2ulong (SCM x, unsigned long pos, const char *s_caller)
+uint64_t
+scm_num2ulong (SCM x, uint64_t pos, const char *s_caller)
 {
   return scm_to_uint64 (x);
 }
 
 size_t
-scm_num2size (SCM x, unsigned long pos, const char *s_caller)
+scm_num2size (SCM x, uint64_t pos, const char *s_caller)
 {
   return scm_to_size_t (x);
 }
 
 ptrdiff_t
-scm_num2ptrdiff (SCM x, unsigned long pos, const char *s_caller)
+scm_num2ptrdiff (SCM x, uint64_t pos, const char *s_caller)
 {
   return scm_to_ssize_t (x);
 }
@@ -137,13 +137,13 @@ scm_ulong_long2num (uint64_t x)
 }
 
 int64_t
-scm_num2long_long (SCM x, unsigned long pos, const char *s_caller)
+scm_num2long_long (SCM x, uint64_t pos, const char *s_caller)
 {
   return scm_to_int64 (x);
 }
 
 uint64_t
-scm_num2ulong_long (SCM x, unsigned long pos, const char *s_caller)
+scm_num2ulong_long (SCM x, uint64_t pos, const char *s_caller)
 {
   return scm_to_uint64 (x);
 }

@@ -11,7 +11,7 @@
  * Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public
- * License along with this library; if not, write to the Free Software
+ * License with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
@@ -129,7 +129,7 @@ scm_c_source_property_breakpoint_p (SCM form)
 static SCM scm_last_plist_filename;
 
 SCM
-scm_make_srcprops (long line, int col, SCM filename, SCM copy, SCM plist)
+scm_make_srcprops (int64_t line, int col, SCM filename, SCM copy, SCM plist)
 {
   if (!SCM_UNBNDP (filename))
     {

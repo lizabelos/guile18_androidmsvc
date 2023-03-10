@@ -11,7 +11,7 @@
  * Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public
- * License along with this library; if not, write to the Free Software
+ * License with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
@@ -48,7 +48,7 @@ static hash_entry_t *malloc_object = 0;
 #define TABLE(table) malloc_ ## table
 #define SIZE(table) malloc_ ## table ## _size
 #define HASH(table, key) \
-  &TABLE (table)[((unsigned long) key >> 4UL) * 2654435761UL % SIZE (table)]
+  &TABLE (table)[((uint64_t) key >> 4UL) * 2654435761UL % SIZE (table)]
 
 #define CREATE_HASH_ENTRY_AT(entry, table, h, k, done)	\
 {							\

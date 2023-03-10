@@ -11,7 +11,7 @@
  * Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public
- * License along with this library; if not, write to the Free Software
+ * License with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
@@ -79,38 +79,38 @@ SCM_API SCM gh_new_procedure5_0(const char *proc_name, SCM (*fn)(SCM, SCM, SCM, 
 /* C to Scheme conversion */
 SCM_API SCM gh_bool2scm(int x);
 SCM_API SCM gh_int2scm(int x);
-SCM_API SCM gh_ulong2scm(unsigned long x);
-SCM_API SCM gh_long2scm(long x);
+SCM_API SCM gh_ulong2scm(uint64_t x);
+SCM_API SCM gh_long2scm(int64_t x);
 SCM_API SCM gh_double2scm(double x);
 SCM_API SCM gh_char2scm(char c);
 SCM_API SCM gh_str2scm(const char *s, size_t len);
 SCM_API SCM gh_str02scm(const char *s);
-SCM_API void gh_set_substr(const char *src, SCM dst, long start, size_t len);
+SCM_API void gh_set_substr(const char *src, SCM dst, int64_t start, size_t len);
 SCM_API SCM gh_symbol2scm(const char *symbol_str);
-SCM_API SCM gh_ints2scm(const int *d, long n);
+SCM_API SCM gh_ints2scm(const int *d, int64_t n);
 
-SCM_API SCM gh_chars2byvect(const char *d, long n);
-SCM_API SCM gh_shorts2svect(const short *d, long n);
-SCM_API SCM gh_longs2ivect(const long *d, long n);
-SCM_API SCM gh_ulongs2uvect(const unsigned long *d, long n);
-SCM_API SCM gh_floats2fvect(const float *d, long n);
-SCM_API SCM gh_doubles2dvect(const double *d, long n);
+SCM_API SCM gh_chars2byvect(const char *d, int64_t n);
+SCM_API SCM gh_shorts2svect(const short *d, int64_t n);
+SCM_API SCM gh_longs2ivect(const int64_t *d, int64_t n);
+SCM_API SCM gh_ulongs2uvect(const uint64_t *d, int64_t n);
+SCM_API SCM gh_floats2fvect(const float *d, int64_t n);
+SCM_API SCM gh_doubles2dvect(const double *d, int64_t n);
 
-SCM_API SCM gh_doubles2scm(const double *d, long n);
+SCM_API SCM gh_doubles2scm(const double *d, int64_t n);
 
 /* Scheme to C conversion */
 SCM_API int gh_scm2bool(SCM obj);
 SCM_API int gh_scm2int(SCM obj);
-SCM_API unsigned long gh_scm2ulong(SCM obj);
-SCM_API long gh_scm2long(SCM obj);
+SCM_API uint64_t gh_scm2ulong(SCM obj);
+SCM_API int64_t gh_scm2long(SCM obj);
 SCM_API char gh_scm2char(SCM obj);
 SCM_API double gh_scm2double(SCM obj);
 SCM_API char *gh_scm2newstr(SCM str, size_t *lenp);
-SCM_API void gh_get_substr(SCM src, char *dst, long start, size_t len);
+SCM_API void gh_get_substr(SCM src, char *dst, int64_t start, size_t len);
 SCM_API char *gh_symbol2newstr(SCM sym, size_t *lenp);
 SCM_API char *gh_scm2chars(SCM vector, char *result);
 SCM_API short *gh_scm2shorts(SCM vector, short *result);
-SCM_API long *gh_scm2longs(SCM vector, long *result);
+SCM_API int64_t *gh_scm2longs(SCM vector, int64_t *result);
 SCM_API float *gh_scm2floats(SCM vector, float *result);
 SCM_API double *gh_scm2doubles(SCM vector, double *result);
 
@@ -158,8 +158,8 @@ SCM_API SCM gh_define(const char *name, SCM val);
 SCM_API SCM gh_make_vector(SCM length, SCM val);
 SCM_API SCM gh_vector_set_x(SCM vec, SCM pos, SCM val);
 SCM_API SCM gh_vector_ref(SCM vec, SCM pos);
-SCM_API unsigned long gh_vector_length (SCM v);
-SCM_API unsigned long gh_uniform_vector_length (SCM v);
+SCM_API uint64_t gh_vector_length (SCM v);
+SCM_API uint64_t gh_uniform_vector_length (SCM v);
 SCM_API SCM gh_uniform_vector_ref (SCM v, SCM ilist);
 #define gh_list_to_vector(ls) scm_vector(ls)
 #define gh_vector_to_list(v) scm_vector_to_list(v)
@@ -169,7 +169,7 @@ SCM_API SCM gh_module_lookup (SCM module, const char *sname);
 
 SCM_API SCM gh_cons(SCM x, SCM y);
 #define gh_list scm_list_n
-SCM_API unsigned long gh_length(SCM l);
+SCM_API uint64_t gh_length(SCM l);
 SCM_API SCM gh_append(SCM args);
 SCM_API SCM gh_append2(SCM l1, SCM l2);
 SCM_API SCM gh_append3(SCM l1, SCM l2, SCM l3);

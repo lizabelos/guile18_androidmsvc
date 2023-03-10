@@ -16,7 +16,7 @@
  * Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public
- * License along with this library; if not, write to the Free Software
+ * License with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
@@ -131,18 +131,18 @@ typedef struct
 #define SCM_SETTER(obj) SCM_CELL_OBJECT_2 (obj)
 
 SCM_API scm_t_subr_entry *scm_subr_table;
-SCM_API long scm_subr_table_size;
-SCM_API long scm_subr_table_room;
+SCM_API int64_t scm_subr_table_size;
+SCM_API int64_t scm_subr_table_room;
 
 
 
 SCM_API void scm_mark_subr_table (void);
 SCM_API void scm_free_subr_entry (SCM subr);
-SCM_API SCM scm_c_make_subr (const char *name, long type, SCM (*fcn)());
-SCM_API SCM scm_c_make_subr_with_generic (const char *name, long type,
+SCM_API SCM scm_c_make_subr (const char *name, int64_t type, SCM (*fcn)());
+SCM_API SCM scm_c_make_subr_with_generic (const char *name, int64_t type,
 					  SCM (*fcn)(), SCM *gf);
-SCM_API SCM scm_c_define_subr (const char *name, long type, SCM (*fcn)());
-SCM_API SCM scm_c_define_subr_with_generic (const char *name, long type,
+SCM_API SCM scm_c_define_subr (const char *name, int64_t type, SCM (*fcn)());
+SCM_API SCM scm_c_define_subr_with_generic (const char *name, int64_t type,
 					    SCM (*fcn)(), SCM *gf);
 SCM_API SCM scm_makcclo (SCM proc, size_t len);
 SCM_API SCM scm_procedure_p (SCM obj);

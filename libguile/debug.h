@@ -17,7 +17,7 @@
  * Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public
- * License along with this library; if not, write to the Free Software
+ * License with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
@@ -87,12 +87,12 @@ typedef union scm_t_debug_info
   SCM id;
 } scm_t_debug_info;
 
-SCM_API long scm_debug_eframe_size;
+SCM_API int64_t scm_debug_eframe_size;
 
 typedef struct scm_t_debug_frame
 {
   struct scm_t_debug_frame *prev;
-  long status;
+  int64_t status;
   scm_t_debug_info *vect;
   scm_t_debug_info *info;
 } scm_t_debug_frame;

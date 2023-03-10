@@ -11,7 +11,7 @@
  * Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public
- * License along with this library; if not, write to the Free Software
+ * License with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
@@ -95,7 +95,7 @@ extern char *strptime ();
 #ifdef __STDC__
 # define timet time_t
 #else
-# define timet long
+# define timet int64_t
 #endif
 
 /* On Apple Darwin in a shared library there's no "environ" to access
@@ -198,9 +198,9 @@ SCM_DEFINE (scm_times, "times", 0, 0, 0,
 #undef FUNC_NAME
 #endif /* HAVE_TIMES */
 
-static long scm_my_base = 0;
+static int64_t scm_my_base = 0;
 
-long
+int64_t
 scm_c_get_internal_run_time ()
 {
   return mytime () - scm_my_base;
@@ -734,7 +734,7 @@ SCM_DEFINE (scm_strptime, "strptime", 2, 0, 0,
 {
   struct tm t;
   const char *fmt, *str, *rest;
-  long zoff;
+  int64_t zoff;
 
   SCM_VALIDATE_STRING (1, format);
   SCM_VALIDATE_STRING (2, string);

@@ -11,7 +11,7 @@
  * Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public
- * License along with this library; if not, write to the Free Software
+ * License with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
@@ -238,7 +238,7 @@ pre_unwind_data_print (SCM closure, SCM port, scm_print_state *pstate SCM_UNUSED
 #if USE_64IMPL
 #else
   sprintf (buf, "#<pre-unwind-data 0x%lx 0x%lx>",
-	   (long) c->handler, (long) c->handler_data);
+	   (int64_t) c->handler, (int64_t) c->handler_data);
   scm_puts (buf, port);
 #endif
   return 1;

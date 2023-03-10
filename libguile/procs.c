@@ -11,7 +11,7 @@
  * Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public
- * License along with this library; if not, write to the Free Software
+ * License with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
@@ -42,18 +42,18 @@ scm_t_subr_entry *scm_subr_table;
 /* Increased to 800 on 2001-05-07 -- Guile now has 779 primitives on
    startup, 786 with guile-readline.  'martin */
 
-long scm_subr_table_size = 0;
-long scm_subr_table_room = 800;
+int64_t scm_subr_table_size = 0;
+int64_t scm_subr_table_room = 800;
 
 SCM 
-scm_c_make_subr (const char *name, long type, SCM (*fcn) ())
+scm_c_make_subr (const char *name, int64_t type, SCM (*fcn) ())
 {
   register SCM z;
-  long entry;
+  int64_t entry;
 
   if (scm_subr_table_size == scm_subr_table_room)
     {
-      long new_size = scm_subr_table_room * 3 / 2;
+      int64_t new_size = scm_subr_table_room * 3 / 2;
       void *new_table
 	= scm_realloc ((char *) scm_subr_table,
 		       sizeof (scm_t_subr_entry) * new_size);
@@ -73,7 +73,7 @@ scm_c_make_subr (const char *name, long type, SCM (*fcn) ())
 }
 
 SCM
-scm_c_define_subr (const char *name, long type, SCM (*fcn) ())
+scm_c_define_subr (const char *name, int64_t type, SCM (*fcn) ())
 {
   SCM subr = scm_c_make_subr (name, type, fcn);
   scm_define (SCM_SUBR_ENTRY(subr).name, subr);
@@ -85,7 +85,7 @@ scm_c_define_subr (const char *name, long type, SCM (*fcn) ())
 void
 scm_free_subr_entry (SCM subr)
 {
-  long entry = SCM_SUBRNUM (subr);
+  int64_t entry = SCM_SUBRNUM (subr);
   /* Move last entry in table to the free position */
   scm_subr_table[entry] = scm_subr_table[scm_subr_table_size - 1];
   SCM_SET_SUBRNUM (scm_subr_table[entry].handle, entry);
@@ -94,7 +94,7 @@ scm_free_subr_entry (SCM subr)
 
 SCM
 scm_c_make_subr_with_generic (const char *name, 
-			      long type, SCM (*fcn) (), SCM *gf)
+			      int64_t type, SCM (*fcn) (), SCM *gf)
 {
   SCM subr = scm_c_make_subr (name, type, fcn);
   SCM_SUBR_ENTRY(subr).generic = gf;
@@ -103,7 +103,7 @@ scm_c_make_subr_with_generic (const char *name,
 
 SCM
 scm_c_define_subr_with_generic (const char *name, 
-				long type, SCM (*fcn) (), SCM *gf)
+				int64_t type, SCM (*fcn) (), SCM *gf)
 {
   SCM subr = scm_c_make_subr_with_generic (name, type, fcn, gf);
   scm_define (SCM_SUBR_ENTRY(subr).name, subr);
@@ -113,7 +113,7 @@ scm_c_define_subr_with_generic (const char *name,
 void
 scm_mark_subr_table ()
 {
-  long i;
+  int64_t i;
   for (i = 0; i < scm_subr_table_size; ++i)
     {
       scm_gc_mark (scm_subr_table[i].name);
@@ -131,7 +131,7 @@ scm_makcclo (SCM proc, size_t len)
 {
   scm_t_bits *base = scm_gc_malloc (len * sizeof (scm_t_bits),
 				    "compiled closure");
-  unsigned long i;
+  uint64_t i;
   SCM s;
 
   for (i = 0; i < len; ++i)

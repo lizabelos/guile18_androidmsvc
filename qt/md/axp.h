@@ -16,7 +16,7 @@
 
 #define QT_GROW_DOWN
 
-typedef unsigned long qt_word_t;
+typedef uint64_t qt_word_t;
 
 
 /* Stack layout on the Alpha:

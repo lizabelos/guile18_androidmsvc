@@ -16,7 +16,7 @@
  * Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public
- * License along with this library; if not, write to the Free Software
+ * License with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
@@ -245,14 +245,14 @@ SCM_API SCM scm_sys_set_object_setter_x (SCM obj, SCM setter);
 SCM_API SCM scm_slot_ref (SCM obj, SCM slot_name);
 SCM_API SCM scm_slot_set_x (SCM obj, SCM slot_name, SCM value);
 
-SCM_API SCM scm_compute_applicable_methods (SCM gf, SCM args, long len, int scm_find_method);
+SCM_API SCM scm_compute_applicable_methods (SCM gf, SCM args, int64_t len, int scm_find_method);
 SCM_API SCM scm_sys_compute_applicable_methods (SCM gf, SCM args);
 #ifdef GUILE_DEBUG
 SCM_API SCM scm_pure_generic_p (SCM obj);
 #endif
 
 SCM_API SCM scm_sys_compute_slots (SCM c);
-SCM_API SCM scm_i_get_keyword (SCM key, SCM l, long len, SCM default_value, const char *subr);
+SCM_API SCM scm_i_get_keyword (SCM key, SCM l, int64_t len, SCM default_value, const char *subr);
 SCM_API SCM scm_get_keyword (SCM key, SCM l, SCM default_value);
 SCM_API SCM scm_sys_initialize_object (SCM obj, SCM initargs);
 SCM_API SCM scm_sys_prep_layout_x (SCM c);

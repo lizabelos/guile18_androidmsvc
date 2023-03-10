@@ -22,7 +22,7 @@
    The `iaddr_t' type is an integer representation of a pointer,
    suited for doing arithmetic on addresses, e.g. to round an address
    to an alignment boundary. */
-typedef unsigned long iaddr_t;
+typedef uint64_t iaddr_t;
 
 #include <stdarg.h>	/* For varargs tryout. */
 #include <stdio.h>

@@ -12,7 +12,7 @@
  * Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public
- * License along with this library; if not, write to the Free Software
+ * License with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
@@ -133,7 +133,7 @@ SCM_DEFINE (scm_system_star, "system*", 0, 0, 1,
 				  SCM_F_WIND_EXPLICITLY);
 
       /* make sure the child can't kill us (as per normal system call) */
-      sig_ign = scm_from_int64 ((unsigned long) SIG_IGN);
+      sig_ign = scm_from_int64 ((uint64_t) SIG_IGN);
       sigint = scm_from_int (SIGINT);
       sigquit = scm_from_int (SIGQUIT);
       oldint = scm_sigaction (sigint, sig_ign, SCM_UNDEFINED);

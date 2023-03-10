@@ -11,7 +11,7 @@
  * Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public
- * License along with this library; if not, write to the Free Software
+ * License with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
@@ -208,8 +208,8 @@ scm_i_sweep_segment (scm_t_heap_segment * seg)
   scm_t_cell * p = seg->next_free_card;
   int yield = scm_gc_cells_collected;
   int coll = seg->freelist->collected;
-  unsigned long alloc = scm_cells_allocated ;
-  unsigned long last_alloc = scm_last_cells_allocated;
+  uint64_t alloc = scm_cells_allocated ;
+  uint64_t last_alloc = scm_last_cells_allocated;
   double last_total
     = scm_gc_cells_allocated_acc
     + (alloc - last_alloc);
@@ -402,7 +402,7 @@ scm_i_all_segments_statistics (SCM tab)
 
   I think this function is too long to be inlined. --hwn
 */
-long int
+int64_t
 scm_i_find_heap_segment_containing_object (SCM obj)
 {
   if (!CELL_P (obj))
@@ -414,8 +414,8 @@ scm_i_find_heap_segment_containing_object (SCM obj)
   
     {
       scm_t_cell *  ptr = SCM2PTR (obj);
-      unsigned long int i = 0;
-      unsigned long int j = scm_i_heap_segment_table_size - 1;
+      uint64_t i = 0;
+      uint64_t j = scm_i_heap_segment_table_size - 1;
 
       if (ptr < scm_i_heap_segment_table[i]->bounds[0])
 	return -1;
@@ -436,7 +436,7 @@ scm_i_find_heap_segment_containing_object (SCM obj)
 		}
 	      else
 		{
-		  unsigned long int k = (i + j) / 2;
+		  uint64_t k = (i + j) / 2;
 
 		  if (k == i)
 		    return -1;
@@ -502,11 +502,11 @@ scm_i_get_new_heap_segment (scm_t_cell_type_statistics *freelist,
     /* Make heap grow with factor 1.5 */
     len =  freelist->heap_size / 2;
 #ifdef DEBUGINFO
-    fprintf (stderr, "(%ld < %ld)", (long) len, (long) min_cells);
+    fprintf (stderr, "(%ld < %ld)", (int64_t) len, (int64_t) min_cells);
 #endif
 
     if (len < min_cells)
-      len = (unsigned long) min_cells;  
+      len = (uint64_t) min_cells;
     len *= sizeof (scm_t_cell);
     /* force new sampling */
     freelist->collected = LONG_MAX;

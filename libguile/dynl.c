@@ -14,7 +14,7 @@
  * Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public
- * License along with this library; if not, write to the Free Software
+ * License with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
@@ -234,7 +234,7 @@ SCM_DEFINE (scm_dynamic_func, "dynamic-func", 2, 0, 0,
 #if USE_64IMPL
     return scm_from_uint64 ((uint64_t) func);
 #else
-    return scm_from_uint64 ((unsigned long) func);
+    return scm_from_uint64 ((uint64_t) func);
 #endif
   }
 }

@@ -16,7 +16,7 @@
  * Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public
- * License along with this library; if not, write to the Free Software
+ * License with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
@@ -27,9 +27,9 @@
 
 
 #define SCM_GSUBR_MAKTYPE(req, opt, rst) ((req)|((opt)<<4)|((rst)<<8))
-#define SCM_GSUBR_REQ(x) ((long)(x)&0xf)
-#define SCM_GSUBR_OPT(x) (((long)(x)&0xf0)>>4)
-#define SCM_GSUBR_REST(x) ((long)(x)>>8)
+#define SCM_GSUBR_REQ(x) ((int64_t)(x)&0xf)
+#define SCM_GSUBR_OPT(x) (((int64_t)(x)&0xf0)>>4)
+#define SCM_GSUBR_REST(x) ((int64_t)(x)>>8)
 
 #define SCM_GSUBR_MAX 10
 #define SCM_GSUBR_TYPE(cclo) (SCM_CCLO_REF ((cclo), 1))

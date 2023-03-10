@@ -10,7 +10,7 @@
  * Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public
- * License along with this library; if not, write to the Free Software
+ * License with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
@@ -38,15 +38,15 @@ gh_bool2scm (int x)
 SCM 
 gh_int2scm (int x)
 {
-  return scm_from_int64 ((long) x);
+  return scm_from_int64 ((int64_t) x);
 }
 SCM 
-gh_ulong2scm (unsigned long x)
+gh_ulong2scm (uint64_t x)
 {
   return scm_from_uint64 (x);
 }
 SCM 
-gh_long2scm (long x)
+gh_long2scm (int64_t x)
 {
   return scm_from_int64 (x);
 }
@@ -77,7 +77,7 @@ gh_str02scm (const char *s)
    If START + LEN is off the end of DST, signal an out-of-range
    error.  */
 void 
-gh_set_substr (const char *src, SCM dst, long start, size_t len)
+gh_set_substr (const char *src, SCM dst, int64_t start, size_t len)
 {
   char *dst_ptr;
   size_t dst_len;
@@ -101,9 +101,9 @@ gh_symbol2scm (const char *symbol_str)
 }
 
 SCM
-gh_ints2scm (const int *d, long n)
+gh_ints2scm (const int *d, int64_t n)
 {
-  long i;
+  int64_t i;
   SCM v = scm_c_make_vector (n, SCM_UNSPECIFIED);
   for (i = 0; i < n; ++i)
     SCM_SIMPLE_VECTOR_SET (v, i, scm_from_int (d[i]));
@@ -112,9 +112,9 @@ gh_ints2scm (const int *d, long n)
 }
 
 SCM
-gh_doubles2scm (const double *d, long n)
+gh_doubles2scm (const double *d, int64_t n)
 {
-  long i;
+  int64_t i;
   SCM v = scm_c_make_vector (n, SCM_UNSPECIFIED);
 
   for(i = 0; i < n; i++) 
@@ -124,7 +124,7 @@ gh_doubles2scm (const double *d, long n)
 
 
 SCM
-gh_chars2byvect (const char *d, long n)
+gh_chars2byvect (const char *d, int64_t n)
 {
   char *m = scm_malloc (n);
   memcpy (m, d, n * sizeof (char));
@@ -132,7 +132,7 @@ gh_chars2byvect (const char *d, long n)
 }
 
 SCM
-gh_shorts2svect (const short *d, long n)
+gh_shorts2svect (const short *d, int64_t n)
 {
   char *m = scm_malloc (n * sizeof (short));
   memcpy (m, d, n * sizeof (short));
@@ -141,25 +141,25 @@ gh_shorts2svect (const short *d, long n)
 }
 
 SCM
-gh_longs2ivect (const long *d, long n)
+gh_longs2ivect (const int64_t *d, int64_t n)
 {
-  char *m = scm_malloc (n * sizeof (long));
-  memcpy (m, d, n * sizeof (long));
-  assert (sizeof (scm_t_int32) == sizeof (long));
+  char *m = scm_malloc (n * sizeof (int64_t));
+  memcpy (m, d, n * sizeof (int64_t));
+  assert (sizeof (scm_t_int32) == sizeof (int64_t));
   return scm_take_s32vector ((scm_t_int32 *)m, n);
 }
 
 SCM
-gh_ulongs2uvect (const unsigned long *d, long n)
+gh_ulongs2uvect (const uint64_t *d, int64_t n)
 {
-  char *m = scm_malloc (n * sizeof (unsigned long));
-  memcpy (m, d, n * sizeof (unsigned long));
-  assert (sizeof (scm_t_uint32) == sizeof (unsigned long));
+  char *m = scm_malloc (n * sizeof (uint64_t));
+  memcpy (m, d, n * sizeof (uint64_t));
+  assert (sizeof (scm_t_uint32) == sizeof (uint64_t));
   return scm_take_u32vector ((scm_t_uint32 *)m, n);
 }
 
 SCM
-gh_floats2fvect (const float *d, long n)
+gh_floats2fvect (const float *d, int64_t n)
 {
   char *m = scm_malloc (n * sizeof (float));
   memcpy (m, d, n * sizeof (float));
@@ -167,7 +167,7 @@ gh_floats2fvect (const float *d, long n)
 }
 
 SCM
-gh_doubles2dvect (const double *d, long n)
+gh_doubles2dvect (const double *d, int64_t n)
 {
   char *m = scm_malloc (n * sizeof (double));
   memcpy (m, d, n * sizeof (double));
@@ -180,12 +180,12 @@ gh_scm2bool (SCM obj)
 {
   return (scm_is_false (obj)) ? 0 : 1;
 }
-unsigned long 
+uint64_t
 gh_scm2ulong (SCM obj)
 {
   return scm_to_uint64 (obj);
 }
-long 
+int64_t
 gh_scm2long (SCM obj)
 {
   return scm_to_int64 (obj);
@@ -215,8 +215,8 @@ gh_scm2char (SCM obj)
 char *
 gh_scm2chars (SCM obj, char *m)
 {
-  long i, n;
-  long v;
+  int64_t i, n;
+  int64_t v;
   SCM val;
   if (SCM_IMP (obj))
     scm_wrong_type_arg (0, 0, obj);
@@ -319,8 +319,8 @@ scm2whatever (SCM obj, void *m, size_t size)
 short *
 gh_scm2shorts (SCM obj, short *m)
 {
-  long i, n;
-  long v;
+  int64_t i, n;
+  int64_t v;
   SCM val;
   if (SCM_IMP (obj))
     scm_wrong_type_arg (0, 0, obj);
@@ -360,15 +360,15 @@ gh_scm2shorts (SCM obj, short *m)
 /* Convert a vector, weak vector or uniform vector into an array of
    longs.  If result array in arg 2 is NULL, malloc a new one.  If out
    of memory, return NULL.  */
-long *
-gh_scm2longs (SCM obj, long *m)
+int64_t *
+gh_scm2longs (SCM obj, int64_t *m)
 {
-  long i, n;
+  int64_t i, n;
   SCM val;
   if (SCM_IMP (obj))
     scm_wrong_type_arg (0, 0, obj);
 
-  SCM2WHATEVER (obj, scm_s32vector_p, scm_t_int32, long)
+  SCM2WHATEVER (obj, scm_s32vector_p, scm_t_int32, int64_t)
 
   switch (SCM_TYP7 (obj))
     {
@@ -382,7 +382,7 @@ gh_scm2longs (SCM obj, long *m)
 	    scm_wrong_type_arg (0, 0, obj);
 	}
       if (m == 0)
-	m = (long *) malloc (n * sizeof (long));
+	m = (int64_t *) malloc (n * sizeof (int64_t));
       if (m == NULL)
 	return NULL;
       for (i = 0; i < n; ++i)
@@ -405,7 +405,7 @@ gh_scm2longs (SCM obj, long *m)
 float *
 gh_scm2floats (SCM obj, float *m)
 {
-  long i, n;
+  int64_t i, n;
   SCM val;
   if (SCM_IMP (obj))
     scm_wrong_type_arg (0, 0, obj);
@@ -453,7 +453,7 @@ gh_scm2floats (SCM obj, float *m)
 double *
 gh_scm2doubles (SCM obj, double *m)
 {
-  long i, n;
+  int64_t i, n;
   SCM val;
   if (SCM_IMP (obj))
     scm_wrong_type_arg (0, 0, obj);
@@ -534,7 +534,7 @@ gh_scm2newstr (SCM str, size_t *lenp)
    region to fit the string.  If truncation occurs, the corresponding
    area of DST is left unchanged.  */
 void 
-gh_get_substr (SCM src, char *dst, long start, size_t len)
+gh_get_substr (SCM src, char *dst, int64_t start, size_t len)
 {
   size_t src_len, effective_length;
   SCM_ASSERT (scm_is_string (src), src, SCM_ARG3, "gh_get_substr");
@@ -585,19 +585,19 @@ gh_vector_ref (SCM vec, SCM pos)
 }
 
 /* returns the length of the given vector */
-unsigned long 
+uint64_t
 gh_vector_length (SCM v)
 {
-  return (unsigned long) scm_c_vector_length (v);
+  return (uint64_t) scm_c_vector_length (v);
 }
 
 /* uniform vector support */
 
-/* returns the length as a C unsigned long integer */
-unsigned long
+/* returns the length as a C uint64_t integer */
+uint64_t
 gh_uniform_vector_length (SCM v)
 {
-  return (unsigned long) scm_c_uniform_vector_length (v);
+  return (uint64_t) scm_c_uniform_vector_length (v);
 }
 
 /* gets the given element from a uniform vector; ilist is a list (or

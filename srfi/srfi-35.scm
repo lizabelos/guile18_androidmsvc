@@ -13,10 +13,10 @@
 ;; Lesser General Public License for more details.
 ;;
 ;; You should have received a copy of the GNU Lesser General Public
-;; License along with this library; if not, write to the Free Software
+;; License with this library; if not, write to the Free Software
 ;; Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
 
-;;; Author: Ludovic Courtès <ludo@gnu.org>
+;;; Author: Ludovic Courtï¿½s <ludo@gnu.org>
 
 ;;; Commentary:
 

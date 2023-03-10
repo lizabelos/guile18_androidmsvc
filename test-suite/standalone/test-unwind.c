@@ -11,7 +11,7 @@
  * Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public
- * License along with this library; if not, write to the Free Software
+ * License with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
@@ -169,7 +169,7 @@ check_cont (int rewindable)
   SCM res;
   
   res = scm_internal_catch (SCM_BOOL_T,
-			    check_cont_body, (void *)(long)rewindable,
+			    check_cont_body, (void *)(int64_t)rewindable,
 			    return_tag, NULL);
 
   /* RES is now either the created continuation, the value passed to

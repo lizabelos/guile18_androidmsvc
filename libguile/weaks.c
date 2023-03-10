@@ -11,7 +11,7 @@
  * Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public
- * License along with this library; if not, write to the Free Software
+ * License with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
@@ -71,7 +71,7 @@ SCM_DEFINE (scm_weak_vector, "weak-vector", 0, 0, 1,
 {
   scm_t_array_handle handle;
   SCM res, *data;
-  long i;
+  int64_t i;
 
   i = scm_ilength (l);
   SCM_ASSERT (i >= 0, l, SCM_ARG1, FUNC_NAME);
@@ -205,8 +205,8 @@ scm_i_mark_weak_vector_non_weaks (SCM w)
   if (SCM_IS_WHVEC_ANY (w))
     {
       SCM *ptr;
-      long n = SCM_I_WVECT_LENGTH (w);
-      long j;
+      int64_t n = SCM_I_WVECT_LENGTH (w);
+      int64_t j;
       int weak_keys = SCM_IS_WHVEC (w) || SCM_IS_WHVEC_B (w);
       int weak_values = SCM_IS_WHVEC_V (w) || SCM_IS_WHVEC_B (w);
 

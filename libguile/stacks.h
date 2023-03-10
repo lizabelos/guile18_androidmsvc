@@ -16,7 +16,7 @@
  * Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public
- * License along with this library; if not, write to the Free Software
+ * License with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
@@ -41,8 +41,8 @@ typedef struct scm_t_info_frame {
 typedef struct scm_t_stack {
   SCM id;			/* Stack id */
   scm_t_info_frame *frames;	/* Info frames */
-  unsigned long length;		/* Stack length */
-  unsigned long tail_length;
+  uint64_t length;		/* Stack length */
+  uint64_t tail_length;
   scm_t_info_frame tail[1];
 } scm_t_stack;
 

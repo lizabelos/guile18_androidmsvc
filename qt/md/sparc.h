@@ -14,7 +14,7 @@
 #ifndef QT_SPARC_H
 #define QT_SPARC_H
 
-typedef unsigned long qt_word_t;
+typedef uint64_t qt_word_t;
 
 /* Stack layout on the sparc:
 

@@ -11,7 +11,7 @@
  * Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public
- * License along with this library; if not, write to the Free Software
+ * License with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
@@ -44,7 +44,7 @@
  */
 
 #define MAX_SMOB_COUNT 256
-long scm_numsmob;
+int64_t scm_numsmob;
 scm_smob_descriptor scm_smobs[MAX_SMOB_COUNT];
 
 /* Lower 16 bit of data must be zero. 
@@ -101,7 +101,7 @@ scm_free0 (SCM ptr SCM_UNUSED)
 size_t
 scm_smob_free (SCM obj)
 {
-  long n = SCM_SMOBNUM (obj);
+  int64_t n = SCM_SMOBNUM (obj);
   if (scm_smobs[n].size > 0)
     scm_gc_free ((void *) SCM_CELL_WORD_1 (obj), 
 		 scm_smobs[n].size, SCM_SMOBNAME (n));
@@ -114,7 +114,7 @@ scm_smob_free (SCM obj)
 int
 scm_smob_print (SCM exp, SCM port, scm_print_state *pstate SCM_UNUSED)
 {
-  long n = SCM_SMOBNUM (exp);
+  int64_t n = SCM_SMOBNUM (exp);
   scm_puts ("#<", port);
   scm_puts (SCM_SMOBNAME (n) ? SCM_SMOBNAME (n) : "smob", port);
   scm_putc (' ', port);
@@ -287,7 +287,7 @@ scm_t_bits
 scm_make_smob_type (char const *name, size_t size)
 #define FUNC_NAME "scm_make_smob_type"
 {
-  long new_smob;
+  int64_t new_smob;
 
   SCM_CRITICAL_SECTION_START;
   new_smob = scm_numsmob;
@@ -454,7 +454,7 @@ scm_set_smob_apply (scm_t_bits tc, SCM (*apply) (),
 SCM
 scm_make_smob (scm_t_bits tc)
 {
-  long n = SCM_TC2SMOBNUM (tc);
+  int64_t n = SCM_TC2SMOBNUM (tc);
   size_t size = scm_smobs[n].size;
   scm_t_bits data = (size > 0
 		     ? (scm_t_bits) scm_gc_malloc (size, SCM_SMOBNAME (n))
@@ -486,7 +486,7 @@ free_print (SCM exp, SCM port, scm_print_state *pstate SCM_UNUSED)
 void
 scm_smob_prehistory ()
 {
-  long i;
+  int64_t i;
   scm_t_bits tc;
 
   scm_numsmob = 0;

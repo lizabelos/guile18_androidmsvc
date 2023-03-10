@@ -12,7 +12,7 @@
  * Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public
- * License along with this library; if not, write to the Free Software
+ * License with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
@@ -310,7 +310,7 @@ flush_ws (SCM port, const char *eoferr)
 static SCM scm_read_expression (SCM port);
 static SCM scm_read_sharp (int chr, SCM port);
 static SCM scm_get_hash_procedure (int c);
-static SCM recsexpr (SCM obj, long line, int column, SCM filename);
+static SCM recsexpr (SCM obj, int64_t line, int column, SCM filename);
 
 
 static SCM
@@ -324,7 +324,7 @@ scm_read_sexp (int chr, SCM port)
   static const int terminating_char = ')';
 
   /* Need to capture line and column numbers here. */
-  long line = SCM_LINUM (port);
+  int64_t line = SCM_LINUM (port);
   int column = SCM_COL (port) - 1;
 
 
@@ -678,7 +678,7 @@ static SCM
 scm_read_quote (int chr, SCM port)
 {
   SCM p;
-  long line = SCM_LINUM (port);
+  int64_t line = SCM_LINUM (port);
   int column = SCM_COL (port) - 1;
 
   switch (chr)
@@ -957,7 +957,7 @@ scm_read_sharp_extension (int chr, SCM port)
   proc = scm_get_hash_procedure (chr);
   if (scm_is_true (scm_procedure_p (proc)))
     {
-      long line = SCM_LINUM (port);
+      int64_t line = SCM_LINUM (port);
       int column = SCM_COL (port) - 2;
       SCM got;
 
@@ -1153,7 +1153,7 @@ SCM_DEFINE (scm_read, "read", 0, 1, 0,
 
 /* Used when recording expressions constructed by `scm_read_sharp ()'.  */
 static SCM
-recsexpr (SCM obj, long line, int column, SCM filename)
+recsexpr (SCM obj, int64_t line, int column, SCM filename)
 {
   if (!scm_is_pair(obj)) {
     return obj;

@@ -11,7 +11,7 @@
  * Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public
- * License along with this library; if not, write to the Free Software
+ * License with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
@@ -492,7 +492,7 @@ init_build_info ()
 {
   static struct { char *name; char *value; } info[] = SCM_BUILD_INFO;
   SCM *loc = SCM_VARIABLE_LOC (scm_c_define ("%guile-build-info", SCM_EOL));
-  unsigned long i;
+  uint64_t i;
 
   for (i = 0; i < (sizeof (info) / sizeof (info[0])); i++)
     {

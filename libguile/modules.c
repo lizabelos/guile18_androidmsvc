@@ -11,7 +11,7 @@
  * Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public
- * License along with this library; if not, write to the Free Software
+ * License with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
@@ -567,7 +567,7 @@ scm_module_reverse_lookup (SCM module, SCM variable)
 #define FUNC_NAME "module-reverse-lookup"
 {
   SCM obarray;
-  long i, n;
+  int64_t i, n;
 
   if (scm_is_false (module))
     obarray = scm_pre_modules_obarray;

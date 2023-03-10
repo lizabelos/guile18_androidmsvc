@@ -14,7 +14,7 @@
 #ifndef QT_M88K_H
 #define QT_M88K_H
 
-typedef unsigned long qt_word_t;
+typedef uint64_t qt_word_t;
 
 #define QT_GROW_DOWN
 

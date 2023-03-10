@@ -11,7 +11,7 @@
  * Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public
- * License along with this library; if not, write to the Free Software
+ * License with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
@@ -26,7 +26,7 @@
 
 #ifdef __ia64__
 #include <ucontext.h>
-extern unsigned long * __libc_ia64_register_backing_store_base;
+extern uint64_t * __libc_ia64_register_backing_store_base;
 #endif
 
 #include "libguile/_scm.h"
@@ -95,7 +95,7 @@ int check_ptr(void *ptr) {
 void
 scm_mark_all (void)
 {
-  long j;
+  int64_t j;
   int loops;
 
   scm_i_init_weak_vectors_for_gc ();
@@ -231,7 +231,7 @@ void
 scm_gc_mark_dependencies (SCM p)
 #define FUNC_NAME "scm_gc_mark_dependencies"
 {
-  register long i;
+  register int64_t i;
   register SCM ptr;
   SCM cell_type;
 
@@ -266,7 +266,7 @@ scm_gc_mark_dependencies (SCM p)
 	scm_t_bits word0 = SCM_CELL_WORD_0 (ptr) - scm_tc3_struct;
 	scm_t_bits * vtable_data = (scm_t_bits *) word0;
 	SCM layout = SCM_PACK (vtable_data [scm_vtable_index_layout]);
-	long len = scm_i_symbol_length (layout);
+	int64_t len = scm_i_symbol_length (layout);
 	const char *fields_desc = scm_i_symbol_chars (layout);
 	scm_t_bits *struct_data = (scm_t_bits *) SCM_STRUCT_DATA (ptr);
 
@@ -277,7 +277,7 @@ scm_gc_mark_dependencies (SCM p)
 	  }
 	if (len)
 	  {
-	    long x;
+	    int64_t x;
 
 	    for (x = 0; x < len - 2; x += 2, ++struct_data)
 	      if (fields_desc[x] == 'p')
@@ -461,9 +461,9 @@ int check_ptr(void *ptr);
 
 /* Mark a region conservatively */
 void
-scm_mark_locations (SCM_STACKITEM x[], unsigned long n)
+scm_mark_locations (SCM_STACKITEM x[], uint64_t n)
 {
-  unsigned long m;
+  uint64_t m;
 
   for (m = 0; m < n; ++m)
     {
@@ -471,7 +471,7 @@ scm_mark_locations (SCM_STACKITEM x[], unsigned long n)
             continue;
         }
       SCM obj = * (SCM *) &x[m];
-      long int segment = scm_i_find_heap_segment_containing_object (obj);
+      int64_t segment = scm_i_find_heap_segment_containing_object (obj);
       if (segment >= 0) scm_gc_mark (obj);
     }
 }
@@ -483,7 +483,7 @@ scm_mark_locations (SCM_STACKITEM x[], unsigned long n)
 int
 scm_in_heap_p (SCM value)
 {
-  long int segment = scm_i_find_heap_segment_containing_object (value);
+  int64_t segment = scm_i_find_heap_segment_containing_object (value);
   return (segment >= 0);
 }
 
@@ -502,14 +502,14 @@ scm_t_bits scm_tc16_allocated;
 static SCM
 allocated_mark (SCM cell)
 {
-  unsigned long int cell_segment = scm_i_find_heap_segment_containing_object (cell);
+  uint64_t cell_segment = scm_i_find_heap_segment_containing_object (cell);
   unsigned int span = scm_i_heap_segment_table[cell_segment]->span;
   unsigned int i;
 
   for (i = 1; i != span * 2; ++i)
     {
       SCM obj = SCM_CELL_OBJECT (cell, i);
-      long int obj_segment = scm_i_find_heap_segment_containing_object (obj);
+      int64_t obj_segment = scm_i_find_heap_segment_containing_object (obj);
       if (obj_segment >= 0)
 	scm_gc_mark (obj);
     }

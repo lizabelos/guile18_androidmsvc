@@ -11,7 +11,7 @@
  * Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public
- * License along with this library; if not, write to the Free Software
+ * License with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
@@ -304,7 +304,7 @@ SCM_DEFINE (scm_setgroups, "setgroups", 1, 0, 0,
   /* validate before allocating, so we don't have to worry about leaks */
   for (i = 0; i < ngroups; i++)
     {
-      unsigned long ulong_gid;
+      uint64_t ulong_gid;
       GETGROUPS_T gid;
       SCM_VALIDATE_ULONG_COPY (1, SCM_SIMPLE_VECTOR_REF (group_vec, i),
 			       ulong_gid);
@@ -1625,7 +1625,7 @@ SCM_DEFINE (scm_chroot, "chroot", 1, 0, 0,
 static char * getlogin (void)
 {
   static char user[256];
-  static unsigned long len = 256;
+  static uint64_t len = 256;
 
   if (!GetUserName (user, &len))
     return NULL;
@@ -1783,7 +1783,7 @@ SCM_DEFINE (scm_getpass, "getpass", 1, 0, 0,
 
 static int flock (int fd, int operation)
 {
-  long pos, len;
+  int64_t pos, len;
   int ret, err;
 
   /* Disable invalid arguments. */
@@ -1938,7 +1938,7 @@ SCM_DEFINE (scm_gethostname, "gethostname", 0, 0, 0,
    * Must watch out for this existing but giving -1, as happens for instance
    * in gnu/linux glibc 2.3.2.  */
   {
-    const long int n = sysconf (_SC_HOST_NAME_MAX);
+    const int64_t n = sysconf (_SC_HOST_NAME_MAX);
     if (n != -1L)
       len = n;
   }

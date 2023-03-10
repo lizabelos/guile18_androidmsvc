@@ -87,9 +87,9 @@ SCM2CTYPES (SCM obj, CTYPE *data)
 /* Converts a C array into a vector. */
 
 SCM
-CTYPES2SCM (const CTYPE *data, long n)
+CTYPES2SCM (const CTYPE *data, int64_t n)
 {
-  long i;
+  int64_t i;
   SCM v;
   
   v = scm_c_make_vector (n, SCM_UNSPECIFIED);
@@ -103,10 +103,10 @@ CTYPES2SCM (const CTYPE *data, long n)
 /* Converts a C array into a uniform vector. */
 
 SCM
-CTYPES2UVECT (const CTYPE *data, long n)
+CTYPES2UVECT (const CTYPE *data, int64_t n)
 {
   scm_t_array_handle handle;
-  long i;
+  int64_t i;
   SCM uvec;
   UVEC_CTYPE *uvec_elements;
   
@@ -127,7 +127,7 @@ SCM
 CTYPES2UVECT_2 (const CTYPE_2 *data, long n)
 {
   scm_t_array_handle handle;
-  long i;
+  int64_t i;
   SCM uvec;
   UVEC_CTYPE_2 *uvec_elements;
   

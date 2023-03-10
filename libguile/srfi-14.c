@@ -13,7 +13,7 @@
  * Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public
- * License along with this library; if not, write to the Free Software
+ * License with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
@@ -27,11 +27,11 @@
 
 
 #define SCM_CHARSET_SET(cs, idx)				\
-  (((long *) SCM_SMOB_DATA (cs))[(idx) / SCM_BITS_PER_LONG] |=	\
+  (((int64_t *) SCM_SMOB_DATA (cs))[(idx) / SCM_BITS_PER_LONG] |=	\
     (1L << ((idx) % SCM_BITS_PER_LONG)))
 
 #define SCM_CHARSET_UNSET(cs, idx)				\
-  (((long *) SCM_SMOB_DATA (cs))[(idx) / SCM_BITS_PER_LONG] &=	\
+  (((int64_t *) SCM_SMOB_DATA (cs))[(idx) / SCM_BITS_PER_LONG] &=	\
     (~(1L << ((idx) % SCM_BITS_PER_LONG))))
 
 #define BYTES_PER_CHARSET (SCM_CHARSET_SIZE / 8)
@@ -76,7 +76,7 @@ charset_free (SCM charset)
 static SCM
 make_char_set (const char * func_name)
 {
-  long * p;
+  int64_t * p;
 
   p = scm_gc_malloc (BYTES_PER_CHARSET, "character-set");
   memset (p, 0, BYTES_PER_CHARSET);
@@ -101,18 +101,18 @@ SCM_DEFINE (scm_char_set_eq, "char-set=", 0, 0, 1,
 #define FUNC_NAME s_scm_char_set_eq
 {
   int argnum = 1;
-  long *cs1_data = NULL;
+  int64_t *cs1_data = NULL;
 
   SCM_VALIDATE_REST_ARGUMENT (char_sets);
 
   while (!scm_is_null (char_sets))
     {
       SCM csi = SCM_CAR (char_sets);
-      long *csi_data;
+      int64_t *csi_data;
 
       SCM_VALIDATE_SMOB (argnum, csi, charset);
       argnum++;
-      csi_data = (long *) SCM_SMOB_DATA (csi);
+      csi_data = (int64_t *) SCM_SMOB_DATA (csi);
       if (cs1_data == NULL)
 	cs1_data = csi_data;
       else if (memcmp (cs1_data, csi_data, BYTES_PER_CHARSET) != 0)
@@ -131,18 +131,18 @@ SCM_DEFINE (scm_char_set_leq, "char-set<=", 0, 0, 1,
 #define FUNC_NAME s_scm_char_set_leq
 {
   int argnum = 1;
-  long *prev_data = NULL;
+  int64_t *prev_data = NULL;
 
   SCM_VALIDATE_REST_ARGUMENT (char_sets);
 
   while (!scm_is_null (char_sets))
     {
       SCM csi = SCM_CAR (char_sets);
-      long *csi_data;
+      int64_t *csi_data;
 
       SCM_VALIDATE_SMOB (argnum, csi, charset);
       argnum++;
-      csi_data = (long *) SCM_SMOB_DATA (csi);
+      csi_data = (int64_t *) SCM_SMOB_DATA (csi);
       if (prev_data)
 	{
 	  int k;
@@ -168,10 +168,10 @@ SCM_DEFINE (scm_char_set_hash, "char-set-hash", 1, 1, 0,
 	    "returned value to the range 0 @dots{} @var{bound - 1}.")
 #define FUNC_NAME s_scm_char_set_hash
 {
-  const unsigned long default_bnd = 871;
-  unsigned long bnd;
-  long * p;
-  unsigned long val = 0;
+  const uint64_t default_bnd = 871;
+  uint64_t bnd;
+  int64_t * p;
+  uint64_t val = 0;
   int k;
 
   SCM_VALIDATE_SMOB (1, cs, charset);
@@ -185,7 +185,7 @@ SCM_DEFINE (scm_char_set_hash, "char-set-hash", 1, 1, 0,
 	bnd = default_bnd;
     }
 
-  p = (long *) SCM_SMOB_DATA (cs);
+  p = (int64_t *) SCM_SMOB_DATA (cs);
   for (k = 0; k < LONGS_PER_CHARSET; k++)
     {
       if (p[k] != 0)
@@ -420,13 +420,13 @@ SCM_DEFINE (scm_char_set_copy, "char-set-copy", 1, 0, 0,
 #define FUNC_NAME s_scm_char_set_copy
 {
   SCM ret;
-  long * p1, * p2;
+  int64_t * p1, * p2;
   int k;
 
   SCM_VALIDATE_SMOB (1, cs, charset);
   ret = make_char_set (FUNC_NAME);
-  p1 = (long *) SCM_SMOB_DATA (cs);
-  p2 = (long *) SCM_SMOB_DATA (ret);
+  p1 = (int64_t *) SCM_SMOB_DATA (cs);
+  p2 = (int64_t *) SCM_SMOB_DATA (ret);
   for (k = 0; k < LONGS_PER_CHARSET; k++)
     p2[k] = p1[k];
   return ret;
@@ -440,12 +440,12 @@ SCM_DEFINE (scm_char_set, "char-set", 0, 0, 1,
 #define FUNC_NAME s_scm_char_set
 {
   SCM cs;
-  long * p;
+  int64_t * p;
   int argnum = 1;
 
   SCM_VALIDATE_REST_ARGUMENT (rest);
   cs = make_char_set (FUNC_NAME);
-  p = (long *) SCM_SMOB_DATA (cs);
+  p = (int64_t *) SCM_SMOB_DATA (cs);
   while (!scm_is_null (rest))
     {
       int c;
@@ -468,7 +468,7 @@ SCM_DEFINE (scm_list_to_char_set, "list->char-set", 1, 1, 0,
 #define FUNC_NAME s_scm_list_to_char_set
 {
   SCM cs;
-  long * p;
+  int64_t * p;
 
   SCM_VALIDATE_LIST (1, list);
   if (SCM_UNBNDP (base_cs))
@@ -478,7 +478,7 @@ SCM_DEFINE (scm_list_to_char_set, "list->char-set", 1, 1, 0,
       SCM_VALIDATE_SMOB (2, base_cs, charset);
       cs = scm_char_set_copy (base_cs);
     }
-  p = (long *) SCM_SMOB_DATA (cs);
+  p = (int64_t *) SCM_SMOB_DATA (cs);
   while (!scm_is_null (list))
     {
       SCM chr = SCM_CAR (list);
@@ -501,11 +501,11 @@ SCM_DEFINE (scm_list_to_char_set_x, "list->char-set!", 2, 0, 0,
 	    "returned.")
 #define FUNC_NAME s_scm_list_to_char_set_x
 {
-  long * p;
+  int64_t * p;
 
   SCM_VALIDATE_LIST (1, list);
   SCM_VALIDATE_SMOB (2, base_cs, charset);
-  p = (long *) SCM_SMOB_DATA (base_cs);
+  p = (int64_t *) SCM_SMOB_DATA (base_cs);
   while (!scm_is_null (list))
     {
       SCM chr = SCM_CAR (list);
@@ -529,7 +529,7 @@ SCM_DEFINE (scm_string_to_char_set, "string->char-set", 1, 1, 0,
 #define FUNC_NAME s_scm_string_to_char_set
 {
   SCM cs;
-  long * p;
+  int64_t * p;
   const char * s;
   size_t k = 0, len;
 
@@ -541,7 +541,7 @@ SCM_DEFINE (scm_string_to_char_set, "string->char-set", 1, 1, 0,
       SCM_VALIDATE_SMOB (2, base_cs, charset);
       cs = scm_char_set_copy (base_cs);
     }
-  p = (long *) SCM_SMOB_DATA (cs);
+  p = (int64_t *) SCM_SMOB_DATA (cs);
   s = scm_i_string_chars (str);
   len = scm_i_string_length (str);
   while (k < len)
@@ -562,13 +562,13 @@ SCM_DEFINE (scm_string_to_char_set_x, "string->char-set!", 2, 0, 0,
 	    "@var{base_cs} is returned.")
 #define FUNC_NAME s_scm_string_to_char_set_x
 {
-  long * p;
+  int64_t * p;
   const char * s;
   size_t k = 0, len;
 
   SCM_VALIDATE_STRING (1, str);
   SCM_VALIDATE_SMOB (2, base_cs, charset);
-  p = (long *) SCM_SMOB_DATA (base_cs);
+  p = (int64_t *) SCM_SMOB_DATA (base_cs);
   s = scm_i_string_chars (str);
   len = scm_i_string_length (str);
   while (k < len)
@@ -591,7 +591,7 @@ SCM_DEFINE (scm_char_set_filter, "char-set-filter", 2, 1, 0,
 {
   SCM ret;
   int k;
-  long * p;
+  int64_t * p;
 
   SCM_VALIDATE_PROC (1, pred);
   SCM_VALIDATE_SMOB (2, cs, charset);
@@ -602,7 +602,7 @@ SCM_DEFINE (scm_char_set_filter, "char-set-filter", 2, 1, 0,
     }
   else
     ret = make_char_set (FUNC_NAME);
-  p = (long *) SCM_SMOB_DATA (ret);
+  p = (int64_t *) SCM_SMOB_DATA (ret);
   for (k = 0; k < SCM_CHARSET_SIZE; k++)
     {
       if (SCM_CHARSET_GET (cs, k))
@@ -626,12 +626,12 @@ SCM_DEFINE (scm_char_set_filter_x, "char-set-filter!", 3, 0, 0,
 #define FUNC_NAME s_scm_char_set_filter_x
 {
   int k;
-  long * p;
+  int64_t * p;
 
   SCM_VALIDATE_PROC (1, pred);
   SCM_VALIDATE_SMOB (2, cs, charset);
   SCM_VALIDATE_SMOB (3, base_cs, charset);
-  p = (long *) SCM_SMOB_DATA (base_cs);
+  p = (int64_t *) SCM_SMOB_DATA (base_cs);
   for (k = 0; k < SCM_CHARSET_SIZE; k++)
     {
       if (SCM_CHARSET_GET (cs, k))
@@ -665,7 +665,7 @@ SCM_DEFINE (scm_ucs_range_to_char_set, "ucs-range->char-set", 2, 2, 0,
 {
   SCM cs;
   size_t clower, cupper;
-  long * p;
+  int64_t * p;
 
   clower = scm_to_size_t (lower);
   cupper = scm_to_size_t (upper);
@@ -689,7 +689,7 @@ SCM_DEFINE (scm_ucs_range_to_char_set, "ucs-range->char-set", 2, 2, 0,
       SCM_VALIDATE_SMOB (4, base_cs, charset);
       cs = scm_char_set_copy (base_cs);
     }
-  p = (long *) SCM_SMOB_DATA (cs);
+  p = (int64_t *) SCM_SMOB_DATA (cs);
   while (clower < cupper)
     {
       p[clower / SCM_BITS_PER_LONG] |= 1L << (clower % SCM_BITS_PER_LONG);
@@ -717,7 +717,7 @@ SCM_DEFINE (scm_ucs_range_to_char_set_x, "ucs-range->char-set!", 4, 0, 0,
 #define FUNC_NAME s_scm_ucs_range_to_char_set_x
 {
   size_t clower, cupper;
-  long * p;
+  int64_t * p;
 
   clower = scm_to_size_t (lower);
   cupper = scm_to_size_t (upper);
@@ -731,7 +731,7 @@ SCM_DEFINE (scm_ucs_range_to_char_set_x, "ucs-range->char-set!", 4, 0, 0,
     clower = SCM_CHARSET_SIZE;
   if (cupper > SCM_CHARSET_SIZE)
     cupper = SCM_CHARSET_SIZE;
-  p = (long *) SCM_SMOB_DATA (base_cs);
+  p = (int64_t *) SCM_SMOB_DATA (base_cs);
   while (clower < cupper)
     {
       p[clower / SCM_BITS_PER_LONG] |= 1L << (clower % SCM_BITS_PER_LONG);
@@ -906,13 +906,13 @@ SCM_DEFINE (scm_char_set_adjoin, "char-set-adjoin", 1, 0, 1,
 	    "be a character set.")
 #define FUNC_NAME s_scm_char_set_adjoin
 {
-  long * p;
+  int64_t * p;
 
   SCM_VALIDATE_SMOB (1, cs, charset);
   SCM_VALIDATE_REST_ARGUMENT (rest);
   cs = scm_char_set_copy (cs);
 
-  p = (long *) SCM_SMOB_DATA (cs);
+  p = (int64_t *) SCM_SMOB_DATA (cs);
   while (!scm_is_null (rest))
     {
       SCM chr = SCM_CAR (rest);
@@ -934,13 +934,13 @@ SCM_DEFINE (scm_char_set_delete, "char-set-delete", 1, 0, 1,
 	    "must be a character set.")
 #define FUNC_NAME s_scm_char_set_delete
 {
-  long * p;
+  int64_t * p;
 
   SCM_VALIDATE_SMOB (1, cs, charset);
   SCM_VALIDATE_REST_ARGUMENT (rest);
   cs = scm_char_set_copy (cs);
 
-  p = (long *) SCM_SMOB_DATA (cs);
+  p = (int64_t *) SCM_SMOB_DATA (cs);
   while (!scm_is_null (rest))
     {
       SCM chr = SCM_CAR (rest);
@@ -962,12 +962,12 @@ SCM_DEFINE (scm_char_set_adjoin_x, "char-set-adjoin!", 1, 0, 1,
 	    "be a character set.")
 #define FUNC_NAME s_scm_char_set_adjoin_x
 {
-  long * p;
+  int64_t * p;
 
   SCM_VALIDATE_SMOB (1, cs, charset);
   SCM_VALIDATE_REST_ARGUMENT (rest);
 
-  p = (long *) SCM_SMOB_DATA (cs);
+  p = (int64_t *) SCM_SMOB_DATA (cs);
   while (!scm_is_null (rest))
     {
       SCM chr = SCM_CAR (rest);
@@ -989,12 +989,12 @@ SCM_DEFINE (scm_char_set_delete_x, "char-set-delete!", 1, 0, 1,
 	    "must be a character set.")
 #define FUNC_NAME s_scm_char_set_delete_x
 {
-  long * p;
+  int64_t * p;
 
   SCM_VALIDATE_SMOB (1, cs, charset);
   SCM_VALIDATE_REST_ARGUMENT (rest);
 
-  p = (long *) SCM_SMOB_DATA (cs);
+  p = (int64_t *) SCM_SMOB_DATA (cs);
   while (!scm_is_null (rest))
     {
       SCM chr = SCM_CAR (rest);
@@ -1017,13 +1017,13 @@ SCM_DEFINE (scm_char_set_complement, "char-set-complement", 1, 0, 0,
 {
   int k;
   SCM res;
-  long * p, * q;
+  int64_t * p, * q;
 
   SCM_VALIDATE_SMOB (1, cs, charset);
 
   res = make_char_set (FUNC_NAME);
-  p = (long *) SCM_SMOB_DATA (res);
-  q = (long *) SCM_SMOB_DATA (cs);
+  p = (int64_t *) SCM_SMOB_DATA (res);
+  q = (int64_t *) SCM_SMOB_DATA (cs);
   for (k = 0; k < LONGS_PER_CHARSET; k++)
     p[k] = ~q[k];
   return res;
@@ -1038,12 +1038,12 @@ SCM_DEFINE (scm_char_set_union, "char-set-union", 0, 0, 1,
 {
   int c = 1;
   SCM res;
-  long * p;
+  int64_t * p;
 
   SCM_VALIDATE_REST_ARGUMENT (rest);
 
   res = make_char_set (FUNC_NAME);
-  p = (long *) SCM_SMOB_DATA (res);
+  p = (int64_t *) SCM_SMOB_DATA (res);
   while (!scm_is_null (rest))
     {
       int k;
@@ -1053,7 +1053,7 @@ SCM_DEFINE (scm_char_set_union, "char-set-union", 0, 0, 1,
       rest = SCM_CDR (rest);
 
       for (k = 0; k < LONGS_PER_CHARSET; k++)
-	p[k] |= ((long *) SCM_SMOB_DATA (cs))[k];
+	p[k] |= ((int64_t *) SCM_SMOB_DATA (cs))[k];
     }
   return res;
 }
@@ -1073,22 +1073,22 @@ SCM_DEFINE (scm_char_set_intersection, "char-set-intersection", 0, 0, 1,
     res = make_char_set (FUNC_NAME);
   else
     {
-      long *p;
+      int64_t *p;
       int argnum = 2;
 
       res = scm_char_set_copy (SCM_CAR (rest));
-      p = (long *) SCM_SMOB_DATA (res);
+      p = (int64_t *) SCM_SMOB_DATA (res);
       rest = SCM_CDR (rest);
 
       while (scm_is_pair (rest))
 	{
 	  int k;
 	  SCM cs = SCM_CAR (rest);
-	  long *cs_data;
+	  int64_t *cs_data;
 
 	  SCM_VALIDATE_SMOB (argnum, cs, charset);
 	  argnum++;
-	  cs_data = (long *) SCM_SMOB_DATA (cs);
+	  cs_data = (int64_t *) SCM_SMOB_DATA (cs);
 	  rest = SCM_CDR (rest);
 	  for (k = 0; k < LONGS_PER_CHARSET; k++)
 	    p[k] &= cs_data[k];
@@ -1107,13 +1107,13 @@ SCM_DEFINE (scm_char_set_difference, "char-set-difference", 1, 0, 1,
 {
   int c = 2;
   SCM res;
-  long * p;
+  int64_t * p;
 
   SCM_VALIDATE_SMOB (1, cs1, charset);
   SCM_VALIDATE_REST_ARGUMENT (rest);
 
   res = scm_char_set_copy (cs1);
-  p = (long *) SCM_SMOB_DATA (res);
+  p = (int64_t *) SCM_SMOB_DATA (res);
   while (!scm_is_null (rest))
     {
       int k;
@@ -1123,7 +1123,7 @@ SCM_DEFINE (scm_char_set_difference, "char-set-difference", 1, 0, 1,
       rest = SCM_CDR (rest);
 
       for (k = 0; k < LONGS_PER_CHARSET; k++)
-	p[k] &= ~((long *) SCM_SMOB_DATA (cs))[k];
+	p[k] &= ~((int64_t *) SCM_SMOB_DATA (cs))[k];
     }
   return res;
 }
@@ -1144,21 +1144,21 @@ SCM_DEFINE (scm_char_set_xor, "char-set-xor", 0, 0, 1,
   else
     {
       int argnum = 2;
-      long * p;
+      int64_t * p;
 
       res = scm_char_set_copy (SCM_CAR (rest));
-      p = (long *) SCM_SMOB_DATA (res);
+      p = (int64_t *) SCM_SMOB_DATA (res);
       rest = SCM_CDR (rest);
 
       while (scm_is_pair (rest))
 	{
 	  SCM cs = SCM_CAR (rest);
-	  long *cs_data;
+	  int64_t *cs_data;
 	  int k;
 
 	  SCM_VALIDATE_SMOB (argnum, cs, charset);
 	  argnum++;
-	  cs_data = (long *) SCM_SMOB_DATA (cs);
+	  cs_data = (int64_t *) SCM_SMOB_DATA (cs);
 	  rest = SCM_CDR (rest);
 
 	  for (k = 0; k < LONGS_PER_CHARSET; k++)
@@ -1178,24 +1178,24 @@ SCM_DEFINE (scm_char_set_diff_plus_intersection, "char-set-diff+intersection", 1
 {
   int c = 2;
   SCM res1, res2;
-  long * p, * q;
+  int64_t * p, * q;
 
   SCM_VALIDATE_SMOB (1, cs1, charset);
   SCM_VALIDATE_REST_ARGUMENT (rest);
 
   res1 = scm_char_set_copy (cs1);
   res2 = make_char_set (FUNC_NAME);
-  p = (long *) SCM_SMOB_DATA (res1);
-  q = (long *) SCM_SMOB_DATA (res2);
+  p = (int64_t *) SCM_SMOB_DATA (res1);
+  q = (int64_t *) SCM_SMOB_DATA (res2);
   while (!scm_is_null (rest))
     {
       int k;
       SCM cs = SCM_CAR (rest);
-      long *r;
+      int64_t *r;
 
       SCM_VALIDATE_SMOB (c, cs, charset);
       c++;
-      r = (long *) SCM_SMOB_DATA (cs);
+      r = (int64_t *) SCM_SMOB_DATA (cs);
 
       for (k = 0; k < LONGS_PER_CHARSET; k++)
 	{
@@ -1215,10 +1215,10 @@ SCM_DEFINE (scm_char_set_complement_x, "char-set-complement!", 1, 0, 0,
 #define FUNC_NAME s_scm_char_set_complement_x
 {
   int k;
-  long * p;
+  int64_t * p;
 
   SCM_VALIDATE_SMOB (1, cs, charset);
-  p = (long *) SCM_SMOB_DATA (cs);
+  p = (int64_t *) SCM_SMOB_DATA (cs);
   for (k = 0; k < LONGS_PER_CHARSET; k++)
     p[k] = ~p[k];
   return cs;
@@ -1232,12 +1232,12 @@ SCM_DEFINE (scm_char_set_union_x, "char-set-union!", 1, 0, 1,
 #define FUNC_NAME s_scm_char_set_union_x
 {
   int c = 2;
-  long * p;
+  int64_t * p;
 
   SCM_VALIDATE_SMOB (1, cs1, charset);
   SCM_VALIDATE_REST_ARGUMENT (rest);
 
-  p = (long *) SCM_SMOB_DATA (cs1);
+  p = (int64_t *) SCM_SMOB_DATA (cs1);
   while (!scm_is_null (rest))
     {
       int k;
@@ -1247,7 +1247,7 @@ SCM_DEFINE (scm_char_set_union_x, "char-set-union!", 1, 0, 1,
       rest = SCM_CDR (rest);
 
       for (k = 0; k < LONGS_PER_CHARSET; k++)
-	p[k] |= ((long *) SCM_SMOB_DATA (cs))[k];
+	p[k] |= ((int64_t *) SCM_SMOB_DATA (cs))[k];
     }
   return cs1;
 }
@@ -1260,12 +1260,12 @@ SCM_DEFINE (scm_char_set_intersection_x, "char-set-intersection!", 1, 0, 1,
 #define FUNC_NAME s_scm_char_set_intersection_x
 {
   int c = 2;
-  long * p;
+  int64_t * p;
 
   SCM_VALIDATE_SMOB (1, cs1, charset);
   SCM_VALIDATE_REST_ARGUMENT (rest);
 
-  p = (long *) SCM_SMOB_DATA (cs1);
+  p = (int64_t *) SCM_SMOB_DATA (cs1);
   while (!scm_is_null (rest))
     {
       int k;
@@ -1275,7 +1275,7 @@ SCM_DEFINE (scm_char_set_intersection_x, "char-set-intersection!", 1, 0, 1,
       rest = SCM_CDR (rest);
 
       for (k = 0; k < LONGS_PER_CHARSET; k++)
-	p[k] &= ((long *) SCM_SMOB_DATA (cs))[k];
+	p[k] &= ((int64_t *) SCM_SMOB_DATA (cs))[k];
     }
   return cs1;
 }
@@ -1288,12 +1288,12 @@ SCM_DEFINE (scm_char_set_difference_x, "char-set-difference!", 1, 0, 1,
 #define FUNC_NAME s_scm_char_set_difference_x
 {
   int c = 2;
-  long * p;
+  int64_t * p;
 
   SCM_VALIDATE_SMOB (1, cs1, charset);
   SCM_VALIDATE_REST_ARGUMENT (rest);
 
-  p = (long *) SCM_SMOB_DATA (cs1);
+  p = (int64_t *) SCM_SMOB_DATA (cs1);
   while (!scm_is_null (rest))
     {
       int k;
@@ -1303,7 +1303,7 @@ SCM_DEFINE (scm_char_set_difference_x, "char-set-difference!", 1, 0, 1,
       rest = SCM_CDR (rest);
 
       for (k = 0; k < LONGS_PER_CHARSET; k++)
-	p[k] &= ~((long *) SCM_SMOB_DATA (cs))[k];
+	p[k] &= ~((int64_t *) SCM_SMOB_DATA (cs))[k];
     }
   return cs1;
 }
@@ -1325,12 +1325,12 @@ SCM_DEFINE (scm_char_set_xor_x, "char-set-xor!", 1, 0, 1,
 #if 0
   /* this would give (char-set-xor! a a a) -> empty char set.  */
   int c = 2;
-  long * p;
+  int64_t * p;
 
   SCM_VALIDATE_SMOB (1, cs1, charset);
   SCM_VALIDATE_REST_ARGUMENT (rest);
 
-  p = (long *) SCM_SMOB_DATA (cs1);
+  p = (int64_t *) SCM_SMOB_DATA (cs1);
   while (!scm_is_null (rest))
     {
       int k;
@@ -1340,7 +1340,7 @@ SCM_DEFINE (scm_char_set_xor_x, "char-set-xor!", 1, 0, 1,
       rest = SCM_CDR (rest);
 
       for (k = 0; k < LONGS_PER_CHARSET; k++)
-	p[k] ^= ((long *) SCM_SMOB_DATA (cs))[k];
+	p[k] ^= ((int64_t *) SCM_SMOB_DATA (cs))[k];
     }
   return cs1;
 #endif
@@ -1355,15 +1355,15 @@ SCM_DEFINE (scm_char_set_diff_plus_intersection_x, "char-set-diff+intersection!"
 #define FUNC_NAME s_scm_char_set_diff_plus_intersection_x
 {
   int c = 3;
-  long * p, * q;
+  int64_t * p, * q;
   int k;
 
   SCM_VALIDATE_SMOB (1, cs1, charset);
   SCM_VALIDATE_SMOB (2, cs2, charset);
   SCM_VALIDATE_REST_ARGUMENT (rest);
 
-  p = (long *) SCM_SMOB_DATA (cs1);
-  q = (long *) SCM_SMOB_DATA (cs2);
+  p = (int64_t *) SCM_SMOB_DATA (cs1);
+  q = (int64_t *) SCM_SMOB_DATA (cs2);
   if (p == q)
     {
       /* (char-set-diff+intersection! a a ...): can't share storage,
@@ -1373,7 +1373,7 @@ SCM_DEFINE (scm_char_set_diff_plus_intersection_x, "char-set-diff+intersection!"
     }
   for (k = 0; k < LONGS_PER_CHARSET; k++)
     {
-      long t = p[k];
+      int64_t t = p[k];
 
       p[k] &= ~q[k];
       q[k] = t & q[k];
@@ -1381,11 +1381,11 @@ SCM_DEFINE (scm_char_set_diff_plus_intersection_x, "char-set-diff+intersection!"
   while (!scm_is_null (rest))
     {
       SCM cs = SCM_CAR (rest);
-      long *r;
+      int64_t *r;
 
       SCM_VALIDATE_SMOB (c, cs, charset);
       c++;
-      r = (long *) SCM_SMOB_DATA (cs);
+      r = (int64_t *) SCM_SMOB_DATA (cs);
 
       for (k = 0; k < LONGS_PER_CHARSET; k++)
 	{

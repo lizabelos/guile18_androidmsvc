@@ -12,7 +12,7 @@
  * Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public
- * License along with this library; if not, write to the Free Software
+ * License with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
@@ -176,10 +176,10 @@ SCM_DEFINE (scm_list_p, "list?", 1, 0, 0,
    This uses the "tortoise and hare" algorithm to detect "infinitely
    long" lists (i.e. lists with cycles in their cdrs), and returns -1
    if it does find one.  */
-long
+int64_t
 scm_ilength(SCM sx)
 {
-  long i = 0;
+  int64_t i = 0;
   SCM tortoise = sx;
   SCM hare = sx;
 
@@ -208,7 +208,7 @@ SCM_DEFINE (scm_length, "length", 1, 0, 0,
 	    "Return the number of elements in list @var{lst}.")
 #define FUNC_NAME s_scm_length
 {
-  long i;
+  int64_t i;
   SCM_VALIDATE_LIST_COPYLEN (1, lst, i);
   return scm_from_int64 (i);
 }
@@ -396,7 +396,7 @@ SCM_DEFINE (scm_list_ref, "list-ref", 2, 0, 0,
 #define FUNC_NAME s_scm_list_ref
 {
   SCM lst = list;
-  unsigned long int i;
+  uint64_t i;
   i = scm_to_uint64 (k);
   while (scm_is_pair (lst)) {
     if (i == 0)
@@ -420,7 +420,7 @@ SCM_DEFINE (scm_list_set_x, "list-set!", 3, 0, 0,
 #define FUNC_NAME s_scm_list_set_x
 {
   SCM lst = list;
-  unsigned long int i = scm_to_uint64 (k);
+  uint64_t i = scm_to_uint64 (k);
   while (scm_is_pair (lst)) {
     if (i == 0) {
       SCM_SETCAR (lst, val);

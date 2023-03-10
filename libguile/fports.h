@@ -16,7 +16,7 @@
  * Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public
- * License along with this library; if not, write to the Free Software
+ * License with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
@@ -56,7 +56,7 @@ SCM_API void scm_init_fports (void);
 
 /* internal functions */
 
-SCM_API SCM scm_i_fdes_to_port (int fdes, long mode_bits, SCM name);
+SCM_API SCM scm_i_fdes_to_port (int fdes, int64_t mode_bits, SCM name);
 SCM_API int scm_i_fport_truncate (SCM, SCM);
 SCM_API SCM scm_i_fport_seek (SCM, SCM, int);
 

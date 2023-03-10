@@ -490,7 +490,7 @@ Like @code{sleep}, but leaves guile mode while sleeping.  Also, the
 delivery of a system async causes this function to be interrupted.
 @end deftypefn
 
-@deftypefn {C Function} {unsigned long} scm_std_usleep ({unsigned long} usecs)
+@deftypefn {C Function} {uint64_t} scm_std_usleep ({uint64_t} usecs)
 Like @code{usleep}, but leaves guile mode while sleeping.  Also, the
 delivery of a system async causes this function to be interrupted.
 @end deftypefn

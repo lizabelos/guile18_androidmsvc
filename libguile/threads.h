@@ -16,7 +16,7 @@
  * Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public
- * License along with this library; if not, write to the Free Software
+ * License with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
@@ -215,7 +215,7 @@ SCM_API int scm_pthread_cond_timedwait (pthread_cond_t *cond,
  */
 
 SCM_API unsigned int scm_std_sleep (unsigned int);
-SCM_API unsigned long scm_std_usleep (unsigned long);
+SCM_API uint64_t scm_std_usleep (uint64_t);
 
 #endif  /* SCM_THREADS_H */
 

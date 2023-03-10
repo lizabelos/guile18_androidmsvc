@@ -16,7 +16,7 @@
  * Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public
- * License along with this library; if not, write to the Free Software
+ * License with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
@@ -63,14 +63,14 @@ do { \
 typedef struct scm_print_state {
   SCM handle;			/* Struct handle */
   int revealed;                 /* Has the state escaped to Scheme? */
-  unsigned long writingp;	/* Writing? */
-  unsigned long fancyp;		/* Fancy printing? */
-  unsigned long level;		/* Max level */
-  unsigned long length;		/* Max number of objects per level */
+  uint64_t writingp;	/* Writing? */
+  uint64_t fancyp;		/* Fancy printing? */
+  uint64_t level;		/* Max level */
+  uint64_t length;		/* Max number of objects per level */
   SCM hot_ref;			/* Hot reference */
-  unsigned long list_offset;
-  unsigned long top;		/* Top of reference stack */
-  unsigned long ceiling;	/* Max size of reference stack */
+  uint64_t list_offset;
+  uint64_t top;		/* Top of reference stack */
+  uint64_t ceiling;	/* Max size of reference stack */
   SCM ref_vect;	 	        /* Stack of references used during
 				   circular reference detection;
 				   a simple vector. */

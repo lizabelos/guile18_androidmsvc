@@ -754,7 +754,7 @@ of type @code{SCM}) and return values of type @code{SCM}.
 Returns @code{#f} if @var{x} is zero, @code{#t} otherwise.
 @end deftypefun
 
-@deftypefun SCM gh_ulong2scm (unsigned long @var{x})
+@deftypefun SCM gh_ulong2scm (uint64_t @var{x})
 @deftypefunx SCM gh_long2scm (long @var{x})
 @deftypefunx SCM gh_double2scm (double @var{x})
 @deftypefunx SCM gh_char2scm (char @var{x})
@@ -793,12 +793,12 @@ location @var{dptr}.
 
 @deftypefun SCM gh_chars2byvect (char *@var{dptr}, int @var{n})
 @deftypefunx SCM gh_shorts2svect (short *@var{dptr}, int @var{n})
-@deftypefunx SCM gh_longs2ivect (long *@var{dptr}, int @var{n})
-@deftypefunx SCM gh_ulongs2uvect (ulong *@var{dptr}, int @var{n})
+@deftypefunx SCM gh_longs2ivect (int64_t *@var{dptr}, int @var{n})
+@deftypefunx SCM gh_ulongs2uvect (uint64_t *@var{dptr}, int @var{n})
 @deftypefunx SCM gh_floats2fvect (float *@var{dptr}, int @var{n})
 @deftypefunx SCM gh_doubles2dvect (double *@var{dptr}, int @var{n})
 Make a scheme uniform vector containing the @var{n} chars, shorts,
-longs, unsigned longs, floats or doubles at memory location @var{dptr}.
+longs, uint64_ts, floats or doubles at memory location @var{dptr}.
 @end deftypefun
 
 
@@ -807,7 +807,7 @@ longs, unsigned longs, floats or doubles at memory location @var{dptr}.
 @subsubsection Scheme to C
 
 @deftypefun int gh_scm2bool (SCM @var{obj})
-@deftypefunx {unsigned long} gh_scm2ulong (SCM @var{obj})
+@deftypefunx {uint64_t} gh_scm2ulong (SCM @var{obj})
 @deftypefunx long gh_scm2long (SCM @var{obj})
 @deftypefunx double gh_scm2double (SCM @var{obj})
 @deftypefunx int gh_scm2char (SCM @var{obj})
@@ -851,7 +851,7 @@ caller is responsible for freeing it.
 
 @deftypefun {char *} gh_scm2chars (SCM @var{vector}, chars *@var{result})
 @deftypefunx {short *} gh_scm2shorts (SCM @var{vector}, short *@var{result})
-@deftypefunx {long *} gh_scm2longs (SCM @var{vector}, long *@var{result})
+@deftypefunx {int64_t *} gh_scm2longs (SCM @var{vector}, int64_t *@var{result})
 @deftypefunx {float *} gh_scm2floats (SCM @var{vector}, float *@var{result})
 @deftypefunx {double *} gh_scm2doubles (SCM @var{vector}, double *@var{result})
 Copy the numbers in @var{vector} to the array pointed to by @var{result}
@@ -1011,7 +1011,7 @@ Modifies the CDR of @var{pair} to be @var{value}.  This is equivalent to
 the Scheme procedure @code{(set-cdr! ...)}.
 @end deftypefun
 
-@deftypefun {unsigned long} gh_length (SCM @var{ls})
+@deftypefun {uint64_t} gh_length (SCM @var{ls})
 Returns the length of the list.
 @end deftypefun
 
@@ -1096,7 +1096,7 @@ respectively.
 @deftypefunx SCM gh_vector (SCM @var{ls})
 @deftypefunx SCM gh_vector_ref (SCM @var{v}, SCM @var{i})
 @deftypefunx SCM gh_vector_set (SCM @var{v}, SCM @var{i}, SCM @var{val})
-@deftypefunx {unsigned long} gh_vector_length (SCM @var{v})
+@deftypefunx {uint64_t} gh_vector_length (SCM @var{v})
 @deftypefunx SCM gh_list_to_vector (SCM @var{ls})
 These correspond to the Scheme @code{(make-vector n fill)},
 @code{(vector a b c ...)} @code{(vector-ref v i)} @code{(vector-set v i
@@ -1107,7 +1107,7 @@ takes a list @var{ls} instead of the individual list elements, thus
 making it identical to @code{gh_list_to_vector}.
 
 There is also a difference in gh_vector_length: the value returned is a
-C @code{unsigned long} instead of an SCM object.
+C @code{uint64_t} instead of an SCM object.
 @end deftypefun
 
 

@@ -11,7 +11,7 @@
  * Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public
- * License along with this library; if not, write to the Free Software
+ * License with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
@@ -873,7 +873,7 @@ scm_threads_mark_stacks (void)
 	  /* stack_len is long rather than sizet in order to guarantee
 	     that &stack_len is long aligned */
     if (SCM_STACK_GROWS_UP) {
-        long stack_len = ((SCM_STACKITEM *) (&t) -
+        int64_t stack_len = ((SCM_STACKITEM *) (&t) -
                           (SCM_STACKITEM *) thread->base);
 
         /* Protect from the C stack.  This must be the first marking
@@ -894,7 +894,7 @@ scm_threads_mark_stacks (void)
         scm_mark_locations(((size_t) t->base,
                 (sizet) stack_len));
     } else {
-        long stack_len = ((SCM_STACKITEM *) t->base -
+        int64_t stack_len = ((SCM_STACKITEM *) t->base -
                           (SCM_STACKITEM *) (&t));
 
         /* Protect from the C stack.  This must be the first marking
@@ -920,10 +920,10 @@ scm_threads_mark_stacks (void)
 	{
 	  /* Suspended thread */
 if (SCM_STACK_GROWS_UP) {
-    long stack_len = t->top - t->base;
+    int64_t stack_len = t->top - t->base;
     scm_mark_locations(t->base, stack_len);
 } else {
-    long stack_len = t->base - t->top;
+    int64_t stack_len = t->base - t->top;
     scm_mark_locations(t->top, stack_len);
 }
 	  scm_mark_locations ((SCM_STACKITEM *) t->regs,
@@ -957,8 +957,8 @@ scm_init_iselect ()
 {
 }
 
-unsigned long
-scm_thread_usleep (unsigned long usec)
+uint64_t
+scm_thread_usleep (uint64_t usec)
 {
   scm_copt_thread *c = leave_guile ();
   usleep (usec);
@@ -966,10 +966,10 @@ scm_thread_usleep (unsigned long usec)
   return 0;
 }
 
-unsigned long
-scm_thread_sleep (unsigned long sec)
+uint64_t
+scm_thread_sleep (uint64_t sec)
 {
-  unsigned long res;
+  uint64_t res;
   scm_copt_thread *c = leave_guile ();
   res = sleep (sec);
   enter_guile (c);

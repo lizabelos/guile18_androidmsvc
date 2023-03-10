@@ -16,7 +16,7 @@
  * Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public
- * License along with this library; if not, write to the Free Software
+ * License with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
@@ -47,7 +47,7 @@ typedef enum scm_t_port_rw_active {
 typedef struct 
 {
   SCM port;			/* Link back to the port object.  */
-  long entry;			/* Index in port table. */
+  int64_t entry;			/* Index in port table. */
   int revealed;			/* 0 not revealed, > 1 revealed.
 				 * Revealed ports do not get GC'd.
 				 */
@@ -55,7 +55,7 @@ typedef struct
   scm_t_bits stream;
 
   SCM file_name;		/* debugging support.  */
-  long line_number;		/* debugging support.  */
+  int64_t line_number;		/* debugging support.  */
   int column_number;		/* debugging support.  */
 
   /* port buffers.  the buffer(s) are set up for all ports.  
@@ -110,7 +110,7 @@ typedef struct
 } scm_t_port;
 
 SCM_API scm_t_port **scm_i_port_table;
-SCM_API long scm_i_port_table_size; /* Number of ports in scm_i_port_table.  */
+SCM_API int64_t scm_i_port_table_size; /* Number of ports in scm_i_port_table.  */
 SCM_API scm_i_pthread_mutex_t scm_i_port_table_mutex;
 
 #define SCM_READ_BUFFER_EMPTY_P(c_port) (c_port->read_pos >= c_port->read_end)
@@ -194,8 +194,8 @@ typedef struct scm_t_ptob_descriptor
 
 
 SCM_API scm_t_ptob_descriptor *scm_ptobs;
-SCM_API long scm_numptob;
-SCM_API long scm_i_port_table_room;
+SCM_API int64_t scm_numptob;
+SCM_API int64_t scm_i_port_table_room;
 
 
 
@@ -249,7 +249,7 @@ SCM_API void scm_port_non_buffer (scm_t_port *pt);
 SCM_API int scm_revealed_count (SCM port);
 SCM_API SCM scm_port_revealed (SCM port);
 SCM_API SCM scm_set_port_revealed_x (SCM port, SCM rcount);
-SCM_API long scm_mode_bits (char *modes);
+SCM_API int64_t scm_mode_bits (char *modes);
 SCM_API SCM scm_port_mode (SCM port);
 SCM_API SCM scm_close_input_port (SCM port);
 SCM_API SCM scm_close_output_port (SCM port);
@@ -302,7 +302,7 @@ SCM_API SCM scm_pt_member (SCM member);
 
 /* internal */
 
-SCM_API long scm_i_mode_bits (SCM modes);
+SCM_API int64_t scm_i_mode_bits (SCM modes);
 SCM_API void scm_i_dynwind_current_load_port (SCM port);
 
 

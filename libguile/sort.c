@@ -10,7 +10,7 @@
  * Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public
- * License along with this library; if not, write to the Free Software
+ * License with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
@@ -114,7 +114,7 @@ SCM_DEFINE (scm_sorted_p, "sorted?", 2, 0, 0,
 #define FUNC_NAME s_scm_sorted_p
 {
   const scm_t_trampoline_2 cmp = compare_function (less, 2, FUNC_NAME);
-  long len, j;			/* list/vector length, temp j */
+  int64_t len, j;			/* list/vector length, temp j */
   SCM item, rest;		/* rest of items loop variable */
 
   if (SCM_NULL_OR_NIL_P (items))
@@ -197,7 +197,7 @@ SCM_DEFINE (scm_merge, "merge", 3, 0, 0,
   else
     {
       const scm_t_trampoline_2 cmp = compare_function (less, 3, FUNC_NAME);
-      long alen, blen;		/* list lengths */
+      int64_t alen, blen;		/* list lengths */
       SCM last;
 
       SCM_VALIDATE_NONEMPTYLIST_COPYLEN (1, alist, alen);
@@ -244,7 +244,7 @@ SCM_DEFINE (scm_merge, "merge", 3, 0, 0,
 
 static SCM 
 scm_merge_list_x (SCM alist, SCM blist,
-		  long alen, long blen,
+		  int64_t alen, int64_t blen,
 		  scm_t_trampoline_2 cmp, SCM less)
 {
   SCM build, last;
@@ -312,7 +312,7 @@ SCM_DEFINE (scm_merge_x, "merge!", 3, 0, 0,
   else
     {
       const scm_t_trampoline_2 cmp = compare_function (less, 3, FUNC_NAME);
-      long alen, blen;		/* list lengths */
+      int64_t alen, blen;		/* list lengths */
       SCM_VALIDATE_NONEMPTYLIST_COPYLEN (1, alist, alen);
       SCM_VALIDATE_NONEMPTYLIST_COPYLEN (2, blist, blen);
       return scm_merge_list_x (alist, blist, alen, blen, cmp, less);
@@ -327,13 +327,13 @@ SCM_DEFINE (scm_merge_x, "merge!", 3, 0, 0,
    though it claimed to be.
 */
 static SCM 
-scm_merge_list_step (SCM * seq, scm_t_trampoline_2 cmp, SCM less, long n)
+scm_merge_list_step (SCM * seq, scm_t_trampoline_2 cmp, SCM less, int64_t n)
 {
   SCM a, b;
 
   if (n > 2)
     {
-      long mid = n / 2;
+      int64_t mid = n / 2;
       SCM_TICK;
       a = scm_merge_list_step (seq, cmp, less, mid);
       b = scm_merge_list_step (seq, cmp, less, n - mid);
@@ -375,7 +375,7 @@ SCM_DEFINE (scm_sort_x, "sort!", 2, 0, 0,
 	    "This is not a stable sort.")
 #define FUNC_NAME s_scm_sort_x
 {
-  long len;			/* list/vector length */
+  int64_t len;			/* list/vector length */
   if (SCM_NULL_OR_NIL_P (items))
     return items;
 
@@ -490,7 +490,7 @@ SCM_DEFINE (scm_stable_sort_x, "stable-sort!", 2, 0, 0,
 #define FUNC_NAME s_scm_stable_sort_x
 {
   const scm_t_trampoline_2 cmp = compare_function (less, 2, FUNC_NAME);
-  long len;			/* list/vector length */
+  int64_t len;			/* list/vector length */
 
   if (SCM_NULL_OR_NIL_P (items))
     return items;
@@ -555,7 +555,7 @@ SCM_DEFINE (scm_sort_list_x, "sort-list!", 2, 0, 0,
 #define FUNC_NAME s_scm_sort_list_x
 {
   const scm_t_trampoline_2 cmp = compare_function (less, 2, FUNC_NAME);
-  long len;
+  int64_t len;
 
   SCM_VALIDATE_LIST_COPYLEN (1, items, len);
   return scm_merge_list_step (&items, cmp, less, len);
@@ -570,7 +570,7 @@ SCM_DEFINE (scm_sort_list, "sort-list", 2, 0, 0,
 #define FUNC_NAME s_scm_sort_list
 {
   const scm_t_trampoline_2 cmp = compare_function (less, 2, FUNC_NAME);
-  long len;
+  int64_t len;
 
   SCM_VALIDATE_LIST_COPYLEN (1, items, len);
   items = scm_list_copy (items);

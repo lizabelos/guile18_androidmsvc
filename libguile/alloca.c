@@ -61,7 +61,7 @@ lose
    provide an "address metric" ADDRESS_FUNCTION macro.  */
 
 #if defined (CRAY) && defined (CRAY_STACKSEG_END)
-long i00afunc ();
+int64_t i00afunc ();
 #define ADDRESS_FUNCTION(arg) (char *) i00afunc (&(arg))
 #else
 #define ADDRESS_FUNCTION(arg) &(arg)
@@ -231,10 +231,10 @@ alloca (unsigned size)
 /* Stack structures for CRAY-1, CRAY X-MP, and CRAY Y-MP */
 struct stack_control_header
   {
-    long shgrow:32;		/* Number of times stack has grown.  */
-    long shaseg:32;		/* Size of increments to stack.  */
-    long shhwm:32;		/* High water mark of stack.  */
-    long shsize:32;		/* Current size of stack (all segments).  */
+    int64_t shgrow:32;		/* Number of times stack has grown.  */
+    int64_t shaseg:32;		/* Size of increments to stack.  */
+    int64_t shhwm:32;		/* High water mark of stack.  */
+    int64_t shsize:32;		/* Current size of stack (all segments).  */
   };
 
 /* The stack segment linkage control information occurs at
@@ -246,37 +246,37 @@ struct stack_control_header
 
 struct stack_segment_linkage
   {
-    long ss[0200];		/* 0200 overflow words.  */
-    long sssize:32;		/* Number of words in this segment.  */
-    long ssbase:32;		/* Offset to stack base.  */
-    long:32;
-    long sspseg:32;		/* Offset to linkage control of previous
+    int64_t ss[0200];		/* 0200 overflow words.  */
+    int64_t sssize:32;		/* Number of words in this segment.  */
+    int64_t ssbase:32;		/* Offset to stack base.  */
+    int64_t:32;
+    int64_t sspseg:32;		/* Offset to linkage control of previous
 				   segment of stack.  */
-    long:32;
-    long sstcpt:32;		/* Pointer to task common address block.  */
-    long sscsnm;		/* Private control structure number for
+    int64_t:32;
+    int64_t sstcpt:32;		/* Pointer to task common address block.  */
+    int64_t sscsnm;		/* Private control structure number for
 				   microtasking.  */
-    long ssusr1;		/* Reserved for user.  */
-    long ssusr2;		/* Reserved for user.  */
-    long sstpid;		/* Process ID for pid based multi-tasking.  */
-    long ssgvup;		/* Pointer to multitasking thread giveup.  */
-    long sscray[7];		/* Reserved for Cray Research.  */
-    long ssa0;
-    long ssa1;
-    long ssa2;
-    long ssa3;
-    long ssa4;
-    long ssa5;
-    long ssa6;
-    long ssa7;
-    long sss0;
-    long sss1;
-    long sss2;
-    long sss3;
-    long sss4;
-    long sss5;
-    long sss6;
-    long sss7;
+    int64_t ssusr1;		/* Reserved for user.  */
+    int64_t ssusr2;		/* Reserved for user.  */
+    int64_t sstpid;		/* Process ID for pid based multi-tasking.  */
+    int64_t ssgvup;		/* Pointer to multitasking thread giveup.  */
+    int64_t sscray[7];		/* Reserved for Cray Research.  */
+    int64_t ssa0;
+    int64_t ssa1;
+    int64_t ssa2;
+    int64_t ssa3;
+    int64_t ssa4;
+    int64_t ssa5;
+    int64_t ssa6;
+    int64_t ssa7;
+    int64_t sss0;
+    int64_t sss1;
+    int64_t sss2;
+    int64_t sss3;
+    int64_t sss4;
+    int64_t sss5;
+    int64_t sss6;
+    int64_t sss7;
   };
 
 #else /* CRAY2 */
@@ -284,27 +284,27 @@ struct stack_segment_linkage
    returned by the STKSTAT library routine.  */
 struct stk_stat
   {
-    long now;			/* Current total stack size.  */
-    long maxc;			/* Amount of contiguous space which would
+    int64_t now;			/* Current total stack size.  */
+    int64_t maxc;			/* Amount of contiguous space which would
 				   be required to satisfy the maximum
 				   stack demand to date.  */
-    long high_water;		/* Stack high-water mark.  */
-    long overflows;		/* Number of stack overflow ($STKOFEN) calls.  */
-    long hits;			/* Number of internal buffer hits.  */
-    long extends;		/* Number of block extensions.  */
-    long stko_mallocs;		/* Block allocations by $STKOFEN.  */
-    long underflows;		/* Number of stack underflow calls ($STKRETN).  */
-    long stko_free;		/* Number of deallocations by $STKRETN.  */
-    long stkm_free;		/* Number of deallocations by $STKMRET.  */
-    long segments;		/* Current number of stack segments.  */
-    long maxs;			/* Maximum number of stack segments so far.  */
-    long pad_size;		/* Stack pad size.  */
-    long current_address;	/* Current stack segment address.  */
-    long current_size;		/* Current stack segment size.  This
+    int64_t high_water;		/* Stack high-water mark.  */
+    int64_t overflows;		/* Number of stack overflow ($STKOFEN) calls.  */
+    int64_t hits;			/* Number of internal buffer hits.  */
+    int64_t extends;		/* Number of block extensions.  */
+    int64_t stko_mallocs;		/* Block allocations by $STKOFEN.  */
+    int64_t underflows;		/* Number of stack underflow calls ($STKRETN).  */
+    int64_t stko_free;		/* Number of deallocations by $STKRETN.  */
+    int64_t stkm_free;		/* Number of deallocations by $STKMRET.  */
+    int64_t segments;		/* Current number of stack segments.  */
+    int64_t maxs;			/* Maximum number of stack segments so far.  */
+    int64_t pad_size;		/* Stack pad size.  */
+    int64_t current_address;	/* Current stack segment address.  */
+    int64_t current_size;		/* Current stack segment size.  This
 				   number is actually corrupted by STKSTAT to
 				   include the fifteen word trailer area.  */
-    long initial_address;	/* Address of initial segment.  */
-    long initial_size;		/* Size of initial segment.  */
+    int64_t initial_address;	/* Address of initial segment.  */
+    int64_t initial_size;		/* Size of initial segment.  */
   };
 
 /* The following structure describes the data structure which trails
@@ -313,23 +313,23 @@ struct stk_stat
 
 struct stk_trailer
   {
-    long this_address;		/* Address of this block.  */
-    long this_size;		/* Size of this block (does not include
+    int64_t this_address;		/* Address of this block.  */
+    int64_t this_size;		/* Size of this block (does not include
 				   this trailer).  */
-    long unknown2;
-    long unknown3;
-    long link;			/* Address of trailer block of previous
+    int64_t unknown2;
+    int64_t unknown3;
+    int64_t link;			/* Address of trailer block of previous
 				   segment.  */
-    long unknown5;
-    long unknown6;
-    long unknown7;
-    long unknown8;
-    long unknown9;
-    long unknown10;
-    long unknown11;
-    long unknown12;
-    long unknown13;
-    long unknown14;
+    int64_t unknown5;
+    int64_t unknown6;
+    int64_t unknown7;
+    int64_t unknown8;
+    int64_t unknown9;
+    int64_t unknown10;
+    int64_t unknown11;
+    int64_t unknown12;
+    int64_t unknown13;
+    int64_t unknown14;
   };
 
 #endif /* CRAY2 */
@@ -339,13 +339,13 @@ struct stk_trailer
 /* Determine a "stack measure" for an arbitrary ADDRESS.
    I doubt that "lint" will like this much.  */
 
-static long
-i00afunc (long *address)
+static int64_t
+i00afunc (int64_t *address)
 {
   struct stk_stat status;
   struct stk_trailer *trailer;
-  long *block, size;
-  long result = 0;
+  int64_t *block, size;
+  int64_t result = 0;
 
   /* We want to iterate through all of the segments.  The first
      step is to get the stack status structure.  We could do this
@@ -370,7 +370,7 @@ i00afunc (long *address)
 
   while (trailer != 0)
     {
-      block = (long *) trailer->this_address;
+      block = (int64_t *) trailer->this_address;
       size = trailer->this_size;
       if (block == 0 || size == 0)
 	abort ();
@@ -413,13 +413,13 @@ i00afunc (long *address)
    routine is to linearize, in some sense, stack addresses
    for alloca.  */
 
-static long
-i00afunc (long address)
+static int64_t
+i00afunc (int64_t address)
 {
-  long stkl = 0;
+  int64_t stkl = 0;
 
-  long size, pseg, this_segment, stack;
-  long result = 0;
+  int64_t size, pseg, this_segment, stack;
+  int64_t result = 0;
 
   struct stack_segment_linkage *ssptr;
 

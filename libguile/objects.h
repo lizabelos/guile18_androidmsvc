@@ -16,7 +16,7 @@
  * Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public
- * License along with this library; if not, write to the Free Software
+ * License with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
@@ -157,7 +157,7 @@ struct scm_metaclass_operator {
 
 typedef struct scm_effective_slot_definition {
   SCM name;
-  long location;
+  int64_t location;
   SCM init_value;
   SCM (*get) (SCM obj, SCM slotdef);
   SCM (*set) (SCM obj, SCM slotdef, SCM value);
@@ -182,7 +182,7 @@ SCM_API SCM scm_metaclass_operator;
 /* Goops functions. */
 SCM_API SCM scm_make_extended_class (char const *type_name, int applicablep);
 SCM_API void scm_i_inherit_applicable (SCM c);
-SCM_API void scm_make_port_classes (long ptobnum, char *type_name);
+SCM_API void scm_make_port_classes (int64_t ptobnum, char *type_name);
 SCM_API void scm_change_object_class (SCM, SCM, SCM);
 SCM_API SCM scm_memoize_method (SCM x, SCM args);
 
@@ -206,7 +206,7 @@ SCM_API SCM scm_make_class_object (SCM metaclass, SCM layout);
 SCM_API SCM scm_make_subclass_object (SCM c, SCM layout);
 
 SCM_API SCM scm_i_make_class_object (SCM metaclass, SCM layout_string,
-				     unsigned long flags);
+				     uint64_t flags);
 SCM_API void scm_init_objects (void);
 
 #endif  /* SCM_OBJECTS_H */

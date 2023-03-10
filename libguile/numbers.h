@@ -16,7 +16,7 @@
  * Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public
- * License along with this library; if not, write to the Free Software
+ * License with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
@@ -58,8 +58,8 @@
 
 #define SCM_I_FIXNUM_BIT         (SCM_LONG_BIT - 2)
 #if USE_64IMPL
-#define SCM_MOST_POSITIVE_FIXNUM (signed long)((SCM_T_SIGNED_BITS_MAX-3)/4)
-#define SCM_MOST_NEGATIVE_FIXNUM (signed long)(-SCM_MOST_POSITIVE_FIXNUM-1)
+#define SCM_MOST_POSITIVE_FIXNUM (int64_t)((SCM_T_SIGNED_BITS_MAX-3)/4)
+#define SCM_MOST_NEGATIVE_FIXNUM (int64_t)(-SCM_MOST_POSITIVE_FIXNUM-1)
 #else
 #define SCM_MOST_POSITIVE_FIXNUM ((SCM_T_SIGNED_BITS_MAX-3)/4)
 #define SCM_MOST_NEGATIVE_FIXNUM (-SCM_MOST_POSITIVE_FIXNUM-1)
@@ -271,8 +271,8 @@ SCM_API int scm_i_bigcmp (SCM a, SCM b);
 SCM_API SCM scm_i_dbl2big (double d);
 SCM_API SCM scm_i_dbl2num (double d);
 SCM_API double scm_i_big2dbl (SCM b);
-SCM_API SCM scm_i_long2big (long n);
-SCM_API SCM scm_i_ulong2big (unsigned long n);
+SCM_API SCM scm_i_long2big (int64_t n);
+SCM_API SCM scm_i_ulong2big (uint64_t n);
 SCM_API SCM scm_i_clonebig (SCM src_big, int same_sign_p);
 
 /* ratio functions */

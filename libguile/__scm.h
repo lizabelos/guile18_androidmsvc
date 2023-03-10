@@ -16,7 +16,7 @@
  * Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public
- * License along with this library; if not, write to the Free Software
+ * License with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
@@ -334,7 +334,7 @@
 #ifdef LONG_BIT
 # define SCM_LONG_BIT LONG_BIT
 #else
-# define SCM_LONG_BIT (SCM_CHAR_BIT * sizeof (long) / sizeof (char))
+# define SCM_LONG_BIT (SCM_CHAR_BIT * sizeof (int64_t) / sizeof (char))
 #endif
 
 #ifdef UCHAR_MAX
@@ -457,7 +457,7 @@
 #ifdef SHORT_ALIGN
 typedef short SCM_STACKITEM;
 #else
-typedef long SCM_STACKITEM;
+typedef int64_t SCM_STACKITEM;
 #endif
 
 /* Cast pointer through (void *) in order to avoid compiler warnings

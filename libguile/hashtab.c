@@ -11,7 +11,7 @@
  * Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public
- * License along with this library; if not, write to the Free Software
+ * License with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
@@ -65,7 +65,7 @@
 
 scm_t_bits scm_tc16_hashtable;
 
-static unsigned long hashtable_size[] = {
+static uint64_t hashtable_size[] = {
   31, 61, 113, 223, 443, 883, 1759, 3517, 7027, 14051, 28099, 56197, 112363,
   224717, 449419, 898823, 1797641, 3595271, 7190537, 14381041
 #if 0
@@ -75,14 +75,14 @@ static unsigned long hashtable_size[] = {
 #endif
 };
 
-#define HASHTABLE_SIZE_N (sizeof(hashtable_size)/sizeof(unsigned long))
+#define HASHTABLE_SIZE_N (sizeof(hashtable_size)/sizeof(uint64_t))
 
 static char *s_hashtable = "hashtable";
 
 SCM weak_hashtables = SCM_EOL;
 
 static SCM
-make_hash_table (int flags, unsigned long k, const char *func_name) 
+make_hash_table (int flags, uint64_t k, const char *func_name)
 {
   SCM table, vector;
   scm_t_hashtable *t;
@@ -123,14 +123,14 @@ make_hash_table (int flags, unsigned long k, const char *func_name)
 
 void
 scm_i_rehash (SCM table,
-	      unsigned long (*hash_fn)(),
+	      uint64_t (*hash_fn)(),
 	      void *closure,
 	      const char* func_name)
 {
   SCM buckets, new_buckets;
   int i;
-  unsigned long old_size;
-  unsigned long new_size;
+  uint64_t old_size;
+  uint64_t new_size;
 
   if (SCM_HASHTABLE_N_ITEMS (table) < SCM_HASHTABLE_LOWER (table))
     {
@@ -192,7 +192,7 @@ scm_i_rehash (SCM table,
 
       while (scm_is_pair (ls))
 	{
-	  unsigned long h;
+	  uint64_t h;
 	  cell = ls;
 	  handle = SCM_CAR (cell);
 	  ls = SCM_CDR (ls);
@@ -303,7 +303,7 @@ hashtable_free (SCM obj)
 
 
 SCM
-scm_c_make_hash_table (unsigned long k)
+scm_c_make_hash_table (uint64_t k)
 {
   return make_hash_table (0, k, "scm_c_make_hash_table");
 }
@@ -421,10 +421,10 @@ SCM_DEFINE (scm_doubly_weak_hash_table_p, "doubly-weak-hash-table?", 1, 0, 0,
 
 
 SCM
-scm_hash_fn_get_handle (SCM table, SCM obj, unsigned long (*hash_fn)(), SCM (*assoc_fn)(), void * closure)
+scm_hash_fn_get_handle (SCM table, SCM obj, uint64_t (*hash_fn)(), SCM (*assoc_fn)(), void * closure)
 #define FUNC_NAME "scm_hash_fn_get_handle"
 {
-  unsigned long k;
+  uint64_t k;
   SCM h;
 
   if (SCM_HASHTABLE_P (table))
@@ -443,11 +443,11 @@ scm_hash_fn_get_handle (SCM table, SCM obj, unsigned long (*hash_fn)(), SCM (*as
 
 
 SCM
-scm_hash_fn_create_handle_x (SCM table, SCM obj, SCM init, unsigned long (*hash_fn)(),
+scm_hash_fn_create_handle_x (SCM table, SCM obj, SCM init, uint64_t (*hash_fn)(),
                              SCM (*assoc_fn)(), void * closure)
 #define FUNC_NAME "scm_hash_fn_create_handle_x"
 {
-  unsigned long k;
+  uint64_t k;
   SCM buckets, it;
 
   if (SCM_HASHTABLE_P (table))
@@ -507,7 +507,7 @@ scm_hash_fn_create_handle_x (SCM table, SCM obj, SCM init, unsigned long (*hash_
 
 
 SCM 
-scm_hash_fn_ref (SCM table, SCM obj, SCM dflt, unsigned long (*hash_fn)(),
+scm_hash_fn_ref (SCM table, SCM obj, SCM dflt, uint64_t (*hash_fn)(),
                  SCM (*assoc_fn)(), void * closure)
 {
   SCM it = scm_hash_fn_get_handle (table, obj, hash_fn, assoc_fn, closure);
@@ -521,7 +521,7 @@ scm_hash_fn_ref (SCM table, SCM obj, SCM dflt, unsigned long (*hash_fn)(),
 
 
 SCM 
-scm_hash_fn_set_x (SCM table, SCM obj, SCM val, unsigned long (*hash_fn)(),
+scm_hash_fn_set_x (SCM table, SCM obj, SCM val, uint64_t (*hash_fn)(),
                    SCM (*assoc_fn)(), void * closure)
 {
   SCM it;
@@ -534,11 +534,11 @@ scm_hash_fn_set_x (SCM table, SCM obj, SCM val, unsigned long (*hash_fn)(),
 
 SCM 
 scm_hash_fn_remove_x (SCM table, SCM obj,
-		      unsigned long (*hash_fn)(),
+		      uint64_t (*hash_fn)(),
 		      SCM (*assoc_fn)(),
                       void *closure)
 {
-  unsigned long k;
+  uint64_t k;
   SCM buckets, h;
 
   if (SCM_HASHTABLE_P (table))
@@ -794,8 +794,8 @@ typedef struct scm_t_ihashx_closure
 
 
 
-static unsigned long
-scm_ihashx (SCM obj, unsigned long n, scm_t_ihashx_closure *closure)
+static uint64_t
+scm_ihashx (SCM obj, uint64_t n, scm_t_ihashx_closure *closure)
 {
   SCM answer = scm_call_2 (closure->hash, obj, scm_from_uint64 (n));
   return scm_to_uint64 (answer);
@@ -1010,7 +1010,7 @@ SCM_DEFINE (scm_hash_map_to_list, "hash-map->list", 2, 0, 0,
 SCM
 scm_internal_hash_fold (SCM (*fn) (), void *closure, SCM init, SCM table)
 {
-  long i, n;
+  int64_t i, n;
   SCM buckets, result = init;
   
   if (SCM_HASHTABLE_P (table))
@@ -1046,7 +1046,7 @@ scm_internal_hash_fold (SCM (*fn) (), void *closure, SCM init, SCM table)
 void
 scm_internal_hash_for_each_handle (SCM (*fn) (), void *closure, SCM table)
 {
-  long i, n;
+  int64_t i, n;
   SCM buckets;
   
   if (SCM_HASHTABLE_P (table))

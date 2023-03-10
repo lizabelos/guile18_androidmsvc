@@ -16,7 +16,7 @@
  * Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public
- * License along with this library; if not, write to the Free Software
+ * License with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
@@ -26,13 +26,13 @@
 
 
 
-SCM_API unsigned long scm_string_hash (const unsigned char *str, size_t len);
-SCM_API unsigned long scm_hasher (SCM obj, unsigned long n, size_t d);
-SCM_API unsigned long scm_ihashq (SCM obj, unsigned long n);
+SCM_API uint64_t scm_string_hash (const unsigned char *str, size_t len);
+SCM_API uint64_t scm_hasher (SCM obj, uint64_t n, size_t d);
+SCM_API uint64_t scm_ihashq (SCM obj, uint64_t n);
 SCM_API SCM scm_hashq (SCM obj, SCM n);
-SCM_API unsigned long scm_ihashv (SCM obj, unsigned long n);
+SCM_API uint64_t scm_ihashv (SCM obj, uint64_t n);
 SCM_API SCM scm_hashv (SCM obj, SCM n);
-SCM_API unsigned long scm_ihash (SCM obj, unsigned long n);
+SCM_API uint64_t scm_ihash (SCM obj, uint64_t n);
 SCM_API SCM scm_hash (SCM obj, SCM n);
 SCM_API void scm_init_hash (void);
 

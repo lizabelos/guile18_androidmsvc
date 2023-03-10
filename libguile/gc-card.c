@@ -11,7 +11,7 @@
  * Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public
- * License along with this library; if not, write to the Free Software
+ * License with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
@@ -44,7 +44,7 @@
 
 #include "libguile/private-gc.h"
 
-long int scm_i_deprecated_memory_return;
+int64_t scm_i_deprecated_memory_return;
 
 
 /* During collection, this accumulates structures which are to be freed.
@@ -438,7 +438,7 @@ typedef struct scm_dbg_t_double_cell {
 
 int scm_dbg_gc_marked_p (SCM obj);
 scm_t_cell * scm_dbg_gc_get_card (SCM obj);
-scm_t_c_bvec_long * scm_dbg_gc_get_bvec (SCM obj);
+scm_t_c_bvec_int64_t * scm_dbg_gc_get_bvec (SCM obj);
 
 
 int
@@ -459,7 +459,7 @@ scm_dbg_gc_get_card (SCM obj)
     return NULL;
 }
 
-scm_t_c_bvec_long *
+scm_t_c_bvec_int64_t *
 scm_dbg_gc_get_bvec (SCM obj)
 {
   if (!SCM_IMP (obj))

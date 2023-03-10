@@ -14,7 +14,7 @@
 #ifndef QT_VAX_H
 #define QT_VAX_H
 
-typedef unsigned long qt_word_t;
+typedef uint64_t qt_word_t;
 
 /* Thread's initial stack layout on the VAX:
 

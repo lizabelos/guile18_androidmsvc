@@ -11,7 +11,7 @@
  * Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public
- * License along with this library; if not, write to the Free Software
+ * License with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
@@ -35,13 +35,13 @@ extern double floor();
 #endif
 
 
-unsigned long 
+uint64_t
 scm_string_hash (const unsigned char *str, size_t len)
 {
   /* from suggestion at: */
   /* http://srfi.schemers.org/srfi-13/mail-archive/msg00112.html */
 
-  unsigned long h = 0;
+  uint64_t h = 0;
   while (len-- > 0)
     h = *str++ + h*37;
   return h;
@@ -52,8 +52,8 @@ scm_string_hash (const unsigned char *str, size_t len)
 /* Dirk:FIXME:: scm_hasher could be made static. */
 
 
-unsigned long
-scm_hasher(SCM obj, unsigned long n, size_t d)
+uint64_t
+scm_hasher(SCM obj, uint64_t n, size_t d)
 {
   switch (SCM_ITAG3 (obj)) {
   case scm_tc3_int_1: 
@@ -111,7 +111,7 @@ scm_hasher(SCM obj, unsigned long n, size_t d)
       /* Fall through */
     case scm_tc7_string:
       {
-	unsigned long hash =
+	uint64_t hash =
 	  scm_string_hash ((const unsigned char *) scm_i_string_chars (obj),
 			   scm_i_string_length (obj)) % n;
 	scm_remember_upto_here_1 (obj);
@@ -126,7 +126,7 @@ scm_hasher(SCM obj, unsigned long n, size_t d)
 	if (len > 5)
 	  {
 	    size_t i = d/2;
-	    unsigned long h = 1;
+	    uint64_t h = 1;
 	    while (i--)
 	      {
 		SCM elt = SCM_SIMPLE_VECTOR_REF (obj, h % len);
@@ -137,7 +137,7 @@ scm_hasher(SCM obj, unsigned long n, size_t d)
 	else
 	  {
 	    size_t i = len;
-	    unsigned long h = (n)-1;
+	    uint64_t h = (n)-1;
 	    while (i--)
 	      {
 		SCM elt = SCM_SIMPLE_VECTOR_REF (obj, h % len);
@@ -164,8 +164,8 @@ scm_hasher(SCM obj, unsigned long n, size_t d)
 
 
 
-unsigned long
-scm_ihashq (SCM obj, unsigned long n)
+uint64_t
+scm_ihashq (SCM obj, uint64_t n)
 {
   return (SCM_UNPACK (obj) >> 1) % n;
 }
@@ -185,7 +185,7 @@ SCM_DEFINE (scm_hashq, "hashq", 2, 0, 0,
 	    "different values, since @code{foo} will be garbage collected.")
 #define FUNC_NAME s_scm_hashq
 {
-  unsigned long sz = scm_to_unsigned_integer (size, 1, ULONG_MAX);
+  uint64_t sz = scm_to_unsigned_integer (size, 1, ULONG_MAX);
   return scm_from_uint64 (scm_ihashq (key, sz));
 }
 #undef FUNC_NAME
@@ -194,14 +194,14 @@ SCM_DEFINE (scm_hashq, "hashq", 2, 0, 0,
 
 
 
-unsigned long
-scm_ihashv (SCM obj, unsigned long n)
+uint64_t
+scm_ihashv (SCM obj, uint64_t n)
 {
   if (SCM_CHARP(obj))
-    return ((unsigned long) (scm_c_downcase (SCM_CHAR (obj)))) % n; /* downcase!?!! */
+    return ((uint64_t) (scm_c_downcase (SCM_CHAR (obj)))) % n; /* downcase!?!! */
 
   if (SCM_NUMP(obj))
-    return (unsigned long) scm_hasher(obj, n, 10);
+    return (uint64_t) scm_hasher(obj, n, 10);
   else
     return SCM_UNPACK (obj) % n;
 }
@@ -221,7 +221,7 @@ SCM_DEFINE (scm_hashv, "hashv", 2, 0, 0,
 	    "different values, since @code{foo} will be garbage collected.")
 #define FUNC_NAME s_scm_hashv
 {
-  unsigned long sz = scm_to_unsigned_integer (size, 1, ULONG_MAX);
+  uint64_t sz = scm_to_unsigned_integer (size, 1, ULONG_MAX);
   return scm_from_uint64 (scm_ihashv (key, sz));
 }
 #undef FUNC_NAME
@@ -230,10 +230,10 @@ SCM_DEFINE (scm_hashv, "hashv", 2, 0, 0,
 
 
 
-unsigned long
-scm_ihash (SCM obj, unsigned long n)
+uint64_t
+scm_ihash (SCM obj, uint64_t n)
 {
-  return (unsigned long) scm_hasher (obj, n, 10);
+  return (uint64_t) scm_hasher (obj, n, 10);
 }
 
 SCM_DEFINE (scm_hash, "hash", 2, 0, 0,
@@ -244,7 +244,7 @@ SCM_DEFINE (scm_hash, "hash", 2, 0, 0,
 	    "integer in the range 0 to @var{size} - 1.")
 #define FUNC_NAME s_scm_hash
 {
-  unsigned long sz = scm_to_unsigned_integer (size, 1, ULONG_MAX);
+  uint64_t sz = scm_to_unsigned_integer (size, 1, ULONG_MAX);
   return scm_from_uint64 (scm_ihash (key, sz));
 }
 #undef FUNC_NAME

@@ -11,7 +11,7 @@
  * Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public
- * License along with this library; if not, write to the Free Software
+ * License with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
@@ -810,7 +810,7 @@ SCM_DEFINE (scm_struct_vtable_tag, "struct-vtable-tag", 1, 0, 0,
 #if USE_64IMPL
   return scm_from_uint64 (((uint64_t)SCM_STRUCT_DATA (handle)) >> 3);
 #else
-  return scm_from_uint64 (((unsigned long)SCM_STRUCT_DATA (handle)) >> 3);
+  return scm_from_uint64 (((uint64_t)SCM_STRUCT_DATA (handle)) >> 3);
 #endif  
 }
 #undef FUNC_NAME
@@ -822,8 +822,8 @@ SCM_DEFINE (scm_struct_vtable_tag, "struct-vtable-tag", 1, 0, 0,
  * how to associate names with vtables.
  */
 
-unsigned long
-scm_struct_ihashq (SCM obj, unsigned long n)
+uint64_t
+scm_struct_ihashq (SCM obj, uint64_t n)
 {
   /* The length of the hash table should be a relative prime it's not
      necessary to shift down the address.  */

@@ -11,7 +11,7 @@
  * Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public
- * License along with this library; if not, write to the Free Software
+ * License with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
@@ -25,7 +25,7 @@
 #if SCM_ENABLE_DEPRECATED
 
 /* returns the length of a list */
-unsigned long 
+uint64_t
 gh_length (SCM l)
 {
   return gh_scm2ulong (scm_length (l));

@@ -1176,7 +1176,7 @@ Here is @file{c_builtins.c}:
 SCM c_factorial(SCM s_n)
 @{
   int i;
-  unsigned long result = 1, n;
+  uint64_t result = 1, n;
 
   n = gh_scm2ulong(s_n);
 

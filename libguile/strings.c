@@ -11,7 +11,7 @@
  * Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public
- * License along with this library; if not, write to the Free Software
+ * License with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
@@ -392,7 +392,7 @@ scm_i_string_stop_writing (void)
 
 SCM
 scm_i_make_symbol (SCM name, scm_t_bits flags,
-		   unsigned long hash, SCM props)
+		   uint64_t hash, SCM props)
 {
   SCM buf;
   size_t start = STRING_START (name);
@@ -426,7 +426,7 @@ scm_i_make_symbol (SCM name, scm_t_bits flags,
 
 SCM
 scm_i_c_make_symbol (const char *name, size_t len,
-		     scm_t_bits flags, unsigned long hash, SCM props)
+		     scm_t_bits flags, uint64_t hash, SCM props)
 {
   SCM buf = make_stringbuf (len);
   memcpy (STRINGBUF_CHARS (buf), name, len);
@@ -439,7 +439,7 @@ scm_i_c_make_symbol (const char *name, size_t len,
    underlying storage.  */
 SCM
 scm_i_c_take_symbol (char *name, size_t len,
-		     scm_t_bits flags, unsigned long hash, SCM props)
+		     scm_t_bits flags, uint64_t hash, SCM props)
 {
   SCM buf = scm_i_take_stringbufn (name, len);
 
@@ -590,7 +590,7 @@ SCM_DEFINE (scm_string, "string", 0, 0, 1,
   char *data;
 
   {
-    long i = scm_ilength (chrs);
+    int64_t i = scm_ilength (chrs);
 
     SCM_ASSERT (i >= 0, chrs, SCM_ARG1, FUNC_NAME);
     len = i;
@@ -669,7 +669,7 @@ SCM_DEFINE (scm_string_ref, "string-ref", 2, 0, 0,
 #define FUNC_NAME s_scm_string_ref
 {
   size_t len;
-  unsigned long idx;
+  uint64_t idx;
 
   SCM_VALIDATE_STRING (1, str);
 
@@ -699,7 +699,7 @@ SCM_DEFINE (scm_string_set_x, "string-set!", 3, 0, 0,
 #define FUNC_NAME s_scm_string_set_x
 {
   size_t len;
-  unsigned long idx;
+  uint64_t idx;
 
   SCM_VALIDATE_STRING (1, str);
 

@@ -15,7 +15,7 @@
  * Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public
- * License along with this library; if not, write to the Free Software
+ * License with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
@@ -84,7 +84,7 @@ scm_wta (SCM arg, const char *pos, const char *s_subr)
 #if USE_64IMPL
   if ((~0x1fL) & (int64_t) pos)
 #else
-  if ((~0x1fL) & (long) pos)
+  if ((~0x1fL) & (int64_t) pos)
 #endif
     {
       /* error string supplied.  */
@@ -193,7 +193,7 @@ SCM_DEFINE (scm_registered_modules, "c-registered-modules", 0, 0, 0,
 #if USE_64IMPL
 			      scm_from_uint64 ((uint64_t) md->init_func)),
 #else
-			      scm_from_uint64 ((unsigned long) md->init_func)),
+			      scm_from_uint64 ((uint64_t) md->init_func)),
 #endif
 		    res);
   return res;
@@ -570,7 +570,7 @@ scm_make_subr_with_generic (const char *name, int type, SCM (*fcn) (), SCM *gf)
 #ifdef _UNICOS
 typedef int setjmp_type;
 #else
-typedef long setjmp_type;
+typedef int64_t setjmp_type;
 #endif
 
 struct cce_handler_data {
@@ -602,7 +602,7 @@ scm_call_catching_errors (SCM (*thunk)(), SCM (*err_filter)(), void *closure)
   }
 }
 
-long
+int64_t
 scm_make_smob_type_mfpe (char *name, size_t size,
                         SCM (*mark) (SCM),
                         size_t (*free) (SCM),
@@ -614,14 +614,14 @@ scm_make_smob_type_mfpe (char *name, size_t size,
      "Use 'scm_make_smob_type' plus 'scm_set_smob_*' instead.");
 
   {
-    long answer = scm_make_smob_type (name, size);
+    int64_t answer = scm_make_smob_type (name, size);
     scm_set_smob_mfpe (answer, mark, free, print, equalp);
     return answer;
   }
 }
 
 void
-scm_set_smob_mfpe (long tc, 
+scm_set_smob_mfpe (int64_t tc,
 		   SCM (*mark) (SCM),
 		   size_t (*free) (SCM),
 		   int (*print) (SCM, SCM, scm_print_state *),
@@ -675,7 +675,7 @@ scm_i_object_chars (SCM obj)
   abort ();
 }
 
-long
+int64_t
 scm_i_object_length (SCM obj)
 {
   scm_c_issue_deprecation_warning 
@@ -1257,7 +1257,7 @@ scm_i_vectorp (SCM x)
   return SCM_I_IS_VECTOR (x);
 }
 
-unsigned long
+uint64_t
 scm_i_vector_length (SCM x)
 {
   scm_c_issue_deprecation_warning

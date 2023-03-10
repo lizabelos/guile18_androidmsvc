@@ -54,8 +54,8 @@ typedef char * ptr_t;	/* A generic pointer to which we can add	*/
 /* better choices.  But those appear to have incorrect definitions	*/
 /* on may systems.  Notably "typedef int size_t" seems to be both	*/
 /* frequent and WRONG.							*/
-typedef unsigned long GC_word;
-typedef long GC_signed_word;
+typedef uint64_t GC_word;
+typedef int64_t GC_signed_word;
 
 typedef GC_word word;
 typedef GC_signed_word signed_word;
@@ -988,7 +988,7 @@ scm_get_stack_base ()
 #   endif
 #   ifdef DOS4GW
 #     define OS_TYPE "DOS4GW"
-      extern long __nullarea;
+      extern int64_t __nullarea;
       extern char _end;
       extern char *_STACKTOP;
       /* Depending on calling conventions Watcom C either precedes
@@ -1553,7 +1553,7 @@ scm_get_stack_base ()
 #ifdef DJGPP
   /* Apparently necessary for djgpp 2.01.  May casuse problems with	*/
   /* other versions.							*/
-  typedef long unsigned int caddr_t;
+  typedef int64_t unsigned int caddr_t;
 #endif
 
 #ifdef PCR
@@ -1581,7 +1581,7 @@ scm_get_stack_base ()
 #   define WORD unsigned short
 # endif
 # ifndef DWORD
-#   define DWORD unsigned long
+#   define DWORD uint64_t
 # endif
 
 # define EXE386 1
@@ -1694,12 +1694,12 @@ void *scm_get_stack_base()
 void *scm_get_stack_base()
 {
     extern struct WBStartup *_WBenchMsg;
-    extern long __base;
-    extern long __stack;
+    extern int64_t __base;
+    extern int64_t __stack;
     struct Task *task;
     struct Process *proc;
     struct CommandLineInterface *cli;
-    long size;
+    int64_t size;
 
     if ((task = FindTask(0)) == 0) {
 	GC_err_puts("Cannot find own task structure\n");

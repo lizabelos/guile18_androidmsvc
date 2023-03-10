@@ -11,7 +11,7 @@
  * Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public
- * License along with this library; if not, write to the Free Software
+ * License with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
@@ -228,8 +228,8 @@ SCM_DEFINE (scm_inet_makeaddr, "inet-makeaddr", 2, 0, 0,
 #define FUNC_NAME s_scm_inet_makeaddr
 {
   struct in_addr addr;
-  unsigned long netnum;
-  unsigned long lnanum;
+  uint64_t netnum;
+  uint64_t lnanum;
 
   netnum = SCM_NUM2ULONG (1, net);
   lnanum = SCM_NUM2ULONG (2, lna);
@@ -279,7 +279,7 @@ SCM_DEFINE (scm_inet_makeaddr, "inet-makeaddr", 2, 0, 0,
 #endif
 
 #if (SIZEOF_UNSIGNED_LONG * SCM_CHAR_BIT) > 128
-#error "Assumption that unsigned long <= 128 bits has been violated."
+#error "Assumption that uint64_t <= 128 bits has been violated."
 #endif
 
 #if (SIZEOF_UNSIGNED_LONG_LONG * SCM_CHAR_BIT) > 128
@@ -295,7 +295,7 @@ scm_from_ipv6 (const scm_t_uint8 *src)
   mpz_import (SCM_I_BIG_MPZ (result),
               1,  /* chunk */
               1,  /* big-endian chunk ordering */
-              16, /* chunks are 16 bytes long */
+              16, /* chunks are 16 bytes int64_t */
               1,  /* big-endian byte ordering */
               0,  /* "nails" -- leading unused bits per chunk */
               src);
@@ -339,7 +339,7 @@ scm_to_ipv6 (scm_t_uint8 dst[16], SCM src)
       mpz_export (dst,
                   &count,
                   1, /* big-endian chunk ordering */
-                  16, /* chunks are 16 bytes long */
+                  16, /* chunks are 16 bytes int64_t */
                   1, /* big-endian byte ordering */
                   0, /* "nails" -- leading unused bits per chunk */
                   SCM_I_BIG_MPZ (src));
@@ -799,7 +799,7 @@ scm_fill_sockaddr (int fam, SCM address, SCM *args, int which_arg,
     case AF_INET:
       {
 	struct sockaddr_in *soka;
-	unsigned long addr;
+	uint64_t addr;
 	int port;
 
 	SCM_VALIDATE_ULONG_COPY (which_arg, address, addr);
@@ -823,8 +823,8 @@ scm_fill_sockaddr (int fam, SCM address, SCM *args, int which_arg,
 	/* see RFC2553.  */
 	int port;
 	struct sockaddr_in6 *soka;
-	unsigned long flowinfo = 0;
-	unsigned long scope_id = 0;
+	uint64_t flowinfo = 0;
+	uint64_t scope_id = 0;
 
 	SCM_VALIDATE_CONS (which_arg + 1, *args);
 	port = scm_to_int (SCM_CAR (*args));

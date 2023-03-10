@@ -11,7 +11,7 @@
  * Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public
- * License along with this library; if not, write to the Free Software
+ * License with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
@@ -69,7 +69,7 @@
  * char			byvect     s8 or u8, depending on signedness of 'char'
  * boolean		bvect      
  * signed long		ivect      s32
- * unsigned long	uvect      u32
+ * uint64_t	uvect      u32
  * float		fvect      f32
  * double		dvect      d32
  * complex double	cvect      c64
@@ -237,7 +237,7 @@ scm_i_get_old_prototype (SCM uvec)
 }
 
 SCM
-scm_make_uve (long k, SCM prot)
+scm_make_uve (int64_t k, SCM prot)
 #define FUNC_NAME "scm_make_uve"
 {
   scm_c_issue_deprecation_warning
@@ -818,7 +818,7 @@ scm_i_ra_set_contp (SCM ra)
   size_t k = SCM_I_ARRAY_NDIM (ra);
   if (k)
     {
-      long inc = SCM_I_ARRAY_DIMS (ra)[k - 1].inc;
+      int64_t inc = SCM_I_ARRAY_DIMS (ra)[k - 1].inc;
       while (k--)
 	{
 	  if (inc != SCM_I_ARRAY_DIMS (ra)[k].inc)
@@ -859,7 +859,7 @@ SCM_DEFINE (scm_make_shared_array, "make-shared-array", 2, 0, 1,
   SCM imap;
   size_t k;
   ssize_t i;
-  long old_base, old_min, new_min, old_max, new_max;
+  int64_t old_base, old_min, new_min, old_max, new_max;
   scm_t_array_dim *s;
 
   SCM_VALIDATE_REST_ARGUMENT (dims);
@@ -1153,7 +1153,7 @@ SCM_DEFINE (scm_array_in_bounds_p, "array-in-bounds?", 1, 0, 1,
 
       for (k = 0; k < ndim; k++)
 	{
-	  long ind;
+	  int64_t ind;
 
 	  if (!scm_is_pair (args))
 	    SCM_WRONG_NUM_ARGS ();
@@ -1176,7 +1176,7 @@ SCM_DEFINE (scm_array_in_bounds_p, "array-in-bounds?", 1, 0, 1,
 	 vectors are guaranteed to be zero-origin here.
       */
 
-      long ind;
+      int64_t ind;
 
       if (!scm_is_pair (args))
 	SCM_WRONG_NUM_ARGS ();
@@ -1317,7 +1317,7 @@ SCM
 scm_ra2contig (SCM ra, int copy)
 {
   SCM ret;
-  long inc = 1;
+  int64_t inc = 1;
   size_t k, len = 1;
   for (k = SCM_I_ARRAY_NDIM (ra); k--;)
     len *= SCM_I_ARRAY_DIMS (ra)[k].ubnd - SCM_I_ARRAY_DIMS (ra)[k].lbnd + 1;
@@ -2286,10 +2286,10 @@ scm_istr2bve (SCM str)
 
 
 static SCM 
-ra2l (SCM ra, unsigned long base, unsigned long k)
+ra2l (SCM ra, uint64_t base, uint64_t k)
 {
   SCM res = SCM_EOL;
-  long inc;
+  int64_t inc;
   size_t i;
   int enclosed = SCM_I_ENCLOSED_ARRAYP (ra);
   
@@ -2467,7 +2467,7 @@ scm_i_print_array_dimension (SCM array, int dim, int base, int enclosed,
 			     SCM port, scm_print_state *pstate)
 {
   scm_t_array_dim *dim_spec = SCM_I_ARRAY_DIMS (array) + dim;
-  long idx;
+  int64_t idx;
 
   scm_putc ('(', port);
 
@@ -2494,11 +2494,11 @@ scm_i_print_array_dimension (SCM array, int dim, int base, int enclosed,
 static int
 scm_i_print_array (SCM array, SCM port, scm_print_state *pstate)
 {
-  long ndim = SCM_I_ARRAY_NDIM (array);
+  int64_t ndim = SCM_I_ARRAY_NDIM (array);
   scm_t_array_dim *dim_specs = SCM_I_ARRAY_DIMS (array);
   SCM v = SCM_I_ARRAY_V (array);
-  unsigned long base = SCM_I_ARRAY_BASE (array);
-  long i;
+  uint64_t base = SCM_I_ARRAY_BASE (array);
+  int64_t i;
   int print_lbnds = 0, zero_size = 0, print_lens = 0;
 
   scm_putc ('#', port);
@@ -2875,7 +2875,7 @@ scm_shap2ra (SCM args, const char *what)
 }
 
 SCM
-scm_cvref (SCM v, unsigned long pos, SCM last)
+scm_cvref (SCM v, uint64_t pos, SCM last)
 {
   scm_c_issue_deprecation_warning
     ("scm_cvref is deprecated.  Use scm_c_generalized_vector_ref instead.");
@@ -2890,7 +2890,7 @@ scm_ra_set_contp (SCM ra)
   scm_i_ra_set_contp (ra);
 }
 
-long 
+int64_t
 scm_aind (SCM ra, SCM args, const char *what)
 {
   scm_t_array_handle handle;

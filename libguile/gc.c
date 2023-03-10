@@ -11,7 +11,7 @@
  * Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public
- * License along with this library; if not, write to the Free Software
+ * License with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
@@ -98,7 +98,7 @@ scm_i_expensive_validation_check (SCM cell)
   if (!scm_in_heap_p (cell))
     {
       fprintf (stderr, "scm_assert_cell_valid: this object does not live in the heap: %lux\n",
-	       (unsigned long) SCM_UNPACK (cell));
+	       (uint64_t) SCM_UNPACK (cell));
       abort ();
     }
 
@@ -148,7 +148,7 @@ scm_assert_cell_valid (SCM cell)
 		   "scm_assert_cell_valid: this object is unmarked. \n"
 		   "It has been garbage-collected in the last GC run: "
 		   "%lux\n",
-                   (unsigned long) SCM_UNPACK (cell));
+                   (uint64_t) SCM_UNPACK (cell));
 	  abort ();
 	}
 
@@ -199,28 +199,28 @@ SCM_DEFINE (scm_set_debug_cell_accesses_x, "set-debug-cell-accesses!", 1, 0, 0,
 /* scm_mtrigger
  * is the number of bytes of malloc allocation needed to trigger gc.
  */
-unsigned long scm_mtrigger;
+uint64_t scm_mtrigger;
 
 /* GC Statistics Keeping
  */
-unsigned long scm_cells_allocated = 0;
-unsigned long scm_last_cells_allocated;
-unsigned long scm_mallocated = 0;
-unsigned long scm_gc_cells_collected;
-unsigned long scm_gc_cells_collected_1 = 0; /* previous GC yield */
-unsigned long scm_gc_malloc_collected;
-unsigned long scm_gc_ports_collected;
-unsigned long scm_gc_time_taken = 0;
-static unsigned long t_before_gc;
-unsigned long scm_gc_mark_time_taken = 0;
-unsigned long scm_gc_times = 0;
-unsigned long scm_gc_cells_swept = 0;
+uint64_t scm_cells_allocated = 0;
+uint64_t scm_last_cells_allocated;
+uint64_t scm_mallocated = 0;
+uint64_t scm_gc_cells_collected;
+uint64_t scm_gc_cells_collected_1 = 0; /* previous GC yield */
+uint64_t scm_gc_malloc_collected;
+uint64_t scm_gc_ports_collected;
+uint64_t scm_gc_time_taken = 0;
+static uint64_t t_before_gc;
+uint64_t scm_gc_mark_time_taken = 0;
+uint64_t scm_gc_times = 0;
+uint64_t scm_gc_cells_swept = 0;
 double scm_gc_cells_marked_acc = 0.;
 double scm_gc_cells_swept_acc = 0.;
 double scm_gc_cells_allocated_acc = 0.;
 int scm_gc_cell_yield_percentage =0;
 int scm_gc_malloc_yield_percentage = 0;
-unsigned long protected_obj_count = 0;
+uint64_t protected_obj_count = 0;
 
 
 SCM_SYMBOL (sym_cells_allocated, "cells-allocated");
@@ -295,18 +295,18 @@ SCM_DEFINE (scm_gc_stats, "gc-stats", 0, 0, 0,
 	    "use of storage.\n")
 #define FUNC_NAME s_scm_gc_stats
 {
-  long i = 0;
+  int64_t i = 0;
   SCM heap_segs = SCM_EOL ;
-  unsigned long int local_scm_mtrigger;
-  unsigned long int local_scm_mallocated;
-  unsigned long int local_scm_heap_size;
+  uint64_t local_scm_mtrigger;
+  uint64_t local_scm_mallocated;
+  uint64_t local_scm_heap_size;
   int local_scm_gc_cell_yield_percentage;
   int local_scm_gc_malloc_yield_percentage;
-  unsigned long int local_scm_cells_allocated;
-  unsigned long int local_scm_gc_time_taken;
-  unsigned long int local_scm_gc_times;
-  unsigned long int local_scm_gc_mark_time_taken;
-  unsigned long int local_protected_obj_count;
+  uint64_t local_scm_cells_allocated;
+  uint64_t local_scm_gc_time_taken;
+  uint64_t local_scm_gc_times;
+  uint64_t local_scm_gc_mark_time_taken;
+  uint64_t local_protected_obj_count;
   double local_scm_gc_cells_swept;
   double local_scm_gc_cells_marked;
   double local_scm_total_cells_allocated;
@@ -425,7 +425,7 @@ gc_start_stats (const char *what SCM_UNUSED)
 static void
 gc_end_stats ()
 {
-  unsigned long t = scm_c_get_internal_run_time ();
+  uint64_t t = scm_c_get_internal_run_time ();
   scm_gc_time_taken += (t - t_before_gc);
 
   ++scm_gc_times;
@@ -807,7 +807,7 @@ scm_gc_register_root (SCM *p)
 #if USE_64IMPL
   SCM key = scm_from_uint64 ((uint64_t) p);
 #else
-  SCM key = scm_from_uint64 ((unsigned long) p);
+  SCM key = scm_from_uint64 ((uint64_t) p);
 #endif
   /* This critical section barrier will be replaced by a mutex. */
   /* njrev: and again. */
@@ -828,7 +828,7 @@ scm_gc_unregister_root (SCM *p)
 #if USE_64IMPL
   SCM key = scm_from_uint64 ((uint64_t) p);
 #else
-  SCM key = scm_from_uint64 ((unsigned long) p);
+  SCM key = scm_from_uint64 ((uint64_t) p);
 #endif
 
   /* This critical section barrier will be replaced by a mutex. */
@@ -855,7 +855,7 @@ scm_gc_unregister_root (SCM *p)
 }
 
 void
-scm_gc_register_roots (SCM *b, unsigned long n)
+scm_gc_register_roots (SCM *b, uint64_t n)
 {
   SCM *p = b;
   for (; p < b + n; ++p)
@@ -863,7 +863,7 @@ scm_gc_register_roots (SCM *b, unsigned long n)
 }
 
 void
-scm_gc_unregister_roots (SCM *b, unsigned long n)
+scm_gc_unregister_roots (SCM *b, uint64_t n)
 {
   SCM *p = b;
   for (; p < b + n; ++p)
@@ -885,7 +885,7 @@ scm_getenv_int (const char *var, int def)
 {
   char *end = 0;
   char *val = getenv (var);
-  long res = def;
+  int64_t res = def;
   if (!val)
     return def;
   res = strtol (val, &end, 10);

@@ -26,7 +26,7 @@
 #include <qt.h>
 
 /* size of an integer-register (32 bit) */
-typedef unsigned long qt_word_t;
+typedef uint64_t qt_word_t;
 
 /* PA-RISC's stack grows up */
 #define QT_GROW_UP

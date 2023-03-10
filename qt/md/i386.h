@@ -14,7 +14,7 @@
 #ifndef QT_386_H
 #define QT_386_H
 
-typedef unsigned long qt_word_t;
+typedef uint64_t qt_word_t;
 
 /* Thread's initial stack layout on the i386:
 

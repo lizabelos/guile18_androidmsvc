@@ -13,7 +13,7 @@
  * Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public
- * License along with this library; if not, write to the Free Software
+ * License with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
@@ -305,7 +305,7 @@ SCM_DEFINE (scm_reverse_list_to_string, "reverse-list->string", 1, 0, 0,
 #define FUNC_NAME s_scm_reverse_list_to_string
 {
   SCM result;
-  long i = scm_ilength (chrs);
+  int64_t i = scm_ilength (chrs);
   char *data;
 
   if (i < 0)
@@ -381,7 +381,7 @@ SCM_DEFINE (scm_string_join, "string-join", 1, 2, 0,
   size_t del_len = 0;
   size_t len = 0;
   char *p;
-  long strings = scm_ilength (ls);
+  int64_t strings = scm_ilength (ls);
 
   /* Validate the string list.  */
   if (strings < 0)
@@ -3289,7 +3289,7 @@ SCM_DEFINE (scm_string_split, "string-split", 2, 0, 0,
 	    "@end lisp")
 #define FUNC_NAME s_scm_string_split
 {
-  long idx, last_idx;
+  int64_t idx, last_idx;
   const char * p;
   char ch;
   SCM res = SCM_EOL;

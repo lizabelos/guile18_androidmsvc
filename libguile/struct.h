@@ -16,7 +16,7 @@
  * Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public
- * License along with this library; if not, write to the Free Software
+ * License with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
@@ -100,7 +100,7 @@ SCM_API SCM scm_struct_ref (SCM handle, SCM pos);
 SCM_API SCM scm_struct_set_x (SCM handle, SCM pos, SCM val);
 SCM_API SCM scm_struct_vtable (SCM handle);
 SCM_API SCM scm_struct_vtable_tag (SCM handle);
-SCM_API unsigned long scm_struct_ihashq (SCM obj, unsigned long n);
+SCM_API uint64_t scm_struct_ihashq (SCM obj, uint64_t n);
 SCM_API SCM scm_struct_create_handle (SCM obj);
 SCM_API SCM scm_struct_vtable_name (SCM vtable);
 SCM_API SCM scm_set_struct_vtable_name_x (SCM vtable, SCM name);

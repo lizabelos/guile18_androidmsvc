@@ -18,7 +18,7 @@
  * Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public
- * License along with this library; if not, write to the Free Software
+ * License with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
@@ -209,14 +209,14 @@ SCM_API SCM scm_make_subr_opt (const char *name,
 SCM_API SCM scm_call_catching_errors (SCM (*thunk)(), SCM (*err_filter)(),
 				      void * closure);
 
-SCM_API long scm_make_smob_type_mfpe (char *name, size_t size,
+SCM_API int64_t scm_make_smob_type_mfpe (char *name, size_t size,
 				      SCM (*mark) (SCM),
 				      size_t (*free) (SCM),
 				      int (*print) (SCM, SCM,
 						    scm_print_state*),
 				      SCM (*equalp) (SCM, SCM));
 
-SCM_API void scm_set_smob_mfpe (long tc, 
+SCM_API void scm_set_smob_mfpe (int64_t tc,
 				SCM (*mark) (SCM),
 				size_t (*free) (SCM),
 				int (*print) (SCM, SCM, scm_print_state*),
@@ -231,7 +231,7 @@ SCM_API char *scm_i_object_chars (SCM);
 #define SCM_CHARS(x)   scm_i_object_chars(x)
 #define SCM_UCHARS(x)  ((unsigned char *)SCM_CHARS(x))
 
-SCM_API long scm_i_object_length (SCM);
+SCM_API int64_t scm_i_object_length (SCM);
 
 #define SCM_LENGTH(x) scm_i_object_length(x)
 
@@ -479,7 +479,7 @@ SCM_API SCM scm_i_keywordsym (SCM keyword);
 #define SCM_VECTOR_MAX_LENGTH ((1L << 24) - 1)
 
 SCM_API int scm_i_vectorp (SCM x);
-SCM_API unsigned long scm_i_vector_length (SCM x);
+SCM_API uint64_t scm_i_vector_length (SCM x);
 SCM_API const SCM *scm_i_velts (SCM x);
 SCM_API SCM *scm_i_writable_velts (SCM x);
 SCM_API SCM scm_i_vector_ref (SCM x, size_t idx);

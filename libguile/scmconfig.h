@@ -107,8 +107,8 @@ typedef ptrdiff_t scm_t_ptrdiff;
 /* POSIX.4 structure for a time value.  This is like a `struct timeval'   but has nanoseconds instead of microseconds.  */
 typedef struct
 {
-  long int tv_sec;		/* Seconds.  */
-  long int tv_nsec;		/* Nanoseconds.  */
+  int64_t tv_sec;		/* Seconds.  */
+  int64_t tv_nsec;		/* Nanoseconds.  */
 } scm_t_timespec;
 
 /*** Threading model (scmconfig.h support not finished) ***/

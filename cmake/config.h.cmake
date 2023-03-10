@@ -808,7 +808,7 @@ See GUILE_HEADER_LIBC_WITH_UNISTD in aclocal.m4. */
 /* The size of `unsigned int', as computed by sizeof. */
 #define SIZEOF_UNSIGNED_INT @SIZEOF_UNSIGNED_INT@
 
-/* The size of `unsigned long', as computed by sizeof. */
+/* The size of `uint64_t', as computed by sizeof. */
 #define SIZEOF_UNSIGNED_LONG @SIZEOF_UNSIGNED_LONG@
 
 /* The size of `uint64_t', as computed by sizeof. */

@@ -13,7 +13,7 @@
  * Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public
- * License along with this library; if not, write to the Free Software
+ * License with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
@@ -40,7 +40,7 @@ SCM_DEFINE (scm_srfi60_log2_binary_factors, "log2-binary-factors", 1, 0, 0,
 
   if (SCM_I_INUMP (n))
     {
-      long nn = SCM_I_INUM (n);
+      int64_t nn = SCM_I_INUM (n);
       if (nn == 0)
         return SCM_I_MAKINUM (-1);
       nn = nn ^ (nn-1);  /* 1 bits for each low 0 and lowest 1 */
@@ -73,7 +73,7 @@ SCM_DEFINE (scm_srfi60_copy_bit, "copy-bit", 3, 0, 0,
 #define FUNC_NAME s_scm_srfi60_copy_bit
 {
   SCM r;
-  unsigned long ii;
+  uint64_t ii;
   int bb;
 
   ii = scm_to_uint64 (index);
@@ -81,14 +81,14 @@ SCM_DEFINE (scm_srfi60_copy_bit, "copy-bit", 3, 0, 0,
 
   if (SCM_I_INUMP (n))
     {
-      long nn = SCM_I_INUM (n);
+      int64_t nn = SCM_I_INUM (n);
 
       /* can't set high bit ii==SCM_LONG_BIT-1, that would change the sign,
          which is not what's wanted */
       if (ii < SCM_LONG_BIT-1)
         {
           nn &= ~(1L << ii);  /* zap bit at index */
-          nn |= ((long) bb << ii);   /* insert desired bit */
+          nn |= ((int64_t) bb << ii);   /* insert desired bit */
           return scm_from_int64 (nn);
         }
       else
@@ -139,9 +139,9 @@ SCM_DEFINE (scm_srfi60_rotate_bit_field, "rotate-bit-field", 4, 0, 0,
 	    "@end example")
 #define FUNC_NAME s_scm_srfi60_rotate_bit_field
 {
-  unsigned long ss = scm_to_uint64 (start);
-  unsigned long ee = scm_to_uint64 (end);
-  unsigned long ww, cc;
+  uint64_t ss = scm_to_uint64 (start);
+  uint64_t ee = scm_to_uint64 (end);
+  uint64_t ww, cc;
 
   SCM_ASSERT_RANGE (3, end, (ee >= ss));
   ww = ee - ss;
@@ -150,15 +150,15 @@ SCM_DEFINE (scm_srfi60_rotate_bit_field, "rotate-bit-field", 4, 0, 0,
 
   if (SCM_I_INUMP (n))
     {
-      long nn = SCM_I_INUM (n);
+      int64_t nn = SCM_I_INUM (n);
 
       if (ee <= SCM_LONG_BIT-1)
         {
-          /* all within a long */
-          long below = nn & ((1L << ss) - 1);  /* before start */
-          long above = nn & (-1L << ee);       /* above end */
-          long fmask = (-1L << ss) & ((1L << ee) - 1);  /* field mask */
-          long ff = nn & fmask;                /* field */
+          /* all within a int64_t */
+          int64_t below = nn & ((1L << ss) - 1);  /* before start */
+          int64_t above = nn & (-1L << ee);       /* above end */
+          int64_t fmask = (-1L << ss) & ((1L << ee) - 1);  /* field mask */
+          int64_t ff = nn & fmask;                /* field */
 
           return scm_from_int64 (above
                                 | ((ff << cc) & fmask)
@@ -231,24 +231,24 @@ SCM_DEFINE (scm_srfi60_reverse_bit_field, "reverse-bit-field", 3, 0, 0,
 	    "@end example")
 #define FUNC_NAME s_scm_srfi60_reverse_bit_field
 {
-  long ss = scm_to_int64 (start);
-  long ee = scm_to_int64 (end);
-  long swaps = (ee - ss) / 2;  /* number of swaps */
+  int64_t ss = scm_to_int64 (start);
+  int64_t ee = scm_to_int64 (end);
+  int64_t swaps = (ee - ss) / 2;  /* number of swaps */
   SCM b;
 
   if (SCM_I_INUMP (n))
     {
-      long nn = SCM_I_INUM (n);
+      int64_t nn = SCM_I_INUM (n);
 
       if (ee <= SCM_LONG_BIT-1)
         {
-          /* all within a long */
-          long smask = 1L << ss;
-          long emask = 1L << (ee-1);
+          /* all within a int64_t */
+          int64_t smask = 1L << ss;
+          int64_t emask = 1L << (ee-1);
           for ( ; swaps > 0; swaps--)
             {
-              long sbit = nn & smask;
-              long ebit = nn & emask;
+              int64_t sbit = nn & smask;
+              int64_t ebit = nn & emask;
               nn ^= sbit ^ (ebit ? smask : 0)  /* zap sbit, put ebit value */
                 ^   ebit ^ (sbit ? emask : 0); /* zap ebit, put sbit value */
 
@@ -323,7 +323,7 @@ SCM_DEFINE (scm_srfi60_integer_to_list, "integer->list", 1, 1, 0,
 #define FUNC_NAME s_scm_srfi60_integer_to_list
 {
   SCM ret = SCM_EOL;
-  unsigned long ll, i;
+  uint64_t ll, i;
 
   if (SCM_UNBNDP (len))
     len = scm_integer_length (n);
@@ -331,10 +331,10 @@ SCM_DEFINE (scm_srfi60_integer_to_list, "integer->list", 1, 1, 0,
 
   if (SCM_I_INUMP (n))
     {
-      long nn = SCM_I_INUM (n);
+      int64_t nn = SCM_I_INUM (n);
       for (i = 0; i < ll; i++)
         {
-          unsigned long shift = SCM_MIN (i, (unsigned long) SCM_LONG_BIT-1);
+          uint64_t shift = SCM_MIN (i, (uint64_t) SCM_LONG_BIT-1);
           int bit = (nn >> shift) & 1;
           ret = scm_cons (scm_from_bool (bit), ret);
         }
@@ -366,7 +366,7 @@ SCM_DEFINE (scm_srfi60_list_to_integer, "list->integer", 1, 0, 0,
 	    "@end example")
 #define FUNC_NAME s_scm_srfi60_list_to_integer
 {
-  long len;
+  int64_t len;
 
   /* strip high zero bits from lst; after this the length tells us whether
      an inum or bignum is required */
@@ -378,7 +378,7 @@ SCM_DEFINE (scm_srfi60_list_to_integer, "list->integer", 1, 0, 0,
   if (len <= SCM_I_FIXNUM_BIT - 1)
     {
       /* fits an inum (a positive inum) */
-      long n = 0;
+      int64_t n = 0;
       while (scm_is_pair (lst))
         {
           n <<= 1;

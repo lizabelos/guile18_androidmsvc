@@ -11,7 +11,7 @@
  * Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public
- * License along with this library; if not, write to the Free Software
+ * License with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
@@ -140,15 +140,15 @@ thread_mark (SCM obj)
 static int
 thread_print (SCM exp, SCM port, scm_print_state *pstate SCM_UNUSED)
 {
-  /* On a Gnu system pthread_t is an unsigned long, but on mingw it's a
-     struct.  A cast like "(unsigned long) t->pthread" is a syntax error in
+  /* On a Gnu system pthread_t is an uint64_t, but on mingw it's a
+     struct.  A cast like "(uint64_t) t->pthread" is a syntax error in
      the struct case, hence we go via a union, and extract according to the
      size of pthread_t.  */
   union {
     scm_i_pthread_t p;
     unsigned short us;
     unsigned int   ui;
-    unsigned long  ul;
+    uint64_t  ul;
     scm_t_uintmax  um;
   } u;
   scm_i_thread *t = SCM_I_THREAD_DATA (exp);
@@ -159,7 +159,7 @@ thread_print (SCM exp, SCM port, scm_print_state *pstate SCM_UNUSED)
     id = u.us;
   else if (sizeof (p) == sizeof (unsigned int))
     id = u.ui;
-  else if (sizeof (p) == sizeof (unsigned long))
+  else if (sizeof (p) == sizeof (uint64_t))
     id = u.ul;
   else
     id = u.um;

@@ -11,7 +11,7 @@
  * Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public
- * License along with this library; if not, write to the Free Software
+ * License with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
@@ -1228,7 +1228,7 @@ eval_environment_folder (SCM extended_data, SCM symbol, SCM value, SCM tail)
 #if USE_64IMPL
       scm_environment_folder proc = (scm_environment_folder) scm_to_uint64 (proc_as_nr);
 #else
-      unsigned long int proc_as_ul = scm_to_uint64 (proc_as_nr);
+      uint64_t proc_as_ul = scm_to_uint64 (proc_as_nr);
       scm_environment_folder proc = (scm_environment_folder) proc_as_ul;
 #endif
       SCM data = SCM_CDDR (extended_data);
@@ -1250,7 +1250,7 @@ eval_environment_fold (SCM env, scm_environment_folder proc, SCM data, SCM init)
 #if USE_64IMPL
   SCM proc_as_nr = scm_from_uint64 ((uint64_t) proc);
 #else
-  SCM proc_as_nr = scm_from_uint64 ((unsigned long) proc);
+  SCM proc_as_nr = scm_from_uint64 ((uint64_t) proc);
 #endif
   SCM extended_data = scm_cons2 (local, proc_as_nr, data);
   SCM tmp_result = scm_c_environment_fold (imported, eval_environment_folder, extended_data, init);
@@ -1641,7 +1641,7 @@ import_environment_folder (SCM extended_data, SCM symbol, SCM value, SCM tail)
 #if USE_64IMPL
   scm_environment_folder proc = (scm_environment_folder) scm_to_uint64 (proc_as_nr);
 #else
-  unsigned long int proc_as_ul = scm_to_uint64 (proc_as_nr);
+  uint64_t proc_as_ul = scm_to_uint64 (proc_as_nr);
   scm_environment_folder proc = (scm_environment_folder) proc_as_ul;
 #endif
   SCM data = SCM_CDDDR (extended_data);
@@ -1663,7 +1663,7 @@ import_environment_fold (SCM env, scm_environment_folder proc, SCM data, SCM ini
 #if USE_64IMPL
   SCM proc_as_nr = scm_from_uint64 ((uint64_t) proc);
 #else
-  SCM proc_as_nr = scm_from_uint64 ((unsigned long) proc);
+  SCM proc_as_nr = scm_from_uint64 ((uint64_t) proc);
 #endif
   SCM result = init;
   SCM l;

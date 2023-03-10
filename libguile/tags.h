@@ -17,7 +17,7 @@
  * Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public
- * License along with this library; if not, write to the Free Software
+ * License with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
@@ -85,10 +85,10 @@ typedef uintptr_t scm_t_bits;
 
 #else
 
-typedef signed long scm_t_signed_bits;
+typedef int64_t scm_t_signed_bits;
 #define SCM_T_SIGNED_BITS_MAX LONG_MAX
 #define SCM_T_SIGNED_BITS_MIN LONG_MIN
-typedef unsigned long scm_t_bits;
+typedef uint64_t scm_t_bits;
 #define SIZEOF_SCM_T_BITS SCM_SIZEOF_UNSIGNED_LONG
 #define SCM_T_BITS_MAX ULONG_MAX
 
@@ -124,7 +124,7 @@ typedef unsigned long scm_t_bits;
 
 /*
   There is no typechecking on SCM_PACK, since all kinds of types
-  (unsigned long, void*) go in SCM_PACK
+  (uint64_t, void*) go in SCM_PACK
  */
 #   define SCM_PACK(x) ((SCM) (x))
 

@@ -16,7 +16,7 @@
  * Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public
- * License along with this library; if not, write to the Free Software
+ * License with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
@@ -27,7 +27,7 @@
 
 #define scm_is_symbol(x)            (!SCM_IMP (x) \
                                      && (SCM_TYP7 (x) == scm_tc7_symbol))
-#define scm_i_symbol_hash(x)        ((unsigned long) SCM_CELL_WORD_2 (x))
+#define scm_i_symbol_hash(x)        ((uint64_t) SCM_CELL_WORD_2 (x))
 #define scm_i_symbol_is_interned(x) \
   (!(SCM_CELL_WORD_0 (x) & SCM_I_F_SYMBOL_UNINTERNED))
 
@@ -61,7 +61,7 @@ SCM_API SCM scm_take_locale_symboln (char *sym, size_t len);
 
 /* internal functions. */
 
-SCM_API unsigned long scm_i_hash_symbol (SCM obj, unsigned long n,
+SCM_API uint64_t scm_i_hash_symbol (SCM obj, uint64_t n,
 					 void *closure);
 
 SCM_API void scm_symbols_prehistory (void);

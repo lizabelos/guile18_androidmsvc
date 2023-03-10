@@ -14,7 +14,7 @@
  * Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public
- * License along with this library; if not, write to the Free Software
+ * License with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
@@ -32,10 +32,10 @@
  * Please feel free to contribute any new replacements!
  */
 
-static long
+static int64_t
 srfi1_ilength (SCM sx)
 {
-  long i = 0;
+  int64_t i = 0;
   SCM tortoise = sx;
   SCM hare = sx;
 
@@ -316,7 +316,7 @@ SCM_DEFINE (scm_srfi1_count, "count", 2, 0, 1,
 	    "At least one list must be non-circular.")
 #define FUNC_NAME s_scm_srfi1_count
 {
-  long  count;
+  int64_t  count;
   SCM   lst;
   int   argnum;
   SCM_VALIDATE_REST_ARGUMENT (rest);
@@ -1083,7 +1083,7 @@ SCM_DEFINE (scm_srfi1_length_plus, "length+", 1, 0, 0,
 	    "circular.")
 #define FUNC_NAME s_scm_srfi1_length_plus
 {
-  long len = scm_ilength (lst);
+  int64_t len = scm_ilength (lst);
   return (len >= 0 ? SCM_I_MAKINUM (len) : SCM_BOOL_F);
 }
 #undef FUNC_NAME
@@ -1106,7 +1106,7 @@ SCM_DEFINE (scm_srfi1_list_index, "list-index", 2, 0, 1,
 	    "@end example")
 #define FUNC_NAME s_scm_srfi1_list_index
 {
-  long  n = 0;
+  int64_t  n = 0;
   SCM   lst;
   int   argnum;
   SCM_VALIDATE_REST_ARGUMENT (rest);
@@ -1233,7 +1233,7 @@ SCM_DEFINE (scm_srfi1_list_tabulate, "list-tabulate", 2, 0, 0,
 	    "is applied to the indices is not specified.")
 #define FUNC_NAME s_scm_srfi1_list_tabulate
 {
-  long i, nn;
+  int64_t i, nn;
   scm_t_trampoline_1 proc_tramp = scm_trampoline_1 (proc);
   SCM ret = SCM_EOL;
 
@@ -1368,18 +1368,18 @@ SCM_DEFINE (scm_srfi1_lset_difference_x, "lset-difference!", 2, 0, 1,
    and claim that the i'th element of ARGV is WHO's i+2'th argument.  */
 static inline int
 check_map_args (SCM argv,
-		long len,
+		int64_t len,
 		SCM gf,
 		SCM proc,
 		SCM args,
 		const char *who)
 {
-  long i;
+  int64_t i;
   SCM elt;
 
   for (i = SCM_SIMPLE_VECTOR_LENGTH (argv) - 1; i >= 1; i--)
     {
-      long elt_len;
+      int64_t elt_len;
       elt = SCM_SIMPLE_VECTOR_REF (argv, i);
 
       if (!(scm_is_null (elt) || scm_is_pair (elt)))
@@ -1422,7 +1422,7 @@ SCM
 scm_srfi1_map (SCM proc, SCM arg1, SCM args)
 #define FUNC_NAME s_srfi1_map
 {
-  long i, len;
+  int64_t i, len;
   SCM res = SCM_EOL;
   SCM *pres = &res;
 
@@ -1496,7 +1496,7 @@ SCM
 scm_srfi1_for_each (SCM proc, SCM arg1, SCM args)
 #define FUNC_NAME s_srfi1_for_each
 {
-  long i, len;
+  int64_t i, len;
   len = srfi1_ilength (arg1);
   SCM_GASSERTn ((scm_is_null (arg1) || scm_is_pair (arg1)) && len >= -1,
 		g_srfi1_for_each, scm_cons2 (proc, arg1, args),
@@ -1864,7 +1864,7 @@ SCM_DEFINE (scm_srfi1_reduce_right, "reduce-right", 3, 0, 0,
 
   scm_t_trampoline_2 proc_tramp = scm_trampoline_2 (proc);
   SCM  ret, vec;
-  long len, i;
+  int64_t len, i;
 
   SCM_ASSERT (proc_tramp, proc, SCM_ARG1, FUNC_NAME);
 
@@ -2088,7 +2088,7 @@ SCM_DEFINE (scm_srfi1_take_x, "take!", 2, 0, 0,
 	    "@var{lst}.")
 #define FUNC_NAME s_scm_srfi1_take_x
 {
-  long nn;
+  int64_t nn;
   SCM pos;
 
   nn = scm_to_signed_integer (n, 0, LONG_MAX);

@@ -11,7 +11,7 @@
  * Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public
- * License along with this library; if not, write to the Free Software
+ * License with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
@@ -103,7 +103,7 @@ scm_make_continuation (int *first)
   scm_i_thread *thread = SCM_I_CURRENT_THREAD;
   SCM cont;
   scm_t_contregs *continuation;
-  long stack_size;
+  int64_t stack_size;
   SCM_STACKITEM * src;
 
   SCM_FLUSH_REGISTER_WINDOWS;
@@ -211,7 +211,7 @@ static void
 copy_stack_and_call (scm_t_contregs *continuation, SCM val,
 		     SCM_STACKITEM * dst)
 {
-  long delta;
+  int64_t delta;
   copy_stack_data data;
 
   delta = scm_ilength (scm_i_dynwinds ()) - scm_ilength (continuation->dynenv);

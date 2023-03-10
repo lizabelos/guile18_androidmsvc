@@ -11,7 +11,7 @@
  * Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public
- * License along with this library; if not, write to the Free Software
+ * License with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 #ifdef USE_FILESYS
@@ -928,7 +928,7 @@ SCM_DEFINE (scm_readdir, "readdir", 1, 0, 0,
                          sizeof (de) - sizeof (de.d_name) + NAME_MAX + 1)];
 #else
     char   *buf;
-    long   name_max = fpathconf (dirfd (ds), _PC_NAME_MAX);
+    int64_t   name_max = fpathconf (dirfd (ds), _PC_NAME_MAX);
     if (name_max == -1)
       SCM_SYSERROR;
     buf = alloca (SCM_MAX (sizeof (de),
@@ -1347,8 +1347,8 @@ SCM_DEFINE (scm_select, "select", 3, 2, 0,
 	    SCM_WRONG_TYPE_ARG (4, secs);
 	  if (fl > LONG_MAX)
 	    SCM_OUT_OF_RANGE (4, secs);
-	  timeout.tv_sec = (long) fl;
-	  timeout.tv_usec = (long) ((fl - timeout.tv_sec) * 1000000);
+	  timeout.tv_sec = (int64_t) fl;
+	  timeout.tv_usec = (int64_t) ((fl - timeout.tv_sec) * 1000000);
 	}
       time_ptr = &timeout;
     }
@@ -1602,8 +1602,8 @@ SCM_DEFINE (scm_dirname, "dirname", 1, 0, 0,
 #define FUNC_NAME s_scm_dirname
 {
   const char *s;
-  long int i;
-  unsigned long int len;
+  int64_t i;
+  uint64_t len;
 
   SCM_VALIDATE_STRING (1, filename);
 

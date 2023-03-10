@@ -39,7 +39,7 @@ TYPE SCM_TO_TYPE_PROTO (SCM val) {
             goto out_of_range;
         else if (TYPE_MAX <= ULONG_MAX) {
             if (mpz_fits_ulong_p(SCM_I_BIG_MPZ (val))) {
-                unsigned long n = mpz_get_ui(SCM_I_BIG_MPZ (val));
+                uint64_t n = mpz_get_ui(SCM_I_BIG_MPZ (val));
                 if (SIZEOF_TYPE != 0 && SIZEOF_TYPE > SCM_SIZEOF_LONG) {
                     return n;
                 } else {

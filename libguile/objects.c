@@ -11,7 +11,7 @@
  * Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public
- * License along with this library; if not, write to the Free Software
+ * License with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
@@ -86,7 +86,7 @@ SCM scm_metaclass_operator;
 SCM
 scm_mcache_lookup_cmethod (SCM cache, SCM args)
 {
-  unsigned long i, mask, n, end;
+  uint64_t i, mask, n, end;
   SCM ls, methods, z = SCM_CDDR (cache);
   n = scm_to_uint64 (SCM_CAR (z)); /* maximum number of specializers */
   methods = SCM_CADR (z);
@@ -101,8 +101,8 @@ scm_mcache_lookup_cmethod (SCM cache, SCM args)
   else
     {
       /* cache format #2: compute a hash value */
-      unsigned long hashset = scm_to_uint64 (methods);
-      long j = n;
+      uint64_t hashset = scm_to_uint64 (methods);
+      int64_t j = n;
       z = SCM_CDDR (z);
       mask = scm_to_uint64 (SCM_CAR (z));
       methods = SCM_CADR (z);
@@ -123,7 +123,7 @@ scm_mcache_lookup_cmethod (SCM cache, SCM args)
   /* Search for match  */
   do
     {
-      long j = n;
+      int64_t j = n;
       z = SCM_SIMPLE_VECTOR_REF (methods, i);
       ls = args; /* list of arguments */
       if (!scm_is_null (ls))
@@ -284,7 +284,7 @@ SCM_DEFINE (scm_object_procedure, "object-procedure", 1, 0, 0,
 SCM
 scm_i_make_class_object (SCM meta,
 			 SCM layout_string,
-			 unsigned long flags)
+			 uint64_t flags)
 {
   SCM c;
   SCM layout = scm_make_struct_layout (layout_string);
@@ -301,7 +301,7 @@ SCM_DEFINE (scm_make_class_object, "make-class-object", 2, 0, 0,
 	    "slot layout specified by @var{layout}.")
 #define FUNC_NAME s_scm_make_class_object
 {
-  unsigned long flags = 0;
+  uint64_t flags = 0;
   SCM_VALIDATE_STRUCT (1, metaclass);
   SCM_VALIDATE_STRING (2, layout);
   if (scm_is_eq (metaclass, scm_metaclass_operator))

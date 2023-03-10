@@ -11,7 +11,7 @@
  * Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public
- * License along with this library; if not, write to the Free Software
+ * License with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
@@ -337,11 +337,11 @@ SCM_DEFINE (scm_sigaction_for_thread, "sigaction", 1, 3, 0,
     query_only = 1;
   else if (scm_is_integer (handler))
     {
-      long handler_int = scm_to_int64 (handler);
+      int64_t handler_int = scm_to_int64 (handler);
 #if USE_64IMPL
       if (handler_int == (int64_t) SIG_DFL || handler_int == (int64_t) SIG_IGN)
 #else      
-      if (handler_int == (long) SIG_DFL || handler_int == (long) SIG_IGN)
+      if (handler_int == (int64_t) SIG_DFL || handler_int == (int64_t) SIG_IGN)
 #endif      
 	{
 #ifdef HAVE_SIGACTION
@@ -443,7 +443,7 @@ SCM_DEFINE (scm_sigaction_for_thread, "sigaction", 1, 3, 0,
 	orig_handlers[csig] = old_action;
     }
   if (old_action.sa_handler == SIG_DFL || old_action.sa_handler == SIG_IGN)
-    old_handler = scm_from_int64 ((long) old_action.sa_handler);
+    old_handler = scm_from_int64 ((int64_t) old_action.sa_handler);
   SCM_CRITICAL_SECTION_END;
   return scm_cons (old_handler, scm_from_int (old_action.sa_flags));
 #else
@@ -465,7 +465,7 @@ SCM_DEFINE (scm_sigaction_for_thread, "sigaction", 1, 3, 0,
 #if USE_64IMPL
     old_handler = scm_from_int64 ((int64_t) old_chandler);
 #else    
-    old_handler = scm_from_int64 ((long) old_chandler);
+    old_handler = scm_from_int64 ((int64_t) old_chandler);
 #endif    
   SCM_CRITICAL_SECTION_END;
   return scm_cons (old_handler, scm_from_int (0));
@@ -709,8 +709,8 @@ scm_init_scmsigs ()
   scm_c_define ("SIG_IGN", scm_from_int64 ((int64_t) SIG_IGN));
   scm_c_define ("SIG_DFL", scm_from_int64 ((int64_t) SIG_DFL));
 #else  
-  scm_c_define ("SIG_IGN", scm_from_int64 ((long) SIG_IGN));
-  scm_c_define ("SIG_DFL", scm_from_int64 ((long) SIG_DFL));
+  scm_c_define ("SIG_IGN", scm_from_int64 ((int64_t) SIG_IGN));
+  scm_c_define ("SIG_DFL", scm_from_int64 ((int64_t) SIG_DFL));
 #endif
 #ifdef SA_NOCLDSTOP
   scm_c_define ("SA_NOCLDSTOP", scm_from_int64 (SA_NOCLDSTOP));

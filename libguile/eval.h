@@ -17,7 +17,7 @@
  * Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public
- * License along with this library; if not, write to the Free Software
+ * License with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
@@ -37,7 +37,7 @@ SCM_API scm_t_option scm_eval_opts[];
 #define SCM_EVAL_STACK         scm_eval_opts[0].val
 #define SCM_N_EVAL_OPTIONS 1
 
-SCM_API long scm_eval_stack;
+SCM_API int64_t scm_eval_stack;
 
 SCM_API scm_t_option scm_evaluator_trap_table[];
 

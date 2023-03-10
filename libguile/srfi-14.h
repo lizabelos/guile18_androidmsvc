@@ -16,7 +16,7 @@
  * Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public
- * License along with this library; if not, write to the Free Software
+ * License with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
@@ -28,10 +28,10 @@
 /* We expect 8-bit bytes here.  Should be no problem in the year
    2001.  */
 #ifndef SCM_BITS_PER_LONG
-# define SCM_BITS_PER_LONG (sizeof (long) * 8)
+# define SCM_BITS_PER_LONG (sizeof (int64_t) * 8)
 #endif
 
-#define SCM_CHARSET_GET(cs, idx) (((long *) SCM_SMOB_DATA (cs))\
+#define SCM_CHARSET_GET(cs, idx) (((int64_t *) SCM_SMOB_DATA (cs))\
 			           [((unsigned char) (idx)) / SCM_BITS_PER_LONG] &\
 			 	   (1L << (((unsigned char) (idx)) % SCM_BITS_PER_LONG)))
 

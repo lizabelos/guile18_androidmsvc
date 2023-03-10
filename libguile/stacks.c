@@ -12,7 +12,7 @@
  * Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public
- * License along with this library; if not, write to the Free Software
+ * License with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
@@ -128,8 +128,8 @@ static scm_t_bits
 stack_depth (scm_t_debug_frame *dframe, scm_t_ptrdiff offset,
 	     SCM *id, int *maxp)
 {
-  long n;
-  long max_depth = SCM_BACKTRACE_MAXDEPTH;
+  int64_t n;
+  int64_t max_depth = SCM_BACKTRACE_MAXDEPTH;
   for (n = 0;
        dframe && !SCM_VOIDFRAMEP (*dframe) && n < max_depth;
        dframe = RELOC_FRAME (dframe->prev, offset))
@@ -230,7 +230,7 @@ do { \
 
 static scm_t_bits
 read_frames (scm_t_debug_frame *dframe, scm_t_ptrdiff offset,
-	     long n, scm_t_info_frame *iframes)
+	     int64_t n, scm_t_info_frame *iframes)
 {
   scm_t_info_frame *iframe = iframes;
   scm_t_debug_info *info, *vect;
@@ -325,11 +325,11 @@ read_frames (scm_t_debug_frame *dframe, scm_t_ptrdiff offset,
  */
 
 static void
-narrow_stack (SCM stack, long inner, SCM inner_key, long outer, SCM outer_key)
+narrow_stack (SCM stack, int64_t inner, SCM inner_key, int64_t outer, SCM outer_key)
 {
   scm_t_stack *s = SCM_STACK (stack);
-  unsigned long int i;
-  long n = s->length;
+  uint64_t i;
+  int64_t n = s->length;
   
   /* Cut inner part. */
   if (scm_is_eq (inner_key, SCM_BOOL_T))
@@ -423,11 +423,11 @@ SCM_DEFINE (scm_make_stack, "make-stack", 1, 0, 1,
 	    "taken as 0.")
 #define FUNC_NAME s_scm_make_stack
 {
-  long n, size;
+  int64_t n, size;
   int maxp;
   scm_t_debug_frame *dframe;
   scm_t_info_frame *iframe;
-  long offset = 0;
+  int64_t offset = 0;
   SCM stack, id;
   SCM inner_cut, outer_cut;
 
@@ -513,7 +513,7 @@ SCM_DEFINE (scm_stack_id, "stack-id", 1, 0, 0,
 #define FUNC_NAME s_scm_stack_id
 {
   scm_t_debug_frame *dframe;
-  long offset = 0;
+  int64_t offset = 0;
   if (scm_is_eq (stack, SCM_BOOL_T))
     {
       dframe = scm_i_last_debug_frame ();
@@ -550,7 +550,7 @@ SCM_DEFINE (scm_stack_ref, "stack-ref", 2, 0, 0,
 	    "Return the @var{index}'th frame from @var{stack}.")
 #define FUNC_NAME s_scm_stack_ref
 {
-  unsigned long int c_index;
+  uint64_t c_index;
 
   SCM_VALIDATE_STACK (1, stack);
   c_index = scm_to_unsigned_integer (index, 0, SCM_STACK_LENGTH(stack)-1);
@@ -588,7 +588,7 @@ SCM_DEFINE (scm_last_stack_frame, "last-stack-frame", 1, 0, 0,
 #define FUNC_NAME s_scm_last_stack_frame
 {
   scm_t_debug_frame *dframe;
-  long offset = 0;
+  int64_t offset = 0;
   SCM stack;
   
   if (SCM_DEBUGOBJP (obj))
@@ -670,7 +670,7 @@ SCM_DEFINE (scm_frame_previous, "frame-previous", 1, 0, 0,
 	    "@var{frame} is the first frame in its stack.")
 #define FUNC_NAME s_scm_frame_previous
 {
-  unsigned long int n;
+  uint64_t n;
   SCM_VALIDATE_FRAME (1, frame);
   n = scm_to_uint64 (SCM_CDR (frame)) + 1;
   if (n >= SCM_STACK_LENGTH (SCM_CAR (frame)))
@@ -686,7 +686,7 @@ SCM_DEFINE (scm_frame_next, "frame-next", 1, 0, 0,
 	    "@var{frame} is the last frame in its stack.")
 #define FUNC_NAME s_scm_frame_next
 {
-  unsigned long int n;
+  uint64_t n;
   SCM_VALIDATE_FRAME (1, frame);
   n = scm_to_uint64 (SCM_CDR (frame));
   if (n == 0)

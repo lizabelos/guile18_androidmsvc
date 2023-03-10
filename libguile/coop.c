@@ -11,7 +11,7 @@
  * Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public
- * License along with this library; if not, write to the Free Software
+ * License with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
@@ -729,8 +729,8 @@ coop_sleephelp (qt_t *sp, void *old, void *blockq)
   return NULL;
 }
 
-unsigned long 
-scm_thread_usleep (unsigned long usec)
+uint64_t
+scm_thread_usleep (uint64_t usec)
 {
   struct timeval timeout;
   timeout.tv_sec = 0;
@@ -740,12 +740,12 @@ scm_thread_usleep (unsigned long usec)
 		but this is faster... :) */
 }
 
-unsigned long
-scm_thread_sleep (unsigned long sec)
+uint64_t
+scm_thread_sleep (uint64_t sec)
 {
   time_t now = time (NULL);
   struct timeval timeout;
-  unsigned long slept;
+  uint64_t slept;
   timeout.tv_sec = sec;
   timeout.tv_usec = 0;
   scm_internal_select (0, NULL, NULL, NULL, &timeout);

@@ -11,7 +11,7 @@
  * Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public
- * License along with this library; if not, write to the Free Software
+ * License with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
@@ -303,7 +303,7 @@ scm_load_startup_files ()
 #ifdef _UNICOS
 typedef int setjmp_type;
 #else
-typedef long setjmp_type;
+typedef int64_t setjmp_type;
 #endif
 
 /* All the data needed to invoke the main function.  */

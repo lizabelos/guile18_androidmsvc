@@ -11,7 +11,7 @@
  * Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public
- * License along with this library; if not, write to the Free Software
+ * License with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
@@ -25,7 +25,7 @@
 
 #ifdef __ia64__
 #include <ucontext.h>
-extern unsigned long * __libc_ia64_register_backing_store_base;
+extern uint64_t * __libc_ia64_register_backing_store_base;
 #endif
 
 #include "libguile/_scm.h"
@@ -226,7 +226,7 @@ increase_mtrigger (size_t size, const char *what)
    */
   if (triggered)
     {
-      unsigned long prev_alloced;
+      uint64_t prev_alloced;
       float yield;
       
       scm_i_scm_pthread_mutex_lock (&scm_i_sweep_mutex);
@@ -267,7 +267,7 @@ increase_mtrigger (size_t size, const char *what)
 	  if (no_overflow_trigger >= (float) ULONG_MAX)
 	    scm_mtrigger = ULONG_MAX;
 	  else
-	    scm_mtrigger =  (unsigned long) no_overflow_trigger;
+	    scm_mtrigger =  (uint64_t) no_overflow_trigger;
 	  
 #ifdef DEBUGINFO
 	  fprintf (stderr, "Mtrigger sweep: ineffective. New trigger %d\n",
@@ -467,7 +467,7 @@ scm_must_free (void *obj)
 
 
 void
-scm_done_malloc (long size)
+scm_done_malloc (int64_t size)
 {
   scm_c_issue_deprecation_warning
     ("scm_done_malloc is deprecated.  "
@@ -480,7 +480,7 @@ scm_done_malloc (long size)
 }
 
 void
-scm_done_free (long size)
+scm_done_free (int64_t size)
 {
   scm_c_issue_deprecation_warning
     ("scm_done_free is deprecated.  "

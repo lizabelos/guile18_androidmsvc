@@ -3608,7 +3608,7 @@ Tue Apr 18 08:22:41 2000  Greg J. Badros  <gjb@cs.washington.edu>
 
 	* ramap.c (scm_ra_eqp, ra_compare), unif.c
 	(scm_uniform_vector_ref, scm_cvref, rapr1):  Separated accesses to
-	unsigned long and signed long arrays and clarified the way the
+	uint64_t and signed long arrays and clarified the way the
 	access is performed.
 
 	* ramap.c (scm_array_map_x, raeql), read.c (scm_lreadr), stacks.c

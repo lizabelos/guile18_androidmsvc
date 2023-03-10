@@ -11,7 +11,7 @@
  * Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public
- * License along with this library; if not, write to the Free Software
+ * License with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
@@ -416,7 +416,7 @@ scm_c_with_fluids (SCM fluids, SCM values, SCM (*cproc) (), void *cdata)
 #define FUNC_NAME "scm_c_with_fluids"
 {
   SCM ans, data;
-  long flen, vlen;
+  int64_t flen, vlen;
 
   SCM_VALIDATE_LIST_COPYLEN (1, fluids, flen);
   SCM_VALIDATE_LIST_COPYLEN (2, values, vlen);

@@ -16,7 +16,7 @@
  * Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public
- * License along with this library; if not, write to the Free Software
+ * License with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
@@ -58,7 +58,7 @@
 
 
 SCM_API void scm_report_stack_overflow (void);
-SCM_API long scm_stack_size (SCM_STACKITEM *start);
+SCM_API int64_t scm_stack_size (SCM_STACKITEM *start);
 SCM_API void scm_stack_report (void);
 SCM_API SCM scm_sys_get_stack_size (void);
 SCM_API void scm_init_stackchk (void);

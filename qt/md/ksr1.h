@@ -120,7 +120,7 @@
 
 #define QT_STKALIGN	128
 #define QT_GROW_DOWN
-typedef unsigned long qt_word_t;
+typedef uint64_t qt_word_t;
 
 #define QT_STKBASE	QT_STKALIGN
 #define QT_VSTKBASE	QT_STKBASE

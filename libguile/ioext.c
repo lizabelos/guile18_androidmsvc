@@ -11,7 +11,7 @@
  * Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public
- * License along with this library; if not, write to the Free Software
+ * License with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
@@ -275,7 +275,7 @@ SCM_DEFINE (scm_fdes_to_ports, "fdes->ports", 1, 0, 0,
 {
   SCM result = SCM_EOL;
   int int_fd;
-  long i;
+  int64_t i;
 
   int_fd = scm_to_int (fd);
 

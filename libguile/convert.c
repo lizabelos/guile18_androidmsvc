@@ -11,7 +11,7 @@
  * Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public
- * License along with this library; if not, write to the Free Software
+ * License with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
@@ -33,8 +33,8 @@
 #endif
 
 /* char *scm_c_scm2chars (SCM obj, char *dst);
-   SCM   scm_c_chars2scm (const char *src, long n);
-   SCM   scm_c_chars2byvect (const char *src, long n);
+   SCM   scm_c_chars2scm (const char *src, int64_t n);
+   SCM   scm_c_chars2byvect (const char *src, int64_t n);
 */
 
 #define CTYPE            char
@@ -54,8 +54,8 @@
 #include "libguile/convert.i.c"
 
 /* short *scm_c_scm2shorts (SCM obj, short *dst);
-   SCM scm_c_shorts2scm (const short *src, long n);
-   SCM scm_c_shorts2svect (const short *src, long n);
+   SCM scm_c_shorts2scm (const short *src, int64_t n);
+   SCM scm_c_shorts2svect (const short *src, int64_t n);
 */
 
 #define CTYPE            short
@@ -68,9 +68,9 @@
 #include "libguile/convert.i.c"
 
 /* int *scm_c_scm2ints (SCM obj, int *dst);
-   SCM scm_c_ints2scm (const int *src, long n);
-   SCM scm_c_ints2ivect (const int *src, long n);
-   SCM scm_c_uints2uvect (const unsigned int *src, long n);
+   SCM scm_c_ints2scm (const int *src, int64_t n);
+   SCM scm_c_ints2ivect (const int *src, int64_t n);
+   SCM scm_c_uints2uvect (const unsigned int *src, int64_t n);
 */
 
 #define CTYPE            int
@@ -88,13 +88,13 @@
 
 #include "libguile/convert.i.c"
 
-/* long *scm_c_scm2longs (SCM obj, long *dst);
-   SCM scm_c_longs2scm (const long *src, long n);
-   SCM scm_c_longs2ivect (const long *src, long n);
-   SCM scm_c_ulongs2uvect (const unsigned long *src, long n);
+/* int64_t *scm_c_scm2longs (SCM obj, int64_t *dst);
+   SCM scm_c_longs2scm (const int64_t *src, int64_t n);
+   SCM scm_c_longs2ivect (const int64_t *src, int64_t n);
+   SCM scm_c_ulongs2uvect (const uint64_t *src, int64_t n);
 */
 
-#define CTYPE            long
+#define CTYPE            int64_t
 #define FROM_CTYPE       scm_from_int64
 #define SCM2CTYPES       scm_c_scm2longs
 #define CTYPES2SCM       scm_c_longs2scm
@@ -110,8 +110,8 @@
 #include "libguile/convert.i.c"
 
 /* float *scm_c_scm2floats (SCM obj, float *dst);
-   SCM scm_c_floats2scm (const float *src, long n);
-   SCM scm_c_floats2fvect (const float *src, long n);
+   SCM scm_c_floats2scm (const float *src, int64_t n);
+   SCM scm_c_floats2fvect (const float *src, int64_t n);
 */
 
 #define CTYPE            float
@@ -124,8 +124,8 @@
 #include "libguile/convert.i.c"
 
 /* double *scm_c_scm2doubles (SCM obj, double *dst);
-   SCM scm_c_doubles2scm (const double *src, long n);
-   SCM scm_c_doubles2dvect (const double *src, long n);
+   SCM scm_c_doubles2scm (const double *src, int64_t n);
+   SCM scm_c_doubles2dvect (const double *src, int64_t n);
 */
 
 #define CTYPE            double

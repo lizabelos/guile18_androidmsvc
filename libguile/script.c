@@ -10,7 +10,7 @@
  * Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public
- * License along with this library; if not, write to the Free Software
+ * License with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
@@ -47,7 +47,7 @@
    string if file exists; 0 otherwise. */
 
 static char *
-scm_cat_path (char *str1, const char *str2, long n)
+scm_cat_path (char *str1, const char *str2, int64_t n)
 {
   if (!n)
     n = strlen (str2);
@@ -591,7 +591,7 @@ scm_compile_shell_switches (int argc, char **argv)
 	  char * p = argv[i] + 11;
 	  while (*p)
 	    {
-	      long num;
+	      int64_t num;
 	      char * end;
 
 	      num = strtol (p, &end, 10);

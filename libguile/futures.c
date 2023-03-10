@@ -11,7 +11,7 @@
  * Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public
- * License along with this library; if not, write to the Free Software
+ * License with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
@@ -54,7 +54,7 @@ static SCM young = SCM_EOL;
 static SCM old = SCM_EOL;
 static SCM undead = SCM_EOL;
 
-static long last_switch;
+static int64_t last_switch;
 
 #ifdef SCM_FUTURES_DEBUG
 static int n_dead = 0;
@@ -305,7 +305,7 @@ scan_futures (void *dummy1, void *dummy2, void *dummy3)
 {
   SCM next, *nextloc;
   
-  long now = scm_c_get_internal_run_time ();
+  int64_t now = scm_c_get_internal_run_time ();
   if (now - last_switch > SCM_TIME_UNITS_PER_SECOND)
     {
       /* switch out old (> 1 sec), unused futures */

@@ -11,7 +11,7 @@
  * Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public
- * License along with this library; if not, write to the Free Software
+ * License with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
@@ -111,9 +111,9 @@ st_resize_port (scm_t_port *pt, off_t new_size)
   const char *src = scm_i_string_chars (old_stream);
   char *dst;
   SCM new_stream = scm_i_make_string (new_size, &dst);
-  unsigned long int old_size = scm_i_string_length (old_stream);
-  unsigned long int min_size = min (old_size, new_size);
-  unsigned long int i;
+  uint64_t old_size = scm_i_string_length (old_stream);
+  uint64_t min_size = min (old_size, new_size);
+  uint64_t i;
 
   off_t index = pt->write_pos - pt->write_buf;
 
@@ -286,7 +286,7 @@ st_truncate (SCM port, off_t length)
 }
 
 SCM 
-scm_mkstrport (SCM pos, SCM str, long modes, const char *caller)
+scm_mkstrport (SCM pos, SCM str, int64_t modes, const char *caller)
 {
   SCM z;
   scm_t_port *pt;

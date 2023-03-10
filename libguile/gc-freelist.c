@@ -11,7 +11,7 @@
  * Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public
- * License along with this library; if not, write to the Free Software
+ * License with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
@@ -102,12 +102,12 @@ scm_i_adjust_min_yield (scm_t_cell_type_statistics *freelist)
   if (freelist->min_yield_fraction)
     {
       /* Pick largest of last two yields. */
-      long delta = ((SCM_HEAP_SIZE * freelist->min_yield_fraction / 100)
-		   - (long) SCM_MAX (scm_gc_cells_collected_1, scm_gc_cells_collected));
+      int64_t delta = ((SCM_HEAP_SIZE * freelist->min_yield_fraction / 100)
+		   - (int64_t) SCM_MAX (scm_gc_cells_collected_1, scm_gc_cells_collected));
 #ifdef DEBUGINFO
       fprintf (stderr, " after GC = %lu, delta = %ld\n",
-	       (unsigned long) scm_cells_allocated,
-	       (long) delta);
+	       (uint64_t) scm_cells_allocated,
+	       (int64_t) delta);
 #endif
       if (delta > 0)
 	freelist->min_yield += delta;

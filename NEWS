@@ -4941,7 +4941,7 @@ of his own choice.
 The size of the random state type used by the current RNG
 measured in chars.
 
-*** Function: unsigned long scm_the_rng.random_bits (scm_rstate *STATE)
+*** Function: uint64_t scm_the_rng.random_bits (scm_rstate *STATE)
 Given the random STATE, return 32 random bits.
 
 *** Function: void scm_the_rng.init_rstate (scm_rstate *STATE, chars *S, int N)
@@ -4967,7 +4967,7 @@ scm_i_uniform32 in assembler.
 These functions are provided through the scm_the_rng interface for use
 by libguile and the application.
 
-*** Function: unsigned long scm_i_uniform32 (scm_i_rstate *STATE)
+*** Function: uint64_t scm_i_uniform32 (scm_i_rstate *STATE)
 Given the random STATE, return 32 random bits.
 Don't use this function directly.  Instead go through the plugin
 interface (see "Plug in interface" above).
@@ -5008,7 +5008,7 @@ program.  While subsequent random numbers generated from one random
 state are guaranteed to be reasonably independent, there is no such
 guarantee for numbers generated from different random states.
 
-*** Macro: unsigned long scm_c_uniform32 (scm_rstate *STATE)
+*** Macro: uint64_t scm_c_uniform32 (scm_rstate *STATE)
 Return 32 random bits.
 
 *** Function: double scm_c_uniform01 (scm_rstate *STATE)
@@ -5020,7 +5020,7 @@ Return a sample from the normal(0,1) distribution.
 *** Function: double scm_c_exp1 (scm_rstate *STATE)
 Return a sample from the exp(1) distribution.
 
-*** Function: unsigned long scm_c_random (scm_rstate *STATE, unsigned long M)
+*** Function: uint64_t scm_c_random (scm_rstate *STATE, uint64_t M)
 Return a sample from the discrete uniform(0,M) distribution.
 
 *** Function: SCM scm_c_random_bignum (scm_rstate *STATE, SCM M)

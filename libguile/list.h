@@ -17,7 +17,7 @@
  * Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public
- * License along with this library; if not, write to the Free Software
+ * License with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
@@ -39,7 +39,7 @@ SCM_API SCM scm_make_list (SCM n, SCM init);
 SCM_API SCM scm_cons_star (SCM arg, SCM objs);
 SCM_API SCM scm_null_p (SCM x);
 SCM_API SCM scm_list_p (SCM x);
-SCM_API long scm_ilength (SCM sx);
+SCM_API int64_t scm_ilength (SCM sx);
 SCM_API SCM scm_length (SCM x);
 SCM_API SCM scm_append (SCM args);
 SCM_API SCM scm_append_x (SCM args);

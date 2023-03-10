@@ -16,7 +16,7 @@
  * Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public
- * License along with this library; if not, write to the Free Software
+ * License with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
@@ -112,7 +112,7 @@ do { \
 #define SCM_SMOB_APPLY_2(x, a1, a2)	(SCM_SMOB_DESCRIPTOR (x).apply_2 (x, (a1), (a2)))
 #define SCM_SMOB_APPLY_3(x, a1, a2, rst)	(SCM_SMOB_DESCRIPTOR (x).apply_3 (x, (a1), (a2), (rst)))
 
-SCM_API long scm_numsmob;
+SCM_API int64_t scm_numsmob;
 SCM_API scm_smob_descriptor scm_smobs[];
 
 SCM_API void scm_i_set_smob_flags (SCM x, scm_t_bits data);

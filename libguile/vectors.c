@@ -11,7 +11,7 @@
  * Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public
- * License along with this library; if not, write to the Free Software
+ * License with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
@@ -143,7 +143,7 @@ SCM_DEFINE (scm_vector, "vector", 0, 0, 1,
 {
   SCM res;
   SCM *data;
-  long i, len;
+  int64_t i, len;
   scm_t_array_handle handle;
 
   SCM_VALIDATE_LIST_COPYLEN (1, l, len);
@@ -296,7 +296,7 @@ scm_c_make_vector (size_t k, SCM fill)
 
   if (k > 0) 
     {
-      unsigned long int j;
+      uint64_t j;
 
       SCM_ASSERT_RANGE (1, scm_from_uint64 (k), k <= VECTOR_MAX_LENGTH);
 
@@ -431,7 +431,7 @@ SCM_DEFINE (scm_vector_fill_x, "vector-fill!", 2, 0, 0,
 SCM
 scm_i_vector_equal_p (SCM x, SCM y)
 {
-  long i;
+  int64_t i;
   for (i = SCM_I_VECTOR_LENGTH (x) - 1; i >= 0; i--)
     if (scm_is_false (scm_equal_p (SCM_I_VECTOR_ELTS (x)[i],
 				   SCM_I_VECTOR_ELTS (y)[i])))

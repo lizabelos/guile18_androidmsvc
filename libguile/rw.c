@@ -11,7 +11,7 @@
  * Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public
- * License along with this library; if not, write to the Free Software
+ * License with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
@@ -101,8 +101,8 @@ SCM_DEFINE (scm_read_string_x_partial, "read-string!/partial", 1, 3, 0,
 {
   char *dest;
   size_t offset;
-  long read_len;
-  long chars_read = 0;
+  int64_t read_len;
+  int64_t chars_read = 0;
   int fdes;
 
   {
@@ -204,7 +204,7 @@ SCM_DEFINE (scm_write_string_partial, "write-string/partial", 1, 3, 0,
 #define FUNC_NAME s_scm_write_string_partial
 {
   const char *src;
-  long write_len;
+  int64_t write_len;
   int fdes;
 
   {
@@ -247,7 +247,7 @@ SCM_DEFINE (scm_write_string_partial, "write-string/partial", 1, 3, 0,
       fdes = SCM_FPORT_FDES (port);
     }
   {
-    long rv;
+    int64_t rv;
 
     SCM_SYSCALL (rv = write (fdes, src, write_len));
     if (rv == -1)
