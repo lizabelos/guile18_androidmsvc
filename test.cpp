@@ -1,6 +1,4 @@
 #include <libguile.hpp>
-#include <qDebug>
-
 
 static void inner_main(void *closure, int argc, char **argv) {
     /* module initializations would go here */
