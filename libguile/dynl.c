@@ -232,9 +232,9 @@ SCM_DEFINE (scm_dynamic_func, "dynamic-func", 2, 0, 0,
 					   FUNC_NAME);
     scm_dynwind_end ();
 #if USE_64IMPL
-    return scm_from_ulong ((unsigned long long) func);
+    return scm_from_uint64 ((unsigned long long) func);
 #else
-    return scm_from_ulong ((unsigned long) func);
+    return scm_from_uint64 ((unsigned long) func);
 #endif
   }
 }
@@ -268,7 +268,7 @@ SCM_DEFINE (scm_dynamic_call, "dynamic-call", 2, 0, 0,
 #if USE_64IMPL
   fptr = (void (*) ()) scm_to_uint64 (func);
 #else
-  fptr = (void (*) ()) scm_to_ulong (func);
+  fptr = (void (*) ()) scm_to_uint64 (func);
 #endif
   fptr ();
   return SCM_UNSPECIFIED;
@@ -308,7 +308,7 @@ SCM_DEFINE (scm_dynamic_args_call, "dynamic-args-call", 3, 0, 0,
 #if USE_64IMPL
   fptr = (int (*) (int, char **)) scm_to_uint64 (func);
 #else
-  fptr = (int (*) (int, char **)) scm_to_ulong (func);
+  fptr = (int (*) (int, char **)) scm_to_uint64 (func);
 #endif
 
   argv = scm_i_allocate_string_pointers (args);

@@ -133,7 +133,7 @@ SCM_DEFINE (scm_system_star, "system*", 0, 0, 1,
 				  SCM_F_WIND_EXPLICITLY);
 
       /* make sure the child can't kill us (as per normal system call) */
-      sig_ign = scm_from_long ((unsigned long) SIG_IGN);
+      sig_ign = scm_from_int64 ((unsigned long) SIG_IGN);
       sigint = scm_from_int (SIGINT);
       sigquit = scm_from_int (SIGQUIT);
       oldint = scm_sigaction (sigint, sig_ign, SCM_UNDEFINED);

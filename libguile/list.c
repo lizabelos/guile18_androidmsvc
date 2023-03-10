@@ -210,7 +210,7 @@ SCM_DEFINE (scm_length, "length", 1, 0, 0,
 {
   long i;
   SCM_VALIDATE_LIST_COPYLEN (1, lst, i);
-  return scm_from_long (i);
+  return scm_from_int64 (i);
 }
 #undef FUNC_NAME
 
@@ -397,7 +397,7 @@ SCM_DEFINE (scm_list_ref, "list-ref", 2, 0, 0,
 {
   SCM lst = list;
   unsigned long int i;
-  i = scm_to_ulong (k);
+  i = scm_to_uint64 (k);
   while (scm_is_pair (lst)) {
     if (i == 0)
       return SCM_CAR (lst);
@@ -420,7 +420,7 @@ SCM_DEFINE (scm_list_set_x, "list-set!", 3, 0, 0,
 #define FUNC_NAME s_scm_list_set_x
 {
   SCM lst = list;
-  unsigned long int i = scm_to_ulong (k);
+  unsigned long int i = scm_to_uint64 (k);
   while (scm_is_pair (lst)) {
     if (i == 0) {
       SCM_SETCAR (lst, val);

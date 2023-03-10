@@ -199,10 +199,10 @@ Use @code{scm_from_bool} instead.
 Use @code{scm_from_int} instead.
 
 @item @code{gh_ulong2scm}
-Use @code{scm_from_ulong} instead.
+Use @code{scm_from_uint64} instead.
 
 @item @code{gh_long2scm}
-Use @code{scm_from_long} instead.
+Use @code{scm_from_int64} instead.
 
 @item @code{gh_double2scm}
 Use @code{scm_make_real} instead.
@@ -240,10 +240,10 @@ Use @code{scm_is_true} or @code{scm_to_bool} instead.
 Use @code{scm_to_int} instead.
 
 @item @code{gh_scm2ulong}
-Use @code{scm_to_ulong} instead.
+Use @code{scm_to_uint64} instead.
 
 @item @code{gh_scm2long}
-Use @code{scm_to_long} instead.
+Use @code{scm_to_int64} instead.
 
 @item @code{gh_scm2double}
 Use @code{scm_to_double} instead.

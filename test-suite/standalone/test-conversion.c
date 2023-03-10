@@ -685,8 +685,8 @@ DEFSTST (scm_to_short)
 DEFUTST (scm_to_ushort)
 DEFSTST (scm_to_int)
 DEFUTST (scm_to_uint)
-DEFSTST (scm_to_long)
-DEFUTST (scm_to_ulong)
+DEFSTST (scm_to_int64)
+DEFUTST (scm_to_uint64)
 #if SCM_SIZEOF_LONG_LONG != 0
 DEFSTST (scm_to_int64)
 DEFUTST (scm_to_uint64)
@@ -717,8 +717,8 @@ test_int_sizes ()
   TEST_7U (scm_from_ushort, 911, "911");
   TEST_7S (scm_from_int,    911, "911");
   TEST_7U (scm_from_uint,   911, "911");
-  TEST_7S (scm_from_long,   911, "911");
-  TEST_7U (scm_from_ulong,  911, "911");
+  TEST_7S (scm_from_int64,   911, "911");
+  TEST_7U (scm_from_uint64,  911, "911");
 #if SCM_SIZEOF_LONG_LONG != 0
   TEST_7S (scm_from_int64,   911, "911");
   TEST_7U (scm_from_uint64,  911, "911");
@@ -752,8 +752,8 @@ test_int_sizes ()
   TEST_8U ("911",  scm_to_ushort, 911, 0, 0);
   TEST_8S ("-911", scm_to_int,   -911, 0, 0);
   TEST_8U ("911",  scm_to_uint,   911, 0, 0);
-  TEST_8S ("-911", scm_to_long,  -911, 0, 0);
-  TEST_8U ("911",  scm_to_ulong,  911, 0, 0);
+  TEST_8S ("-911", scm_to_int64,  -911, 0, 0);
+  TEST_8U ("911",  scm_to_uint64,  911, 0, 0);
 #if SCM_SIZEOF_LONG_LONG != 0
   TEST_8S ("-911", scm_to_int64, -911, 0, 0);
   TEST_8U ("911",  scm_to_uint64, 911, 0, 0);

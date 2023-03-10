@@ -1030,7 +1030,7 @@ SCM_DEFINE (scm_array_index_map_x, "array-index-map!", 2, 0, 0,
 	      for (; vinds[k] <= SCM_I_ARRAY_DIMS (ra)[k].ubnd; vinds[k]++)
 		{
 		  for (j = kmax + 1, args = SCM_EOL; j--;)
-		    args = scm_cons (scm_from_long (vinds[j]), args);
+		    args = scm_cons (scm_from_int64 (vinds[j]), args);
 		  GVSET (SCM_I_ARRAY_V (ra), i, scm_apply_0 (proc, args));
 		  i += SCM_I_ARRAY_DIMS (ra)[k].inc;
 		}
@@ -1055,7 +1055,7 @@ SCM_DEFINE (scm_array_index_map_x, "array-index-map!", 2, 0, 0,
     {
       size_t length = scm_c_generalized_vector_length (ra);
       for (i = 0; i < length; i++)
-	GVSET (ra, i, scm_call_1 (proc, scm_from_ulong (i)));
+	GVSET (ra, i, scm_call_1 (proc, scm_from_uint64 (i)));
       return SCM_UNSPECIFIED;
     }
   else 

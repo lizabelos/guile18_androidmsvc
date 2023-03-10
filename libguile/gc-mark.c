@@ -121,7 +121,7 @@ scm_mark_all (void)
 #if USE_64IMPL
 	    SCM *p = (SCM *) (scm_to_uint64 (SCM_CAAR (l)));
 #else
-	    SCM *p = (SCM *) (scm_to_ulong (SCM_CAAR (l)));
+	    SCM *p = (SCM *) (scm_to_uint64 (SCM_CAAR (l)));
 #endif
           if (check_ptr(p) == 0) {
               scm_gc_mark(*p);

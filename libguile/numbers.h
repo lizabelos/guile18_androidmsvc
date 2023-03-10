@@ -400,22 +400,6 @@ SCM_API SCM  scm_from_mpz (mpz_t rop);
 #endif
 #endif
 
-#if SCM_SIZEOF_LONG == 4
-#define scm_to_long    scm_to_int32
-#define scm_from_long  scm_from_int32
-#define scm_to_ulong   scm_to_uint32
-#define scm_from_ulong scm_from_uint32
-#else
-#if SCM_SIZEOF_LONG == 8
-#define scm_to_long    scm_to_int64
-#define scm_from_long  scm_from_int64
-#define scm_to_ulong   scm_to_uint64
-#define scm_from_ulong scm_from_uint64
-#else
-#error sizeof(long) is not 4 or 8.
-#endif
-#endif
-
 #if SCM_SIZEOF_INTMAX == 4
 #define scm_to_intmax    scm_to_int32
 #define scm_from_intmax  scm_from_int32

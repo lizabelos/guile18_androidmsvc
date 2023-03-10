@@ -462,7 +462,7 @@ SCM_DEFINE (scm_make_stack, "make-stack", 1, 0, 1,
   size = n * SCM_FRAME_N_SLOTS;
 
   /* Make the stack object. */
-  stack = scm_make_struct (scm_stack_type, scm_from_long (size), SCM_EOL);
+  stack = scm_make_struct (scm_stack_type, scm_from_int64 (size), SCM_EOL);
   SCM_STACK (stack) -> id = id;
   iframe = &SCM_STACK (stack) -> tail[0];
   SCM_STACK (stack) -> frames = iframe;
@@ -672,11 +672,11 @@ SCM_DEFINE (scm_frame_previous, "frame-previous", 1, 0, 0,
 {
   unsigned long int n;
   SCM_VALIDATE_FRAME (1, frame);
-  n = scm_to_ulong (SCM_CDR (frame)) + 1;
+  n = scm_to_uint64 (SCM_CDR (frame)) + 1;
   if (n >= SCM_STACK_LENGTH (SCM_CAR (frame)))
     return SCM_BOOL_F;
   else
-    return scm_cons (SCM_CAR (frame), scm_from_ulong (n));
+    return scm_cons (SCM_CAR (frame), scm_from_uint64 (n));
 }
 #undef FUNC_NAME
 
@@ -688,11 +688,11 @@ SCM_DEFINE (scm_frame_next, "frame-next", 1, 0, 0,
 {
   unsigned long int n;
   SCM_VALIDATE_FRAME (1, frame);
-  n = scm_to_ulong (SCM_CDR (frame));
+  n = scm_to_uint64 (SCM_CDR (frame));
   if (n == 0)
     return SCM_BOOL_F;
   else
-    return scm_cons (SCM_CAR (frame), scm_from_ulong (n - 1));
+    return scm_cons (SCM_CAR (frame), scm_from_uint64 (n - 1));
 }
 #undef FUNC_NAME
 

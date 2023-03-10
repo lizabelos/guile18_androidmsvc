@@ -599,10 +599,10 @@
 	implementing `set-program-arguments'.
 
 	* filesys.c (scm_init_filesys): Use scm_from_int rather than
-	scm_from_long for O_RDONLY, O_WRONLY, O_RDWR, O_CREAT, O_EXCL,
+	scm_from_int64 for O_RDONLY, O_WRONLY, O_RDWR, O_CREAT, O_EXCL,
 	O_NOCTTY, O_TRUNC, O_APPEND, O_NONBLOCK, O_NDELAY, O_SYNC and
 	O_LARGEFILE.  These are all int not long, per arg to open().
-	(scm_init_filesys): Use scm_from_int rather than scm_from_long for
+	(scm_init_filesys): Use scm_from_int rather than scm_from_int64 for
 	F_DUPFD, F_GETFD, F_SETFD, F_GETFL, F_SETFL, F_GETOWN, F_SETOWN, these
 	are all ints (per command arg to fcntl).  Likewise FD_CLOEXEC which is
 	an int arg to fcntl.
@@ -2204,7 +2204,7 @@
 	that it's an scm_t_int32.  Otherwise gcc 3.4 says it's always false on
 	a 64-bit system.
 
-	* scmsigs.c (scm_sigaction_for_thread): Use scm_to_long for
+	* scmsigs.c (scm_sigaction_for_thread): Use scm_to_int64 for
 	sa_handler, needs to be a long on 64-bit systems where int is only 32
 	bits.
 
@@ -2747,7 +2747,7 @@
 
 	* socket.c (scm_from_ipv6): Just use mpz_import.  Don't bother trying
 	to fit scm_from_uint64, since that uses mpz_import anyway.  Don't
-	bother trying to fit scm_from_ulong, not really worth the trouble if
+	bother trying to fit scm_from_uint64, not really worth the trouble if
 	addresses are more than 4 bytes usually.
 
 2004-11-30  Kevin Ryde  <user42@zip.com.au>
@@ -3690,7 +3690,7 @@
 
 	* rdelim.c (scm_read_delimited_x): Avoid
 	SCM_VALIDATE_SUBSTRING_SPEC_COPY and use scm_from_size_t instead
-	of scm_from_long for the returned number of read characters.
+	of scm_from_int64 for the returned number of read characters.
 
 	* ioext.c (scm_fdopen): Use scm_i_fdes_to_port together with
 	scm_i_mode_bits to avoid accessing internals of SCM string from C.
@@ -3891,7 +3891,7 @@
 	
 	* posix.c (scm_setgroups): Enhance docstring, per doc/ref/posix.texi.
 
-	* simpos.c (scm_system_star): Change scm_from_long to scm_from_int on
+	* simpos.c (scm_system_star): Change scm_from_int64 to scm_from_int on
 	SIGINT and SIGQUIT, since those values are ints.
 
 2004-08-03  Marius Vollmer  <marius.vollmer@uni-dortmund.de>
@@ -3987,11 +3987,11 @@
 2004-07-29  Marius Vollmer  <marius.vollmer@uni-dortmund.de>
 
 	* numbers.h (scm_to_schar, scm_to_uchar, scm_to_char,
-	scm_to_short, scm_to_ushort, scm_to_int, scm_to_uint, scm_to_long,
-	scm_to_ulong, scm_to_int64, scm_to_uint64, scm_to_intmax,
+	scm_to_short, scm_to_ushort, scm_to_int, scm_to_uint, scm_to_int64,
+	scm_to_uint64, scm_to_int64, scm_to_uint64, scm_to_intmax,
 	scm_to_uintmax, scm_to_size_t, scm_to_ssize_t scm_from_schar,
 	scm_from_uchar, scm_from_char, scm_from_short, scm_from_ushort,
-	scm_from_int, scm_from_uint, scm_from_long, scm_from_ulong,
+	scm_from_int, scm_from_uint, scm_from_int64, scm_from_uint64,
 	scm_from_int64, scm_from_uint64, scm_from_intmax,
 	scm_from_uintmax, scm_from_size_t, scm_from_ssize_t): No longer
 	defined in terms of scm_to_signed_integer, etc, but in terms of
@@ -4163,10 +4163,10 @@
 	* numbers.h, numbers.c (scm_is_integer, scm_is_signed_integer,
 	scm_is_unsigned_integer, scm_to_signed_integer,
 	scm_to_unsigned_integer, scm_to_schar, scm_to_uchar, scm_to_char,
-	scm_to_short, scm_to_ushort, scm_to_long, scm_to_ulong,
+	scm_to_short, scm_to_ushort, scm_to_int64, scm_to_uint64,
 	scm_to_size_t, scm_to_ssize_t, scm_from_schar, scm_from_uchar,
 	scm_from_char, scm_from_short, scm_from_ushort, scm_from_int,
-	scm_from_uint, scm_from_long, scm_from_ulong, scm_from_size_t,
+	scm_from_uint, scm_from_int64, scm_from_uint64, scm_from_size_t,
 	scm_from_ssize_t, scm_is_real, scm_to_double, scm_from_double):
 	New.
 	

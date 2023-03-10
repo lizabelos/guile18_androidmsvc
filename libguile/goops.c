@@ -607,11 +607,11 @@ SCM_DEFINE (scm_sys_initialize_object, "%initialize-object", 2, 0, 0,
 #define SCM_GNS_INDEX(gns)			\
   (SCM_I_INUMP (SCM_CDDR (gns))			\
    ? SCM_I_INUM (SCM_CDDR (gns))		\
-   : scm_to_long (SCM_CAR (SCM_CDDDDR (gns))))
+   : scm_to_int64 (SCM_CAR (SCM_CDDDDR (gns))))
 #define SCM_GNS_SIZE(gns)			\
   (SCM_I_INUMP (SCM_CDDR (gns))			\
    ? 1						\
-   : scm_to_long (SCM_CADR (SCM_CDDDDR (gns))))
+   : scm_to_int64 (SCM_CADR (SCM_CDDDDR (gns))))
 
 SCM_KEYWORD (k_class, "class");
 SCM_KEYWORD (k_allocation, "allocation");

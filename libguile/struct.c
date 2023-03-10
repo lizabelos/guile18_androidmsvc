@@ -166,7 +166,7 @@ scm_struct_init (SCM handle, SCM layout, scm_t_bits * mem, int tail_elts, SCM in
 	    *mem = 0;
 	  else
 	    {
-	      *mem = scm_to_long (SCM_CAR (inits));
+	      *mem = scm_to_int64 (SCM_CAR (inits));
 	      inits = SCM_CDR (inits);
 	    }
 	  break;
@@ -177,7 +177,7 @@ scm_struct_init (SCM handle, SCM layout, scm_t_bits * mem, int tail_elts, SCM in
 	    *mem = 0;
 	  else
 	    {
-	      *mem = scm_to_ulong (SCM_CAR (inits));
+	      *mem = scm_to_uint64 (SCM_CAR (inits));
 	      inits = SCM_CDR (inits);
 	    }
 	  break;
@@ -684,12 +684,12 @@ SCM_DEFINE (scm_struct_ref, "struct-ref", 2, 0, 0,
   switch (field_type)
     {
     case 'u':
-      answer = scm_from_ulong (data[p]);
+      answer = scm_from_uint64 (data[p]);
       break;
 
 #if 0
     case 'i':
-      answer = scm_from_long (data[p]);
+      answer = scm_from_int64 (data[p]);
       break;
 
     case 'd':
@@ -808,9 +808,9 @@ SCM_DEFINE (scm_struct_vtable_tag, "struct-vtable-tag", 1, 0, 0,
 {
   SCM_VALIDATE_VTABLE (1, handle);
 #if USE_64IMPL
-  return scm_from_ulong (((unsigned long long)SCM_STRUCT_DATA (handle)) >> 3);
+  return scm_from_uint64 (((unsigned long long)SCM_STRUCT_DATA (handle)) >> 3);
 #else
-  return scm_from_ulong (((unsigned long)SCM_STRUCT_DATA (handle)) >> 3);
+  return scm_from_uint64 (((unsigned long)SCM_STRUCT_DATA (handle)) >> 3);
 #endif  
 }
 #undef FUNC_NAME

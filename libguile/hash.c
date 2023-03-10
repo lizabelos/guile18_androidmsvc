@@ -92,14 +92,14 @@ scm_hasher(SCM obj, unsigned long n, size_t d)
     case scm_tc7_number:
       switch SCM_TYP16 (obj) {
       case scm_tc16_big:
-        return scm_to_ulong (scm_modulo (obj, scm_from_ulong (n)));
+        return scm_to_uint64 (scm_modulo (obj, scm_from_uint64 (n)));
       case scm_tc16_real:
 	{
 	  double r = SCM_REAL_VALUE (obj);
 	  if (floor (r) == r) 
 	    {
 	      obj = scm_inexact_to_exact (obj);
-	      return scm_to_ulong (scm_modulo (obj, scm_from_ulong (n)));
+	      return scm_to_uint64 (scm_modulo (obj, scm_from_uint64 (n)));
 	    }
 	}
         /* Fall through */
@@ -186,7 +186,7 @@ SCM_DEFINE (scm_hashq, "hashq", 2, 0, 0,
 #define FUNC_NAME s_scm_hashq
 {
   unsigned long sz = scm_to_unsigned_integer (size, 1, ULONG_MAX);
-  return scm_from_ulong (scm_ihashq (key, sz));
+  return scm_from_uint64 (scm_ihashq (key, sz));
 }
 #undef FUNC_NAME
 
@@ -222,7 +222,7 @@ SCM_DEFINE (scm_hashv, "hashv", 2, 0, 0,
 #define FUNC_NAME s_scm_hashv
 {
   unsigned long sz = scm_to_unsigned_integer (size, 1, ULONG_MAX);
-  return scm_from_ulong (scm_ihashv (key, sz));
+  return scm_from_uint64 (scm_ihashv (key, sz));
 }
 #undef FUNC_NAME
 
@@ -245,7 +245,7 @@ SCM_DEFINE (scm_hash, "hash", 2, 0, 0,
 #define FUNC_NAME s_scm_hash
 {
   unsigned long sz = scm_to_unsigned_integer (size, 1, ULONG_MAX);
-  return scm_from_ulong (scm_ihash (key, sz));
+  return scm_from_uint64 (scm_ihash (key, sz));
 }
 #undef FUNC_NAME
 

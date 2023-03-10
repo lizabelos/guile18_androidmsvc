@@ -1282,12 +1282,12 @@ SCM_DEFINE (scm_timed_wait_condition_variable, "wait-condition-variable", 2, 1, 
     {
       if (scm_is_pair (t))
 	{
-	  waittime.tv_sec = scm_to_ulong (SCM_CAR (t));
-	  waittime.tv_nsec = scm_to_ulong (SCM_CAR (t)) * 1000;
+	  waittime.tv_sec = scm_to_uint64 (SCM_CAR (t));
+	  waittime.tv_nsec = scm_to_uint64 (SCM_CAR (t)) * 1000;
 	}
       else
 	{
-	  waittime.tv_sec = scm_to_ulong (t);
+	  waittime.tv_sec = scm_to_uint64 (t);
 	  waittime.tv_nsec = 0;
 	}
       waitptr = &waittime;

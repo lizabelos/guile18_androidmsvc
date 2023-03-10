@@ -399,7 +399,7 @@ SCM_DEFINE (scm_srfi1_count, "count", 2, 0, 1,
 
  check_lst_and_done:
   SCM_ASSERT_TYPE (SCM_NULL_OR_NIL_P (lst), lst, argnum, FUNC_NAME, "list");
-  return scm_from_long (count);
+  return scm_from_int64 (count);
 }
 #undef FUNC_NAME
 
@@ -1241,7 +1241,7 @@ SCM_DEFINE (scm_srfi1_list_tabulate, "list-tabulate", 2, 0, 0,
   SCM_ASSERT (proc_tramp, proc, SCM_ARG2, FUNC_NAME);
 
   for (i = nn-1; i >= 0; i--)
-    ret = scm_cons (proc_tramp (proc, scm_from_long (i)), ret);
+    ret = scm_cons (proc_tramp (proc, scm_from_int64 (i)), ret);
 
   return ret;
 }
@@ -2095,7 +2095,7 @@ SCM_DEFINE (scm_srfi1_take_x, "take!", 2, 0, 0,
   if (nn == 0)
     return SCM_EOL;
 
-  pos = scm_list_tail (lst, scm_from_long (nn - 1));
+  pos = scm_list_tail (lst, scm_from_int64 (nn - 1));
 
   /* Must have at least one cell left, mustn't have reached the end of an
      n-1 element list.  SCM_VALIDATE_CONS here gives the same error as

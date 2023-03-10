@@ -3841,7 +3841,7 @@ dispatch:
 	    {
 	      SCM z = SCM_CDDR (x);
 	      SCM tmp = SCM_CADR (z);
-	      specializers = scm_to_ulong (SCM_CAR (z));
+	      specializers = scm_to_uint64 (SCM_CAR (z));
 
 	      /* Compute a hash value for searching the method cache.  There
 	       * are two variants for computing the hash value, a (rather)
@@ -3875,7 +3875,7 @@ dispatch:
 		   * where dispatch is called, such that hopefully the hash
 		   * value that is computed will directly point to the right
 		   * method in the method cache.  */
-		  unsigned long int hashset = scm_to_ulong (tmp);
+		  unsigned long int hashset = scm_to_uint64 (tmp);
 		  unsigned long int counter = specializers + 1;
 		  SCM tmp_arg = arg1;
 		  hash_value = 0;
@@ -3888,7 +3888,7 @@ dispatch:
 		    }
 		  z = SCM_CDDR (z);
 		  method_cache = SCM_CADR (z);
-		  mask = scm_to_ulong (SCM_CAR (z));
+		  mask = scm_to_uint64 (SCM_CAR (z));
 		  hash_value &= mask;
 		  cache_end_pos = hash_value;
 		}
@@ -5477,7 +5477,7 @@ check_map_args (SCM argv,
 	}
 
       if (elt_len != len)
-	scm_out_of_range_pos (who, elt, scm_from_long (i + 2));
+	scm_out_of_range_pos (who, elt, scm_from_int64 (i + 2));
     }
 }
 

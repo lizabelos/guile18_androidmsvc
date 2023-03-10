@@ -91,9 +91,9 @@ display_header (SCM source, SCM port)
       if (scm_is_true (line) && scm_is_true (col))
 	{
 	  scm_putc (':', port);
-	  scm_intprint (scm_to_long (line) + 1, 10, port);
+	  scm_intprint (scm_to_int64 (line) + 1, 10, port);
 	  scm_putc (':', port);
-	  scm_intprint (scm_to_long (col) + 1, 10, port);
+	  scm_intprint (scm_to_int64 (col) + 1, 10, port);
 	}
     }
   else

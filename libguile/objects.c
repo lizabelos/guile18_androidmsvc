@@ -88,7 +88,7 @@ scm_mcache_lookup_cmethod (SCM cache, SCM args)
 {
   unsigned long i, mask, n, end;
   SCM ls, methods, z = SCM_CDDR (cache);
-  n = scm_to_ulong (SCM_CAR (z)); /* maximum number of specializers */
+  n = scm_to_uint64 (SCM_CAR (z)); /* maximum number of specializers */
   methods = SCM_CADR (z);
 
   if (scm_is_simple_vector (methods))
@@ -101,10 +101,10 @@ scm_mcache_lookup_cmethod (SCM cache, SCM args)
   else
     {
       /* cache format #2: compute a hash value */
-      unsigned long hashset = scm_to_ulong (methods);
+      unsigned long hashset = scm_to_uint64 (methods);
       long j = n;
       z = SCM_CDDR (z);
-      mask = scm_to_ulong (SCM_CAR (z));
+      mask = scm_to_uint64 (SCM_CAR (z));
       methods = SCM_CADR (z);
       i = 0;
       ls = args;

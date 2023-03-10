@@ -155,7 +155,7 @@ SCM_DEFINE (scm_read_string_x_partial, "read-string!/partial", 1, 3, 0,
     }
 
   scm_remember_upto_here_1 (str);
-  return scm_from_long (chars_read);
+  return scm_from_int64 (chars_read);
 }
 #undef FUNC_NAME
 
@@ -240,7 +240,7 @@ SCM_DEFINE (scm_write_string_partial, "write-string/partial", 1, 3, 0,
 	{
 	  memcpy (pt->write_pos, src, write_len);
 	  pt->write_pos += write_len;
-	  return scm_from_long (write_len);
+	  return scm_from_int64 (write_len);
 	}
       if (pt->write_pos > pt->write_buf)
 	scm_flush (port);
@@ -259,7 +259,7 @@ SCM_DEFINE (scm_write_string_partial, "write-string/partial", 1, 3, 0,
       }
 
     scm_remember_upto_here_1 (str);
-    return scm_from_long (rv);
+    return scm_from_int64 (rv);
   }
 }
 #undef FUNC_NAME

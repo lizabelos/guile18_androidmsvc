@@ -1119,7 +1119,7 @@ scm_gcd (SCM x, SCM y)
           scm_remember_upto_here_1 (x);
           return (SCM_POSFIXABLE (result) 
 		  ? SCM_I_MAKINUM (result)
-		  : scm_from_ulong (result));
+		  : scm_from_uint64 (result));
         }
       else if (SCM_BIGP (y))
         {
@@ -1549,7 +1549,7 @@ SCM_DEFINE (scm_logbit_p, "logbit?", 2, 0, 0,
 #define FUNC_NAME s_scm_logbit_p
 {
   unsigned long int iindex;
-  iindex = scm_to_ulong (index);
+  iindex = scm_to_uint64 (index);
 
   if (SCM_I_INUMP (j))
     {
@@ -1827,7 +1827,7 @@ SCM_DEFINE (scm_ash, "ash", 2, 0, 0,
 #define FUNC_NAME s_scm_ash
 {
   long bits_to_shift;
-  bits_to_shift = scm_to_long (cnt);
+  bits_to_shift = scm_to_int64 (cnt);
 
   if (SCM_I_INUMP (n))
     {
@@ -1918,8 +1918,8 @@ SCM_DEFINE (scm_bit_extract, "bit-extract", 3, 0, 0,
 #define FUNC_NAME s_scm_bit_extract
 {
   unsigned long int istart, iend, bits;
-  istart = scm_to_ulong (start);
-  iend = scm_to_ulong (end);
+  istart = scm_to_uint64 (start);
+  iend = scm_to_uint64 (end);
   SCM_ASSERT_RANGE (3, end, (iend >= istart));
 
   /* how many bits to keep */
@@ -4291,7 +4291,7 @@ scm_difference (SCM x, SCM y)
 	  scm_remember_upto_here_1 (x);
 	  if (sgn_x == 0)
 	    return (SCM_FIXABLE (-yy) ?
-		    SCM_I_MAKINUM (-yy) : scm_from_long (-yy));
+		    SCM_I_MAKINUM (-yy) : scm_from_int64 (-yy));
 	  else
 	    {
 	      SCM result = scm_i_mkbig ();

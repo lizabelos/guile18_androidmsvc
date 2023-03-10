@@ -95,7 +95,7 @@
 */
 
 #define CTYPE            long
-#define FROM_CTYPE       scm_from_long
+#define FROM_CTYPE       scm_from_int64
 #define SCM2CTYPES       scm_c_scm2longs
 #define CTYPES2SCM       scm_c_longs2scm
 #define CTYPES2UVECT     scm_c_longs2ivect

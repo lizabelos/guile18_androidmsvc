@@ -23,7 +23,7 @@ index a91cb50..2b7c27c 100644
 @@ -79,7 +79,7 @@ SCM_DEFINE (scm_srfi60_copy_bit, "copy-bit", 3, 0, 0,
    int bb;
  
-   ii = scm_to_ulong (index);
+   ii = scm_to_uint64 (index);
 -  bb = scm_to_bool (bit);
 +  bb = scm_to_bool (newbit);
  

@@ -110,7 +110,7 @@ CTYPES2UVECT (const CTYPE *data, long n)
   SCM uvec;
   UVEC_CTYPE *uvec_elements;
   
-  uvec = F(scm_make_,UVEC_TAG,vector) (scm_from_long (n), SCM_UNDEFINED);
+  uvec = F(scm_make_,UVEC_TAG,vector) (scm_from_int64 (n), SCM_UNDEFINED);
   uvec_elements = F(scm_,UVEC_TAG,vector_writable_elements) (uvec, &handle,
 							     NULL, NULL);
   for (i = 0; i < n; i++)
@@ -131,7 +131,7 @@ CTYPES2UVECT_2 (const CTYPE_2 *data, long n)
   SCM uvec;
   UVEC_CTYPE_2 *uvec_elements;
   
-  uvec = F(scm_make_,UVEC_TAG_2,vector) (scm_from_long (n), SCM_UNDEFINED);
+  uvec = F(scm_make_,UVEC_TAG_2,vector) (scm_from_int64 (n), SCM_UNDEFINED);
   uvec_elements = F(scm_,UVEC_TAG_2,vector_writable_elements) (uvec, &handle,
 							       NULL, NULL);
 

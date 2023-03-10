@@ -76,7 +76,7 @@ SCM_DEFINE (scm_srfi60_copy_bit, "copy-bit", 3, 0, 0,
   unsigned long ii;
   int bb;
 
-  ii = scm_to_ulong (index);
+  ii = scm_to_uint64 (index);
   bb = scm_to_bool (bit);
 
   if (SCM_I_INUMP (n))
@@ -89,7 +89,7 @@ SCM_DEFINE (scm_srfi60_copy_bit, "copy-bit", 3, 0, 0,
         {
           nn &= ~(1L << ii);  /* zap bit at index */
           nn |= ((long) bb << ii);   /* insert desired bit */
-          return scm_from_long (nn);
+          return scm_from_int64 (nn);
         }
       else
         {
@@ -139,14 +139,14 @@ SCM_DEFINE (scm_srfi60_rotate_bit_field, "rotate-bit-field", 4, 0, 0,
 	    "@end example")
 #define FUNC_NAME s_scm_srfi60_rotate_bit_field
 {
-  unsigned long ss = scm_to_ulong (start);
-  unsigned long ee = scm_to_ulong (end);
+  unsigned long ss = scm_to_uint64 (start);
+  unsigned long ee = scm_to_uint64 (end);
   unsigned long ww, cc;
 
   SCM_ASSERT_RANGE (3, end, (ee >= ss));
   ww = ee - ss;
 
-  cc = scm_to_ulong (scm_modulo (count, scm_difference (end, start)));
+  cc = scm_to_uint64 (scm_modulo (count, scm_difference (end, start)));
 
   if (SCM_I_INUMP (n))
     {
@@ -160,7 +160,7 @@ SCM_DEFINE (scm_srfi60_rotate_bit_field, "rotate-bit-field", 4, 0, 0,
           long fmask = (-1L << ss) & ((1L << ee) - 1);  /* field mask */
           long ff = nn & fmask;                /* field */
 
-          return scm_from_long (above
+          return scm_from_int64 (above
                                 | ((ff << cc) & fmask)
                                 | ((ff >> (ww-cc)) & fmask)
                                 | below);
@@ -231,8 +231,8 @@ SCM_DEFINE (scm_srfi60_reverse_bit_field, "reverse-bit-field", 3, 0, 0,
 	    "@end example")
 #define FUNC_NAME s_scm_srfi60_reverse_bit_field
 {
-  long ss = scm_to_long (start);
-  long ee = scm_to_long (end);
+  long ss = scm_to_int64 (start);
+  long ee = scm_to_int64 (end);
   long swaps = (ee - ss) / 2;  /* number of swaps */
   SCM b;
 
@@ -255,7 +255,7 @@ SCM_DEFINE (scm_srfi60_reverse_bit_field, "reverse-bit-field", 3, 0, 0,
               smask <<= 1;
               emask >>= 1;
             }
-          return scm_from_long (nn);
+          return scm_from_int64 (nn);
         }
       else
         {
@@ -327,7 +327,7 @@ SCM_DEFINE (scm_srfi60_integer_to_list, "integer->list", 1, 1, 0,
 
   if (SCM_UNBNDP (len))
     len = scm_integer_length (n);
-  ll = scm_to_ulong (len);
+  ll = scm_to_uint64 (len);
 
   if (SCM_I_INUMP (n))
     {

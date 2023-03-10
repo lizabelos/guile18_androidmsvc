@@ -99,7 +99,7 @@ scm_i_input_error (char const *function,
   scm_simple_format (string_port,
 		     scm_from_locale_string ("~A:~S:~S: ~A"),
 		     scm_list_4 (fn,
-				 scm_from_long (SCM_LINUM (port) + 1),
+				 scm_from_int64 (SCM_LINUM (port) + 1),
 				 scm_from_int (SCM_COL (port) + 1),
 				 scm_from_locale_string (message)));
     

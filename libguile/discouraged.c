@@ -53,13 +53,13 @@ scm_uint2num (unsigned int x)
 SCM
 scm_long2num (long x)
 {
-  return scm_from_long (x);
+  return scm_from_int64 (x);
 }
 
 SCM
 scm_ulong2num (unsigned long x)
 {
-  return scm_from_ulong (x);
+  return scm_from_uint64 (x);
 }
 
 SCM
@@ -101,13 +101,13 @@ scm_num2uint (SCM x, unsigned long pos, const char *s_caller)
 long
 scm_num2long (SCM x, unsigned long pos, const char *s_caller)
 {
-  return scm_to_long (x);
+  return scm_to_int64 (x);
 }
 
 unsigned long
 scm_num2ulong (SCM x, unsigned long pos, const char *s_caller)
 {
-  return scm_to_ulong (x);
+  return scm_to_uint64 (x);
 }
 
 size_t

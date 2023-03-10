@@ -507,25 +507,25 @@ scm_stat2scm (struct stat_or_stat64 *stat_temp)
 {
   SCM ans = scm_c_make_vector (15, SCM_UNSPECIFIED);
   
-  SCM_SIMPLE_VECTOR_SET(ans, 0, scm_from_ulong (stat_temp->st_dev));
+  SCM_SIMPLE_VECTOR_SET(ans, 0, scm_from_uint64 (stat_temp->st_dev));
   SCM_SIMPLE_VECTOR_SET(ans, 1, scm_from_ino_t_or_ino64_t (stat_temp->st_ino));
-  SCM_SIMPLE_VECTOR_SET(ans, 2, scm_from_ulong (stat_temp->st_mode));
-  SCM_SIMPLE_VECTOR_SET(ans, 3, scm_from_ulong (stat_temp->st_nlink));
-  SCM_SIMPLE_VECTOR_SET(ans, 4, scm_from_ulong (stat_temp->st_uid));
-  SCM_SIMPLE_VECTOR_SET(ans, 5, scm_from_ulong (stat_temp->st_gid));
+  SCM_SIMPLE_VECTOR_SET(ans, 2, scm_from_uint64 (stat_temp->st_mode));
+  SCM_SIMPLE_VECTOR_SET(ans, 3, scm_from_uint64 (stat_temp->st_nlink));
+  SCM_SIMPLE_VECTOR_SET(ans, 4, scm_from_uint64 (stat_temp->st_uid));
+  SCM_SIMPLE_VECTOR_SET(ans, 5, scm_from_uint64 (stat_temp->st_gid));
 #ifdef HAVE_STRUCT_STAT_ST_RDEV
-  SCM_SIMPLE_VECTOR_SET(ans, 6, scm_from_ulong (stat_temp->st_rdev));
+  SCM_SIMPLE_VECTOR_SET(ans, 6, scm_from_uint64 (stat_temp->st_rdev));
 #else
   SCM_SIMPLE_VECTOR_SET(ans, 6, SCM_BOOL_F);
 #endif
   SCM_SIMPLE_VECTOR_SET(ans, 7, scm_from_off_t_or_off64_t (stat_temp->st_size));
-  SCM_SIMPLE_VECTOR_SET(ans, 8, scm_from_ulong (stat_temp->st_atime));
-  SCM_SIMPLE_VECTOR_SET(ans, 9, scm_from_ulong (stat_temp->st_mtime));
-  SCM_SIMPLE_VECTOR_SET(ans, 10, scm_from_ulong (stat_temp->st_ctime));
+  SCM_SIMPLE_VECTOR_SET(ans, 8, scm_from_uint64 (stat_temp->st_atime));
+  SCM_SIMPLE_VECTOR_SET(ans, 9, scm_from_uint64 (stat_temp->st_mtime));
+  SCM_SIMPLE_VECTOR_SET(ans, 10, scm_from_uint64 (stat_temp->st_ctime));
 #ifdef HAVE_STRUCT_STAT_ST_BLKSIZE
-  SCM_SIMPLE_VECTOR_SET(ans, 11, scm_from_ulong (stat_temp->st_blksize));
+  SCM_SIMPLE_VECTOR_SET(ans, 11, scm_from_uint64 (stat_temp->st_blksize));
 #else
-  SCM_SIMPLE_VECTOR_SET(ans, 11, scm_from_ulong (4096L));
+  SCM_SIMPLE_VECTOR_SET(ans, 11, scm_from_uint64 (4096L));
 #endif
 #ifdef HAVE_STRUCT_STAT_ST_BLOCKS
   SCM_SIMPLE_VECTOR_SET(ans, 12, scm_from_blkcnt_t_or_blkcnt64_t (stat_temp->st_blocks));
@@ -1333,11 +1333,11 @@ SCM_DEFINE (scm_select, "select", 3, 2, 0,
     {
       if (scm_is_unsigned_integer (secs, 0, ULONG_MAX))
 	{
-	  timeout.tv_sec = scm_to_ulong (secs);
+	  timeout.tv_sec = scm_to_uint64 (secs);
 	  if (SCM_UNBNDP (usecs))
 	    timeout.tv_usec = 0;
 	  else
-	    timeout.tv_usec = scm_to_long (usecs);
+	    timeout.tv_usec = scm_to_int64 (usecs);
 	}
       else
 	{

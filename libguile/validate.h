@@ -70,15 +70,15 @@
 #define SCM_NUM2UINT_DEF(pos, arg, def) \
   (SCM_UNBNDP (arg) ? def : scm_to_uint (arg))
 
-#define SCM_NUM2ULONG(pos, arg) (scm_to_ulong (arg))
+#define SCM_NUM2ULONG(pos, arg) (scm_to_uint64 (arg))
 
 #define SCM_NUM2ULONG_DEF(pos, arg, def) \
-  (SCM_UNBNDP (arg) ? def : scm_to_ulong (arg))
+  (SCM_UNBNDP (arg) ? def : scm_to_uint64 (arg))
 
-#define SCM_NUM2LONG(pos, arg) (scm_to_long (arg))
+#define SCM_NUM2LONG(pos, arg) (scm_to_int64 (arg))
 
 #define SCM_NUM2LONG_DEF(pos, arg, def) \
-  (SCM_UNBNDP (arg) ? def : scm_to_long (arg))
+  (SCM_UNBNDP (arg) ? def : scm_to_int64 (arg))
 
 #define SCM_NUM2LONG_LONG(pos, arg) (scm_to_int64 (arg))
 

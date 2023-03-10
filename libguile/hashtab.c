@@ -167,7 +167,7 @@ scm_i_rehash (SCM table,
   
   if (SCM_HASHTABLE_WEAK_P (table))
     new_buckets = scm_i_allocate_weak_vector (SCM_HASHTABLE_FLAGS (table),
-					      scm_from_ulong (new_size),
+					      scm_from_uint64 (new_size),
 					      SCM_EOL);
   else
     new_buckets = scm_c_make_vector (new_size, SCM_EOL);
@@ -198,7 +198,7 @@ scm_i_rehash (SCM table,
 	  ls = SCM_CDR (ls);
 	  h = hash_fn (SCM_CAR (handle), new_size, closure);
 	  if (h >= new_size)
-	    scm_out_of_range (func_name, scm_from_ulong (h));
+	    scm_out_of_range (func_name, scm_from_uint64 (h));
 	  SCM_SETCDR (cell, SCM_SIMPLE_VECTOR_REF (new_buckets, h));
 	  SCM_SIMPLE_VECTOR_SET (new_buckets, h, cell);
 	  SCM_HASHTABLE_INCREMENT (table);
@@ -316,7 +316,7 @@ SCM_DEFINE (scm_make_hash_table, "make-hash-table", 0, 1, 0,
   if (SCM_UNBNDP (n))
     return make_hash_table (0, 0, FUNC_NAME);
   else
-    return make_hash_table (0, scm_to_ulong (n), FUNC_NAME);
+    return make_hash_table (0, scm_to_uint64 (n), FUNC_NAME);
 }
 #undef FUNC_NAME
 
@@ -334,7 +334,7 @@ SCM_DEFINE (scm_make_weak_key_hash_table, "make-weak-key-hash-table", 0, 1, 0,
     return make_hash_table (SCM_HASHTABLEF_WEAK_CAR, 0, FUNC_NAME);
   else
     return make_hash_table (SCM_HASHTABLEF_WEAK_CAR,
-			    scm_to_ulong (n), FUNC_NAME);
+			    scm_to_uint64 (n), FUNC_NAME);
 }
 #undef FUNC_NAME
 
@@ -350,7 +350,7 @@ SCM_DEFINE (scm_make_weak_value_hash_table, "make-weak-value-hash-table", 0, 1, 
   else
     {
       return make_hash_table (SCM_HASHTABLEF_WEAK_CDR,
-			      scm_to_ulong (n), FUNC_NAME);
+			      scm_to_uint64 (n), FUNC_NAME);
     }
 }
 #undef FUNC_NAME
@@ -369,7 +369,7 @@ SCM_DEFINE (scm_make_doubly_weak_hash_table, "make-doubly-weak-hash-table", 1, 0
   else
     {
       return make_hash_table (SCM_HASHTABLEF_WEAK_CAR | SCM_HASHTABLEF_WEAK_CDR,
-			      scm_to_ulong (n),
+			      scm_to_uint64 (n),
 			      FUNC_NAME);
     }
 }
@@ -435,7 +435,7 @@ scm_hash_fn_get_handle (SCM table, SCM obj, unsigned long (*hash_fn)(), SCM (*as
     return SCM_BOOL_F;
   k = hash_fn (obj, SCM_SIMPLE_VECTOR_LENGTH (table), closure);
   if (k >= SCM_SIMPLE_VECTOR_LENGTH (table))
-    scm_out_of_range ("hash_fn_get_handle", scm_from_ulong (k));
+    scm_out_of_range ("hash_fn_get_handle", scm_from_uint64 (k));
   h = assoc_fn (obj, SCM_SIMPLE_VECTOR_REF (table, k), closure);
   return h;
 }
@@ -463,7 +463,7 @@ scm_hash_fn_create_handle_x (SCM table, SCM obj, SCM init, unsigned long (*hash_
 
   k = hash_fn (obj, SCM_SIMPLE_VECTOR_LENGTH (buckets), closure);
   if (k >= SCM_SIMPLE_VECTOR_LENGTH (buckets))
-    scm_out_of_range ("hash_fn_create_handle_x", scm_from_ulong (k));
+    scm_out_of_range ("hash_fn_create_handle_x", scm_from_uint64 (k));
   it = assoc_fn (obj, SCM_SIMPLE_VECTOR_REF (buckets, k), closure);
   if (scm_is_pair (it))
     return it;
@@ -484,7 +484,7 @@ scm_hash_fn_create_handle_x (SCM table, SCM obj, SCM init, unsigned long (*hash_
 	  buckets = SCM_HASHTABLE_VECTOR (table);
 	  k = hash_fn (obj, SCM_SIMPLE_VECTOR_LENGTH (buckets), closure);
 	  if (k >= SCM_SIMPLE_VECTOR_LENGTH (buckets))
-	    scm_out_of_range ("hash_fn_create_handle_x", scm_from_ulong (k));
+	    scm_out_of_range ("hash_fn_create_handle_x", scm_from_uint64 (k));
 	}
       SCM_SETCDR (new_bucket, SCM_SIMPLE_VECTOR_REF (buckets, k));
       SCM_SIMPLE_VECTOR_SET (buckets, k, new_bucket);
@@ -554,7 +554,7 @@ scm_hash_fn_remove_x (SCM table, SCM obj,
 
   k = hash_fn (obj, SCM_SIMPLE_VECTOR_LENGTH (buckets), closure);
   if (k >= SCM_SIMPLE_VECTOR_LENGTH (buckets))
-    scm_out_of_range ("hash_fn_remove_x", scm_from_ulong (k));
+    scm_out_of_range ("hash_fn_remove_x", scm_from_uint64 (k));
   h = assoc_fn (obj, SCM_SIMPLE_VECTOR_REF (buckets, k), closure);
   if (scm_is_true (h))
     {
@@ -797,8 +797,8 @@ typedef struct scm_t_ihashx_closure
 static unsigned long
 scm_ihashx (SCM obj, unsigned long n, scm_t_ihashx_closure *closure)
 {
-  SCM answer = scm_call_2 (closure->hash, obj, scm_from_ulong (n));
-  return scm_to_ulong (answer);
+  SCM answer = scm_call_2 (closure->hash, obj, scm_from_uint64 (n));
+  return scm_to_uint64 (answer);
 }
 
 

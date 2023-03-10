@@ -191,9 +191,9 @@ SCM_DEFINE (scm_registered_modules, "c-registered-modules", 0, 0, 0,
   for (md = registered_mods; md; md = md->link)
     res = scm_cons (scm_cons (scm_from_locale_string (md->module_name),
 #if USE_64IMPL
-			      scm_from_ulong ((unsigned long long) md->init_func)),
+			      scm_from_uint64 ((unsigned long long) md->init_func)),
 #else
-			      scm_from_ulong ((unsigned long) md->init_func)),
+			      scm_from_uint64 ((unsigned long) md->init_func)),
 #endif
 		    res);
   return res;

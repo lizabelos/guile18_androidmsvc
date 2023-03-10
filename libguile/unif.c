@@ -710,23 +710,23 @@ scm_i_shap2ra (SCM args)
       spec = SCM_CAR (args);
       if (scm_is_integer (spec))
 	{
-	  if (scm_to_long (spec) < 0)
+	  if (scm_to_int64 (spec) < 0)
 	    scm_misc_error (NULL, s_bad_spec, SCM_EOL);
 	  s->lbnd = 0;
-	  s->ubnd = scm_to_long (spec) - 1;
+	  s->ubnd = scm_to_int64 (spec) - 1;
 	  s->inc = 1;
 	}
       else
 	{
 	  if (!scm_is_pair (spec) || !scm_is_integer (SCM_CAR (spec)))
 	    scm_misc_error (NULL, s_bad_spec, SCM_EOL);
-	  s->lbnd = scm_to_long (SCM_CAR (spec));
+	  s->lbnd = scm_to_int64 (SCM_CAR (spec));
 	  sp = SCM_CDR (spec);
 	  if (!scm_is_pair (sp) 
 	      || !scm_is_integer (SCM_CAR (sp))
 	      || !scm_is_null (SCM_CDR (sp)))
 	    scm_misc_error (NULL, s_bad_spec, SCM_EOL);
-	  s->ubnd = scm_to_long (SCM_CAR (sp));
+	  s->ubnd = scm_to_int64 (SCM_CAR (sp));
 	  s->inc = 1;
 	}
     }
@@ -893,7 +893,7 @@ SCM_DEFINE (scm_make_shared_array, "make-shared-array", 2, 0, 1,
   s = SCM_I_ARRAY_DIMS (ra);
   for (k = 0; k < SCM_I_ARRAY_NDIM (ra); k++)
     {
-      inds = scm_cons (scm_from_long (s[k].lbnd), inds);
+      inds = scm_cons (scm_from_int64 (s[k].lbnd), inds);
       if (s[k].ubnd < s[k].lbnd)
 	{
 	  if (1 == SCM_I_ARRAY_NDIM (ra))
@@ -1157,7 +1157,7 @@ SCM_DEFINE (scm_array_in_bounds_p, "array-in-bounds?", 1, 0, 1,
 
 	  if (!scm_is_pair (args))
 	    SCM_WRONG_NUM_ARGS ();
-	  ind = scm_to_long (SCM_CAR (args));
+	  ind = scm_to_int64 (SCM_CAR (args));
 	  args = SCM_CDR (args);
 
 	  if (ind < s[k].lbnd || ind > s[k].ubnd)
@@ -1180,7 +1180,7 @@ SCM_DEFINE (scm_array_in_bounds_p, "array-in-bounds?", 1, 0, 1,
 
       if (!scm_is_pair (args))
 	SCM_WRONG_NUM_ARGS ();
-      ind = scm_to_long (SCM_CAR (args));
+      ind = scm_to_int64 (SCM_CAR (args));
       args = SCM_CDR (args);
       res = scm_from_bool (ind >= 0
 			   && ind < scm_c_generalized_vector_length (v));
@@ -2432,7 +2432,7 @@ l2ra (SCM lst, scm_t_array_handle *handle, ssize_t pos, size_t k)
       if (!scm_is_null (lst))
 	errmsg = "too many elements for array dimension ~a, want ~a";
       if (errmsg)
-	scm_misc_error (NULL, errmsg, scm_list_2 (scm_from_ulong (k),
+	scm_misc_error (NULL, errmsg, scm_list_2 (scm_from_uint64 (k),
 						  scm_from_size_t (len)));
     }
 }

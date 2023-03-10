@@ -272,7 +272,7 @@ SCM_DEFINE (scm_getgroups, "getgroups", 0, 0, 0,
 
   result = scm_c_make_vector (ngroups, SCM_BOOL_F);
   while (--ngroups >= 0) 
-    SCM_SIMPLE_VECTOR_SET (result, ngroups, scm_from_ulong (groups[ngroups]));
+    SCM_SIMPLE_VECTOR_SET (result, ngroups, scm_from_uint64 (groups[ngroups]));
 
   free (groups);
   return result;
@@ -364,8 +364,8 @@ SCM_DEFINE (scm_getpwuid, "getpw", 0, 1, 0,
 
   SCM_SIMPLE_VECTOR_SET(result, 0, scm_from_locale_string (entry->pw_name));
   SCM_SIMPLE_VECTOR_SET(result, 1, scm_from_locale_string (entry->pw_passwd));
-  SCM_SIMPLE_VECTOR_SET(result, 2, scm_from_ulong (entry->pw_uid));
-  SCM_SIMPLE_VECTOR_SET(result, 3, scm_from_ulong (entry->pw_gid));
+  SCM_SIMPLE_VECTOR_SET(result, 2, scm_from_uint64 (entry->pw_uid));
+  SCM_SIMPLE_VECTOR_SET(result, 3, scm_from_uint64 (entry->pw_gid));
   SCM_SIMPLE_VECTOR_SET(result, 4, scm_from_locale_string (entry->pw_gecos));
   if (!entry->pw_dir)
     SCM_SIMPLE_VECTOR_SET(result, 5, scm_from_locale_string (""));
@@ -429,7 +429,7 @@ SCM_DEFINE (scm_getgrgid, "getgr", 0, 1, 0,
 
   SCM_SIMPLE_VECTOR_SET(result, 0, scm_from_locale_string (entry->gr_name));
   SCM_SIMPLE_VECTOR_SET(result, 1, scm_from_locale_string (entry->gr_passwd));
-  SCM_SIMPLE_VECTOR_SET(result, 2, scm_from_ulong  (entry->gr_gid));
+  SCM_SIMPLE_VECTOR_SET(result, 2, scm_from_uint64  (entry->gr_gid));
   SCM_SIMPLE_VECTOR_SET(result, 3, scm_makfromstrs (-1, entry->gr_mem));
   return result;
 }
@@ -1289,7 +1289,7 @@ SCM_DEFINE (scm_getpid, "getpid", 0, 0, 0,
 	    "Return an integer representing the current process ID.")
 #define FUNC_NAME s_scm_getpid
 {
-  return scm_from_ulong (getpid ());
+  return scm_from_uint64 (getpid ());
 }
 #undef FUNC_NAME
 
@@ -2055,7 +2055,7 @@ scm_init_posix ()
   scm_c_define ("LC_IDENTIFICATION", scm_from_int (LC_IDENTIFICATION));
 #endif
 #ifdef PIPE_BUF
-  scm_c_define ("PIPE_BUF", scm_from_long (PIPE_BUF));
+  scm_c_define ("PIPE_BUF", scm_from_int64 (PIPE_BUF));
 #endif
 
 #ifdef PRIO_PROCESS

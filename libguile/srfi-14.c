@@ -180,7 +180,7 @@ SCM_DEFINE (scm_char_set_hash, "char-set-hash", 1, 1, 0,
     bnd = default_bnd;
   else
     {
-      bnd = scm_to_ulong (bound);
+      bnd = scm_to_uint64 (bound);
       if (bnd == 0)
 	bnd = default_bnd;
     }
@@ -191,7 +191,7 @@ SCM_DEFINE (scm_char_set_hash, "char-set-hash", 1, 1, 0,
       if (p[k] != 0)
         val = p[k] + (val << 1);
     }
-  return scm_from_ulong (val % bnd);
+  return scm_from_uint64 (val % bnd);
 }
 #undef FUNC_NAME
 

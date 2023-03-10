@@ -119,7 +119,7 @@ SCM_DEFINE (scm_htonl, "htonl", 1, 0, 0,
 	    "and returned as a new integer.")
 #define FUNC_NAME s_scm_htonl
 {
-  return scm_from_ulong (htonl (scm_to_uint32 (value)));
+  return scm_from_uint64 (htonl (scm_to_uint32 (value)));
 }
 #undef FUNC_NAME
 
@@ -130,7 +130,7 @@ SCM_DEFINE (scm_ntohl, "ntohl", 1, 0, 0,
 	    "and returned as a new integer.")
 #define FUNC_NAME s_scm_ntohl
 {
-  return scm_from_ulong (ntohl (scm_to_uint32 (value)));
+  return scm_from_uint64 (ntohl (scm_to_uint32 (value)));
 }
 #undef FUNC_NAME
 
@@ -157,7 +157,7 @@ SCM_DEFINE (scm_inet_aton, "inet-aton", 1, 0, 0,
   free (c_address);
   if (rv == 0)
     SCM_MISC_ERROR ("bad address", SCM_EOL);
-  return scm_from_ulong (ntohl (soka.s_addr));
+  return scm_from_uint64 (ntohl (soka.s_addr));
 }
 #undef FUNC_NAME
 
@@ -193,7 +193,7 @@ SCM_DEFINE (scm_inet_netof, "inet-netof", 1, 0, 0,
 {
   struct in_addr addr;
   addr.s_addr = htonl (SCM_NUM2ULONG (1, address));
-  return scm_from_ulong (inet_netof (addr));
+  return scm_from_uint64 (inet_netof (addr));
 }
 #undef FUNC_NAME
 #endif
@@ -211,7 +211,7 @@ SCM_DEFINE (scm_lnaof, "inet-lnaof", 1, 0, 0,
 {
   struct in_addr addr;
   addr.s_addr = htonl (SCM_NUM2ULONG (1, address));
-  return scm_from_ulong (inet_lnaof (addr));
+  return scm_from_uint64 (inet_lnaof (addr));
 }
 #undef FUNC_NAME
 #endif
@@ -234,7 +234,7 @@ SCM_DEFINE (scm_inet_makeaddr, "inet-makeaddr", 2, 0, 0,
   netnum = SCM_NUM2ULONG (1, net);
   lnanum = SCM_NUM2ULONG (2, lna);
   addr = inet_makeaddr (netnum, lnanum);
-  return scm_from_ulong (ntohl (addr.s_addr));
+  return scm_from_uint64 (ntohl (addr.s_addr));
 }
 #undef FUNC_NAME
 #endif
@@ -380,7 +380,7 @@ SCM_DEFINE (scm_inet_pton, "inet-pton", 2, 0, 0,
   else if (rv == 0)
     SCM_MISC_ERROR ("Bad address", SCM_EOL);
   if (af == AF_INET)
-    return scm_from_ulong (ntohl (*dst));
+    return scm_from_uint64 (ntohl (*dst));
   else
     return scm_from_ipv6 ((scm_t_uint8 *) dst);
 }
@@ -572,10 +572,10 @@ SCM_DEFINE (scm_getsockopt, "getsockopt", 3, 0, 0,
 #ifdef HAVE_STRUCT_LINGER
 	  struct linger *ling = (struct linger *) &optval;
 
-	  return scm_cons (scm_from_long (ling->l_onoff),
-			   scm_from_long (ling->l_linger));
+	  return scm_cons (scm_from_int64 (ling->l_onoff),
+			   scm_from_int64 (ling->l_linger));
 #else
-	  return scm_cons (scm_from_long (*(int *) &optval),
+	  return scm_cons (scm_from_int64 (*(int *) &optval),
 			   scm_from_int (0));
 #endif
 	}
@@ -732,8 +732,8 @@ SCM_DEFINE (scm_setsockopt, "setsockopt", 4, 0, 0,
     {
       /* Fourth argument must be a pair of addresses. */
       SCM_ASSERT (scm_is_pair (value), value, SCM_ARG4, FUNC_NAME);
-      opt_mreq.imr_multiaddr.s_addr = htonl (scm_to_ulong (SCM_CAR (value)));
-      opt_mreq.imr_interface.s_addr = htonl (scm_to_ulong (SCM_CDR (value)));
+      opt_mreq.imr_multiaddr.s_addr = htonl (scm_to_uint64 (SCM_CAR (value)));
+      opt_mreq.imr_interface.s_addr = htonl (scm_to_uint64 (SCM_CDR (value)));
       optlen = sizeof (opt_mreq);
       optval = &opt_mreq;
     }
@@ -1055,7 +1055,7 @@ _scm_from_sockaddr (const scm_t_max_sockaddr *address, unsigned addr_size,
 	SCM_SIMPLE_VECTOR_SET(result, 0,
 			      scm_from_short (fam));
 	SCM_SIMPLE_VECTOR_SET(result, 1,
-			      scm_from_ulong (ntohl (nad->sin_addr.s_addr)));
+			      scm_from_uint64 (ntohl (nad->sin_addr.s_addr)));
 	SCM_SIMPLE_VECTOR_SET(result, 2,
 			      scm_from_ushort (ntohs (nad->sin_port)));
       }
@@ -1071,7 +1071,7 @@ _scm_from_sockaddr (const scm_t_max_sockaddr *address, unsigned addr_size,
 	SCM_SIMPLE_VECTOR_SET(result, 2, scm_from_ushort (ntohs (nad->sin6_port)));
 	SCM_SIMPLE_VECTOR_SET(result, 3, scm_from_uint32 (nad->sin6_flowinfo));
 #ifdef HAVE_SIN6_SCOPE_ID
-	SCM_SIMPLE_VECTOR_SET(result, 4, scm_from_ulong (nad->sin6_scope_id));
+	SCM_SIMPLE_VECTOR_SET(result, 4, scm_from_uint64 (nad->sin6_scope_id));
 #else
 	SCM_SIMPLE_VECTOR_SET(result, 4, SCM_INUM0);
 #endif
@@ -1143,7 +1143,7 @@ scm_to_sockaddr (SCM address, size_t *address_size)
 	    struct sockaddr_in c_inet;
 
 	    c_inet.sin_addr.s_addr =
-	      htonl (scm_to_ulong (SCM_SIMPLE_VECTOR_REF (address, 1)));
+	      htonl (scm_to_uint64 (SCM_SIMPLE_VECTOR_REF (address, 1)));
 	    c_inet.sin_port =
 	      htons (scm_to_ushort (SCM_SIMPLE_VECTOR_REF (address, 2)));
 	    c_inet.sin_family = AF_INET;
@@ -1174,7 +1174,7 @@ scm_to_sockaddr (SCM address, size_t *address_size)
 	      scm_to_uint32 (SCM_SIMPLE_VECTOR_REF (address, 3));
 #ifdef HAVE_SIN6_SCOPE_ID
 	    c_inet6.sin6_scope_id =
-	      scm_to_ulong (SCM_SIMPLE_VECTOR_REF (address, 4));
+	      scm_to_uint64 (SCM_SIMPLE_VECTOR_REF (address, 4));
 #endif
 
 	    c_inet6.sin6_family = AF_INET6;
@@ -1674,16 +1674,16 @@ scm_init_socket ()
 
   /* standard addresses.  */
 #ifdef INADDR_ANY
-  scm_c_define ("INADDR_ANY", scm_from_ulong (INADDR_ANY));
+  scm_c_define ("INADDR_ANY", scm_from_uint64 (INADDR_ANY));
 #endif
 #ifdef INADDR_BROADCAST
-  scm_c_define ("INADDR_BROADCAST", scm_from_ulong (INADDR_BROADCAST));
+  scm_c_define ("INADDR_BROADCAST", scm_from_uint64 (INADDR_BROADCAST));
 #endif
 #ifdef INADDR_NONE
-  scm_c_define ("INADDR_NONE", scm_from_ulong (INADDR_NONE));
+  scm_c_define ("INADDR_NONE", scm_from_uint64 (INADDR_NONE));
 #endif
 #ifdef INADDR_LOOPBACK
-  scm_c_define ("INADDR_LOOPBACK", scm_from_ulong (INADDR_LOOPBACK));
+  scm_c_define ("INADDR_LOOPBACK", scm_from_uint64 (INADDR_LOOPBACK));
 #endif
 
   /* socket types.
