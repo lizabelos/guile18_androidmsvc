@@ -311,7 +311,7 @@ SCM_DEFINE (scm_gc_stats, "gc-stats", 0, 0, 0,
   double local_scm_gc_cells_marked;
   double local_scm_total_cells_allocated;
   SCM answer;
-  unsigned long long *bounds = 0;
+  uint64_t *bounds = 0;
   int table_size = scm_i_heap_segment_table_size;  
   SCM_CRITICAL_SECTION_START;
 
@@ -319,13 +319,13 @@ SCM_DEFINE (scm_gc_stats, "gc-stats", 0, 0, 0,
     temporarily store the numbers, so as not to cause GC.
    */
  
-  bounds = malloc (sizeof (unsigned long long)  * table_size * 2);
+  bounds = malloc (sizeof (uint64_t)  * table_size * 2);
   if (!bounds)
     abort();
   for (i = table_size; i--; )
     {
-      bounds[2*i] = (unsigned long long)scm_i_heap_segment_table[i]->bounds[0];
-      bounds[2*i+1] = (unsigned long long)scm_i_heap_segment_table[i]->bounds[1];
+      bounds[2*i] = (uint64_t)scm_i_heap_segment_table[i]->bounds[0];
+      bounds[2*i+1] = (uint64_t)scm_i_heap_segment_table[i]->bounds[1];
     }
 
 
@@ -805,7 +805,7 @@ scm_gc_register_root (SCM *p)
 {
   SCM handle;
 #if USE_64IMPL
-  SCM key = scm_from_uint64 ((unsigned long long) p);
+  SCM key = scm_from_uint64 ((uint64_t) p);
 #else
   SCM key = scm_from_uint64 ((unsigned long) p);
 #endif
@@ -826,7 +826,7 @@ scm_gc_unregister_root (SCM *p)
 {
   SCM handle;
 #if USE_64IMPL
-  SCM key = scm_from_uint64 ((unsigned long long) p);
+  SCM key = scm_from_uint64 ((uint64_t) p);
 #else
   SCM key = scm_from_uint64 ((unsigned long) p);
 #endif

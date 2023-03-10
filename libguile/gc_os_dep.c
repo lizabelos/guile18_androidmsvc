@@ -1644,7 +1644,7 @@ void *scm_get_stack_base()
         GC_page_size = sysinfo.dwPageSize;
     }
 #if USE_64IMPL
-    trunc_sp = (ptr_t)((long long)sp & ~(GC_page_size - 1));
+    trunc_sp = (ptr_t)((int64_t)sp & ~(GC_page_size - 1));
 #else
     trunc_sp = (ptr_t)((word)sp & ~(GC_page_size - 1));
 #endif

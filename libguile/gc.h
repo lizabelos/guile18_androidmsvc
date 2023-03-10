@@ -121,8 +121,8 @@ typedef struct scm_t_cell
 #define SCM_GC_CARD_SIZE_MASK  (SCM_GC_SIZEOF_CARD-1)
 #define SCM_GC_CARD_ADDR_MASK  (~SCM_GC_CARD_SIZE_MASK)
 #if USE_64IMPL
-#define SCM_GC_CELL_CARD(x)    ((scm_t_cell *) ((long long) (x) & SCM_GC_CARD_ADDR_MASK))
-#define SCM_GC_CELL_OFFSET(x)  (((long long) (x) & SCM_GC_CARD_SIZE_MASK) >> SCM_CELL_SIZE_SHIFT)
+#define SCM_GC_CELL_CARD(x)    ((scm_t_cell *) ((int64_t) (x) & SCM_GC_CARD_ADDR_MASK))
+#define SCM_GC_CELL_OFFSET(x)  (((int64_t) (x) & SCM_GC_CARD_SIZE_MASK) >> SCM_CELL_SIZE_SHIFT)
 #else
 #define SCM_GC_CELL_CARD(x)    ((scm_t_cell *) ((long) (x) & SCM_GC_CARD_ADDR_MASK))
 #define SCM_GC_CELL_OFFSET(x)  (((long) (x) & SCM_GC_CARD_SIZE_MASK) >> SCM_CELL_SIZE_SHIFT)

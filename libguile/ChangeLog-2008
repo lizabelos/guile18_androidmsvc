@@ -10001,10 +10001,10 @@
 	whether the integral type fits in a fixnum, not the compiler.
 	This removes a spurious compiler warning.  Also, honor the
 	NO_PREPRO_MAGIC flag to suppress any preprocessor tests.  This is
-	needed for `long long's.
+	needed for `int64_t's.
 
 	* numbers.c: Define NO_PREPRO_MAGOC when including
-	num2integral.c.i for `long long' and `signed long long'.
+	num2integral.c.i for `int64_t' and `signed int64_t'.
 
 2001-10-06  Mikael Djurfeldt  <mdj@linnaeus>
 

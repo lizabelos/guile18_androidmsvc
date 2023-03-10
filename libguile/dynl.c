@@ -232,7 +232,7 @@ SCM_DEFINE (scm_dynamic_func, "dynamic-func", 2, 0, 0,
 					   FUNC_NAME);
     scm_dynwind_end ();
 #if USE_64IMPL
-    return scm_from_uint64 ((unsigned long long) func);
+    return scm_from_uint64 ((uint64_t) func);
 #else
     return scm_from_uint64 ((unsigned long) func);
 #endif

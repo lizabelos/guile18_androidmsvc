@@ -489,7 +489,7 @@ lookup_symbol (const SCM symbol, const SCM env)
 		/* found the symbol, therefore return the iloc */
 #if USE_64IMPL
 		// return SCM_MAKE_ILOC (frame_nr, symbol_nr, 0);
-				return 	(SCM)(long long)(((frame_nr) << 8) \
+				return 	(SCM)(int64_t)(((frame_nr) << 8) \
 				+ ((symbol_nr) << 20) \
 				+ ((0) ? SCM_ICDR : 0) \
 				+ scm_tc8_iloc );
@@ -500,7 +500,7 @@ lookup_symbol (const SCM symbol, const SCM env)
 	  if (scm_is_eq (symbol_idx, symbol))
 	    /* found the symbol as the last element of the current frame */
 #if USE_64IMPL
-		return 		(SCM)(long long)(((frame_nr) << 8) \
+		return 		(SCM)(int64_t)(((frame_nr) << 8) \
 				+ ((symbol_nr) << 20) \
 				+ ((1) ? SCM_ICDR : 0) \
 				+ scm_tc8_iloc );
@@ -3114,7 +3114,7 @@ scm_t_option scm_debug_opts[] = {
   { SCM_OPTION_BOOLEAN, "debug", 0, "Use the debugging evaluator." },
   { SCM_OPTION_INTEGER, "stack", 20000, "Stack size limit (measured in words; 0 = no check)." },
 #if USE_64IMPL
-  { SCM_OPTION_SCM, "show-file-name", (unsigned long long)SCM_BOOL_T, "Show file names and line numbers in backtraces when not `#f'.  A value of `base' displays only base names, while `#t' displays full names."},
+  { SCM_OPTION_SCM, "show-file-name", (uint64_t)SCM_BOOL_T, "Show file names and line numbers in backtraces when not `#f'.  A value of `base' displays only base names, while `#t' displays full names."},
 #else
   { SCM_OPTION_SCM, "show-file-name", (unsigned long)SCM_BOOL_T, "Show file names and line numbers in backtraces when not `#f'.  A value of `base' displays only base names, while `#t' displays full names."},
 #endif
@@ -3127,9 +3127,9 @@ scm_t_option scm_evaluator_trap_table[] = {
   { SCM_OPTION_BOOLEAN, "apply-frame", 0, "Trap when entering apply." },
   { SCM_OPTION_BOOLEAN, "exit-frame", 0, "Trap when exiting eval or apply." },
 #if USE_64IMPL
-  { SCM_OPTION_SCM, "enter-frame-handler", (unsigned long long)SCM_BOOL_F, "Handler for enter-frame traps." },
-  { SCM_OPTION_SCM, "apply-frame-handler", (unsigned long long)SCM_BOOL_F, "Handler for apply-frame traps." },
-  { SCM_OPTION_SCM, "exit-frame-handler", (unsigned long long)SCM_BOOL_F, "Handler for exit-frame traps." }
+  { SCM_OPTION_SCM, "enter-frame-handler", (uint64_t)SCM_BOOL_F, "Handler for enter-frame traps." },
+  { SCM_OPTION_SCM, "apply-frame-handler", (uint64_t)SCM_BOOL_F, "Handler for apply-frame traps." },
+  { SCM_OPTION_SCM, "exit-frame-handler", (uint64_t)SCM_BOOL_F, "Handler for exit-frame traps." }
 #else
   { SCM_OPTION_SCM, "enter-frame-handler", (unsigned long)SCM_BOOL_F, "Handler for enter-frame traps." },
   { SCM_OPTION_SCM, "apply-frame-handler", (unsigned long)SCM_BOOL_F, "Handler for apply-frame traps." },

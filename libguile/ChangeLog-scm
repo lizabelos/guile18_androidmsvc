@@ -115,7 +115,7 @@ Sat Feb 11 17:30:14 1995  Aubrey Jaffer  (jaffer@jacal)
 
 Fri Feb 10 10:50:03 1995  Aubrey Jaffer  (jaffer@jacal)
 
-	* scl.c (num2long long2num): moved here from subr.c.
+	* scl.c (num2int64_t2num): moved here from subr.c.
 	(num2ulong): fixed (< to >=) bug.
 
 	* unif.c (aset array2list array_ref cvref): uniform integers and

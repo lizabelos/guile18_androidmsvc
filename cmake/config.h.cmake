@@ -784,7 +784,7 @@ See GUILE_HEADER_LIBC_WITH_UNISTD in aclocal.m4. */
 /* The size of `long', as computed by sizeof. */
 #define SIZEOF_LONG @SIZEOF_LONG@
 
-/* The size of `long long', as computed by sizeof. */
+/* The size of `int64_t', as computed by sizeof. */
 #define SIZEOF_LONG_LONG @SIZEOF_LONG_LONG@
 
 /* The size of `off_t', as computed by sizeof. */
@@ -811,7 +811,7 @@ See GUILE_HEADER_LIBC_WITH_UNISTD in aclocal.m4. */
 /* The size of `unsigned long', as computed by sizeof. */
 #define SIZEOF_UNSIGNED_LONG @SIZEOF_UNSIGNED_LONG@
 
-/* The size of `unsigned long long', as computed by sizeof. */
+/* The size of `uint64_t', as computed by sizeof. */
 #define SIZEOF_UNSIGNED_LONG_LONG @SIZEOF_UNSIGNED_LONG_LONG@
 
 /* The size of `unsigned short', as computed by sizeof. */

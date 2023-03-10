@@ -125,24 +125,24 @@ scm_num2ptrdiff (SCM x, unsigned long pos, const char *s_caller)
 #if SCM_SIZEOF_LONG_LONG != 0
 
 SCM
-scm_long_long2num (long long x)
+scm_long_long2num (int64_t x)
 {
   return scm_from_int64 (x);
 }
 
 SCM
-scm_ulong_long2num (unsigned long long x)
+scm_ulong_long2num (uint64_t x)
 {
   return scm_from_uint64 (x);
 }
 
-long long
+int64_t
 scm_num2long_long (SCM x, unsigned long pos, const char *s_caller)
 {
   return scm_to_int64 (x);
 }
 
-unsigned long long
+uint64_t
 scm_num2ulong_long (SCM x, unsigned long pos, const char *s_caller)
 {
   return scm_to_uint64 (x);

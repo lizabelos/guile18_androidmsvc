@@ -1248,7 +1248,7 @@ eval_environment_fold (SCM env, scm_environment_folder proc, SCM data, SCM init)
   SCM local = EVAL_ENVIRONMENT (env)->local;
   SCM imported = EVAL_ENVIRONMENT (env)->imported;
 #if USE_64IMPL
-  SCM proc_as_nr = scm_from_uint64 ((unsigned long long) proc);
+  SCM proc_as_nr = scm_from_uint64 ((uint64_t) proc);
 #else
   SCM proc_as_nr = scm_from_uint64 ((unsigned long) proc);
 #endif
@@ -1661,7 +1661,7 @@ static SCM
 import_environment_fold (SCM env, scm_environment_folder proc, SCM data, SCM init)
 {
 #if USE_64IMPL
-  SCM proc_as_nr = scm_from_uint64 ((unsigned long long) proc);
+  SCM proc_as_nr = scm_from_uint64 ((uint64_t) proc);
 #else
   SCM proc_as_nr = scm_from_uint64 ((unsigned long) proc);
 #endif

@@ -485,7 +485,7 @@ debugobj_print (SCM obj, SCM port, scm_print_state *pstate SCM_UNUSED)
 {
   scm_puts ("#<debug-object ", port);
 #if USE_64IMPL
-  scm_intprint ((long long) SCM_DEBUGOBJ_FRAME (obj), 16, port);
+  scm_intprint ((int64_t) SCM_DEBUGOBJ_FRAME (obj), 16, port);
 #else
   scm_intprint ((long) SCM_DEBUGOBJ_FRAME (obj), 16, port);
 #endif

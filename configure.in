@@ -332,8 +332,8 @@ AC_CHECK_SIZEOF(unsigned int)
 AC_CHECK_SIZEOF(long)
 AC_CHECK_SIZEOF(unsigned long)
 AC_CHECK_SIZEOF(size_t)
-AC_CHECK_SIZEOF(long long)
-AC_CHECK_SIZEOF(unsigned long long)
+AC_CHECK_SIZEOF(int64_t)
+AC_CHECK_SIZEOF(uint64_t)
 AC_CHECK_SIZEOF(__int64)
 AC_CHECK_SIZEOF(unsigned __int64)
 AC_CHECK_SIZEOF(void *)
@@ -345,7 +345,7 @@ AC_CHECK_SIZEOF(off_t)
 case $host in
   *-*-mingw*)
   if test "$ac_cv_sizeof_long_long" -ne "$ac_cv_sizeof_void_p"; then
-    AC_MSG_ERROR(sizes of long long and void* are not identical)
+    AC_MSG_ERROR(sizes of int64_t and void* are not identical)
   fi
   ;;
   *)
@@ -531,7 +531,7 @@ fi
 AC_SUBST([SCM_I_GSC_T_UINT32])
 
 ### Optional type scm_t_int64 (ANSI C says int, short, or long might work)
-### Also try 'long long' and '__int64' if we have it.
+### Also try 'int64_t' and '__int64' if we have it.
 SCM_I_GSC_T_INT64=0
 if test "$scm_stdint_has_int64"; then
   SCM_I_GSC_T_INT64='"int64_t"'
@@ -546,7 +546,7 @@ elif test "$ac_cv_sizeof_long" -eq 8; then
 elif test "$ac_cv_sizeof_short" -eq 8; then
   SCM_I_GSC_T_INT64='"short"'
 elif test "$ac_cv_sizeof_long_long" -eq 8; then
-  SCM_I_GSC_T_INT64='"long long"'
+  SCM_I_GSC_T_INT64='"int64_t"'
 elif test "$ac_cv_sizeof___int64" -eq 8; then
   SCM_I_GSC_T_INT64='"__int64"'
 else
@@ -556,7 +556,7 @@ AC_SUBST([SCM_I_GSC_T_INT64])
 
 
 ### Optional type scm_t_uint64 (ANSI C says int, short, or long might work)
-### Also try 'long long' and '__int64' if we have it.
+### Also try 'int64_t' and '__int64' if we have it.
 SCM_I_GSC_T_UINT64=0
 if test "$scm_stdint_has_uint64"; then
   SCM_I_GSC_T_UINT64='"uint64_t"'
@@ -571,7 +571,7 @@ elif test "$ac_cv_sizeof_unsigned_long" -eq 8; then
 elif test "$ac_cv_sizeof_unsigned_short" -eq 8; then
   SCM_I_GSC_T_UINT64='"unsigned short"'
 elif test "$ac_cv_sizeof_unsigned_long_long" -eq 8; then
-  SCM_I_GSC_T_UINT64='"unsigned long long"'
+  SCM_I_GSC_T_UINT64='"uint64_t"'
 elif test "$ac_cv_sizeof_unsigned___int64" -eq 8; then
   SCM_I_GSC_T_UINT64='"unsigned __int64"'
 else
@@ -581,7 +581,7 @@ AC_SUBST([SCM_I_GSC_T_UINT64])
 
 ### Required type scm_t_intmax
 ###
-### We try 'intmax_t', '__int64', 'long long' in this order.  When
+### We try 'intmax_t', '__int64', 'int64_t' in this order.  When
 ### none of them is available, we use 'long'.
 ###
 SCM_I_GSC_T_INTMAX=0
@@ -594,7 +594,7 @@ elif test "$scm_inttypes_has_intmax"; then
 elif test "$ac_cv_sizeof___int64" -ne 0; then
   SCM_I_GSC_T_INTMAX='"__int64"'
 elif test "$ac_cv_sizeof_long_long" -ne 0; then
-  SCM_I_GSC_T_INTMAX='"long long"'
+  SCM_I_GSC_T_INTMAX='"int64_t"'
 else
   SCM_I_GSC_T_INTMAX='"long"'
 fi
@@ -602,7 +602,7 @@ AC_SUBST([SCM_I_GSC_T_INTMAX])
 
 ### Required type scm_t_uintmax
 ###
-### We try 'uintmax_t', 'unsigned __int64', 'unsigned long long' in
+### We try 'uintmax_t', 'unsigned __int64', 'uint64_t' in
 ### this order.  When none of them is available, we use 'unsigned long'.
 ###
 SCM_I_GSC_T_UINTMAX=0
@@ -615,7 +615,7 @@ elif test "$scm_inttypes_has_uintmax"; then
 elif test "$ac_cv_sizeof_unsigned___int64" -ne 0; then
   SCM_I_GSC_T_UINTMAX='"unsigned __int64"'
 elif test "$ac_cv_sizeof_unsigned_long_long" -ne 0; then
-  SCM_I_GSC_T_UINTMAX='"unsigned long long"'
+  SCM_I_GSC_T_UINTMAX='"uint64_t"'
 else
   SCM_I_GSC_T_UINTMAX='"unsigned long"'
 fi

@@ -864,8 +864,8 @@
 	config.h, and public, scmconfig.h, configuration headers.  Added a
 	fair amount of code to track down new required types: scm_t_uint8,
 	scm_t_uint16, scm_t_uint32, scm_t_int8, scm_t_int16, scm_t_int32,
-	and to detect optional types scm_t_uint64, scm_t_in64, long long,
-	unsigned long long, scm_t_ptrdiff, intptr_t, and uintptr_t.
+	and to detect optional types scm_t_uint64, scm_t_in64, int64_t,
+	uint64_t, scm_t_ptrdiff, intptr_t, and uintptr_t.
 	(SCM_I_GSC_T_PTRDIFF): gen-scmconfig.h.in AC_SUBST var.
 	(SCM_I_GSC_NEEDS_INTTYPES_H): gen-scmconfig.h.in AC_SUBST var.
 	(SCM_I_GSC_NEEDS_STDINT_H): gen-scmconfig.h.in AC_SUBST var.
@@ -1437,7 +1437,7 @@
 	* configure.in: Check for sizes of short, size_t, uintptr_t, and
 	ptrdiff_t.  Checking for a size also checks automatically for the
 	existence of the type, so we don't check for the existence of
-	uintptr_t, ptrdiff_t and long long ourselves.
+	uintptr_t, ptrdiff_t and int64_t ourselves.
 
 2001-11-10  Thien-Thi Nguyen  <ttn@glug.org>
 
@@ -2468,7 +2468,7 @@ Tue Dec 14 09:12:22 1999  Greg J. Badros  <gjb@cs.washington.edu>
 	* acconfig.h: Added HAVE_LONG_LONGS.
 
 	* configure.in: Added AC_CHECK_SIZEOF(long), AC_CHECK_SIZEOF(int);
-	Added check for long longs.
+	Added check for int64_ts.
 
 1998-12-14  Jim Blandy  <jimb@zwingli.cygnus.com>
 

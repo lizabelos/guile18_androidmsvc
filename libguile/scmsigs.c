@@ -339,7 +339,7 @@ SCM_DEFINE (scm_sigaction_for_thread, "sigaction", 1, 3, 0,
     {
       long handler_int = scm_to_int64 (handler);
 #if USE_64IMPL
-      if (handler_int == (long long) SIG_DFL || handler_int == (long long) SIG_IGN)
+      if (handler_int == (int64_t) SIG_DFL || handler_int == (int64_t) SIG_IGN)
 #else      
       if (handler_int == (long) SIG_DFL || handler_int == (long) SIG_IGN)
 #endif      
@@ -348,7 +348,7 @@ SCM_DEFINE (scm_sigaction_for_thread, "sigaction", 1, 3, 0,
 	  action.sa_handler = (SIGRETTYPE (*) (int)) handler_int;
 #else
 #if USE_64IMPL
-	  chandler = (SIGRETTYPE (*) (int))(long long) handler_int;
+	  chandler = (SIGRETTYPE (*) (int))(int64_t) handler_int;
 #else    
 	  chandler = (SIGRETTYPE (*) (int)) handler_int;
 #endif    
@@ -463,7 +463,7 @@ SCM_DEFINE (scm_sigaction_for_thread, "sigaction", 1, 3, 0,
     }
   if (old_chandler == SIG_DFL || old_chandler == SIG_IGN)
 #if USE_64IMPL
-    old_handler = scm_from_int64 ((long long) old_chandler);
+    old_handler = scm_from_int64 ((int64_t) old_chandler);
 #else    
     old_handler = scm_from_int64 ((long) old_chandler);
 #endif    
@@ -706,8 +706,8 @@ scm_init_scmsigs ()
 
   scm_c_define ("NSIG", scm_from_int64 (NSIG));
 #if USE_64IMPL
-  scm_c_define ("SIG_IGN", scm_from_int64 ((long long) SIG_IGN));
-  scm_c_define ("SIG_DFL", scm_from_int64 ((long long) SIG_DFL));
+  scm_c_define ("SIG_IGN", scm_from_int64 ((int64_t) SIG_IGN));
+  scm_c_define ("SIG_DFL", scm_from_int64 ((int64_t) SIG_DFL));
 #else  
   scm_c_define ("SIG_IGN", scm_from_int64 ((long) SIG_IGN));
   scm_c_define ("SIG_DFL", scm_from_int64 ((long) SIG_DFL));

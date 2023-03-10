@@ -283,7 +283,7 @@ SCM_DEFINE (scm_inet_makeaddr, "inet-makeaddr", 2, 0, 0,
 #endif
 
 #if (SIZEOF_UNSIGNED_LONG_LONG * SCM_CHAR_BIT) > 128
-#error "Assumption that unsigned long long <= 128 bits has been violated."
+#error "Assumption that uint64_t <= 128 bits has been violated."
 #endif
 
 /* convert a 128 bit IPv6 address in network order to a host ordered

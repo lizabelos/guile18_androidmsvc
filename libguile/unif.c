@@ -74,7 +74,7 @@
  * double		dvect      d32
  * complex double	cvect      c64
  * short		svect      s16
- * long long		llvect     s64
+ * int64_t		llvect     s64
  */
 
 scm_t_bits scm_i_tc16_array;

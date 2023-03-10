@@ -77,19 +77,19 @@ scm_t_option scm_print_opts[] = {
   { SCM_OPTION_BOOLEAN, "source", 0,
     "Print closures with source." },
 #if USE_64IMPL
-  { SCM_OPTION_SCM, "highlight-prefix", (unsigned long long)SCM_BOOL_F,
+  { SCM_OPTION_SCM, "highlight-prefix", (uint64_t)SCM_BOOL_F,
 #else
   { SCM_OPTION_SCM, "highlight-prefix", (unsigned long)SCM_BOOL_F,
 #endif
     "The string to print before highlighted values." },
 #if USE_64IMPL
-  { SCM_OPTION_SCM, "highlight-suffix", (unsigned long long)SCM_BOOL_F,
+  { SCM_OPTION_SCM, "highlight-suffix", (uint64_t)SCM_BOOL_F,
 #else  
   { SCM_OPTION_SCM, "highlight-suffix", (unsigned long)SCM_BOOL_F,
 #endif  
     "The string to print after highlighted values." },
 #if USE_64IMPL
-  { SCM_OPTION_SCM, "quote-keywordish-symbols", (unsigned long long)SCM_BOOL_F,
+  { SCM_OPTION_SCM, "quote-keywordish-symbols", (uint64_t)SCM_BOOL_F,
 #else  
   { SCM_OPTION_SCM, "quote-keywordish-symbols", (unsigned long)SCM_BOOL_F,
 #endif  

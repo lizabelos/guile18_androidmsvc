@@ -82,7 +82,7 @@ scm_wta (SCM arg, const char *pos, const char *s_subr)
   if (!s_subr || !*s_subr)
     s_subr = NULL;
 #if USE_64IMPL
-  if ((~0x1fL) & (long long) pos)
+  if ((~0x1fL) & (int64_t) pos)
 #else
   if ((~0x1fL) & (long) pos)
 #endif
@@ -191,7 +191,7 @@ SCM_DEFINE (scm_registered_modules, "c-registered-modules", 0, 0, 0,
   for (md = registered_mods; md; md = md->link)
     res = scm_cons (scm_cons (scm_from_locale_string (md->module_name),
 #if USE_64IMPL
-			      scm_from_uint64 ((unsigned long long) md->init_func)),
+			      scm_from_uint64 ((uint64_t) md->init_func)),
 #else
 			      scm_from_uint64 ((unsigned long) md->init_func)),
 #endif

@@ -808,7 +808,7 @@ SCM_DEFINE (scm_struct_vtable_tag, "struct-vtable-tag", 1, 0, 0,
 {
   SCM_VALIDATE_VTABLE (1, handle);
 #if USE_64IMPL
-  return scm_from_uint64 (((unsigned long long)SCM_STRUCT_DATA (handle)) >> 3);
+  return scm_from_uint64 (((uint64_t)SCM_STRUCT_DATA (handle)) >> 3);
 #else
   return scm_from_uint64 (((unsigned long)SCM_STRUCT_DATA (handle)) >> 3);
 #endif  

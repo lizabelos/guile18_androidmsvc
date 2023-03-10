@@ -122,7 +122,7 @@
       (pass-if (eq? #f (typed-array? complex  's32)))
       (pass-if (eq? #f (typed-array? scm      's32))))
 
-    (with-test-prefix "is long long"
+    (with-test-prefix "is int64_t"
       (pass-if (eq? #f (typed-array? bool     's64)))
       (pass-if (eq? #f (typed-array? char     's64)))
       (pass-if (eq? #f (typed-array? byte     's64)))
@@ -297,7 +297,7 @@
     (pass-if "long"
       (eq? 's32 (array-type (make-s32vector 1))))
 
-    (pass-if "long long"
+    (pass-if "int64_t"
       (eq? 's64 (array-type (make-s64vector 1))))
 
     (pass-if "float"

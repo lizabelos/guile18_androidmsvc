@@ -56,7 +56,7 @@ test_long_long ()
 #if SCM_SIZEOF_LONG_LONG != 0
   {
     SCM n = scm_long_long2num (SCM_I_LLONG_MIN);
-    long long result = scm_num2long_long(n, 0, "main");
+    int64_t result = scm_num2long_long(n, 0, "main");
     assert (result == SCM_I_LLONG_MIN);
   }
 
@@ -112,7 +112,7 @@ test_ulong_long ()
 
   {
     SCM n = scm_ulong_long2num (SCM_I_ULLONG_MAX);
-    unsigned long long result = scm_num2ulong_long(n, 0, "main");
+    uint64_t result = scm_num2ulong_long(n, 0, "main");
     assert (result == SCM_I_ULLONG_MAX);
   }
 

@@ -65,7 +65,7 @@ extern int SCM_STACK_GROWS_UP; /* 0 or 1 */
 #define SCM_SIZEOF_UNSIGNED_INT 4
 #define SCM_SIZEOF_SIZE_T 8
 
-/* Size of (unsigned) long long or 0 if not available (scm_t_*64 may
+/* Size of (unsigned) int64_t or 0 if not available (scm_t_*64 may
    be more likely to be what you want */
 #define SCM_SIZEOF_LONG_LONG 8
 #define SCM_SIZEOF_UNSIGNED_LONG_LONG 8
@@ -73,8 +73,8 @@ extern int SCM_STACK_GROWS_UP; /* 0 or 1 */
 /* handling for the deprecated long_long and ulong_long types */
 /* If anything suitable is available, it'll be defined here.  */
 #if (SCM_ENABLE_DEPRECATED == 1)
-typedef long long long_long;
-typedef unsigned long long ulong_long;
+typedef int64_t long_long;
+typedef uint64_t ulong_long;
 #endif /* SCM_ENABLE_DEPRECATED == 1 */
 
 /* These are always defined. */
