@@ -122,7 +122,6 @@ scm_num2ptrdiff (SCM x, uint64_t pos, const char *s_caller)
   return scm_to_ssize_t (x);
 }
 
-#if SCM_SIZEOF_LONG_LONG != 0
 
 SCM
 scm_long_long2num (int64_t x)
@@ -147,8 +146,6 @@ scm_num2ulong_long (SCM x, uint64_t pos, const char *s_caller)
 {
   return scm_to_uint64 (x);
 }
-
-#endif
 
 SCM
 scm_make_real (double x)

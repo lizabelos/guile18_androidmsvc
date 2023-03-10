@@ -40,7 +40,7 @@ TYPE SCM_TO_TYPE_PROTO (SCM val) {
         else if (TYPE_MAX <= ULONG_MAX) {
             if (mpz_fits_ulong_p(SCM_I_BIG_MPZ (val))) {
                 uint64_t n = mpz_get_ui(SCM_I_BIG_MPZ (val));
-                if (SIZEOF_TYPE != 0 && SIZEOF_TYPE > SCM_SIZEOF_LONG) {
+                if (SIZEOF_TYPE != 0 && SIZEOF_TYPE > sizeof(int64_t)) {
                     return n;
                 } else {
                     if (n >= TYPE_MIN && n <= TYPE_MAX) {
@@ -81,7 +81,7 @@ TYPE SCM_TO_TYPE_PROTO (SCM val) {
 
 SCM
 SCM_FROM_TYPE_PROTO (TYPE val) {
-   if (SIZEOF_TYPE != 0 && SIZEOF_TYPE < SIZEOF_SCM_T_BITS) {
+    if (SIZEOF_TYPE != 0 && SIZEOF_TYPE < sizeof(void*)) {
        return SCM_I_MAKINUM (val);
    } else {
        if (SCM_POSFIXABLE (val))

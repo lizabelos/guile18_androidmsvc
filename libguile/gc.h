@@ -139,17 +139,10 @@ typedef struct scm_t_cell
 /* low level bit banging aids */
 typedef uint64_t scm_t_c_bvec_long;
 
-#if (SCM_SIZEOF_UNSIGNED_LONG == 8)
 #       define SCM_C_BVEC_LONG_BITS    64
 #       define SCM_C_BVEC_OFFSET_SHIFT 6
 #       define SCM_C_BVEC_POS_MASK     63
 #       define SCM_CELL_SIZE_SHIFT     4
-#else
-#       define SCM_C_BVEC_LONG_BITS    32
-#       define SCM_C_BVEC_OFFSET_SHIFT 5
-#       define SCM_C_BVEC_POS_MASK     31
-#       define SCM_CELL_SIZE_SHIFT     3
-#endif
 
 #define SCM_C_BVEC_OFFSET(pos) (pos >> SCM_C_BVEC_OFFSET_SHIFT)
 

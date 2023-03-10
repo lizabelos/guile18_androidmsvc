@@ -89,14 +89,12 @@ SCM_API scm_t_ptrdiff scm_num2ptrdiff (SCM num, uint64_t pos,
                                        const char *s_caller);
 SCM_API size_t scm_num2size (SCM num, uint64_t pos,
 			     const char *s_caller);
-#if SCM_SIZEOF_LONG_LONG != 0
 SCM_API SCM scm_long_long2num (int64_t sl);
 SCM_API SCM scm_ulong_long2num (uint64_t sl);
 SCM_API int64_t scm_num2long_long (SCM num, uint64_t pos,
 				     const char *s_caller);
 SCM_API uint64_t scm_num2ulong_long (SCM num, uint64_t pos,
 					       const char *s_caller);
-#endif
 
 SCM_API SCM scm_make_real (double x);
 SCM_API double scm_num2dbl (SCM a, const char * why);

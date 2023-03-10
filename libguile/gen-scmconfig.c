@@ -266,8 +266,6 @@ main (int argc, char *argv[])
   pf ("#define SCM_SIZEOF_UNSIGNED_CHAR %d\n", SIZEOF_UNSIGNED_CHAR);
   pf ("#define SCM_SIZEOF_SHORT %d\n", SIZEOF_SHORT);
   pf ("#define SCM_SIZEOF_UNSIGNED_SHORT %d\n", SIZEOF_UNSIGNED_SHORT);
-  pf ("#define SCM_SIZEOF_LONG %d\n", SIZEOF_LONG);
-  pf ("#define SCM_SIZEOF_UNSIGNED_LONG %d\n", SIZEOF_UNSIGNED_LONG);
   pf ("#define SCM_SIZEOF_INT %d\n", SIZEOF_INT);
   pf ("#define SCM_SIZEOF_UNSIGNED_INT %d\n", SIZEOF_UNSIGNED_INT);
   pf ("#define SCM_SIZEOF_SIZE_T %d\n", SIZEOF_SIZE_T);
@@ -275,8 +273,6 @@ main (int argc, char *argv[])
   pf ("\n");
   pf ("/* Size of (unsigned) int64_t or 0 if not available (scm_t_*64 may\n"
       "   be more likely to be what you want */\n");
-  pf ("#define SCM_SIZEOF_LONG_LONG %d\n", SIZEOF_LONG_LONG);
-  pf ("#define SCM_SIZEOF_UNSIGNED_LONG_LONG %d\n", SIZEOF_UNSIGNED_LONG_LONG);
 
   pf("\n");
   pf("/* handling for the deprecated long_long and ulong_long types */\n");  

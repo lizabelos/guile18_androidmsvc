@@ -53,7 +53,6 @@ call_num2ulong_long_body (void *data)
 static void
 test_long_long ()
 {
-#if SCM_SIZEOF_LONG_LONG != 0
   {
     SCM n = scm_long_long2num (SCM_I_LLONG_MIN);
     int64_t result = scm_num2long_long(n, 0, "main");
@@ -102,13 +101,11 @@ test_long_long ()
     assert (scm_is_true (caught));
   }
 
-#endif /* SCM_SIZEOF_LONG_LONG != 0 */
 }
 
 static void
 test_ulong_long ()
 {
-#if SCM_SIZEOF_LONG_LONG != 0
 
   {
     SCM n = scm_ulong_long2num (SCM_I_ULLONG_MAX);
@@ -140,7 +137,6 @@ test_ulong_long ()
     assert (scm_is_true (caught));
   }
 
-#endif /* SCM_SIZEOF_LONG_LONG != 0 */
 }
 
 static void

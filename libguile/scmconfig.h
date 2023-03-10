@@ -59,16 +59,10 @@ extern int SCM_STACK_GROWS_UP; /* 0 or 1 */
 #define SCM_SIZEOF_UNSIGNED_CHAR 1
 #define SCM_SIZEOF_SHORT 2
 #define SCM_SIZEOF_UNSIGNED_SHORT 2
-#define SCM_SIZEOF_LONG 4
-#define SCM_SIZEOF_UNSIGNED_LONG 4
 #define SCM_SIZEOF_INT 4
 #define SCM_SIZEOF_UNSIGNED_INT 4
 #define SCM_SIZEOF_SIZE_T 8
 
-/* Size of (unsigned) int64_t or 0 if not available (scm_t_*64 may
-   be more likely to be what you want */
-#define SCM_SIZEOF_LONG_LONG 8
-#define SCM_SIZEOF_UNSIGNED_LONG_LONG 8
 
 /* handling for the deprecated long_long and ulong_long types */
 /* If anything suitable is available, it'll be defined here.  */

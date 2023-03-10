@@ -85,7 +85,7 @@ scm_i_initialize_heap_segment_data (scm_t_heap_segment * segment, size_t request
     one card extra due to alignment
   */
   size_t mem_needed = (1+card_count) * SCM_GC_SIZEOF_CARD
-    + SCM_GC_CARD_BVEC_SIZE_IN_LONGS * card_count * SCM_SIZEOF_LONG
+    + SCM_GC_CARD_BVEC_SIZE_IN_LONGS * card_count * sizeof(int64_t);
     ;
   scm_t_c_bvec_long * bvec_ptr = 0;
   scm_t_cell *  memory = 0;
@@ -139,7 +139,7 @@ scm_i_clear_segment_mark_space (scm_t_heap_segment *seg)
   scm_t_cell *  markspace = seg->bounds[1];
 
   memset (markspace, 0x00,
-	  scm_i_segment_card_count (seg) *  SCM_GC_CARD_BVEC_SIZE_IN_LONGS * SCM_SIZEOF_LONG);
+          scm_i_segment_card_count (seg) *  SCM_GC_CARD_BVEC_SIZE_IN_LONGS * sizeof(int64_t));
 }
 
 /*

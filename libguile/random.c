@@ -342,15 +342,7 @@ SCM_DEFINE (scm_random, "random", 1, 1, 0,
     {
       uint64_t m = (uint64_t) SCM_I_INUM (n);
       SCM_ASSERT_RANGE (1, n, SCM_I_INUM (n) > 0);
-#if SCM_SIZEOF_UNSIGNED_LONG <= 4
-      return scm_from_uint32 (scm_c_random (SCM_RSTATE (state),
-                                            (scm_t_uint32) m));
-#elif SCM_SIZEOF_UNSIGNED_LONG <= 8
-      return scm_from_uint64 (scm_c_random64 (SCM_RSTATE (state),
-                                              (scm_t_uint64) m));
-#else
-#error "Cannot deal with this platform's uint64_t size"
-#endif
+      return scm_from_uint64 (scm_c_random64 (SCM_RSTATE (state), (scm_t_uint64) m));
     }
   SCM_VALIDATE_NIM (1, n);
   if (SCM_REALP (n))
