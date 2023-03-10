@@ -80,15 +80,15 @@
 #define SCM_NUM2LONG_DEF(pos, arg, def) \
   (SCM_UNBNDP (arg) ? def : scm_to_long (arg))
 
-#define SCM_NUM2LONG_LONG(pos, arg) (scm_to_long_long (arg))
+#define SCM_NUM2LONG_LONG(pos, arg) (scm_to_int64 (arg))
 
 #define SCM_NUM2LONG_LONG_DEF(pos, arg, def) \
-  (SCM_UNBNDP (arg) ? def : scm_to_long_long (arg))
+  (SCM_UNBNDP (arg) ? def : scm_to_int64 (arg))
 
-#define SCM_NUM2ULONG_LONG(pos, arg) (scm_to_ulong_long (arg))
+#define SCM_NUM2ULONG_LONG(pos, arg) (scm_to_uint64 (arg))
 
 #define SCM_NUM2ULONG_LONG_DEF(pos, arg, def) \
-  (SCM_UNBNDP (arg) ? def : scm_to_ulong_long (arg))
+  (SCM_UNBNDP (arg) ? def : scm_to_uint64 (arg))
 
 #define SCM_NUM2FLOAT(pos, arg) \
   (scm_num2float (arg, pos, FUNC_NAME))

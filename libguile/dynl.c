@@ -266,7 +266,7 @@ SCM_DEFINE (scm_dynamic_call, "dynamic-call", 2, 0, 0,
   if (scm_is_string (func))
     func = scm_dynamic_func (func, dobj);
 #if USE_64IMPL
-  fptr = (void (*) ()) scm_to_ulong_long (func);
+  fptr = (void (*) ()) scm_to_uint64 (func);
 #else
   fptr = (void (*) ()) scm_to_ulong (func);
 #endif
@@ -306,7 +306,7 @@ SCM_DEFINE (scm_dynamic_args_call, "dynamic-args-call", 3, 0, 0,
   if (scm_is_string (func))
     func = scm_dynamic_func (func, dobj);
 #if USE_64IMPL
-  fptr = (int (*) (int, char **)) scm_to_ulong_long (func);
+  fptr = (int (*) (int, char **)) scm_to_uint64 (func);
 #else
   fptr = (int (*) (int, char **)) scm_to_ulong (func);
 #endif

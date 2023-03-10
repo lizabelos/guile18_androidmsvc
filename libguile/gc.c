@@ -805,7 +805,7 @@ scm_gc_register_root (SCM *p)
 {
   SCM handle;
 #if USE_64IMPL
-  SCM key = scm_from_ulong_long ((unsigned long long) p);
+  SCM key = scm_from_uint64 ((unsigned long long) p);
 #else
   SCM key = scm_from_ulong ((unsigned long) p);
 #endif
@@ -826,7 +826,7 @@ scm_gc_unregister_root (SCM *p)
 {
   SCM handle;
 #if USE_64IMPL
-  SCM key = scm_from_ulong_long ((unsigned long long) p);
+  SCM key = scm_from_uint64 ((unsigned long long) p);
 #else
   SCM key = scm_from_ulong ((unsigned long) p);
 #endif

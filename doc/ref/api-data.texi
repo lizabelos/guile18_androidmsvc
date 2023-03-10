@@ -416,8 +416,8 @@ function will always succeed and will always return an exact number.
 @deftypefnx {C Function} {unsigned int} scm_to_uint (SCM x)
 @deftypefnx {C Function} long scm_to_long (SCM x)
 @deftypefnx {C Function} {unsigned long} scm_to_ulong (SCM x)
-@deftypefnx {C Function} {long long} scm_to_long_long (SCM x)
-@deftypefnx {C Function} {unsigned long long} scm_to_ulong_long (SCM x)
+@deftypefnx {C Function} {long long} scm_to_int64 (SCM x)
+@deftypefnx {C Function} {unsigned long long} scm_to_uint64 (SCM x)
 @deftypefnx {C Function} size_t scm_to_size_t (SCM x)
 @deftypefnx {C Function} ssize_t scm_to_ssize_t (SCM x)
 @deftypefnx {C Function} scm_t_int8 scm_to_int8 (SCM x)
@@ -435,7 +435,7 @@ C type, return that integer.  Else signal an error, either a
 `wrong-type' error when @var{x} is not an exact integer, or an
 `out-of-range' error when it doesn't fit the given range.
 
-The functions @code{scm_to_long_long}, @code{scm_to_ulong_long},
+The functions @code{scm_to_int64}, @code{scm_to_uint64},
 @code{scm_to_int64}, and @code{scm_to_uint64} are only available when
 the corresponding types are.
 @end deftypefn
@@ -449,8 +449,8 @@ the corresponding types are.
 @deftypefnx {C Function} SCM scm_from_uint (unsigned int x)
 @deftypefnx {C Function} SCM scm_from_long (long x)
 @deftypefnx {C Function} SCM scm_from_ulong (unsigned long x)
-@deftypefnx {C Function} SCM scm_from_long_long (long long x)
-@deftypefnx {C Function} SCM scm_from_ulong_long (unsigned long long x)
+@deftypefnx {C Function} SCM scm_from_int64 (long long x)
+@deftypefnx {C Function} SCM scm_from_uint64 (unsigned long long x)
 @deftypefnx {C Function} SCM scm_from_size_t (size_t x)
 @deftypefnx {C Function} SCM scm_from_ssize_t (ssize_t x)
 @deftypefnx {C Function} SCM scm_from_int8 (scm_t_int8 x)

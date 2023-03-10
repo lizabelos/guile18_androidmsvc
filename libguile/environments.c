@@ -1226,7 +1226,7 @@ eval_environment_folder (SCM extended_data, SCM symbol, SCM value, SCM tail)
     {
       SCM proc_as_nr = SCM_CADR (extended_data);
 #if USE_64IMPL
-      scm_environment_folder proc = (scm_environment_folder) scm_to_ulong_long (proc_as_nr);
+      scm_environment_folder proc = (scm_environment_folder) scm_to_uint64 (proc_as_nr);
 #else
       unsigned long int proc_as_ul = scm_to_ulong (proc_as_nr);
       scm_environment_folder proc = (scm_environment_folder) proc_as_ul;
@@ -1248,7 +1248,7 @@ eval_environment_fold (SCM env, scm_environment_folder proc, SCM data, SCM init)
   SCM local = EVAL_ENVIRONMENT (env)->local;
   SCM imported = EVAL_ENVIRONMENT (env)->imported;
 #if USE_64IMPL
-  SCM proc_as_nr = scm_from_ulong_long ((unsigned long long) proc);
+  SCM proc_as_nr = scm_from_uint64 ((unsigned long long) proc);
 #else
   SCM proc_as_nr = scm_from_ulong ((unsigned long) proc);
 #endif
@@ -1639,7 +1639,7 @@ import_environment_folder (SCM extended_data, SCM symbol, SCM value, SCM tail)
   SCM owner = import_environment_lookup (import_env, symbol);
   SCM proc_as_nr = SCM_CADDR (extended_data);
 #if USE_64IMPL
-  scm_environment_folder proc = (scm_environment_folder) scm_to_ulong_long (proc_as_nr);
+  scm_environment_folder proc = (scm_environment_folder) scm_to_uint64 (proc_as_nr);
 #else
   unsigned long int proc_as_ul = scm_to_ulong (proc_as_nr);
   scm_environment_folder proc = (scm_environment_folder) proc_as_ul;

@@ -127,25 +127,25 @@ scm_num2ptrdiff (SCM x, unsigned long pos, const char *s_caller)
 SCM
 scm_long_long2num (long long x)
 {
-  return scm_from_long_long (x);
+  return scm_from_int64 (x);
 }
 
 SCM
 scm_ulong_long2num (unsigned long long x)
 {
-  return scm_from_ulong_long (x);
+  return scm_from_uint64 (x);
 }
 
 long long
 scm_num2long_long (SCM x, unsigned long pos, const char *s_caller)
 {
-  return scm_to_long_long (x);
+  return scm_to_int64 (x);
 }
 
 unsigned long long
 scm_num2ulong_long (SCM x, unsigned long pos, const char *s_caller)
 {
-  return scm_to_ulong_long (x);
+  return scm_to_uint64 (x);
 }
 
 #endif
