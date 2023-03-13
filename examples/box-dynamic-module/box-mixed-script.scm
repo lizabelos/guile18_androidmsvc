@@ -1,7 +1,0 @@
-(use-modules (box-mixed))
-(define bl  (make-box-list 1 2 3))
-(display bl)
-(newline)
-(box-map 1+ bl)
-(display bl)
-(newline)
