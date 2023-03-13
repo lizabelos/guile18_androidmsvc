@@ -608,7 +608,6 @@ scm_i_init_thread_for_guile (SCM_STACKITEM *base, SCM parent)
 
     {
         SCM_STACK_GROWS_UP = stack_direction(NULL);
-        printf("SCM_STACK_GROWS_UP = %d\n" , SCM_STACK_GROWS_UP);
     }
 
   scm_i_thread *t;
@@ -1369,7 +1368,6 @@ scm_threads_mark_stacks (void)
       scm_gc_mark (t->handle);
 
       int test = stack_direction(NULL);
-      printf("scm_threads_mark_stacks; stack direction: %d\n" , test);
 
       if (SCM_STACK_GROWS_UP) {
           scm_mark_locations(t->base, t->top - t->base);

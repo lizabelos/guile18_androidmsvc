@@ -485,7 +485,7 @@ scm_i_init_guile (SCM_STACKITEM *base)
   scm_init_fluids ();
   scm_init_feature ();          /* Requires fluids */
   scm_init_backtrace ();	/* Requires fluids */
-//  scm_init_fports ();
+  scm_init_fports ();
   scm_init_strports ();
   scm_init_gdbint ();           /* Requires strports */
   scm_init_hash ();
@@ -549,7 +549,7 @@ scm_i_init_guile (SCM_STACKITEM *base)
   scm_init_unif ();
   scm_init_simpos ();
   scm_init_load_path ();
-  /*scm_init_standard_ports ();  // Requires fports
+  scm_init_standard_ports ();  // Requires fports
   //scm_init_dynamic_linking ();
 #if SCM_ENABLE_ELISP
   scm_init_lang ();
@@ -578,7 +578,7 @@ scm_i_init_guile (SCM_STACKITEM *base)
   scm_init_rdelim ();
   scm_init_rw ();
   //scm_init_extensions ();
-*/
+
   atexit (cleanup_for_exit);
   scm_load_startup_files ();
 }

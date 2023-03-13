@@ -95,7 +95,6 @@ make_hash_table (int flags, uint64_t k, const char *func_name)
   else
     vector = scm_c_make_vector (n, SCM_EOL);
   int vec_lenght = SCM_SIMPLE_VECTOR_LENGTH(vector);
-    printf("vec_lenght = %d\n", vec_lenght);
   t = scm_gc_malloc (sizeof (*t), s_hashtable);
   t->min_size_index = t->size_index = i;
   t->n_items = 0;
@@ -112,7 +111,6 @@ make_hash_table (int flags, uint64_t k, const char *func_name)
     SCM_NEWSMOB3 (table, scm_tc16_hashtable, vector, t, SCM_EOL);
 
     int n_buckets = SCM_HASHTABLE_N_BUCKETS (table);
-    printf ("n_buckets = %d; flags = %d; k = %d;\n", n_buckets, flags, k);
     if (n_buckets != n) {
         printf("Error, n_buckets != n, n_buckets = %d, n = %d", n_buckets, n);
         abort();

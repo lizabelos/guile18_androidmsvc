@@ -4155,15 +4155,15 @@ dispatch:
     switch (SCM_TYP7 (proc))
       {				/* no arguments given */
       case scm_tc7_subr_0:
-	RETURN (SCM_SUBRF (proc) (proc));
+	RETURN (SCM_SUBRF (proc) ());
       case scm_tc7_subr_1o:
-	RETURN (SCM_SUBRF (proc) (proc, SCM_UNDEFINED));
+	RETURN (SCM_SUBRF (proc) (SCM_UNDEFINED));
       case scm_tc7_lsubr:
-	RETURN (SCM_SUBRF (proc) (proc,SCM_EOL));
+	RETURN (SCM_SUBRF (proc) (SCM_EOL));
       case scm_tc7_rpsubr:
 	RETURN (SCM_BOOL_T);
       case scm_tc7_asubr:
-	RETURN (SCM_SUBRF (proc) (proc,SCM_UNDEFINED, SCM_UNDEFINED));
+	RETURN (SCM_SUBRF (proc) (SCM_UNDEFINED, SCM_UNDEFINED));
       case scm_tc7_smob:
 	if (!SCM_SMOB_APPLICABLE_P (proc))
 	  goto badfun;
@@ -4249,10 +4249,10 @@ dispatch:
 	switch (SCM_TYP7 (proc))
 	  {				/* have one argument in arg1 */
 	  case scm_tc7_subr_2o:
-	    RETURN (SCM_SUBRF (proc) (proc,arg1, SCM_UNDEFINED));
+	    RETURN (SCM_SUBRF (proc) (arg1, SCM_UNDEFINED));
 	  case scm_tc7_subr_1:
 	  case scm_tc7_subr_1o:
-	    RETURN (SCM_SUBRF (proc) (proc,arg1));
+	    RETURN (SCM_SUBRF (proc) (arg1));
 	  case scm_tc7_dsubr:
             if (SCM_I_INUMP (arg1))
               {
@@ -4278,12 +4278,12 @@ dispatch:
 	  case scm_tc7_rpsubr:
 	    RETURN (SCM_BOOL_T);
 	  case scm_tc7_asubr:
-	    RETURN (SCM_SUBRF (proc) (proc,arg1, SCM_UNDEFINED));
+	    RETURN (SCM_SUBRF (proc) (arg1, SCM_UNDEFINED));
 	  case scm_tc7_lsubr:
 #ifdef DEVAL
-	    RETURN (SCM_SUBRF (proc) (proc,debug.info->a.args));
+	    RETURN (SCM_SUBRF (proc) (debug.info->a.args));
 #else
-	    RETURN (SCM_SUBRF (proc) (proc,scm_list_1 (arg1)));
+	    RETURN (SCM_SUBRF (proc) (scm_list_1 (arg1)));
 #endif
 	  case scm_tc7_smob:
 	    if (!SCM_SMOB_APPLICABLE_P (proc))
@@ -4379,18 +4379,18 @@ dispatch:
 	  {			/* have two arguments */
 	  case scm_tc7_subr_2:
 	  case scm_tc7_subr_2o:
-	    RETURN (SCM_SUBRF (proc) (proc,arg1, arg2));
+	    RETURN (SCM_SUBRF (proc) (arg1, arg2));
 	  case scm_tc7_lsubr:
 #ifdef DEVAL
-	    RETURN (SCM_SUBRF (proc) (proc,debug.info->a.args));
+	    RETURN (SCM_SUBRF (proc) (debug.info->a.args));
 #else
-	    RETURN (SCM_SUBRF (proc) (proc,scm_list_2 (arg1, arg2)));
+	    RETURN (SCM_SUBRF (proc) (scm_list_2 (arg1, arg2)));
 #endif
 	  case scm_tc7_lsubr_2:
-	    RETURN (SCM_SUBRF (proc) (proc,arg1, arg2, SCM_EOL));
+	    RETURN (SCM_SUBRF (proc) (arg1, arg2, SCM_EOL));
 	  case scm_tc7_rpsubr:
 	  case scm_tc7_asubr:
-	    RETURN (SCM_SUBRF (proc) (proc,arg1, arg2));
+	    RETURN (SCM_SUBRF (proc) (arg1, arg2));
 	  case scm_tc7_smob:
 	    if (!SCM_SMOB_APPLICABLE_P (proc))
 	      goto badfun;
@@ -4503,7 +4503,7 @@ dispatch:
 	  if (SCM_UNLIKELY (!scm_is_null (SCM_CDR (x))))
 	    scm_wrong_num_args (proc);
 	  else
-	    RETURN (SCM_SUBRF (proc) (proc,arg1, arg2,
+	    RETURN (SCM_SUBRF (proc) (arg1, arg2,
 				      SCM_CADDR (debug.info->a.args)));
 	case scm_tc7_asubr:
 	  arg1 = SCM_SUBRF(proc)(arg1, arg2);
@@ -4516,12 +4516,12 @@ dispatch:
 	  while (SCM_NIMP (arg2));
 	  RETURN (arg1);
 	case scm_tc7_rpsubr:
-	  if (scm_is_false (SCM_SUBRF (proc) (proc,arg1, arg2)))
+	  if (scm_is_false (SCM_SUBRF (proc) (arg1, arg2)))
 	    RETURN (SCM_BOOL_F);
 	  arg1 = SCM_CDDR (debug.info->a.args);
 	  do
 	    {
-	      if (scm_is_false (SCM_SUBRF (proc) (proc,arg2, SCM_CAR (arg1))))
+	      if (scm_is_false (SCM_SUBRF (proc) (arg2, SCM_CAR (arg1))))
 		RETURN (SCM_BOOL_F);
 	      arg2 = SCM_CAR (arg1);
 	      arg1 = SCM_CDR (arg1);
@@ -4529,10 +4529,10 @@ dispatch:
 	  while (SCM_NIMP (arg1));
 	  RETURN (SCM_BOOL_T);
 	case scm_tc7_lsubr_2:
-	  RETURN (SCM_SUBRF (proc) (proc,arg1, arg2,
+	  RETURN (SCM_SUBRF (proc) (arg1, arg2,
 				    SCM_CDDR (debug.info->a.args)));
 	case scm_tc7_lsubr:
-	  RETURN (SCM_SUBRF (proc) (proc,debug.info->a.args));
+	  RETURN (SCM_SUBRF (proc) (debug.info->a.args));
 	case scm_tc7_smob:
 	  if (!SCM_SMOB_APPLICABLE_P (proc))
 	    goto badfun;
@@ -4567,7 +4567,7 @@ dispatch:
 	  if (SCM_UNLIKELY (!scm_is_null (SCM_CDR (x))))
 	    scm_wrong_num_args (proc);
 	  else
-	    RETURN (SCM_SUBRF (proc) (proc,arg1, arg2, EVALCAR (x, env)));
+	    RETURN (SCM_SUBRF (proc) (arg1, arg2, EVALCAR (x, env)));
 	case scm_tc7_asubr:
 	  arg1 = SCM_SUBRF (proc) (arg1, arg2);
 	  do
@@ -4578,12 +4578,12 @@ dispatch:
 	  while (!scm_is_null (x));
 	  RETURN (arg1);
 	case scm_tc7_rpsubr:
-	  if (scm_is_false (SCM_SUBRF (proc) (proc,arg1, arg2)))
+	  if (scm_is_false (SCM_SUBRF (proc) (arg1, arg2)))
 	    RETURN (SCM_BOOL_F);
 	  do
 	    {
 	      arg1 = EVALCAR (x, env);
-	      if (scm_is_false (SCM_SUBRF (proc) (proc,arg2, arg1)))
+	      if (scm_is_false (SCM_SUBRF (proc) (arg2, arg1)))
 		RETURN (SCM_BOOL_F);
 	      arg2 = arg1;
 	      x = SCM_CDR (x);
@@ -4591,9 +4591,9 @@ dispatch:
 	  while (!scm_is_null (x));
 	  RETURN (SCM_BOOL_T);
 	case scm_tc7_lsubr_2:
-	  RETURN (SCM_SUBRF (proc) (proc,arg1, arg2, scm_eval_args (x, env, proc)));
+	  RETURN (SCM_SUBRF (proc) (arg1, arg2, scm_eval_args (x, env, proc)));
 	case scm_tc7_lsubr:
-	  RETURN (SCM_SUBRF (proc) (proc,scm_cons2 (arg1,
+	  RETURN (SCM_SUBRF (proc) (scm_cons2 (arg1,
 					       arg2,
 					       scm_eval_args (x, env, proc))));
 	case scm_tc7_smob:
@@ -4897,17 +4897,17 @@ tail:
             scm_wrong_num_args (proc);
           args = SCM_CAR (args);
         }
-      RETURN (SCM_SUBRF (proc) (proc,arg1, args));
+      RETURN (SCM_SUBRF (proc) (arg1, args));
     case scm_tc7_subr_2:
       if (SCM_UNLIKELY (scm_is_null (args) || !scm_is_null (SCM_CDR (args))))
 	scm_wrong_num_args (proc);
       args = SCM_CAR (args);
-      RETURN (SCM_SUBRF (proc) (proc,arg1, args));
+      RETURN (SCM_SUBRF (proc) (arg1, args));
     case scm_tc7_subr_0:
       if (SCM_UNLIKELY (!SCM_UNBNDP (arg1)))
 	scm_wrong_num_args (proc);
       else
-	RETURN (SCM_SUBRF (proc) (proc));
+	RETURN (SCM_SUBRF (proc) ());
     case scm_tc7_subr_1:
       if (SCM_UNLIKELY (SCM_UNBNDP (arg1)))
 	scm_wrong_num_args (proc);
@@ -4915,7 +4915,7 @@ tail:
       if (SCM_UNLIKELY (!scm_is_null (args)))
 	scm_wrong_num_args (proc);
       else
-	RETURN (SCM_SUBRF (proc) (proc,arg1));
+	RETURN (SCM_SUBRF (proc) (arg1));
     case scm_tc7_dsubr:
       if (SCM_UNLIKELY (SCM_UNBNDP (arg1) || !scm_is_null (args)))
 	scm_wrong_num_args (proc);
@@ -4947,10 +4947,10 @@ tail:
 			|| !scm_is_null (SCM_CDDR (args))))
 	scm_wrong_num_args (proc);
       else
-	RETURN (SCM_SUBRF (proc) (proc,arg1, SCM_CAR (args), SCM_CADR (args)));
+	RETURN (SCM_SUBRF (proc) (arg1, SCM_CAR (args), SCM_CADR (args)));
     case scm_tc7_lsubr:
 #ifdef DEVAL
-      RETURN (SCM_SUBRF (proc) (proc,SCM_UNBNDP (arg1) ? SCM_EOL : debug.vect[0].a.args));
+      RETURN (SCM_SUBRF (proc) (SCM_UNBNDP (arg1) ? SCM_EOL : debug.vect[0].a.args));
 #else
       RETURN (SCM_SUBRF (proc) (SCM_UNBNDP (arg1) ? SCM_EOL : scm_cons (arg1, args)));
 #endif
@@ -4958,10 +4958,10 @@ tail:
       if (SCM_UNLIKELY (!scm_is_pair (args)))
 	scm_wrong_num_args (proc);
       else
-	RETURN (SCM_SUBRF (proc) (proc,arg1, SCM_CAR (args), SCM_CDR (args)));
+	RETURN (SCM_SUBRF (proc) (arg1, SCM_CAR (args), SCM_CDR (args)));
     case scm_tc7_asubr:
       if (scm_is_null (args))
-	RETURN (SCM_SUBRF (proc) (proc,arg1, SCM_UNDEFINED));
+	RETURN (SCM_SUBRF (proc) (arg1, SCM_UNDEFINED));
       while (SCM_NIMP (args))
 	{
 	  SCM_ASSERT (scm_is_pair (args), args, SCM_ARG2, "apply");
@@ -4975,7 +4975,7 @@ tail:
       while (SCM_NIMP (args))
 	{
 	  SCM_ASSERT (scm_is_pair (args), args, SCM_ARG2, "apply");
-	  if (scm_is_false (SCM_SUBRF (proc) (proc,arg1, SCM_CAR (args))))
+	  if (scm_is_false (SCM_SUBRF (proc) (arg1, SCM_CAR (args))))
 	    RETURN (SCM_BOOL_F);
 	  arg1 = SCM_CAR (args);
 	  args = SCM_CDR (args);

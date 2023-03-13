@@ -27,6 +27,8 @@ target_include_directories(minigmp INTERFACE ${CMAKE_CURRENT_SOURCE_DIR}/mini-gm
 add_library(guile STATIC)
 # use -fno-strict-aliasing
 target_compile_options(guile PRIVATE -fno-strict-aliasing)
+#target_compile_options(guile PUBLIC -fsanitize=address)
+#target_link_options(guile PUBLIC -fsanitize=address)
 add_definitions(-DHAVE_CONFIG_H)
 target_sources(guile
         PRIVATE
@@ -166,10 +168,57 @@ endif ()
 target_include_directories(guile PUBLIC ${CMAKE_CURRENT_BINARY_DIR} ${CMAKE_CURRENT_SOURCE_DIR})
 
 target_link_libraries(guile PUBLIC Threads::Threads minigmp)
+
 # Fix undefined reference to `__imp_WSAGetLastError' with mingw
 if (MINGW)
     target_link_libraries(guile PUBLIC ws2_32)
 endif ()
+
+function(GenerateResourcesQRC)
+
+    # Generate resources.qrc
+    file(GLOB_RECURSE Guile_Resources "${CMAKE_CURRENT_SOURCE_DIR}/ice-9/*")
+
+    set(Guile_Resources_List "")
+
+    # For each file
+    foreach (Guile_Resource ${Guile_Resources})
+        # Get the file name
+        get_filename_component(Guile_Resource_Name ${Guile_Resource} NAME)
+        # Get the file path
+        get_filename_component(Guile_Resource_Path ${Guile_Resource} PATH)
+        # Remove the path prefix
+        string(REPLACE "${CMAKE_CURRENT_SOURCE_DIR}" "" Guile_Resource_Path ${Guile_Resource_Path})
+        # Add the file to the resources
+        # list(APPEND Guile_Resources_List "<file alias=\"${Guile_Resource_Path}/${Guile_Resource_Name}\">${Guile_Resource}</file>")
+        set(Guile_Resources_List "${Guile_Resources_List}<file alias=\"${Guile_Resource_Path}/${Guile_Resource_Name}\">${Guile_Resource}</file>\n")
+    endforeach ()
+
+    # Generate the qrc file
+    configure_file("${CMAKE_CURRENT_SOURCE_DIR}/resources.qrc.in" "${CMAKE_CURRENT_BINARY_DIR}/resources.qrc" @ONLY)
+
+    # add the qrc to the texmacs target
+    target_sources(guile PUBLIC "${CMAKE_CURRENT_BINARY_DIR}/resources.qrc")
+
+endfunction()
+
+option(USE_GUILE_QT5 "Use Qt for GUILE" OFF)
+if (USE_GUILE_QT5)
+    set(CMAKE_AUTORCC ON)
+    find_package(Qt5 COMPONENTS Core REQUIRED)
+    target_link_libraries(guile PUBLIC Qt5::Core)
+    target_compile_definitions(guile PUBLIC USE_GUILE_QT)
+    GenerateResourcesQRC()
+endif()
+
+option(USE_GUILE_QT6 "Use Qt for GUILE" OFF)
+if (USE_GUILE_QT6)
+    set(CMAKE_AUTORCC ON)
+    find_package(Qt6 COMPONENTS Core REQUIRED)
+    target_link_libraries(guile PUBLIC Qt6::Core)
+    target_compile_definitions(guile PUBLIC USE_GUILE_QT)
+    GenerateResourcesQRC()
+endif()
 
 
 add_executable(guile-test test.cpp)
