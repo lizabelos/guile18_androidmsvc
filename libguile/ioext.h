@@ -1,5 +1,4 @@
 /* classes: h_files */
-#ifdef USE_FILESYS
 #ifndef SCM_IOEXT_H
 #define SCM_IOEXT_H
 
@@ -44,4 +43,3 @@ SCM_API void scm_init_ioext (void);
   c-file-style: "gnu"
   End:
 */
-#endif

@@ -216,15 +216,15 @@ scm_gsubr_apply (SCM args)
   else if (!scm_is_null (args))
     scm_wrong_num_args (SCM_SNAME (SCM_GSUBR_PROC (self)));
   switch (n) {
-  case 2: return (*fcn)(self, v[0], v[1]);
-  case 3: return (*fcn)(self, v[0], v[1], v[2]);
-  case 4: return (*fcn)(self, v[0], v[1], v[2], v[3]);
-  case 5: return (*fcn)(self, v[0], v[1], v[2], v[3], v[4]);
-  case 6: return (*fcn)(self, v[0], v[1], v[2], v[3], v[4], v[5]);
-  case 7: return (*fcn)(self, v[0], v[1], v[2], v[3], v[4], v[5], v[6]);
-  case 8: return (*fcn)(self, v[0], v[1], v[2], v[3], v[4], v[5], v[6], v[7]);
-  case 9: return (*fcn)(self, v[0], v[1], v[2], v[3], v[4], v[5], v[6], v[7], v[8]);
-  case 10: return (*fcn)(self, v[0], v[1], v[2], v[3], v[4], v[5], v[6], v[7], v[8], v[9]);
+  case 2: return (*fcn)(v[0], v[1]);
+  case 3: return (*fcn)(v[0], v[1], v[2]);
+  case 4: return (*fcn)(v[0], v[1], v[2], v[3]);
+  case 5: return (*fcn)(v[0], v[1], v[2], v[3], v[4]);
+  case 6: return (*fcn)(v[0], v[1], v[2], v[3], v[4], v[5]);
+  case 7: return (*fcn)(v[0], v[1], v[2], v[3], v[4], v[5], v[6]);
+  case 8: return (*fcn)(v[0], v[1], v[2], v[3], v[4], v[5], v[6], v[7]);
+  case 9: return (*fcn)(v[0], v[1], v[2], v[3], v[4], v[5], v[6], v[7], v[8]);
+  case 10: return (*fcn)(v[0], v[1], v[2], v[3], v[4], v[5], v[6], v[7], v[8], v[9]);
   }
   return SCM_BOOL_F; /* Never reached. */
 }
