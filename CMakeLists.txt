@@ -27,9 +27,18 @@ target_include_directories(minigmp INTERFACE ${CMAKE_CURRENT_SOURCE_DIR}/mini-gm
 add_library(guile STATIC)
 # use -fno-strict-aliasing
 target_compile_options(guile PRIVATE -fno-strict-aliasing)
-#target_compile_options(guile PUBLIC -fsanitize=address)
-#target_link_options(guile PUBLIC -fsanitize=address)
-add_definitions(-DHAVE_CONFIG_H)
+
+option(GUILE_ENABLE_CHECK_PTR OFF)
+if (GUILE_ENABLE_CHECK_PTR)
+    target_compile_definitions(guile PUBLIC GUILE_ENABLE_CHECK_PTR)
+endif()
+
+option(GUILE_ENABLE_SANITIZE OFF)
+if (GUILE_ENABLE_SANITIZE)
+    target_compile_options(guile PUBLIC -fsanitize=address)
+    target_link_options(guile PUBLIC -fsanitize=address)
+endif()
+
 target_sources(guile
         PRIVATE
         ${CMAKE_CURRENT_SOURCE_DIR}/libguile/alist.c

@@ -70,11 +70,12 @@ extern uint64_t * __libc_ia64_register_backing_store_base;
 #endif
 
 int check_ptr(void *ptr) {
+#if GUILE_ENABLE_CHECK_PTR
     // IsBadReadPtr on Windows or mprotect on Linux
 #ifdef _WIN32
     return IsBadReadPtr(ptr, 1);
 #else
-    ptr = (void *)(((size_t)ptr) & ~(getpagesize() - 1));
+   /* ptr = (void *)(((size_t)ptr) & ~(getpagesize() - 1));
     int val = mprotect(ptr, 1, PROT_READ);
     if (val != 0) {
         return 1;
@@ -84,7 +85,10 @@ int check_ptr(void *ptr) {
     {
         return 1;
     }
-    close(nullfd);
+    close(nullfd); */
+    return 0;
+#endif
+#else
     return 0;
 #endif
 }
