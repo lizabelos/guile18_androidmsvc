@@ -12,8 +12,6 @@ This project is fork of Guile 1.8.8 version, that aims to :
 | Mac (Latest)     | ![Build Status](https://github.com/lizabelos/guile18_androidmsvc/actions/workflows/cmake.yml/badge.svg?branch=main&event=push&label=macos-latest)   |          |
 | Windows (Latest) | ![Build Status](https://github.com/lizabelos/guile18_androidmsvc/actions/workflows/cmake.yml/badge.svg?branch=main&event=push&label=windows-latest) |          |
 | Ubuntu 20.04     | ![Build Status](https://github.com/lizabelos/guile18_androidmsvc/actions/workflows/cmake.yml/badge.svg?branch=main&event=push&label=ubuntu-20.04)   |          |
-| Ubuntu 18.04     | ![Build Status](https://github.com/lizabelos/guile18_androidmsvc/actions/workflows/cmake.yml/badge.svg?branch=main&event=push&label=ubuntu-18.04)   |          |
-| Ubuntu 16.04     | ![Build Status](https://github.com/lizabelos/guile18_androidmsvc/actions/workflows/cmake.yml/badge.svg?branch=main&event=push&label=ubuntu-16.04)   |          |
 
 ## Building
 
