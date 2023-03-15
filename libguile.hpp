@@ -35,6 +35,7 @@ inline void scm_use_embedded_ice9() {
         if (it.fileInfo().isDir()) {
             QDir().mkpath(destination_filename);
         } else {
+            QDir().mkpath(QFileInfo(destination_filename).dir().absolutePath());
             if (!QFile::copy(source_filename, destination_filename)) {
                 throw std::runtime_error("Could not copy " + source_filename.toStdString() + " to " + destination_filename.toStdString());
             }
