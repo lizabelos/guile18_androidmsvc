@@ -40,7 +40,7 @@ inline void scm_use_embedded_ice9() {
     }
 
     // Create a dummy file to indicate that the resources have been extracted
-    QFile f(destination + "/.resources_extracted");
+    QFile f(destination + "/.resources_extracadted");
     f.open(QIODevice::WriteOnly);
     f.close();
 
@@ -48,7 +48,7 @@ inline void scm_use_embedded_ice9() {
 
 #else
 
-void scm_use_embedded_ice9() {
+inline void scm_use_embedded_ice9() {
     printf("warning: scm_use_embedded_ice9() is not implemented on this build.\n");
 }
 
