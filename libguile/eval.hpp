@@ -34,6 +34,9 @@ SCM proxy_callback_6(SCM arg1, SCM arg2, SCM arg3, SCM arg4, SCM arg5, SCM arg6)
 SCM proxy_callback_7(SCM arg1, SCM arg2, SCM arg3, SCM arg4, SCM arg5, SCM arg6, SCM arg7);
 SCM proxy_callback_8(SCM arg1, SCM arg2, SCM arg3, SCM arg4, SCM arg5, SCM arg6, SCM arg7, SCM arg8);
 SCM proxy_callback_9(SCM arg1, SCM arg2, SCM arg3, SCM arg4, SCM arg5, SCM arg6, SCM arg7, SCM arg8, SCM arg9);
+SCM proxy_callback_10(SCM arg1, SCM arg2, SCM arg3, SCM arg4, SCM arg5, SCM arg6, SCM arg7, SCM arg8, SCM arg9, SCM arg10);
+SCM proxy_callback_11(SCM arg1, SCM arg2, SCM arg3, SCM arg4, SCM arg5, SCM arg6, SCM arg7, SCM arg8, SCM arg9, SCM arg10, SCM arg11);
+SCM proxy_callback_12(SCM arg1, SCM arg2, SCM arg3, SCM arg4, SCM arg5, SCM arg6, SCM arg7, SCM arg8, SCM arg9, SCM arg10, SCM arg11, SCM arg12);
 
 inline SCM register_callback(std::string name, std::function<SCM(SCM)> callback, int req = 0) {
     SCM proc;
@@ -67,6 +70,15 @@ inline SCM register_callback(std::string name, std::function<SCM(SCM)> callback,
             break;
         case 9:
             proc = scm_c_define_gsubr(name.c_str(), 9, 0, 0, reinterpret_cast<SCM (*)(void)>(proxy_callback_9));
+            break;
+        case 10:
+            proc = scm_c_define_gsubr(name.c_str(), 10, 0, 0, reinterpret_cast<SCM (*)(void)>(proxy_callback_10));
+            break;
+        case 11:
+            proc = scm_c_define_gsubr(name.c_str(), 11, 0, 0, reinterpret_cast<SCM (*)(void)>(proxy_callback_11));
+            break;
+        case 12:
+            proc = scm_c_define_gsubr(name.c_str(), 12, 0, 0, reinterpret_cast<SCM (*)(void)>(proxy_callback_12));
             break;
         default:
             throw std::runtime_error("Too many arguments");
