@@ -181,14 +181,16 @@ scm_c_define_gsubr_with_generic (const char *name,
 }
 
 
+extern SCM guile_self;
+
 SCM
 scm_gsubr_apply (SCM args)
 #define FUNC_NAME "scm_gsubr_apply"
 {
-  SCM self = SCM_CAR (args);
-  SCM (*fcn)() = SCM_SUBRF (SCM_GSUBR_PROC (self));
+  guile_self = SCM_CAR (args);
+  SCM (*fcn)() = SCM_SUBRF_PROC (SCM_GSUBR_PROC (guile_self));
   SCM v[SCM_GSUBR_MAX];
-  int typ = scm_to_int (SCM_GSUBR_TYPE (self));
+  int typ = scm_to_int (SCM_GSUBR_TYPE (guile_self));
   int64_t i, n = SCM_GSUBR_REQ (typ) + SCM_GSUBR_OPT (typ) + SCM_GSUBR_REST (typ);
 #if 0
   if (n > SCM_GSUBR_MAX)
@@ -199,7 +201,7 @@ scm_gsubr_apply (SCM args)
   args = SCM_CDR (args);
   for (i = 0; i < SCM_GSUBR_REQ (typ); i++) {
     if (scm_is_null (args))
-      scm_wrong_num_args (SCM_SNAME (SCM_GSUBR_PROC (self)));
+      scm_wrong_num_args (SCM_SNAME (SCM_GSUBR_PROC (guile_self)));
     v[i] = SCM_CAR(args);
     args = SCM_CDR(args);
   }
@@ -214,7 +216,7 @@ scm_gsubr_apply (SCM args)
   if (SCM_GSUBR_REST(typ))
     v[i] = args;
   else if (!scm_is_null (args))
-    scm_wrong_num_args (SCM_SNAME (SCM_GSUBR_PROC (self)));
+    scm_wrong_num_args (SCM_SNAME (SCM_GSUBR_PROC (guile_self)));
   switch (n) {
   case 2: return (*fcn)(v[0], v[1]);
   case 3: return (*fcn)(v[0], v[1], v[2]);

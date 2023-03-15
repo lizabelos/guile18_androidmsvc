@@ -24,18 +24,18 @@ inline SCM mergeArgs() {
     return scm_list_n(SCM_UNDEFINED);
 }
 
-SCM proxy_callback_0(SCM proc);
-SCM proxy_callback_1(SCM proc, SCM arg1);
-SCM proxy_callback_2(SCM proc, SCM arg1, SCM arg2);
-SCM proxy_callback_3(SCM proc, SCM arg1, SCM arg2, SCM arg3);
-SCM proxy_callback_4(SCM proc, SCM arg1, SCM arg2, SCM arg3, SCM arg4);
-SCM proxy_callback_5(SCM proc, SCM arg1, SCM arg2, SCM arg3, SCM arg4, SCM arg5);
-SCM proxy_callback_6(SCM proc, SCM arg1, SCM arg2, SCM arg3, SCM arg4, SCM arg5, SCM arg6);
-SCM proxy_callback_7(SCM proc, SCM arg1, SCM arg2, SCM arg3, SCM arg4, SCM arg5, SCM arg6, SCM arg7);
-SCM proxy_callback_8(SCM proc, SCM arg1, SCM arg2, SCM arg3, SCM arg4, SCM arg5, SCM arg6, SCM arg7, SCM arg8);
-SCM proxy_callback_9(SCM proc, SCM arg1, SCM arg2, SCM arg3, SCM arg4, SCM arg5, SCM arg6, SCM arg7, SCM arg8, SCM arg9);
+SCM proxy_callback_0();
+SCM proxy_callback_1(SCM arg1);
+SCM proxy_callback_2(SCM arg1, SCM arg2);
+SCM proxy_callback_3(SCM arg1, SCM arg2, SCM arg3);
+SCM proxy_callback_4(SCM arg1, SCM arg2, SCM arg3, SCM arg4);
+SCM proxy_callback_5(SCM arg1, SCM arg2, SCM arg3, SCM arg4, SCM arg5);
+SCM proxy_callback_6(SCM arg1, SCM arg2, SCM arg3, SCM arg4, SCM arg5, SCM arg6);
+SCM proxy_callback_7(SCM arg1, SCM arg2, SCM arg3, SCM arg4, SCM arg5, SCM arg6, SCM arg7);
+SCM proxy_callback_8(SCM arg1, SCM arg2, SCM arg3, SCM arg4, SCM arg5, SCM arg6, SCM arg7, SCM arg8);
+SCM proxy_callback_9(SCM arg1, SCM arg2, SCM arg3, SCM arg4, SCM arg5, SCM arg6, SCM arg7, SCM arg8, SCM arg9);
 
-inline void register_callback(std::string name, std::function<SCM(SCM)> callback, int req = 0) {
+inline SCM register_callback(std::string name, std::function<SCM(SCM)> callback, int req = 0) {
     SCM proc;
     switch (req) {
         case 0:
@@ -72,6 +72,7 @@ inline void register_callback(std::string name, std::function<SCM(SCM)> callback
             throw std::runtime_error("Too many arguments");
     }
     scm_callbacks[proc] = std::move(callback);
+    return proc;
 }
 
 #endif

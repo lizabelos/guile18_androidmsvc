@@ -45,7 +45,15 @@ typedef struct
         SCM_SET_CELL_WORD_0 (subr, (num << 8) + SCM_TYP7 (subr))
 #define SCM_SUBR_ENTRY(x) (scm_subr_table[SCM_SUBRNUM (x)])
 #define SCM_SNAME(x) (SCM_SUBR_ENTRY (x).name)
-#define SCM_SUBRF(x) ((SCM (*)()) SCM_CELL_WORD_1 (x))
+
+#define SCM_SUBRF_PROC(x) ((SCM (*)()) SCM_CELL_WORD_1 (x))
+
+typedef SCM(*SCM_fun)();
+SCM_fun SCM_SUBRF(SCM x);
+SCM scm_self();
+void scm_reset_self();
+
+
 #define SCM_SET_SUBRF(x, v) (SCM_SET_CELL_WORD_1 ((x), (v)))
 #define SCM_DSUBRF(x) ((double (*)()) SCM_CELL_WORD_1 (x))
 #define SCM_SUBR_PROPS(x) (SCM_SUBR_ENTRY (x).properties)

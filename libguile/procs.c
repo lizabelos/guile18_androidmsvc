@@ -361,6 +361,22 @@ scm_init_procs ()
 #include "libguile/procs.x"
 }
 
+// Liza
+SCM guile_self = NULL;
+
+SCM_fun SCM_SUBRF(SCM x) {
+    guile_self = x;
+    return (SCM(*)()) SCM_CELL_WORD_1 (x);
+}
+
+SCM scm_self() {
+    return guile_self;
+}
+
+void scm_reset_self() {
+    guile_self = NULL;
+}
+
 /*
   Local Variables:
   c-file-style: "gnu"
