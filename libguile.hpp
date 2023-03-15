@@ -1,3 +1,6 @@
+#ifndef LIBGUILE_HPP
+#define LIBGUILE_HPP
+
 #include <libguile.h>
 #include <libguile/eval.hpp>
 
@@ -51,5 +54,7 @@ inline void scm_use_embedded_ice9() {
 inline void scm_use_embedded_ice9() {
     printf("warning: scm_use_embedded_ice9() is not implemented on this build.\n");
 }
+
+#endif
 
 #endif
