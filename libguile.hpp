@@ -11,7 +11,7 @@
 #include <QDirIterator>
 
 inline void scm_use_embedded_ice9() {
-    QString destination = QDir::currentPath();
+    QString destination = QDir::currentPath() + QDir::separator() + "guile";
 
     // Test if the resources are already extracted
     if (QFile(destination + "/.resources_extracted").exists()) {
