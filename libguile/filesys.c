@@ -14,8 +14,6 @@
  * License with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
-#ifdef USE_FILESYS
-
 
 
 
@@ -304,7 +302,8 @@ SCM_DEFINE (scm_chown, "chown", 3, 0, 0,
 #undef FUNC_NAME
 #endif /* HAVE_CHOWN */
 
-
+SCM scm_dot_string;
+#ifdef HAVE_POSIX
 SCM_DEFINE (scm_chmod, "chmod", 2, 0, 0,
             (SCM object, SCM mode),
 	    "Changes the permissions of the file referred to by @var{obj}.\n"
@@ -1592,7 +1591,7 @@ SCM_DEFINE (scm_copy_file, "copy-file", 2, 0, 0,
 
 /* Filename manipulation */
 
-SCM scm_dot_string;
+#endif /* HAVE_POSIX */
 
 SCM_DEFINE (scm_dirname, "dirname", 1, 0, 0, 
             (SCM filename),
@@ -1697,10 +1696,11 @@ SCM_DEFINE (scm_basename, "basename", 1, 1, 0,
 void
 scm_init_filesys ()
 {
+#ifdef HAVE_POSIX
   scm_tc16_dir = scm_make_smob_type ("directory", 0);
   scm_set_smob_free (scm_tc16_dir, scm_dir_free);
   scm_set_smob_print (scm_tc16_dir, scm_dir_print);
-
+#endif
   scm_dot_string = scm_permanent_object (scm_from_locale_string ("."));
   
 #ifdef O_RDONLY
@@ -1768,7 +1768,6 @@ scm_init_filesys ()
 #include "libguile/filesys.x"
 }
 
-#endif //USE_FILESYS
 /*
   Local Variables:
   c-file-style: "gnu"

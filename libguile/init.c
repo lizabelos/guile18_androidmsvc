@@ -506,8 +506,8 @@ scm_i_init_guile (SCM_STACKITEM *base)
   scm_init_options ();
   scm_init_pairs ();
   scm_init_ports ();
-#ifdef HAVE_POSIX
   scm_init_filesys ();
+#ifdef HAVE_POSIX
   scm_init_posix ();
 #endif
 #ifdef HAVE_REGCOMP

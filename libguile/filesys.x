@@ -1,3 +1,4 @@
+#ifdef HAVE_POSIX
  scm_c_define_gsubr (s_scm_chmod, 2, 0, 0, (SCM (*)()) scm_chmod); ;
  scm_c_define_gsubr (s_scm_umask, 0, 1, 0, (SCM (*)()) scm_umask); ;
  scm_c_define_gsubr (s_scm_open_fdes, 2, 1, 0, (SCM (*)()) scm_open_fdes); ;
@@ -25,5 +26,6 @@
  scm_c_define_gsubr (s_scm_getcwd, 0, 0, 0, (SCM (*)()) scm_getcwd); ;
  scm_c_define_gsubr (s_scm_fsync, 1, 0, 0, (SCM (*)()) scm_fsync); ;
  scm_c_define_gsubr (s_scm_copy_file, 2, 0, 0, (SCM (*)()) scm_copy_file); ;
+ #endif
  scm_c_define_gsubr (s_scm_dirname, 1, 0, 0, (SCM (*)()) scm_dirname); ;
  scm_c_define_gsubr (s_scm_basename, 1, 1, 0, (SCM (*)()) scm_basename); ;
