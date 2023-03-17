@@ -17,7 +17,7 @@ template <typename ...Args> inline SCM mergeArgs(SCM t, Args... args) {
 }
 
 inline SCM mergeArgs(SCM t) {
-    return t;
+    return scm_cons(t, scm_list_n(SCM_UNDEFINED));
 }
 
 inline SCM mergeArgs() {
