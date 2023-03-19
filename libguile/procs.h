@@ -78,19 +78,19 @@ typedef SCM(*SCM_fun10)(SCM, SCM, SCM, SCM, SCM, SCM, SCM, SCM, SCM, SCM);
 typedef SCM(*SCM_fun11)(SCM, SCM, SCM, SCM, SCM, SCM, SCM, SCM, SCM, SCM, SCM);
 typedef SCM(*SCM_fun12)(SCM, SCM, SCM, SCM, SCM, SCM, SCM, SCM, SCM, SCM, SCM, SCM);
 
-#define SCM_SUBRF0(x) ((SCM_fun0) SCM_SUBRF_PROC (x))
-#define SCM_SUBRF1(x) ((SCM_fun1) SCM_SUBRF_PROC (x))
-#define SCM_SUBRF2(x) ((SCM_fun2) SCM_SUBRF_PROC (x))
-#define SCM_SUBRF3(x) ((SCM_fun3) SCM_SUBRF_PROC (x))
-#define SCM_SUBRF4(x) ((SCM_fun4) SCM_SUBRF_PROC (x))
-#define SCM_SUBRF5(x) ((SCM_fun5) SCM_SUBRF_PROC (x))
-#define SCM_SUBRF6(x) ((SCM_fun6) SCM_SUBRF_PROC (x))
-#define SCM_SUBRF7(x) ((SCM_fun7) SCM_SUBRF_PROC (x))
-#define SCM_SUBRF8(x) ((SCM_fun8) SCM_SUBRF_PROC (x))
-#define SCM_SUBRF9(x) ((SCM_fun9) SCM_SUBRF_PROC (x))
-#define SCM_SUBRF10(x) ((SCM_fun10) SCM_SUBRF_PROC (x))
-#define SCM_SUBRF11(x) ((SCM_fun11) SCM_SUBRF_PROC (x))
-#define SCM_SUBRF12(x) ((SCM_fun12) SCM_SUBRF_PROC (x))
+#define SCM_SUBRF0(x) ((SCM_fun0) SCM_SUBRF (x))
+#define SCM_SUBRF1(x) ((SCM_fun1) SCM_SUBRF (x))
+#define SCM_SUBRF2(x) ((SCM_fun2) SCM_SUBRF (x))
+#define SCM_SUBRF3(x) ((SCM_fun3) SCM_SUBRF (x))
+#define SCM_SUBRF4(x) ((SCM_fun4) SCM_SUBRF (x))
+#define SCM_SUBRF5(x) ((SCM_fun5) SCM_SUBRF (x))
+#define SCM_SUBRF6(x) ((SCM_fun6) SCM_SUBRF (x))
+#define SCM_SUBRF7(x) ((SCM_fun7) SCM_SUBRF (x))
+#define SCM_SUBRF8(x) ((SCM_fun8) SCM_SUBRF (x))
+#define SCM_SUBRF9(x) ((SCM_fun9) SCM_SUBRF (x))
+#define SCM_SUBRF10(x) ((SCM_fun10) SCM_SUBRF (x))
+#define SCM_SUBRF11(x) ((SCM_fun11) SCM_SUBRF (x))
+#define SCM_SUBRF12(x) ((SCM_fun12) SCM_SUBRF (x))
 
 SCM scm_self();
 void scm_reset_self();
