@@ -43,7 +43,7 @@ inline void scm_use_embedded_ice9() {
     }
 
     // Create a dummy file to indicate that the resources have been extracted
-    QFile f(destination + "/.resources_extracadted");
+    QFile f(destination + "/.resources_extracted");
     f.open(QIODevice::WriteOnly);
     f.close();
 
