@@ -49,6 +49,22 @@
  */
 
 
+void (*scm_error_callback) (const char *message) = NULL;
+
+void call_error_callback() {
+    if (scm_error_callback != NULL) {
+        scm_error_callback("");
+    }
+#ifndef _WIN32
+    raise(SIGINT);
+#endif
+    abort();
+}
+
+void set_error_callback(void (*callback)(const char *message)) {
+    scm_error_callback = callback;
+}
+
 /* Scheme interface to scm_error_scm.  */
 void
 scm_error (SCM key, const char *subr, const char *message, SCM args, SCM rest)
@@ -84,7 +100,7 @@ SCM_DEFINE (scm_error_scm, "scm-error", 5, 0, 0,
     {
       /* The error occured during GC --- abort */
       fprintf (stderr, "Guile: error during GC.\n"),
-      abort ();
+      call_error_callback();
     }
 
   scm_ithrow (key, scm_list_4 (subr, message, args, data), 1);
@@ -256,7 +272,8 @@ void
 scm_memory_error (const char *subr)
 {
   fprintf (stderr, "FATAL: memory error in %s\n", subr);
-  abort ();
+  call_error_callback();
+    abort ();
 }
 
 SCM_GLOBAL_SYMBOL (scm_misc_error_key, "misc-error");

@@ -1624,10 +1624,10 @@ SCM_DEFINE (scm_chroot, "chroot", 1, 0, 0,
 /* Wrapper function to supplying `getlogin()' under Windows.  */
 static char * getlogin (void)
 {
-  static char user[256];
-  static uint64_t len = 256;
+  static CHAR user[256];
+  static DWORD len = 256;
 
-  if (!GetUserName (user, &len))
+  if (!GetUserNameA (user, &len))
     return NULL;
   return user;
 }

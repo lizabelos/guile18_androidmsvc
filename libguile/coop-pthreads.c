@@ -160,7 +160,7 @@ thread_free (SCM obj)
 {
   scm_copt_thread *t = SCM_THREAD_DATA (obj);
   if (t->pthread != -1)
-    abort ();
+    call_error_callback();
   scm_gc_free (t, sizeof (*t), "thread");
   return 0;
 }

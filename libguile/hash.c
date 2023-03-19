@@ -165,8 +165,9 @@ scm_hasher(SCM obj, uint64_t n, size_t d)
 
 
 uint64_t
-scm_ihashq (SCM obj, uint64_t n)
+scm_ihashq (SCM obj, uint64_t n, scm_t_ihashx_closure *c)
 {
+    (void)c;
   return (SCM_UNPACK (obj) >> 1) % n;
 }
 
@@ -186,7 +187,7 @@ SCM_DEFINE (scm_hashq, "hashq", 2, 0, 0,
 #define FUNC_NAME s_scm_hashq
 {
   uint64_t sz = scm_to_unsigned_integer (size, 1, ULONG_MAX);
-  return scm_from_uint64 (scm_ihashq (key, sz));
+  return scm_from_uint64 (scm_ihashq (key, sz, NULL));
 }
 #undef FUNC_NAME
 
@@ -195,8 +196,9 @@ SCM_DEFINE (scm_hashq, "hashq", 2, 0, 0,
 
 
 uint64_t
-scm_ihashv (SCM obj, uint64_t n)
+scm_ihashv (SCM obj, uint64_t n, scm_t_ihashx_closure *closure)
 {
+    (void)closure;
   if (SCM_CHARP(obj))
     return ((uint64_t) (scm_c_downcase (SCM_CHAR (obj)))) % n; /* downcase!?!! */
 
@@ -222,7 +224,7 @@ SCM_DEFINE (scm_hashv, "hashv", 2, 0, 0,
 #define FUNC_NAME s_scm_hashv
 {
   uint64_t sz = scm_to_unsigned_integer (size, 1, ULONG_MAX);
-  return scm_from_uint64 (scm_ihashv (key, sz));
+  return scm_from_uint64 (scm_ihashv (key, sz, NULL));
 }
 #undef FUNC_NAME
 
@@ -231,8 +233,9 @@ SCM_DEFINE (scm_hashv, "hashv", 2, 0, 0,
 
 
 uint64_t
-scm_ihash (SCM obj, uint64_t n)
+scm_ihash (SCM obj, uint64_t n, scm_t_ihashx_closure *closure)
 {
+    (void)closure;
   return (uint64_t) scm_hasher (obj, n, 10);
 }
 
@@ -245,7 +248,7 @@ SCM_DEFINE (scm_hash, "hash", 2, 0, 0,
 #define FUNC_NAME s_scm_hash
 {
   uint64_t sz = scm_to_unsigned_integer (size, 1, ULONG_MAX);
-  return scm_from_uint64 (scm_ihash (key, sz));
+  return scm_from_uint64 (scm_ihash (key, sz, NULL));
 }
 #undef FUNC_NAME
 

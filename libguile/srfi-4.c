@@ -147,7 +147,7 @@ uvec_print (SCM uvec, SCM port, scm_print_state *pstate)
     case SCM_UVEC_C32: np.f32 = (float *) uptr; break;
     case SCM_UVEC_C64: np.f64 = (double *) uptr; break;
     default:
-      abort ();			/* Sanity check.  */
+      call_error_callback();			/* Sanity check.  */
       break;
   }
 
@@ -179,7 +179,7 @@ uvec_print (SCM uvec, SCM port, scm_print_state *pstate)
 	  np.f64 += 2;
 	  break;
 	default:
-	  abort ();			/* Sanity check.  */
+	  call_error_callback();			/* Sanity check.  */
 	  break;
 	}
       i++;
@@ -496,6 +496,7 @@ coerce_to_uvec (int type, SCM obj)
     }
   else
     scm_wrong_type_arg_msg (NULL, 0, obj, "list or generalized vector");
+  return SCM_UNSPECIFIED;
 }
 
 SCM_SYMBOL (scm_sym_a, "a");
@@ -654,6 +655,7 @@ scm_array_handle_uniform_element_size (scm_t_array_handle *h)
   if (scm_is_uniform_vector (vec))
     return uvec_sizes[SCM_UVEC_TYPE(vec)];
   scm_wrong_type_arg_msg (NULL, 0, h->array, "uniform array");
+  return 0;
 }
 
 #if SCM_ENABLE_DEPRECATED
@@ -694,6 +696,7 @@ scm_array_handle_uniform_writable_elements (scm_t_array_handle *h)
       return (void *) (elts + size*h->base);
     }
   scm_wrong_type_arg_msg (NULL, 0, h->array, "uniform array");
+  return NULL;
 }
 
 const void *

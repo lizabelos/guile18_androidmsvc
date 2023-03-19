@@ -293,6 +293,7 @@ SCM_DEFINE (scm_sigaction_for_thread, "sigaction", 1, 3, 0,
 	    "structures.")
 #define FUNC_NAME s_scm_sigaction_for_thread
 {
+    (void)flags;
   int csig;
 #ifdef HAVE_SIGACTION
   struct sigaction action;

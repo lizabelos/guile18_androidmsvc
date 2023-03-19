@@ -209,11 +209,11 @@ strncasecmp (const char *s1, const char *s2, size_t len2)
 
 
 /* Read an SCSH block comment.  */
-static inline SCM scm_read_scsh_block_comment (int chr, SCM port);
+static SCM scm_read_scsh_block_comment (int chr, SCM port);
 
 /* Read from PORT until a delimiter (e.g., a whitespace) is read.  Return
    zero if the whole token fits in BUF, non-zero otherwise.  */
-static inline int
+static int
 read_token (SCM port, char *buf, size_t buf_size, size_t *read)
 {
   *read = 0;
@@ -317,6 +317,7 @@ static SCM
 scm_read_sexp (int chr, SCM port)
 #define FUNC_NAME "scm_i_lreadparen"
 {
+    (void) chr; /* unused */
   register int c;
   register SCM tmp;
   register SCM tl, ans = SCM_EOL;
@@ -405,6 +406,7 @@ static SCM
 scm_read_string (int chr, SCM port)
 #define FUNC_NAME "scm_lreadr"
 {
+    (void)chr;
   /* For strings smaller than C_STR, this function creates only one Scheme
      object (the string returned).  */
 
@@ -709,7 +711,8 @@ scm_read_quote (int chr, SCM port)
     default:
       fprintf (stderr, "%s: unhandled quote character (%i)\n",
 	       "scm_read_quote", chr);
-      abort ();
+      call_error_callback();
+      abort();
     }
 
   p = scm_cons2 (p, scm_read_expression (port), SCM_EOL);
@@ -728,9 +731,10 @@ scm_read_quote (int chr, SCM port)
   return p;
 }
 
-static inline SCM
+static SCM
 scm_read_semicolon_comment (int chr, SCM port)
 {
+    (void)(chr);
   int c;
 
   for (c = scm_getc (port);
@@ -746,6 +750,7 @@ scm_read_semicolon_comment (int chr, SCM port)
 static SCM
 scm_read_boolean (int chr, SCM port)
 {
+    (void)(port);
   switch (chr)
     {
     case 't':
@@ -764,7 +769,7 @@ static SCM
 scm_read_character (int chr, SCM port)
 #define FUNC_NAME "scm_lreadr"
 {
-  unsigned c;
+  int c;
   char charname[READER_CHAR_NAME_MAX_SIZE];
   size_t charname_len;
 
@@ -811,7 +816,7 @@ scm_read_character (int chr, SCM port)
 }
 #undef FUNC_NAME
 
-static inline SCM
+static SCM
 scm_read_keyword (int chr, SCM port)
 {
   SCM symbol;
@@ -830,7 +835,7 @@ scm_read_keyword (int chr, SCM port)
   return (scm_symbol_to_keyword (symbol));
 }
 
-static inline SCM
+static SCM
 scm_read_vector (int chr, SCM port)
 {
   /* Note: We call `scm_read_sexp ()' rather than READER here in order to
@@ -840,7 +845,7 @@ scm_read_vector (int chr, SCM port)
   return (scm_vector (scm_read_sexp (chr, port)));
 }
 
-static inline SCM
+static SCM
 scm_read_srfi4_vector (int chr, SCM port)
 {
   return scm_i_read_array (port, chr);
@@ -866,9 +871,10 @@ scm_read_guile_bit_vector (int chr, SCM port)
   return scm_bitvector (scm_reverse_x (s_bits, SCM_EOL));
 }
 
-static inline SCM
+static SCM
 scm_read_scsh_block_comment (int chr, SCM port)
 {
+    (void)(chr);
   int bang_seen = 0;
 
   for (;;)
@@ -1272,7 +1278,7 @@ scm_get_hash_procedure (int c)
       if (scm_is_null (rest))
 	return SCM_BOOL_F;
   
-      if (SCM_CHAR (SCM_CAAR (rest)) == c)
+      if ((int)SCM_CHAR (SCM_CAAR (rest)) == c)
 	return SCM_CDAR (rest);
      
       rest = SCM_CDR (rest);

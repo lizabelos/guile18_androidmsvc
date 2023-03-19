@@ -140,12 +140,12 @@ scm_cell (scm_t_bits car, scm_t_bits cdr)
 	if (SCM_GC_MARK_P (z))
 	  {
 	    fprintf(stderr, "scm_cell tried to allocate a marked cell.\n");
-	    abort();
+	    call_error_callback();
 	  }
 	else if (SCM_GC_CELL_WORD(z, 0) != scm_tc_free_cell)
 	  {
 	    fprintf(stderr, "cell from freelist is not a free cell.\n");
-	    abort();
+	    call_error_callback();
 	  }
       }
 
@@ -225,7 +225,7 @@ scm_double_cell (scm_t_bits car, scm_t_bits cbr,
 	{
 	  fprintf(stderr,
 		  "scm_double_cell tried to allocate a marked cell.\n");
-	  abort();
+	  call_error_callback();
 	}
     }
 

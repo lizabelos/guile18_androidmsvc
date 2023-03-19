@@ -74,8 +74,7 @@
 
 #define SCM_I_INUMP(x)	(2 & SCM_UNPACK (x))
 #define SCM_I_NINUMP(x) (!SCM_I_INUMP (x))
-#define SCM_I_MAKINUM(x) \
-  (SCM_PACK ((((scm_t_signed_bits) (x)) << 2) + scm_tc2_int))
+#define SCM_I_MAKINUM(x) (SCM_PACK ((((scm_t_signed_bits) (x)) << 2) + scm_tc2_int))
 #define SCM_I_INUM(x)   (SCM_SRS ((scm_t_signed_bits) SCM_UNPACK (x), 2))
 
 /* SCM_FIXABLE is true if its long argument can be encoded in an SCM_INUM. */

@@ -77,8 +77,9 @@ SCM_DEFINE (scm_sys_symbols, "%symbols", 0, 0, 0,
  */
 
 uint64_t
-scm_i_hash_symbol (SCM obj, uint64_t n, void *closure)
+scm_i_hash_symbol (SCM obj, uint64_t n, scm_t_ihashx_closure *c)
 {
+    (void) c;
   return scm_i_symbol_hash (obj) % n;
 }
 

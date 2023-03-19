@@ -754,6 +754,7 @@ SCM_DEFINE (scm_to_char_set, "->char-set", 1, 0, 0,
     return x;
   else
     scm_wrong_type_arg (NULL, 0, x);
+    return SCM_UNSPECIFIED;
 }
 #undef FUNC_NAME
 

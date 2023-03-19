@@ -61,8 +61,7 @@ int mkstemp (char *);
 
    Returns a file descriptor open on the file for reading and writing.  */
 int
-mkstemp (template)
-     char *template;
+mkstemp (char *template)
 {
   static const char letters[]
     = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";

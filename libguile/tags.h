@@ -108,25 +108,14 @@ typedef uint64_t scm_t_bits;
  */
     typedef struct scm_unused_struct * SCM;
 
-/*
-  The 0?: constructions makes sure that the code is never executed,
-  and that there is no performance hit.  However, the alternative is
-  compiled, and does generate a warning when used with the wrong
-  pointer type.
 
-  The Tru64 and ia64-hp-hpux11.23 compilers fail on `case (0?0=0:x)'
-  statements, so for them type-checking is disabled.  */
-#if defined __DECC || defined __HP_cc
-#   define SCM_UNPACK(x) ((scm_t_bits) (x))
-#else
-#   define SCM_UNPACK(x) ((scm_t_bits) (0? (*(SCM*)0=(x)): x))
-#endif
+#define SCM_UNPACK(x) ((scm_t_bits) (x))
 
 /*
   There is no typechecking on SCM_PACK, since all kinds of types
   (uint64_t, void*) go in SCM_PACK
  */
-#   define SCM_PACK(x) ((SCM) (x))
+#define SCM_PACK(x) ((SCM) (x))
 
 #else
 /* This should be used as a fall back solution for machines on which casting
@@ -134,8 +123,8 @@ typedef uint64_t scm_t_bits;
  * significant bits.
  */
     typedef scm_t_bits SCM;
-#   define SCM_UNPACK(x) (x)
-#   define SCM_PACK(x) ((SCM) (x))
+#define SCM_UNPACK(x) (x)
+#define SCM_PACK(x) ((SCM) (x))
 #endif
 
 

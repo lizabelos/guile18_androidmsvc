@@ -24,6 +24,7 @@
 
 #include "libguile/__scm.h"
 #include "libguile/print.h"
+#include "hash.h"
 
 
 
@@ -100,7 +101,7 @@ SCM_API SCM scm_struct_ref (SCM handle, SCM pos);
 SCM_API SCM scm_struct_set_x (SCM handle, SCM pos, SCM val);
 SCM_API SCM scm_struct_vtable (SCM handle);
 SCM_API SCM scm_struct_vtable_tag (SCM handle);
-SCM_API uint64_t scm_struct_ihashq (SCM obj, uint64_t n);
+SCM_API uint64_t scm_struct_ihashq (SCM obj, uint64_t n, scm_t_ihashx_closure *closure);
 SCM_API SCM scm_struct_create_handle (SCM obj);
 SCM_API SCM scm_struct_vtable_name (SCM vtable);
 SCM_API SCM scm_set_struct_vtable_name_x (SCM vtable, SCM name);

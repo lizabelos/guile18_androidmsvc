@@ -303,6 +303,7 @@ SCM_DEFINE (scm_chown, "chown", 3, 0, 0,
 #endif /* HAVE_CHOWN */
 
 SCM scm_dot_string;
+
 #ifdef HAVE_POSIX
 SCM_DEFINE (scm_chmod, "chmod", 2, 0, 0,
             (SCM object, SCM mode),

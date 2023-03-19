@@ -123,6 +123,7 @@ end_input_default (SCM port SCM_UNUSED, int offset SCM_UNUSED)
 static size_t
 scm_port_free0 (SCM port)
 {
+    (void) port;
   return 0;
 }
 
@@ -290,7 +291,7 @@ size_t scm_take_from_input_buffers (SCM port, char *dest, size_t read_len)
 {
   scm_t_port *pt = SCM_PTAB_ENTRY (port);
   size_t chars_read = 0;
-  size_t from_buf = min (pt->read_end - pt->read_pos, read_len);
+  size_t from_buf = min (pt->read_end - pt->read_pos, (int64_t)read_len);
 
   if (from_buf > 0)
     {
@@ -304,7 +305,7 @@ size_t scm_take_from_input_buffers (SCM port, char *dest, size_t read_len)
   /* if putback was active, try the real input buffer too.  */
   if (pt->read_buf == pt->putback_buf)
     {
-      from_buf = min (pt->saved_read_end - pt->saved_read_pos, read_len);
+      from_buf = min (pt->saved_read_end - pt->saved_read_pos, (int64_t)read_len);
       if (from_buf > 0)
 	{
 	  memcpy (dest, pt->saved_read_pos, from_buf);
@@ -803,7 +804,7 @@ void
 scm_c_port_for_each (void (*proc)(void *data, SCM p), void *data)
 {
   int64_t i;
-  size_t n;
+    int64_t n;
   SCM ports;
 
   /* Even without pre-emptive multithreading, running arbitrary code
@@ -934,7 +935,7 @@ SCM_DEFINE (scm_flush_all_ports, "flush-all-ports", 0, 0, 0,
 	    "all open output ports.  The return value is unspecified.")
 #define FUNC_NAME s_scm_flush_all_ports
 {
-  size_t i;
+    int64_t i;
 
   scm_i_scm_pthread_mutex_lock (&scm_i_port_table_mutex);
   for (i = 0; i < scm_i_port_table_size; i++)
@@ -1083,7 +1084,7 @@ scm_c_read (SCM port, void *buffer, size_t size)
   /* Take bytes first from the port's read buffer. */
   if (pt->read_pos < pt->read_end)
     {
-      n_available = min (size, pt->read_end - pt->read_pos);
+      n_available = min ((int64_t)size, pt->read_end - pt->read_pos);
       memcpy (buffer, pt->read_pos, n_available);
       buffer = (char *) buffer + n_available;
       pt->read_pos += n_available;
@@ -1140,7 +1141,7 @@ scm_c_read (SCM port, void *buffer, size_t size)
 	 the same as they first set up. */
       while (size && (scm_fill_input (port) != EOF))
 	{
-	  n_available = min (size, pt->read_end - pt->read_pos);
+	  n_available = min ((int64_t)size, pt->read_end - pt->read_pos);
 	  memcpy (buffer, pt->read_pos, n_available);
 	  buffer = (char *) buffer + n_available;
 	  pt->read_pos += n_available;

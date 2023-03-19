@@ -35,6 +35,9 @@ SCM_API SCM scm_misc_error_key;
 
 
 
+void call_error_callback ();
+void set_error_callback(void (*callback)(const char *message));
+
 SCM_API void scm_error (SCM key, const char *subr, const char *message,
 			SCM args, SCM rest) SCM_NORETURN;
 SCM_API SCM scm_error_scm (SCM key, SCM subr, SCM message,

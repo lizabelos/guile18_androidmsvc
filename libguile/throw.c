@@ -697,7 +697,7 @@ scm_ithrow (SCM key, SCM args, int noreturn SCM_UNUSED)
   if (SCM_I_CURRENT_THREAD->critical_section_level)
     {
       fprintf (stderr, "throw from within critical section.\n");
-      abort ();
+      call_error_callback();
     }
 
  rethrow:
@@ -734,12 +734,12 @@ scm_ithrow (SCM key, SCM args, int noreturn SCM_UNUSED)
   if (scm_is_null (winds))
     {
       scm_handle_by_message (NULL, key, args);
-      abort ();
+      call_error_callback();
     }
 
   /* If the wind list is malformed, bail.  */
   if (!scm_is_pair (winds))
-    abort ();
+    call_error_callback();
   
   for (wind_goal = scm_i_dynwinds ();
        (!scm_is_pair (SCM_CAR (wind_goal))
@@ -828,13 +828,9 @@ scm_ithrow (SCM key, SCM args, int noreturn SCM_UNUSED)
 
   /* Otherwise, it's some random piece of junk.  */
   else
-    abort ();
+    call_error_callback();
 
-#ifdef __ia64__
-  /* On IA64, we #define longjmp as setcontext, and GCC appears not to
-     know that that doesn't return. */
   return SCM_UNSPECIFIED;
-#endif
 }
 
 

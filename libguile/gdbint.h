@@ -30,6 +30,10 @@ SCM_API int scm_print_carefully_p;
 
 SCM_API void scm_init_gdbint (void);
 
+SCM_API void unmark_port (SCM port);
+
+SCM_API void remark_port (SCM port);
+
 #endif  /* SCM_GDBINT_H */
 
 /*

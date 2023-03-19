@@ -24,6 +24,8 @@
 
 SCM_API void scm_init_i18n (void);
 
+SCM_API int scm_i_to_lc_category (SCM category, int allow_lc_all);
+
 #if 0
 
 SCM_API SCM scm_gettext (SCM msgid, SCM domainname, SCM category);
@@ -32,7 +34,6 @@ SCM_API SCM scm_textdomain (SCM domainname);
 SCM_API SCM scm_bindtextdomain (SCM domainname, SCM directory);
 SCM_API SCM scm_bind_textdomain_codeset (SCM domainname, SCM encoding);
 
-SCM_API int scm_i_to_lc_category (SCM category, int allow_lc_all);
 
 
 #endif  /* SCM_I18N_H */

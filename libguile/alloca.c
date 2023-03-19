@@ -205,7 +205,7 @@ alloca (unsigned size)
     if (new == 0)
       {
 	write (2, "alloca emulation: out of memory\n", 32);
-	abort();
+	call_error_callback();
       }
 
     ((header *) new)->h.next = last_alloca_header;
@@ -364,7 +364,7 @@ i00afunc (int64_t *address)
      a fatal error if "trailer" is null.  */
 
   if (trailer == 0)
-    abort ();
+    call_error_callback();
 
   /* Discard segments that do not contain our argument address.  */
 
@@ -373,7 +373,7 @@ i00afunc (int64_t *address)
       block = (int64_t *) trailer->this_address;
       size = trailer->this_size;
       if (block == 0 || size == 0)
-	abort ();
+	call_error_callback();
       trailer = (struct stk_trailer *) trailer->link;
       if ((block <= address) && (address < (block + size)))
 	break;
@@ -392,7 +392,7 @@ i00afunc (int64_t *address)
   do
     {
       if (trailer->this_size <= 0)
-	abort ();
+	call_error_callback();
       result += trailer->this_size;
       trailer = (struct stk_trailer *) trailer->link;
     }

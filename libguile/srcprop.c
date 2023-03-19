@@ -86,8 +86,6 @@ SCM_GLOBAL_SYMBOL (scm_sym_breakpoint, "breakpoint");
 #define SETSRCPROPLINE(p, l) SETSRCPROPPOS (p, l, SRCPROPCOL (p))
 #define SETSRCPROPCOL(p, c) SETSRCPROPPOS (p, SRCPROPLINE (p), c)
 
-
-
 scm_t_bits scm_tc16_srcprops;
 
 static SCM

@@ -55,6 +55,8 @@
 #include "libguile/validate.h"
 #include "libguile/goops.h"
 
+#include "srcprop.h"
+
 #define SPEC_OF(x)  SCM_SLOT (x, scm_si_specializers)
 
 #define DEFVAR(v, val) \
@@ -902,8 +904,7 @@ create_basic_classes (void)
   /* SCM slots_of_class = build_class_class_slots (); */
 
   /**** <scm_class_class> ****/
-  SCM cs = scm_from_locale_string (SCM_CLASS_CLASS_LAYOUT
-				   + 2 * scm_vtable_offset_user);
+  SCM cs = scm_from_locale_string (&SCM_CLASS_CLASS_LAYOUT[2 * scm_vtable_offset_user]);
   SCM name = scm_from_locale_symbol ("<class>");
   scm_class_class = scm_permanent_object (scm_make_vtable_vtable (cs,
 								  SCM_INUM0,
@@ -1291,7 +1292,7 @@ get_slot_value (SCM class SCM_UNUSED, SCM obj, SCM slotdef)
 
       code = SCM_CAR (access);
       if (!SCM_CLOSUREP (code))
-	return SCM_SUBRF (code) (obj);
+	return SCM_SUBRF1 (code) (obj);
       env  = SCM_EXTEND_ENV (SCM_CLOSURE_FORMALS (code),
 			     scm_list_1 (obj),
 			     SCM_ENV (code));
@@ -1334,7 +1335,7 @@ set_slot_value (SCM class SCM_UNUSED, SCM obj, SCM slotdef, SCM value)
 
       code = SCM_CADR (access);
       if (!SCM_CLOSUREP (code))
-	SCM_SUBRF (code) (obj, value);
+	SCM_SUBRF2 (code) (obj, value);
       else
 	{
 	  env  = SCM_EXTEND_ENV (SCM_CLOSURE_FORMALS (code),
@@ -2390,7 +2391,7 @@ fix_cpl (SCM c, SCM before, SCM after)
   SCM tail = scm_delq1_x (before, SCM_CDR (ls));
   if (scm_is_false (ls))
     /* if this condition occurs, fix_cpl should not be applied this way */
-    abort ();
+    call_error_callback();
   SCM_SETCAR (ls, before);
   SCM_SETCDR (ls, scm_cons (after, tail));
   {
@@ -2673,7 +2674,7 @@ scm_i_inherit_applicable (SCM c)
       /* patch scm_class_applicable into cpl */
       top = scm_c_memq (scm_class_top, cpl);
       if (scm_is_false (top))
-	abort ();
+	call_error_callback();
       else
 	{
 	  SCM_SETCAR (top, scm_class_applicable);
@@ -2915,12 +2916,12 @@ SCM
 scm_wrap_component (SCM class, SCM container, void *data)
 {
   SCM obj = scm_wrap_object (class, data);
-  SCM handle = scm_hash_fn_create_handle_x (scm_components,
-					    obj,
-					    SCM_BOOL_F,
-					    scm_struct_ihashq,
-					    scm_sloppy_assq,
-					    0);
+  SCM handle = scm_hash_fn_create_handle_x(scm_components,
+                                           obj,
+                                           SCM_BOOL_F,
+                                           scm_struct_ihashq,
+                                           hashmap_assoc_fn_assq,
+                                           0);
   SCM_SETCDR (handle, container);
   return obj;
 }

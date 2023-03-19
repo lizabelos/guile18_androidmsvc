@@ -395,6 +395,7 @@ SCM_DEFINE (scm_sort_x, "sort!", 2, 0, 0,
     }
   else
     SCM_WRONG_TYPE_ARG (1, items);
+    return SCM_UNSPECIFIED;
 }
 #undef FUNC_NAME
 
@@ -415,6 +416,7 @@ SCM_DEFINE (scm_sort, "sort", 2, 0, 0,
     return scm_sort_x (scm_vector_copy (items), less);
   else
     SCM_WRONG_TYPE_ARG (1, items);
+  return SCM_UNSPECIFIED;
 }
 #undef FUNC_NAME
 
@@ -522,6 +524,7 @@ SCM_DEFINE (scm_stable_sort_x, "stable-sort!", 2, 0, 0,
     }
   else
     SCM_WRONG_TYPE_ARG (1, items);
+    return SCM_UNSPECIFIED;
 }
 #undef FUNC_NAME
 
@@ -542,6 +545,7 @@ SCM_DEFINE (scm_stable_sort, "stable-sort", 2, 0, 0,
     return scm_stable_sort_x (scm_vector_copy (items), less);
   else
     SCM_WRONG_TYPE_ARG (1, items);
+    return SCM_UNSPECIFIED;
 }
 #undef FUNC_NAME
 

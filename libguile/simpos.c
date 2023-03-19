@@ -45,10 +45,6 @@
 
 #include "posix.h"
 
-
-extern int system();
-
-
 #ifdef HAVE_SYSTEM
 SCM_DEFINE (scm_system, "system", 0, 1, 0,
            (SCM cmd),

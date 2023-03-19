@@ -274,7 +274,7 @@ coop_mutex_lock (coop_m *m)
 
       newthread = coop_wait_for_runnable_thread();
       if (newthread == coop_global_curr)
-	coop_abort ();
+	coop_call_error_callback();
       old = coop_global_curr;
       coop_global_curr = newthread;
       QT_BLOCK (coop_yieldhelp, old, &(m->waiting), newthread->sp);
@@ -311,7 +311,7 @@ coop_mutex_unlock (coop_m *m)
   else if (m->level > 0)
     m->level--;
   else
-    abort (); /* XXX */
+    call_error_callback(); /* XXX */
 
   return 0;
 }
@@ -354,7 +354,7 @@ coop_condition_variable_wait_mutex (coop_c *c, coop_m *m)
       /*fixme* Should we really wait here?  Isn't it OK just to proceed? */
       newthread = coop_wait_for_runnable_thread();
       if (newthread == coop_global_curr)
-	coop_abort ();
+	coop_call_error_callback();
     }
   coop_global_curr->top = &old;
   old = coop_global_curr;
@@ -618,7 +618,7 @@ coop_only (void *pu, void *pt, qt_userf_t *f)
 {
   coop_global_curr = (coop_t *)pt;
   (*(coop_userf_t *)f)(pu);
-  coop_abort();
+  coop_call_error_callback();
   /* NOTREACHED */
 }
 

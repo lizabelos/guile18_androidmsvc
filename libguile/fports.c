@@ -386,29 +386,29 @@ SCM_DEFINE (scm_open_file, "open-file", 2, 0, 0,
 #ifndef O_ACCMODE
 # define O_ACCMODE 0x0003
 #endif
-
+/*
 static int getflags (int fdes)
 {
   int flags = 0;
   struct stat buf;
   int error, optlen = sizeof (int);
 
-  /* Is this a socket ? */
+  // Is this a socket ?
   if (getsockopt (fdes, SOL_SOCKET, SO_ERROR, (void *) &error, &optlen) >= 0)
     flags = O_RDWR;
-  /* Maybe a regular file ? */
+  // Maybe a regular file ?
   else if (fstat (fdes, &buf) < 0)
     flags = -1;
   else
     {
-      /* Or an anonymous pipe handle ? */
+      // Or an anonymous pipe handle ?
       if (buf.st_mode & _S_IFIFO)
 	flags = PeekNamedPipe ((HANDLE) _get_osfhandle (fdes), NULL, 0, 
 			       NULL, NULL, NULL) ? O_RDONLY : O_WRONLY;
-      /* stdin ? */
+      // stdin ?
       else if (fdes == fileno (stdin) && isatty (fdes))
 	flags = O_RDONLY;
-      /* stdout / stderr ? */
+      // stdout / stderr ?
       else if ((fdes == fileno (stdout) || fdes == fileno (stderr)) && 
 	       isatty (fdes))
 	flags = O_WRONLY;
@@ -416,7 +416,7 @@ static int getflags (int fdes)
 	flags = buf.st_mode;
     }
   return flags;
-}
+}*/
 #endif /* __MINGW32__ */
 
 /* Building Guile ports from a file descriptor.  */
@@ -432,7 +432,7 @@ scm_i_fdes_to_port (int fdes, int64_t mode_bits, SCM name)
 {
   SCM port;
   scm_t_port *pt;
-  int flags;
+ // int flags;
 
   /* test that fdes is valid.  */
   /*
@@ -485,6 +485,7 @@ scm_fdes_to_port (int fdes, char *mode, SCM name)
 static int
 fport_input_waiting (SCM port)
 {
+    (void) port; /* unused */
 #ifdef HAVE_SELECT
   int fdes = SCM_FSTREAM (port)->fdes;
   struct timeval timeout;
@@ -723,7 +724,7 @@ static void write_all (SCM port, const void *data, size_t remaining)
 
   while (remaining > 0)
     {
-      size_t done;
+        int done;
 
       SCM_SYSCALL (done = write (fdes, data, remaining));
 
@@ -742,7 +743,7 @@ fport_write (SCM port, const void *data, size_t size)
   scm_t_port *pt = SCM_PTAB_ENTRY (port);
 
   if (pt->write_buf == &pt->shortbuf
-      || (pt->write_pos == pt->write_buf && size >= pt->write_buf_size))
+      || (pt->write_pos == pt->write_buf && (ssize_t)size >= pt->write_buf_size))
     {
       /* "unbuffered" port, or
 	 port with empty buffer and data won't fit in buffer. */
@@ -753,7 +754,7 @@ fport_write (SCM port, const void *data, size_t size)
   {
     off_t space = pt->write_end - pt->write_pos;
 
-    if (size <= space)
+    if ((ssize_t)size <= space)
       {
 	/* data fits in buffer.  */
 	memcpy (pt->write_pos, data, size);
@@ -774,7 +775,7 @@ fport_write (SCM port, const void *data, size_t size)
 	  const void *ptr = ((const char *) data) + space;
 	  size_t remaining = size - space;
 
-	  if (size >= pt->write_buf_size)
+	  if ((ssize_t)size >= pt->write_buf_size)
 	    {
 	      write_all (port, ptr, remaining);
 	      return;
@@ -831,11 +832,10 @@ fport_flush (SCM port)
 	    {
 	      const char *msg = "Error: could not flush file-descriptor ";
 	      char buf[11];
-	      size_t written;
 
-	      written = write (2, msg, strlen (msg));
+          write (2, msg, strlen (msg));
 	      sprintf (buf, "%d\n", fp->fdes);
-	      written = write (2, buf, strlen (buf));
+	      write (2, buf, strlen (buf));
 
 	      count = remaining;
 	    }

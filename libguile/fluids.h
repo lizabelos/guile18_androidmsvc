@@ -63,10 +63,8 @@ SCM_API size_t scm_i_fluid_num (SCM fl);
 SCM_API SCM scm_i_fast_fluid_ref (size_t n);
 SCM_API void scm_i_fast_fluid_set_x (size_t n, SCM val);
 
-SCM_API SCM scm_c_with_fluids (SCM fluids, SCM vals,
-			       SCM (*cproc)(void *), void *cdata);
-SCM_API SCM scm_c_with_fluid (SCM fluid, SCM val,
-			      SCM (*cproc)(void *), void *cdata);
+SCM_API SCM scm_c_with_fluids (SCM fluids, SCM vals, SCM (*cproc)(void *), void *cdata);
+SCM_API SCM scm_c_with_fluid (SCM fluid, SCM val, SCM (*cproc)(void *), void *cdata);
 SCM_API SCM scm_with_fluids (SCM fluids, SCM vals, SCM thunk);
 SCM_API SCM scm_with_fluid (SCM fluid, SCM val, SCM thunk);
 

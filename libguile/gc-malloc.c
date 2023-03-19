@@ -181,6 +181,7 @@ scm_strdup (const char *str)
 static void
 decrease_mtrigger (size_t size, const char * what)
 {
+    (void) what; /* unused */
   scm_i_pthread_mutex_lock (&scm_i_gc_admin_mutex);
 
   if (size > scm_mallocated)
@@ -189,7 +190,7 @@ decrease_mtrigger (size_t size, const char * what)
 	       "memory was unregistered\n"
 	       "via `scm_gc_unregister_collectable_memory ()' than "
 	       "registered.\n");
-      abort ();
+      call_error_callback();
     }
 
   scm_mallocated -= size;
@@ -283,6 +284,7 @@ increase_mtrigger (size_t size, const char *what)
 void
 scm_gc_register_collectable_memory (void *mem, size_t size, const char *what)
 {
+    (void) mem; /* unused */
   increase_mtrigger (size, what); 
 #ifdef GUILE_DEBUG_MALLOC
   if (mem)
@@ -294,6 +296,7 @@ scm_gc_register_collectable_memory (void *mem, size_t size, const char *what)
 void
 scm_gc_unregister_collectable_memory (void *mem, size_t size, const char *what)
 {
+    (void) mem; /* unused */
   decrease_mtrigger (size, what);
 #ifdef GUILE_DEBUG_MALLOC
   if (mem)
@@ -460,7 +463,7 @@ scm_must_free (void *obj)
   else
     {
       fprintf (stderr,"freeing NULL pointer");
-      abort ();
+      call_error_callback();
     }
 }
 #undef FUNC_NAME

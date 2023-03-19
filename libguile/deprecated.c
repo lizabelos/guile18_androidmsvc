@@ -672,7 +672,7 @@ scm_i_object_chars (SCM obj)
     return SCM_STRING_CHARS (obj);
   if (SCM_SYMBOLP (obj))
     return SCM_SYMBOL_CHARS (obj);
-  abort ();
+  call_error_callback();
 }
 
 int64_t
@@ -687,7 +687,7 @@ scm_i_object_length (SCM obj)
     return SCM_SYMBOL_LENGTH (obj);
   if (SCM_VECTORP (obj))
     return SCM_VECTOR_LENGTH (obj);
-  abort ();
+  call_error_callback();
 }
 
 SCM 

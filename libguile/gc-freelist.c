@@ -192,5 +192,5 @@ scm_i_gc_sweep_freelist_reset (scm_t_cell_type_statistics *freelist)
 int
 scm_i_gc_grow_heap_p (scm_t_cell_type_statistics * freelist)
 {
-  return SCM_MAX (freelist->collected,freelist->collected_1)  < freelist->min_yield;
+  return (int64_t)SCM_MAX (freelist->collected,freelist->collected_1)  < freelist->min_yield;
 }

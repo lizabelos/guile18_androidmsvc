@@ -162,7 +162,7 @@ scm_malloc_unregister (void *obj)
     {
       fprintf (stderr,
 	       "scm_gc_free called on object not allocated with scm_gc_malloc\n");
-      abort ();
+      call_error_callback();
     }
   type->data = (void *) ((int) type->data - 1);
   object->key = 0;
@@ -184,7 +184,7 @@ scm_malloc_reregister (void *old, void *new, const char *newwhat)
 	  fprintf (stderr,
 		   "scm_gc_realloc called on object not allocated "
 		   "with scm_gc_malloc\n");
-	  abort ();
+	  call_error_callback();
 	}
       if (strcmp ((char *) type->key, newwhat) != 0)
 	{
@@ -194,7 +194,7 @@ scm_malloc_reregister (void *old, void *new, const char *newwhat)
 		       "scm_gc_realloc called with arg %s, was %s\n",
 		       newwhat,
 		       (char *) type->key);
-	      abort ();
+	      call_error_callback();
 	    }
 	}
       if (new != old)

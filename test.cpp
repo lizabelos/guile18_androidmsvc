@@ -1,9 +1,11 @@
 #include <libguile.hpp>
 
 static void inner_main(void *closure, int argc, char **argv) {
-    SCM k = scm_c_eval_string("(+ 1 1)");
-    int res = scm_to_int32(k);
-    printf("%d\n", res);
+    scm_c_eval_string("(guile-version)");
+}
+
+void error_callback(const char *message) {
+    printf("Error: %s\n");
 }
 
 int main(int argc, char **argv) {

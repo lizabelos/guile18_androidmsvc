@@ -407,6 +407,7 @@ int scm_initialized_p = 0;
 static void *
 really_cleanup_for_exit (void *unused)
 {
+    (void)unused;
   scm_flush_all_ports ();
   return NULL;
 }
@@ -429,7 +430,7 @@ scm_i_init_guile (SCM_STACKITEM *base)
   if (base == NULL)
     {
       fprintf (stderr, "cannot determine stack base!\n");
-      abort ();
+      call_error_callback();
     }
 
   if (sizeof (mpz_t) > (3 * sizeof (scm_t_bits)))
@@ -451,7 +452,7 @@ scm_i_init_guile (SCM_STACKITEM *base)
   if (scm_init_storage ())        /* requires threads_prehistory,
 				     smob_prehistory and
 				     hashtab_prehistory */
-    abort ();
+    call_error_callback();
   
   scm_struct_prehistory ();	  /* requires storage */
   scm_symbols_prehistory ();      /* requires storage */

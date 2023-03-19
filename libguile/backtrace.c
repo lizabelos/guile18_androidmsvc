@@ -393,7 +393,7 @@ display_frame_expr (char *hdr, SCM exp, char *tlr, int indentation, SCM sport, S
       n = ptob->seek (sport, 0, SEEK_CUR);
       ++i;
     }
-  while (indentation + n > SCM_BACKTRACE_WIDTH && i < n_print_params);
+  while (indentation + n > (int64_t)SCM_BACKTRACE_WIDTH && i < n_print_params);
   ptob->truncate (sport, n);
       
   scm_display (scm_strport_to_string (sport), port);
@@ -469,11 +469,11 @@ display_backtrace_get_file_line (SCM frame, SCM *file, SCM *line)
 }
 
 static void
-display_backtrace_file (frame, last_file, port, pstate)
-     SCM frame;
-     SCM *last_file;
-     SCM port;
-     scm_print_state *pstate;
+display_backtrace_file (
+     SCM frame,
+     SCM *last_file,
+     SCM port,
+     scm_print_state *pstate)
 {
   SCM file, line;
 

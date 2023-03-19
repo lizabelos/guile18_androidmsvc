@@ -271,7 +271,7 @@ static void
 gmp_die (const char *msg)
 {
   fprintf (stderr, "%s\n", msg);
-  abort();
+  call_error_callback();
 }
 #endif
 

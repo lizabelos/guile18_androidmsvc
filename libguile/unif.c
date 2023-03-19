@@ -132,6 +132,7 @@ type_to_creator (SCM type)
       return type_creator_table[i].creator;
 
   scm_misc_error (NULL, "unknown array type: ~a", scm_list_1 (type));
+    return NULL;
 }
 
 static SCM
@@ -478,6 +479,7 @@ scm_array_handle_elements (scm_t_array_handle *h)
   if (SCM_I_IS_VECTOR (vec))
     return SCM_I_VECTOR_ELTS (vec) + h->base;
   scm_wrong_type_arg_msg (NULL, 0, h->array, "non-uniform array");
+    return SCM_UNSPECIFIED;
 }
 
 SCM *
@@ -489,6 +491,7 @@ scm_array_handle_writable_elements (scm_t_array_handle *h)
   if (SCM_I_IS_VECTOR (vec))
     return SCM_I_VECTOR_WELTS (vec) + h->base;
   scm_wrong_type_arg_msg (NULL, 0, h->array, "non-uniform array");
+  return SCM_UNSPECIFIED;
 }
 
 #if SCM_ENABLE_DEPRECATED
@@ -614,6 +617,7 @@ SCM_DEFINE (scm_shared_array_root, "shared-array-root", 1, 0, 0,
   else if (scm_is_generalized_vector (ra))
     return ra;
   scm_wrong_type_arg_msg (NULL, 0, ra, "array");
+    return SCM_UNSPECIFIED;
 }
 #undef FUNC_NAME
 
@@ -1043,6 +1047,7 @@ SCM_DEFINE (scm_transpose_array, "transpose-array", 1, 0, 1,
     }
 
   scm_wrong_type_arg_msg (NULL, 0, ra, "array");
+    return SCM_UNSPECIFIED;
 }
 #undef FUNC_NAME
 
@@ -1309,6 +1314,7 @@ SCM_DEFINE (scm_array_contents, "array-contents", 1, 1, 0,
     scm_wrong_type_arg_msg (NULL, 0, ra, "non-enclosed array");
   else
     scm_wrong_type_arg_msg (NULL, 0, ra, "array");
+    return SCM_UNSPECIFIED;
 }
 #undef FUNC_NAME
 
@@ -1403,6 +1409,7 @@ SCM_DEFINE (scm_uniform_array_read_x, "uniform-array-read!", 1, 3, 0,
     scm_wrong_type_arg_msg (NULL, 0, ura, "non-enclosed array");    
   else
     scm_wrong_type_arg_msg (NULL, 0, ura, "array");
+    return SCM_UNSPECIFIED;
 }
 #undef FUNC_NAME
 
@@ -1455,6 +1462,7 @@ SCM_DEFINE (scm_uniform_array_write, "uniform-array-write", 1, 3, 0,
     scm_wrong_type_arg_msg (NULL, 0, ura, "non-enclosed array");    
   else
     scm_wrong_type_arg_msg (NULL, 0, ura, "array");
+    return SCM_UNSPECIFIED;
 }
 #undef FUNC_NAME
 
@@ -1602,6 +1610,7 @@ scm_array_handle_bit_writable_elements (scm_t_array_handle *h)
   if (IS_BITVECTOR (vec))
     return BITVECTOR_BITS (vec) + h->base/32;
   scm_wrong_type_arg_msg (NULL, 0, h->array, "bit array");
+    return SCM_UNSPECIFIED;
 }
 
 size_t
@@ -2322,6 +2331,7 @@ SCM_DEFINE (scm_array_to_list, "array->list", 1, 0, 0,
     return ra2l (v, SCM_I_ARRAY_BASE (v), 0);
 
   scm_wrong_type_arg_msg (NULL, 0, v, "array");
+    return SCM_UNSPECIFIED;
 }
 #undef FUNC_NAME
 
@@ -2815,6 +2825,7 @@ SCM_DEFINE (scm_array_type, "array-type", 1, 0, 0,
     scm_wrong_type_arg_msg (NULL, 0, ra, "non-enclosed array");
   else
     scm_wrong_type_arg_msg (NULL, 0, ra, "array");
+    return SCM_UNSPECIFIED;
 }
 #undef FUNC_NAME
 

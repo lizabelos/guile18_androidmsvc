@@ -104,7 +104,7 @@ static int port_mark_p, stream_mark_p, string_mark_p;
 static SCM gdb_output_port;
 
 
-static void
+void
 unmark_port (SCM port)
 {
   SCM stream, string;
@@ -119,7 +119,7 @@ unmark_port (SCM port)
 }
 
 
-static void
+void
 remark_port (SCM port)
 {
   SCM stream = SCM_PACK (SCM_STREAM (port));

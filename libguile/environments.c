@@ -245,12 +245,14 @@ SCM_DEFINE (scm_environment_define, "environment-define", 3, 0, 0,
 
   status = SCM_ENVIRONMENT_DEFINE (env, sym, val);
 
-  if (scm_is_eq (status, SCM_ENVIRONMENT_SUCCESS))
-    return SCM_UNSPECIFIED;
-  else if (scm_is_eq (status, SCM_ENVIRONMENT_BINDING_IMMUTABLE))
-    scm_error_environment_immutable_binding (FUNC_NAME, env, sym);
-  else
-    abort();
+  if (scm_is_eq (status, SCM_ENVIRONMENT_SUCCESS)) {
+      return SCM_UNSPECIFIED;
+  } else if (scm_is_eq (status, SCM_ENVIRONMENT_BINDING_IMMUTABLE)) {
+      scm_error_environment_immutable_binding(FUNC_NAME, env, sym);
+  } else {
+      call_error_callback();
+  }
+  return SCM_UNSPECIFIED;
 }
 #undef FUNC_NAME
 
@@ -271,12 +273,16 @@ SCM_DEFINE (scm_environment_undefine, "environment-undefine", 2, 0, 0,
 
   status = SCM_ENVIRONMENT_UNDEFINE (env, sym);
 
-  if (scm_is_eq (status, SCM_ENVIRONMENT_SUCCESS))
-    return SCM_UNSPECIFIED;
-  else if (scm_is_eq (status, SCM_ENVIRONMENT_BINDING_IMMUTABLE))
-    scm_error_environment_immutable_binding (FUNC_NAME, env, sym);
-  else
-    abort();
+  if (scm_is_eq (status, SCM_ENVIRONMENT_SUCCESS)) {
+      return SCM_UNSPECIFIED;
+  }
+  else if (scm_is_eq (status, SCM_ENVIRONMENT_BINDING_IMMUTABLE)) {
+      scm_error_environment_immutable_binding(FUNC_NAME, env, sym);
+  }
+  else {
+      call_error_callback();
+  }
+  return SCM_UNSPECIFIED;
 }
 #undef FUNC_NAME
 
@@ -299,14 +305,17 @@ SCM_DEFINE (scm_environment_set_x, "environment-set!", 3, 0, 0,
 
   status = SCM_ENVIRONMENT_SET (env, sym, val);
 
-  if (scm_is_eq (status, SCM_ENVIRONMENT_SUCCESS))
+  if (scm_is_eq (status, SCM_ENVIRONMENT_SUCCESS)) {
+      return SCM_UNSPECIFIED;
+  } else if (SCM_UNBNDP (status)) {
+      scm_error_environment_unbound(FUNC_NAME, env, sym);
+  } else if (scm_is_eq (status, SCM_ENVIRONMENT_LOCATION_IMMUTABLE)) {
+      scm_error_environment_immutable_binding(FUNC_NAME, env, sym);
+  }
+  else {
+      call_error_callback();
+  }
     return SCM_UNSPECIFIED;
-  else if (SCM_UNBNDP (status))
-    scm_error_environment_unbound (FUNC_NAME, env, sym);
-  else if (scm_is_eq (status, SCM_ENVIRONMENT_LOCATION_IMMUTABLE))
-    scm_error_environment_immutable_binding (FUNC_NAME, env, sym);
-  else
-    abort();
 }
 #undef FUNC_NAME
 
@@ -696,7 +705,7 @@ core_environments_unobserve (SCM env, SCM observer)
 	    }
 
 	  do {
-	    SCM rest = SCM_CDR (l);
+	    rest = SCM_CDR (l);
 
 	    if (!scm_is_null (rest)) 
 	      {
@@ -1135,7 +1144,7 @@ eval_environment_lookup (SCM env, SCM sym, int for_write)
 	  if (scm_is_eq (mutability, UNKNOWN))
 	    {
 	      SCM source_env = CACHED_SOURCE_ENVIRONMENT (entry);
-	      SCM location = SCM_ENVIRONMENT_CELL (source_env, sym, 1);
+          location = SCM_ENVIRONMENT_CELL (source_env, sym, 1);
 
 	      if (scm_is_pair (location))
 		{

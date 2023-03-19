@@ -33,6 +33,8 @@
 
 #include "libguile/eq.h"
 
+#include "srcprop.h"
+
 #ifdef HAVE_STRING_H
 #include <string.h>
 #endif
@@ -823,7 +825,7 @@ SCM_DEFINE (scm_struct_vtable_tag, "struct-vtable-tag", 1, 0, 0,
  */
 
 uint64_t
-scm_struct_ihashq (SCM obj, uint64_t n)
+scm_struct_ihashq (SCM obj, uint64_t n, scm_t_ihashx_closure *closure)
 {
   /* The length of the hash table should be a relative prime it's not
      necessary to shift down the address.  */
@@ -833,12 +835,12 @@ scm_struct_ihashq (SCM obj, uint64_t n)
 SCM
 scm_struct_create_handle (SCM obj)
 {
-  SCM handle = scm_hash_fn_create_handle_x (scm_struct_table,
-					    obj,
-					    SCM_BOOL_F,
-					    scm_struct_ihashq,
-					    scm_sloppy_assq,
-					    0);
+  SCM handle = scm_hash_fn_create_handle_x(scm_struct_table,
+                                           obj,
+                                           SCM_BOOL_F,
+                                           scm_struct_ihashq,
+                                           hashmap_assoc_fn_assq,
+                                           0);
   if (scm_is_false (SCM_CDR (handle)))
     SCM_SETCDR (handle, scm_cons (SCM_BOOL_F, SCM_BOOL_F));
   return handle;

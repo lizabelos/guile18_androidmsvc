@@ -3,7 +3,7 @@ project(guile_liza VERSION 1.8.8 LANGUAGES C CXX)
 set(GUILE_MAJOR_VERSION ${guile_liza_VERSION_MAJOR})
 set(GUILE_MINOR_VERSION ${guile_liza_VERSION_MINOR})
 set(GUILE_MICRO_VERSION ${guile_liza_VERSION_PATCH})
-set(CMAKE_C_STANDARD 90)
+set(CMAKE_C_STANDARD 11)
 set(CMAKE_CXX_STANDARD 11)
 set (CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
 
@@ -32,6 +32,9 @@ option(GUILE_ENABLE_CHECK_PTR OFF)
 if (GUILE_ENABLE_CHECK_PTR)
     target_compile_definitions(guile PUBLIC GUILE_ENABLE_CHECK_PTR)
 endif()
+
+#target_compile_options(guile PUBLIC -Werror -Wall -Wextra)
+#target_link_options(guile PUBLIC -Werror -Wall -Wextra)
 
 option(GUILE_ENABLE_SANITIZE OFF)
 if (GUILE_ENABLE_SANITIZE)

@@ -188,7 +188,7 @@ scm_gsubr_apply (SCM args)
 #define FUNC_NAME "scm_gsubr_apply"
 {
   guile_self = SCM_CAR (args);
-  SCM (*fcn)() = SCM_SUBRF_PROC (SCM_GSUBR_PROC (guile_self));
+  //SCM (*fcn)() = SCM_SUBRF_PROC (SCM_GSUBR_PROC (guile_self));
   SCM v[SCM_GSUBR_MAX];
   int typ = scm_to_int (SCM_GSUBR_TYPE (guile_self));
   int64_t i, n = SCM_GSUBR_REQ (typ) + SCM_GSUBR_OPT (typ) + SCM_GSUBR_REST (typ);
@@ -218,15 +218,15 @@ scm_gsubr_apply (SCM args)
   else if (!scm_is_null (args))
     scm_wrong_num_args (SCM_SNAME (SCM_GSUBR_PROC (guile_self)));
   switch (n) {
-  case 2: return (*fcn)(v[0], v[1]);
-  case 3: return (*fcn)(v[0], v[1], v[2]);
-  case 4: return (*fcn)(v[0], v[1], v[2], v[3]);
-  case 5: return (*fcn)(v[0], v[1], v[2], v[3], v[4]);
-  case 6: return (*fcn)(v[0], v[1], v[2], v[3], v[4], v[5]);
-  case 7: return (*fcn)(v[0], v[1], v[2], v[3], v[4], v[5], v[6]);
-  case 8: return (*fcn)(v[0], v[1], v[2], v[3], v[4], v[5], v[6], v[7]);
-  case 9: return (*fcn)(v[0], v[1], v[2], v[3], v[4], v[5], v[6], v[7], v[8]);
-  case 10: return (*fcn)(v[0], v[1], v[2], v[3], v[4], v[5], v[6], v[7], v[8], v[9]);
+        case 2: return SCM_SUBRF_PROC2 (SCM_GSUBR_PROC(guile_self))(v[0], v[1]);
+        case 3: return SCM_SUBRF_PROC3 (SCM_GSUBR_PROC(guile_self))(v[0], v[1], v[2]);
+        case 4: return SCM_SUBRF_PROC4 (SCM_GSUBR_PROC(guile_self))(v[0], v[1], v[2], v[3]);
+        case 5: return SCM_SUBRF_PROC5 (SCM_GSUBR_PROC(guile_self))(v[0], v[1], v[2], v[3], v[4]);
+        case 6: return SCM_SUBRF_PROC6 (SCM_GSUBR_PROC(guile_self))(v[0], v[1], v[2], v[3], v[4], v[5]);
+        case 7: return SCM_SUBRF_PROC7 (SCM_GSUBR_PROC(guile_self))(v[0], v[1], v[2], v[3], v[4], v[5], v[6]);
+        case 8: return SCM_SUBRF_PROC8 (SCM_GSUBR_PROC(guile_self))(v[0], v[1], v[2], v[3], v[4], v[5], v[6], v[7]);
+        case 9: return SCM_SUBRF_PROC9 (SCM_GSUBR_PROC(guile_self))(v[0], v[1], v[2], v[3], v[4], v[5], v[6], v[7], v[8]);
+        case 10: return SCM_SUBRF_PROC10 (SCM_GSUBR_PROC(guile_self))(v[0], v[1], v[2], v[3], v[4], v[5], v[6], v[7], v[8], v[9]);
   }
   return SCM_BOOL_F; /* Never reached. */
 }

@@ -255,6 +255,7 @@ scm_i_get_one_zombie (SCM guardian)
 static SCM
 guardian_apply (SCM guardian, SCM obj, SCM throw_p)
 {
+    (void) throw_p; /* unused */
 #if ENABLE_DEPRECATED
   if (!SCM_UNBNDP (throw_p))
     scm_c_issue_deprecation_warning

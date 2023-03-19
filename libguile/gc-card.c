@@ -179,7 +179,7 @@ scm_i_sweep_card (scm_t_cell *  p, SCM *free_list, scm_t_heap_segment*seg)
 	      if (!(k < scm_numptob))
 		{
 		  fprintf (stderr, "undefined port type");
-		  abort();
+		  call_error_callback();
 		}
 #endif
 	      /* Keep "revealed" ports alive.  */
@@ -202,7 +202,7 @@ scm_i_sweep_card (scm_t_cell *  p, SCM *free_list, scm_t_heap_segment*seg)
 		     SCM_PTOBNAME (k));
 		  scm_i_deprecated_memory_return += mm;
 #else
-		  abort ();
+		  call_error_callback();
 #endif
 		}
 
@@ -226,7 +226,7 @@ scm_i_sweep_card (scm_t_cell *  p, SCM *free_list, scm_t_heap_segment*seg)
 		if (!(k < scm_numsmob))
 		  {
 		    fprintf (stderr, "undefined smob type");
-		    abort();
+		    call_error_callback();
 		  }
 #endif
 		if (scm_smobs[k].free)
@@ -244,7 +244,7 @@ scm_i_sweep_card (scm_t_cell *  p, SCM *free_list, scm_t_heap_segment*seg)
 			   SCM_SMOBNAME (k));
 			scm_i_deprecated_memory_return += mm;
 #else
-			abort();
+			call_error_callback();
 #endif
 		      }
 		  }
@@ -254,7 +254,7 @@ scm_i_sweep_card (scm_t_cell *  p, SCM *free_list, scm_t_heap_segment*seg)
 	  break;
 	default:
 	  fprintf (stderr, "unknown type");
-	  abort();
+	  call_error_callback();
 	}
 
       SCM_GC_SET_CELL_WORD (scmptr, 0, scm_tc_free_cell);	  

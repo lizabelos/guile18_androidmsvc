@@ -447,7 +447,7 @@ guilify_self_1 (SCM_STACKITEM *base)
   t->sleep_fd = -1;
 
   //if (pipe (t->sleep_pipe) != 0)
-  //  abort ();
+  //  call_error_callback();
 
   scm_i_pthread_mutex_init (&t->heap_mutex, NULL);
   t->clear_freelists_p = 0;

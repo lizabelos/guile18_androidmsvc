@@ -257,7 +257,7 @@ scm_dynthrow (SCM cont, SCM val)
   if (thread->critical_section_level)
     {
       fprintf (stderr, "continuation invoked from within critical section.\n");
-      abort ();
+      call_error_callback();
     }
 
  if (SCM_STACK_GROWS_UP) {
@@ -352,6 +352,8 @@ c_body (void *d)
 static SCM
 c_handler (void *d, SCM tag, SCM args)
 {
+    (void)tag;
+    (void)args;
   struct c_data *data = (struct c_data *)d;
   data->result = NULL;
   return SCM_UNSPECIFIED;
@@ -383,6 +385,9 @@ scm_body (void *d)
 static SCM
 scm_handler (void *d, SCM tag, SCM args)
 {
+    (void)d;
+    (void)tag;
+    (void)args;
   return SCM_BOOL_F;
 }
 

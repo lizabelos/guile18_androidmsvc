@@ -77,6 +77,7 @@ SCM_SYMBOL (scm_no_data_key, "no-data");
 
 static void scm_resolv_error (const char *subr, SCM bad_value)
 {
+    (void) bad_value;  /* unused */
 #ifdef NETDB_INTERNAL
   if (h_errno == NETDB_INTERNAL)
     {

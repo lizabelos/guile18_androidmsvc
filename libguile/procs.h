@@ -47,15 +47,73 @@ typedef struct
 #define SCM_SNAME(x) (SCM_SUBR_ENTRY (x).name)
 
 #define SCM_SUBRF_PROC(x) ((SCM (*)()) SCM_CELL_WORD_1 (x))
+#define SCM_SUBFR_PROC0(x) ((SCM (*)()) SCM_CELL_WORD_1 (x))
+#define SCM_SUBRF_PROC1(x) ((SCM (*)(SCM)) SCM_CELL_WORD_1 (x))
+#define SCM_SUBRF_PROC2(x) ((SCM (*)(SCM, SCM)) SCM_CELL_WORD_1 (x))
+#define SCM_SUBRF_PROC3(x) ((SCM (*)(SCM, SCM, SCM)) SCM_CELL_WORD_1 (x))
+#define SCM_SUBRF_PROC4(x) ((SCM (*)(SCM, SCM, SCM, SCM)) SCM_CELL_WORD_1 (x))
+#define SCM_SUBRF_PROC5(x) ((SCM (*)(SCM, SCM, SCM, SCM, SCM)) SCM_CELL_WORD_1 (x))
+#define SCM_SUBRF_PROC6(x) ((SCM (*)(SCM, SCM, SCM, SCM, SCM, SCM)) SCM_CELL_WORD_1 (x))
+#define SCM_SUBRF_PROC7(x) ((SCM (*)(SCM, SCM, SCM, SCM, SCM, SCM, SCM)) SCM_CELL_WORD_1 (x))
+#define SCM_SUBRF_PROC8(x) ((SCM (*)(SCM, SCM, SCM, SCM, SCM, SCM, SCM, SCM)) SCM_CELL_WORD_1 (x))
+#define SCM_SUBRF_PROC9(x) ((SCM (*)(SCM, SCM, SCM, SCM, SCM, SCM, SCM, SCM, SCM)) SCM_CELL_WORD_1 (x))
+#define SCM_SUBRF_PROC10(x) ((SCM (*)(SCM, SCM, SCM, SCM, SCM, SCM, SCM, SCM, SCM, SCM)) SCM_CELL_WORD_1 (x))
+#define SCM_SUBRF_PROC11(x) ((SCM (*)(SCM, SCM, SCM, SCM, SCM, SCM, SCM, SCM, SCM, SCM, SCM)) SCM_CELL_WORD_1 (x))
+#define SCM_SUBRF_PROC12(x) ((SCM (*)(SCM, SCM, SCM, SCM, SCM, SCM, SCM, SCM, SCM, SCM, SCM, SCM)) SCM_CELL_WORD_1 (x))
 
 typedef SCM(*SCM_fun)();
 SCM_fun SCM_SUBRF(SCM x);
+
+typedef SCM(*SCM_fun0)(SCM);
+typedef SCM(*SCM_fun1)(SCM);
+typedef SCM(*SCM_fun2)(SCM, SCM);
+typedef SCM(*SCM_fun3)(SCM, SCM, SCM);
+typedef SCM(*SCM_fun4)(SCM, SCM, SCM, SCM);
+typedef SCM(*SCM_fun5)(SCM, SCM, SCM, SCM, SCM);
+typedef SCM(*SCM_fun6)(SCM, SCM, SCM, SCM, SCM, SCM);
+typedef SCM(*SCM_fun7)(SCM, SCM, SCM, SCM, SCM, SCM, SCM);
+typedef SCM(*SCM_fun8)(SCM, SCM, SCM, SCM, SCM, SCM, SCM, SCM);
+typedef SCM(*SCM_fun9)(SCM, SCM, SCM, SCM, SCM, SCM, SCM, SCM, SCM);
+typedef SCM(*SCM_fun10)(SCM, SCM, SCM, SCM, SCM, SCM, SCM, SCM, SCM, SCM);
+typedef SCM(*SCM_fun11)(SCM, SCM, SCM, SCM, SCM, SCM, SCM, SCM, SCM, SCM, SCM);
+typedef SCM(*SCM_fun12)(SCM, SCM, SCM, SCM, SCM, SCM, SCM, SCM, SCM, SCM, SCM, SCM);
+
+#define SCM_SUBRF0(x) ((SCM_fun0) SCM_SUBRF_PROC (x))
+#define SCM_SUBRF1(x) ((SCM_fun1) SCM_SUBRF_PROC (x))
+#define SCM_SUBRF2(x) ((SCM_fun2) SCM_SUBRF_PROC (x))
+#define SCM_SUBRF3(x) ((SCM_fun3) SCM_SUBRF_PROC (x))
+#define SCM_SUBRF4(x) ((SCM_fun4) SCM_SUBRF_PROC (x))
+#define SCM_SUBRF5(x) ((SCM_fun5) SCM_SUBRF_PROC (x))
+#define SCM_SUBRF6(x) ((SCM_fun6) SCM_SUBRF_PROC (x))
+#define SCM_SUBRF7(x) ((SCM_fun7) SCM_SUBRF_PROC (x))
+#define SCM_SUBRF8(x) ((SCM_fun8) SCM_SUBRF_PROC (x))
+#define SCM_SUBRF9(x) ((SCM_fun9) SCM_SUBRF_PROC (x))
+#define SCM_SUBRF10(x) ((SCM_fun10) SCM_SUBRF_PROC (x))
+#define SCM_SUBRF11(x) ((SCM_fun11) SCM_SUBRF_PROC (x))
+#define SCM_SUBRF12(x) ((SCM_fun12) SCM_SUBRF_PROC (x))
+
 SCM scm_self();
 void scm_reset_self();
 
 
 #define SCM_SET_SUBRF(x, v) (SCM_SET_CELL_WORD_1 ((x), (v)))
+
 #define SCM_DSUBRF(x) ((double (*)()) SCM_CELL_WORD_1 (x))
+#define SCM_DSUBRF0(x) ((double (*)()) SCM_CELL_WORD_1 (x))
+#define SCM_DSUBRF1(x) ((double (*)(double)) SCM_CELL_WORD_1 (x))
+#define SCM_DSUBRF2(x) ((double (*)(double, double)) SCM_CELL_WORD_1 (x))
+#define SCM_DSUBRF3(x) ((double (*)(double, double, double)) SCM_CELL_WORD_1 (x))
+#define SCM_DSUBRF4(x) ((double (*)(double, double, double, double)) SCM_CELL_WORD_1 (x))
+#define SCM_DSUBRF5(x) ((double (*)(double, double, double, double, double)) SCM_CELL_WORD_1 (x))
+#define SCM_DSUBRF6(x) ((double (*)(double, double, double, double, double, double)) SCM_CELL_WORD_1 (x))
+#define SCM_DSUBRF7(x) ((double (*)(double, double, double, double, double, double, double)) SCM_CELL_WORD_1 (x))
+#define SCM_DSUBRF8(x) ((double (*)(double, double, double, double, double, double, double, double)) SCM_CELL_WORD_1 (x))
+#define SCM_DSUBRF9(x) ((double (*)(double, double, double, double, double, double, double, double, double)) SCM_CELL_WORD_1 (x))
+#define SCM_DSUBRF10(x) ((double (*)(double, double, double, double, double, double, double, double, double, double)) SCM_CELL_WORD_1 (x))
+#define SCM_DSUBRF11(x) ((double (*)(double, double, double, double, double, double, double, double, double, double, double)) SCM_CELL_WORD_1 (x))
+#define SCM_DSUBRF12(x) ((double (*)(double, double, double, double, double, double, double, double, double, double, double, double)) SCM_CELL_WORD_1 (x))
+
+
 #define SCM_SUBR_PROPS(x) (SCM_SUBR_ENTRY (x).properties)
 #define SCM_SUBR_GENERIC(x) (SCM_SUBR_ENTRY (x).generic)
 
