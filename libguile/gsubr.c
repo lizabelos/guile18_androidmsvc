@@ -188,7 +188,7 @@ scm_gsubr_apply (SCM args)
 #define FUNC_NAME "scm_gsubr_apply"
 {
   guile_self = SCM_CAR (args);
-  //SCM (*fcn)() = SCM_SUBRF_PROC (SCM_GSUBR_PROC (guile_self));
+  SCM (*fcn)() = SCM_SUBRF_PROC (SCM_GSUBR_PROC (guile_self));
   SCM v[SCM_GSUBR_MAX];
   int typ = scm_to_int (SCM_GSUBR_TYPE (guile_self));
   int64_t i, n = SCM_GSUBR_REQ (typ) + SCM_GSUBR_OPT (typ) + SCM_GSUBR_REST (typ);
