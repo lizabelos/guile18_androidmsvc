@@ -9,6 +9,7 @@
 #include <QString>
 #include <QDir>
 #include <QDirIterator>
+#include <QDebug>
 
 inline void scm_use_embedded_ice9() {
     QString destination = QDir::currentPath() + QDir::separator() + "guile";
