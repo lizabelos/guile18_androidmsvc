@@ -145,7 +145,7 @@ check_flag1 (const char *tag, void (*func)(void), int val)
   if (flag1 != val)
     {
       printf ("%s failed\n", tag);
-      exit (1);
+      call_error_callback();
     }
 }
 
@@ -188,7 +188,7 @@ check_cont (int rewindable)
       if (rewindable)
 	return;
       printf ("continuation not blocked\n");
-      exit (1);
+      call_error_callback();
     }
   else
     {
@@ -196,7 +196,7 @@ check_cont (int rewindable)
       if (!rewindable)
 	return;
       printf ("continuation didn't work\n");
-      exit (1);
+      call_error_callback();
     }
 }
 
@@ -228,7 +228,7 @@ check_ports ()
   strcat (filename, FILENAME_TEMPLATE);
 
   if (mktemp (filename) == NULL)
-    exit (1);
+    call_error_callback();
 
   scm_dynwind_begin (0);
   {
@@ -256,7 +256,7 @@ check_ports ()
     if (scm_is_false (scm_equal_p (res, scm_version ())))
       {
 	printf ("ports didn't work\n");
-	exit (1);
+	call_error_callback();
       }
   }
   scm_dynwind_end ();
@@ -279,13 +279,13 @@ check_fluid ()
   if (!scm_is_eq (x, scm_from_int (13)))
     {
       printf ("setting fluid didn't work\n");
-      exit (1);
+      call_error_callback();
     }
 
   if (!scm_is_eq (scm_fluid_ref (f), scm_from_int (12)))
     {
       printf ("resetting fluid didn't work\n");
-      exit (1);
+      call_error_callback();
     }
 }
 
@@ -304,7 +304,7 @@ inner_main (void *data, int argc, char **argv)
 
   check_fluid ();
 
-  exit (0);
+  call_error_callback();
 }
 
 int

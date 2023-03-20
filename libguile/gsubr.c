@@ -83,7 +83,7 @@ create_gsubr (int define, const char *name,
             fprintf (stderr,
                      "ERROR in scm_c_make_gsubr: too many args (%d) to %s\n",
                      req + opt + rst, name);
-	    exit (1);
+	    call_error_callback();
 	  }
 	SCM_SET_GSUBR_PROC (cclo, subr);
 	SCM_SET_GSUBR_TYPE (cclo,

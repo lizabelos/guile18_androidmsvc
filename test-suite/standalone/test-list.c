@@ -34,7 +34,7 @@ test_scm_list (void)
     if (! scm_is_eq (SCM_EOL, scm_list (SCM_EOL)))
       {
         fprintf (stderr, "fail: scm_list SCM_EOL\n");
-        exit (1);
+        call_error_callback();
       }
   }
 
@@ -43,7 +43,7 @@ test_scm_list (void)
     if (! scm_is_true (scm_equal_p (lst, scm_list (lst))))
       {
         fprintf (stderr, "fail: scm_list '(1 2)\n");
-        exit (1);
+        call_error_callback();
       }
   }
 }

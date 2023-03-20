@@ -452,7 +452,7 @@ coop_key_create (coop_k *keyp, void (*destructor) (void *value))
       if (destructors == 0)
 	{
 	  fprintf (stderr, "Virtual memory exceeded in coop_key_create\n");
-	  exit (1);
+	  call_error_callback();
 	}
       for (i = n_keys; i < max_keys; ++i)
 	destructors[i] = NULL;
@@ -477,7 +477,7 @@ coop_setspecific (coop_k key, const void *value)
       if (coop_global_curr->specific == 0)
 	{
 	  fprintf (stderr, "Virtual memory exceeded in coop_setspecific\n");
-	  exit (1);
+	  call_error_callback();
 	}
       for (i = n_keys; i < max_keys; ++i)
 	coop_global_curr->specific[i] = NULL;

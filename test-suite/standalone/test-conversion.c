@@ -48,7 +48,7 @@ test_1 (const char *str, scm_t_intmax min, scm_t_intmax max,
       fprintf (stderr, "fail: scm_is_signed_integer (%s, "
 	       "%" PRIiMAX ", %" PRIiMAX ") == %d\n",
 	       str, min, max, result);
-      exit (1);
+      call_error_callback();
     }
 }
 
@@ -134,7 +134,7 @@ test_2 (const char *str, scm_t_uintmax min, scm_t_uintmax max,
       fprintf (stderr, "fail: scm_is_unsigned_integer (%s, "
 	       "%" PRIuMAX ", %" PRIuMAX ") == %d\n",
 	       str, min, max, result);
-      exit (1);
+      call_error_callback();
     }
 }
 
@@ -255,7 +255,7 @@ test_3 (const char *str, scm_t_intmax min, scm_t_intmax max,
 		   "fail: scm_to_signed_int (%s, "
 		   "%" PRIiMAX ", %" PRIiMAX ") -> out of range\n",
 		   str, min, max);
-	  exit (1);
+	  call_error_callback();
 	}
     }
   else if (type_error)
@@ -268,7 +268,7 @@ test_3 (const char *str, scm_t_intmax min, scm_t_intmax max,
 		   "fail: scm_to_signed_int (%s, "
 		   "%" PRIiMAX", %" PRIiMAX ") -> wrong type\n",
 		   str, min, max);
-	  exit (1);
+	  call_error_callback();
 	}
     }
   else
@@ -282,7 +282,7 @@ test_3 (const char *str, scm_t_intmax min, scm_t_intmax max,
 		   "fail: scm_to_signed_int (%s, "
 		   "%" PRIiMAX ", %" PRIiMAX ") = %" PRIiMAX "\n",
 		   str, min, max, result);
-	  exit (1);
+	  call_error_callback();
 	}
     }
 }
@@ -390,7 +390,7 @@ test_4 (const char *str, scm_t_uintmax min, scm_t_uintmax max,
 		   "fail: scm_to_unsigned_int (%s, "
 		   "%" PRIuMAX ", %" PRIuMAX ") -> out of range\n",
 		   str, min, max);
-	  exit (1);
+	  call_error_callback();
 	}
     }
   else if (type_error)
@@ -403,7 +403,7 @@ test_4 (const char *str, scm_t_uintmax min, scm_t_uintmax max,
 		   "fail: scm_to_unsigned_int (%s, "
 		   "%" PRIuMAX ", %" PRIuMAX ") -> wrong type\n",
 		   str, min, max);
-	  exit (1);
+	  call_error_callback();
 	}
     }
   else
@@ -417,7 +417,7 @@ test_4 (const char *str, scm_t_uintmax min, scm_t_uintmax max,
 		   "fail: scm_to_unsigned_int (%s, "
 		   "%" PRIuMAX ", %" PRIuMAX ") == %" PRIuMAX "\n",
 		   str, min, max, result);
-	  exit (1);
+	  call_error_callback();
 	}
     }
 }
@@ -473,7 +473,7 @@ test_5 (scm_t_intmax val, const char *result)
     {
       fprintf (stderr, "fail: scm_from_signed_integer (%" PRIiMAX ") == %s\n",
 	       val, result);
-      exit (1);
+      call_error_callback();
     }
 }
 
@@ -506,7 +506,7 @@ test_6 (scm_t_uintmax val, const char *result)
       fprintf (stderr, "fail: scm_from_unsigned_integer (%"
 	       PRIuMAX ") == %s\n",
 	       val, result);
-      exit (1);
+      call_error_callback();
     }
 }
 
@@ -534,7 +534,7 @@ test_7s (SCM n, scm_t_intmax c_n, const char *result, const char *func)
   if (scm_is_false (scm_equal_p (n, r)))
     {
       fprintf (stderr, "fail: %s (%" PRIiMAX ") == %s\n", func, c_n, result);
-      exit (1);
+      call_error_callback();
     }
 }
 
@@ -548,7 +548,7 @@ test_7u (SCM n, scm_t_uintmax c_n, const char *result, const char *func)
   if (scm_is_false (scm_equal_p (n, r)))
     {
       fprintf (stderr, "fail: %s (%" PRIuMAX ") == %s\n", func, c_n, result);
-      exit (1);
+      call_error_callback();
     }
 }
 
@@ -584,7 +584,7 @@ test_8s (const char *str, scm_t_intmax (*func) (SCM), const char *func_name,
 	{
 	  fprintf (stderr,
 		   "fail: %s (%s) -> out of range\n", func_name, str);
-	  exit (1);
+	  call_error_callback();
 	}
     }
   else if (type_error)
@@ -595,7 +595,7 @@ test_8s (const char *str, scm_t_intmax (*func) (SCM), const char *func_name,
 	{
 	  fprintf (stderr,
 		   "fail: %s (%s) -> wrong type\n", func_name, str);
-	  exit (1);
+	  call_error_callback();
 	}
     }
   else
@@ -607,7 +607,7 @@ test_8s (const char *str, scm_t_intmax (*func) (SCM), const char *func_name,
 	{
 	  fprintf (stderr,
 		   "fail: %s (%s) = %" PRIiMAX "\n", func_name, str, result);
-	  exit (1);
+	  call_error_callback();
 	}
     }
 }
@@ -642,7 +642,7 @@ test_8u (const char *str, scm_t_uintmax (*func) (SCM), const char *func_name,
 	{
 	  fprintf (stderr,
 		   "fail: %s (%s) -> out of range\n", func_name, str);
-	  exit (1);
+	  call_error_callback();
 	}
     }
   else if (type_error)
@@ -653,7 +653,7 @@ test_8u (const char *str, scm_t_uintmax (*func) (SCM), const char *func_name,
 	{
 	  fprintf (stderr,
 		   "fail: %s (%s) -> wrong type\n", func_name, str);
-	  exit (1);
+	  call_error_callback();
 	}
     }
   else
@@ -665,7 +665,7 @@ test_8u (const char *str, scm_t_uintmax (*func) (SCM), const char *func_name,
 	{
 	  fprintf (stderr,
 		   "fail: %s (%s) = %" PRIiMAX "\n", func_name, str, result);
-	  exit (1);
+	  call_error_callback();
 	}
     }
 }
@@ -800,7 +800,7 @@ test_9 (double val, const char *result)
   if (scm_is_false (scm_eqv_p (res, scm_from_double (val))))
     {
       fprintf (stderr, "fail: scm_from_double (%g) == %s\n", val, result);
-      exit (1);
+      call_error_callback();
     }
 }
 
@@ -887,7 +887,7 @@ test_10 (const char *val, double result, int type_error)
 	{
 	  fprintf (stderr,
 		   "fail: scm_double (%s) -> wrong type\n", val);
-	  exit (1);
+	  call_error_callback();
 	}
     }
   else
@@ -899,7 +899,7 @@ test_10 (const char *val, double result, int type_error)
 	{
 	  fprintf (stderr,
 		   "fail: scm_to_double (%s) = %g\n", val, result);
-	  exit (1);
+	  call_error_callback();
 	}
     }
 }
@@ -944,7 +944,7 @@ test_11 (const char *str, const char *result, int misc_error, int type_error)
 	{
 	  fprintf (stderr,
 		   "fail: scm_to_locale_string (%s) -> misc error\n", str);
-	  exit (1);
+	  call_error_callback();
 	}
     }
   else if (type_error)
@@ -955,7 +955,7 @@ test_11 (const char *str, const char *result, int misc_error, int type_error)
 	{
 	  fprintf (stderr,
 		   "fail: scm_to_locale_string (%s) -> wrong type\n", str);
-	  exit (1);
+	  call_error_callback();
 	}
     }
   else
@@ -967,7 +967,7 @@ test_11 (const char *str, const char *result, int misc_error, int type_error)
 	{
 	  fprintf (stderr,
 		   "fail: scm_to_locale_string (%s) = %s\n", str, result);
-	  exit (1);
+	  call_error_callback();
 	}
     }
 
@@ -986,7 +986,7 @@ test_locale_strings ()
   if (!scm_is_string (scm_c_eval_string ("\"foo\"")))
     {
       fprintf (stderr, "fail: scm_is_string (\"foo\") = true\n");
-      exit (1);
+      call_error_callback();
     }
 
   str = scm_from_locale_string (lstr);
@@ -994,14 +994,14 @@ test_locale_strings ()
   if (!scm_is_string (str))
     {
       fprintf (stderr, "fail: scm_is_string (str) = true\n");
-      exit (1);
+      call_error_callback();
     }
 
   lstr2 = scm_to_locale_string (str);
   if (strcmp (lstr, lstr2))
     {
       fprintf (stderr, "fail: lstr = lstr2\n");
-      exit (1);
+      call_error_callback();
     }
   free (lstr2);
 
@@ -1010,17 +1010,17 @@ test_locale_strings ()
   if (len != strlen (lstr))
     {
       fprintf (stderr, "fail: scm_to_locale_stringbuf (...) = strlen(lstr)\n");
-      exit (1);
+      call_error_callback();
     }
   if (buf[15] != 'x')
     {
       fprintf (stderr, "fail: scm_to_locale_stringbuf (...) no overrun\n");
-      exit (1);
+      call_error_callback();
     }
   if (strncmp (lstr, buf, 15))
     {
       fprintf (stderr, "fail: scm_to_locale_stringbuf (...) = lstr\n");
-      exit (1);
+      call_error_callback();
     }
 
   str2 = scm_from_locale_stringn (lstr, 10);
@@ -1028,14 +1028,14 @@ test_locale_strings ()
   if (!scm_is_string (str2))
     {
       fprintf (stderr, "fail: scm_is_string (str2) = true\n");
-      exit (1);
+      call_error_callback();
     }
 
   lstr2 = scm_to_locale_string (str2);
   if (strncmp (lstr, lstr2, 10))
     {
       fprintf (stderr, "fail: lstr = lstr2\n");
-      exit (1);
+      call_error_callback();
     }
   free (lstr2);
 
@@ -1044,24 +1044,24 @@ test_locale_strings ()
   if (len != 10)
     {
       fprintf (stderr, "fail: scm_to_locale_stringbuf (...) = 10\n");
-      exit (1);
+      call_error_callback();
     }
   if (buf[10] != 'x')
     {
       fprintf (stderr, "fail: scm_to_locale_stringbuf (...) no overrun\n");
-      exit (1);
+      call_error_callback();
     }
   if (strncmp (lstr, buf, 10))
     {
       fprintf (stderr, "fail: scm_to_locale_stringbuf (...) = lstr\n");
-      exit (1);
+      call_error_callback();
     }
 
   lstr2 = scm_to_locale_stringn (str2, &len);
   if (len != 10)
     {
       fprintf (stderr, "fail: scm_to_locale_stringn, len = 10\n");
-      exit (1);
+      call_error_callback();
     }
 
   test_11 ("#f", NULL, 0, 1);
