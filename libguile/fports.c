@@ -82,6 +82,22 @@
 #error Oops, unknown OFF_T size
 #endif
 
+
+void (*scm_fport_log_function) (const char *, int) = NULL;
+void scm_set_log_function(void (*log_function)(const char *, int)) {
+    scm_fport_log_function = log_function;
+}
+
+ssize_t scm_write_proxy(int fd, const void *buf, size_t count) {
+    if ((fd == 0 || fd == 1 || fd == 2) && scm_fport_log_function != NULL) {
+        scm_fport_log_function(buf, count);
+        return count;
+    }
+    return write(fd, buf, count);
+}
+
+
+
 scm_t_bits scm_tc16_fport;
 
 
@@ -376,49 +392,6 @@ SCM_DEFINE (scm_open_file, "open-file", 2, 0, 0,
 }
 #undef FUNC_NAME
 
-
-#ifdef __MINGW32__
-/*
- * Try getting the appropiate file flags for a given file descriptor
- * under Windows. This incorporates some fancy operations because Windows
- * differentiates between file, pipe and socket descriptors.
- */
-#ifndef O_ACCMODE
-# define O_ACCMODE 0x0003
-#endif
-/*
-static int getflags (int fdes)
-{
-  int flags = 0;
-  struct stat buf;
-  int error, optlen = sizeof (int);
-
-  // Is this a socket ?
-  if (getsockopt (fdes, SOL_SOCKET, SO_ERROR, (void *) &error, &optlen) >= 0)
-    flags = O_RDWR;
-  // Maybe a regular file ?
-  else if (fstat (fdes, &buf) < 0)
-    flags = -1;
-  else
-    {
-      // Or an anonymous pipe handle ?
-      if (buf.st_mode & _S_IFIFO)
-	flags = PeekNamedPipe ((HANDLE) _get_osfhandle (fdes), NULL, 0, 
-			       NULL, NULL, NULL) ? O_RDONLY : O_WRONLY;
-      // stdin ?
-      else if (fdes == fileno (stdin) && isatty (fdes))
-	flags = O_RDONLY;
-      // stdout / stderr ?
-      else if ((fdes == fileno (stdout) || fdes == fileno (stderr)) && 
-	       isatty (fdes))
-	flags = O_WRONLY;
-      else
-	flags = buf.st_mode;
-    }
-  return flags;
-}*/
-#endif /* __MINGW32__ */
-
 /* Building Guile ports from a file descriptor.  */
 
 /* Build a Scheme port from an open file descriptor `fdes'.
@@ -432,26 +405,7 @@ scm_i_fdes_to_port (int fdes, int64_t mode_bits, SCM name)
 {
   SCM port;
   scm_t_port *pt;
- // int flags;
 
-  /* test that fdes is valid.  */
-  /*
-   * // todo
-#ifdef __MINGW32__
-  flags = getflags (fdes);
-#else
-  flags = fcntl (fdes, F_GETFL, 0);
-#endif
-  if (flags == -1)
-    SCM_SYSERROR;
-  flags &= O_ACCMODE;
-  if (flags != O_RDWR
-      && ((flags != O_WRONLY && (mode_bits & SCM_WRTNG))
-	  || (flags != O_RDONLY && (mode_bits & SCM_RDNG))))
-    {
-      SCM_MISC_ERROR ("requested file mode not available on fdes", SCM_EOL);
-    }
-*/
   scm_i_scm_pthread_mutex_lock (&scm_i_port_table_mutex);
 
   port = scm_new_port_table_entry (scm_tc16_fport);
@@ -726,7 +680,7 @@ static void write_all (SCM port, const void *data, size_t remaining)
     {
         int done;
 
-      SCM_SYSCALL (done = write (fdes, data, remaining));
+      SCM_SYSCALL (done = scm_write_proxy (fdes, data, remaining));
 
       if (done == -1)
 	SCM_SYSERROR;
@@ -811,7 +765,7 @@ fport_flush (SCM port)
     {
       int64_t count;
 
-      SCM_SYSCALL (count = write (fp->fdes, ptr, remaining));
+      SCM_SYSCALL (count = scm_write_proxy (fp->fdes, ptr, remaining));
       if (count < 0)
 	{
 	  /* error.  assume nothing was written this call, but
@@ -833,9 +787,9 @@ fport_flush (SCM port)
 	      const char *msg = "Error: could not flush file-descriptor ";
 	      char buf[11];
 
-          write (2, msg, strlen (msg));
+          scm_write_proxy (2, msg, strlen (msg));
 	      sprintf (buf, "%d\n", fp->fdes);
-	      write (2, buf, strlen (buf));
+          scm_write_proxy (2, buf, strlen (buf));
 
 	      count = remaining;
 	    }

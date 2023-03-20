@@ -254,18 +254,9 @@ scm_init_standard_ports ()
 				  "standard error"));
 				  */
   // We are never in the console
-    scm_set_current_input_port
-            (scm_standard_stream_to_port (0,
-                                          "r0",
-                                          "standard input"));
-    scm_set_current_output_port
-            (scm_standard_stream_to_port (1,
-                                          "w0",
-                                          "standard output"));
-    scm_set_current_error_port
-            (scm_standard_stream_to_port (2,
-                                          "w0",
-                                          "standard error"));
+    scm_set_current_input_port(scm_standard_stream_to_port (0, "r", "standard input"));
+    scm_set_current_output_port(scm_standard_stream_to_port (1, "w", "standard output"));
+    scm_set_current_error_port(scm_standard_stream_to_port (2,"w","standard error"));
 }
 
 

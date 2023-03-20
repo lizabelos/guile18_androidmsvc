@@ -55,9 +55,6 @@ void call_error_callback() {
     if (scm_error_callback != NULL) {
         scm_error_callback("");
     }
-#ifndef _WIN32
-    raise(SIGINT);
-#endif
     abort();
 }
 

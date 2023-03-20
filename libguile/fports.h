@@ -60,6 +60,7 @@ SCM_API SCM scm_i_fdes_to_port (int fdes, int64_t mode_bits, SCM name);
 SCM_API int scm_i_fport_truncate (SCM, SCM);
 SCM_API SCM scm_i_fport_seek (SCM, SCM, int);
 
+void scm_set_log_function(void (*log_function)(const char *, int));
 
 #endif  /* SCM_FPORTS_H */
 
