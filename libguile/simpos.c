@@ -197,7 +197,7 @@ SCM_DEFINE (scm_primitive_exit, "primitive-exit", 0, 1, 0,
   int cstatus = 0;
   if (!SCM_UNBNDP (status))
     cstatus = scm_to_int (status);
-  exit (cstatus);
+    call_error_callback();
 }
 #undef FUNC_NAME
 
@@ -215,7 +215,7 @@ SCM_DEFINE (scm_primitive__exit, "primitive-_exit", 0, 1, 0,
   int cstatus = 0;
   if (!SCM_UNBNDP (status))
     cstatus = scm_to_int (status);
-  _exit (cstatus);
+    call_error_callback();
 }
 #undef FUNC_NAME
 

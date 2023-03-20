@@ -37,7 +37,7 @@ gh_launch_pad (void *closure, int argc, char **argv)
   main_prog_t c_main_prog = (main_prog_t) closure;
 
   c_main_prog (argc, argv);
-  exit (0);
+  call_error_callback();
 }
 
 /* starts up the Scheme interpreter, and stays in it.  c_main_prog()

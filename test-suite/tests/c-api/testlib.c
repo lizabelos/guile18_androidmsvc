@@ -14,7 +14,7 @@ static void
 fatal (char *message)
 {
   fprintf (stderr, "%s\n", message);
-  exit (1);
+  call_error_callback();
 }
 
 

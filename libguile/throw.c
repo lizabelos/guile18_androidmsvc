@@ -496,10 +496,10 @@ SCM
 scm_handle_by_message (void *handler_data, SCM tag, SCM args)
 {
   if (scm_is_true (scm_eq_p (tag, scm_from_locale_symbol ("quit"))))
-    exit (scm_exit_status (args));
+      call_error_callback();
 
   handler_message (handler_data, tag, args);
-  scm_i_pthread_exit (NULL);
+    call_error_callback();
 
   /* this point not reached, but suppress gcc warning about no return value
      in case scm_i_pthread_exit isn't marked as "noreturn" (which seemed not
@@ -516,7 +516,7 @@ SCM
 scm_handle_by_message_noexit (void *handler_data, SCM tag, SCM args)
 {
   if (scm_is_true (scm_eq_p (tag, scm_from_locale_symbol ("quit"))))
-    exit (scm_exit_status (args));
+      call_error_callback();
 
   handler_message (handler_data, tag, args);
 

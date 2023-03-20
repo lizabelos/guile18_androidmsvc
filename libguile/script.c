@@ -383,7 +383,7 @@ scm_shell_usage (int fatal, char *message)
            scm_usage_name);
 
   if (fatal)
-    exit (fatal);
+      call_error_callback();
 }
 
 
@@ -623,7 +623,7 @@ scm_compile_shell_switches (int argc, char **argv)
 	       || ! strcmp (argv[i], "--help"))
 	{
 	  scm_shell_usage (0, 0);
-	  exit (0);
+	  call_error_callback();
 	}
 
       else if (! strcmp (argv[i], "-v")
@@ -637,7 +637,7 @@ scm_compile_shell_switches (int argc, char **argv)
 		  "`COPYING', which is included in the Guile distribution.\n"
 		  "There is no warranty, to the extent permitted by law.\n",
 		  scm_to_locale_string (scm_version ()));
-	  exit (0);
+	  call_error_callback();
 	}
 
       else
@@ -732,8 +732,9 @@ scm_shell (int argc, char **argv)
       }
   }
 
-  exit (scm_exit_status (scm_eval_x (scm_compile_shell_switches (argc, argv),
-				     scm_current_module ())));
+  //exit (scm_exit_status (scm_eval_x (scm_compile_shell_switches (argc, argv),
+	//			     scm_current_module ())));
+    call_error_callback();
 }
 
 
