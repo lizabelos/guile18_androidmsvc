@@ -496,11 +496,10 @@ SCM
 scm_handle_by_message (void *handler_data, SCM tag, SCM args)
 {
   if (scm_is_true (scm_eq_p (tag, scm_from_locale_symbol ("quit"))))
-    exit (scm_exit_status (args));
+      call_error_callback();
 
   handler_message (handler_data, tag, args);
-  scm_i_pthread_exit (NULL);
-
+  call_error_callback();
   /* this point not reached, but suppress gcc warning about no return value
      in case scm_i_pthread_exit isn't marked as "noreturn" (which seemed not
      to be the case on cygwin for instance) */
@@ -516,7 +515,7 @@ SCM
 scm_handle_by_message_noexit (void *handler_data, SCM tag, SCM args)
 {
   if (scm_is_true (scm_eq_p (tag, scm_from_locale_symbol ("quit"))))
-    exit (scm_exit_status (args));
+        call_error_callback();
 
   handler_message (handler_data, tag, args);
 
@@ -587,7 +586,7 @@ SCM_DEFINE (scm_catch_with_pre_unwind_handler, "catch", 3, 1, 0,
      latter receives a pointer to HANDLER, so it knows who to
      call.  */
   return scm_c_catch (key,
-		      scm_body_thunk, &c, 
+		      scm_body_thunk, &c,
 		      scm_handle_by_proc, &handler,
 		      SCM_UNBNDP (pre_unwind_handler) ? NULL : scm_handle_by_proc,
 		      &pre_unwind_handler);
@@ -625,7 +624,7 @@ SCM_DEFINE (scm_with_throw_handler, "with-throw-handler", 3, 0, 0,
      behave.  The latter receives a pointer to HANDLER, so it knows
      who to call.  */
   return scm_c_with_throw_handler (key,
-				   scm_body_thunk, &c, 
+				   scm_body_thunk, &c,
 				   scm_handle_by_proc, &handler,
 				   0);
 }
@@ -656,7 +655,7 @@ SCM_DEFINE (scm_lazy_catch, "lazy-catch", 3, 0, 0,
      to behave.  The latter receives a pointer to HANDLER, so it knows
      who to call.  */
   return scm_internal_lazy_catch (key,
-				  scm_body_thunk, &c, 
+				  scm_body_thunk, &c,
 				  scm_handle_by_proc, &handler);
 }
 #undef FUNC_NAME
@@ -728,107 +727,8 @@ scm_ithrow (SCM key, SCM args, int noreturn SCM_UNUSED)
 	}
     }
 
-  /* If we didn't find anything, print a message and abort the process
-     right here.  If you don't want this, establish a catch-all around
-     any code that might throw up. */
-  if (scm_is_null (winds))
-    {
       scm_handle_by_message (NULL, key, args);
       call_error_callback();
-    }
-
-  /* If the wind list is malformed, bail.  */
-  if (!scm_is_pair (winds))
-    call_error_callback();
-  
-  for (wind_goal = scm_i_dynwinds ();
-       (!scm_is_pair (SCM_CAR (wind_goal))
-	|| !scm_is_eq (SCM_CDAR (wind_goal), jmpbuf));
-       wind_goal = SCM_CDR (wind_goal))
-    ;
-
-  /* Is this a throw handler (or lazy catch)?  In a wind list entry
-     for a throw handler or lazy catch, the key is bound to a
-     pre_unwind_data smob, not a jmpbuf.  */
-  if (SCM_PRE_UNWIND_DATA_P (jmpbuf))
-    {
-      struct pre_unwind_data *c =
-	(struct pre_unwind_data *) SCM_CELL_WORD_1 (jmpbuf);
-      SCM handle, answer;
-
-      /* For old-style lazy-catch behaviour, we unwind the dynamic
-	 context before invoking the handler. */
-      if (c->lazy_catch_p)
-	{
-	  scm_dowinds (wind_goal, (scm_ilength (scm_i_dynwinds ())
-				   - scm_ilength (wind_goal)));
-	  SCM_CRITICAL_SECTION_START;
-	  handle = scm_i_dynwinds ();
-	  scm_i_set_dynwinds (SCM_CDR (handle));
-	  SCM_CRITICAL_SECTION_END;
-	}
-
-      /* Call the handler, with framing to set the pre-unwind
-	 structure's running field while the handler is running, so we
-	 can avoid recursing into the same handler again.  Note that
-	 if the handler returns normally, the running flag stays
-	 set until some kind of non-local jump occurs. */
-      scm_dynwind_begin (SCM_F_DYNWIND_REWINDABLE);
-      scm_dynwind_rewind_handler (toggle_pre_unwind_running,
-				  c,
-				  SCM_F_WIND_EXPLICITLY);
-      scm_dynwind_unwind_handler (toggle_pre_unwind_running, c, 0);
-      answer = (c->handler) (c->handler_data, key, args);
-
-      /* There is deliberately no scm_dynwind_end call here.  This
-	 means that the unwind handler (toggle_pre_unwind_running)
-	 stays in place until a non-local exit occurs, and will then
-	 reset the pre-unwind structure's running flag.  For sample
-	 code where this makes a difference, see the "again but with
-	 two chained throw handlers" test case in exceptions.test.  */
-
-      /* If the handler returns, rethrow the same key and args. */
-      goto rethrow;
-    }
-
-  /* Otherwise, it's a normal catch.  */
-  else if (SCM_JMPBUFP (jmpbuf))
-    {
-      struct pre_unwind_data * pre_unwind;
-      struct jmp_buf_and_retval * jbr;
-
-      /* Before unwinding anything, run the pre-unwind handler if
-	 there is one, and if it isn't already running. */
-      pre_unwind = SCM_JBPREUNWIND (jmpbuf);
-      if (pre_unwind->handler && !pre_unwind->running)
-	{
-	  /* Use framing to detect and avoid possible reentry into
-	     this handler, which could otherwise cause an infinite
-	     loop. */
-	  scm_dynwind_begin (SCM_F_DYNWIND_REWINDABLE);
-	  scm_dynwind_rewind_handler (toggle_pre_unwind_running,
-				      pre_unwind,
-				      SCM_F_WIND_EXPLICITLY);
-	  scm_dynwind_unwind_handler (toggle_pre_unwind_running,
-				      pre_unwind,
-				      SCM_F_WIND_EXPLICITLY);
-	  (pre_unwind->handler) (pre_unwind->handler_data, key, args);
-	  scm_dynwind_end ();
-	}
-
-      /* Now unwind and jump. */
-      scm_dowinds (wind_goal, (scm_ilength (scm_i_dynwinds ())
-			       - scm_ilength (wind_goal)));
-      jbr = (struct jmp_buf_and_retval *)JBJMPBUF (jmpbuf);
-      jbr->throw_tag = key;
-      jbr->retval = args;
-      scm_i_set_last_debug_frame (SCM_JBDFRAME (jmpbuf));
-      SCM_I_LONGJMP (*JBJMPBUF (jmpbuf), 1);
-    }
-
-  /* Otherwise, it's some random piece of junk.  */
-  else
-    call_error_callback();
 
   return SCM_UNSPECIFIED;
 }
