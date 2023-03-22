@@ -105,7 +105,6 @@ SCM_DEFINE (scm_error_scm, "scm-error", 5, 0, 0,
   /* No return, but just in case: */
   fprintf (stderr, "Guile scm_ithrow returned!\n");
     call_error_callback();
-    return SCM_UNSPECIFIED;
 }
 #undef FUNC_NAME
 

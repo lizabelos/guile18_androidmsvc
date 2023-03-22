@@ -663,6 +663,7 @@ scm_strprint_obj (SCM obj)
   return scm_object_to_string (obj, SCM_UNDEFINED);
 }
 
+#if SCM_ENABLE_DISCOURAGED
 char *
 scm_i_object_chars (SCM obj)
 {
@@ -689,6 +690,7 @@ scm_i_object_length (SCM obj)
     return SCM_VECTOR_LENGTH (obj);
   call_error_callback();
 }
+#endif
 
 SCM 
 scm_sym2ovcell_soft (SCM sym, SCM obarray)
@@ -1241,6 +1243,7 @@ scm_i_keywordp (SCM obj)
   return scm_is_keyword (obj);
 }
 
+#if SCM_ENABLE_DISCOURAGED
 SCM
 scm_i_keywordsym (SCM keyword)
 {
@@ -1248,6 +1251,7 @@ scm_i_keywordsym (SCM keyword)
     ("SCM_KEYWORDSYM is deprecated.  See scm_keyword_to_symbol instead.");
   return scm_keyword_dash_symbol (keyword);
 }
+#endif
 
 int
 scm_i_vectorp (SCM x)
