@@ -29,41 +29,30 @@
 
 extern int scm_stack_checking_enabled_p;
 
-
 
-/* With debug options we have the possibility to disable stack checking.
- */
-#define SCM_STACK_CHECKING_P SCM_STACK_LIMIT
-
-#ifdef STACK_CHECKING
-# if SCM_STACK_GROWS_UP
-#  define SCM_STACK_OVERFLOW_P(s)\
-   (SCM_STACK_PTR (s) \
-    > (SCM_I_CURRENT_THREAD->base + SCM_STACK_LIMIT))
-# else
-#  define SCM_STACK_OVERFLOW_P(s)\
-   (SCM_STACK_PTR (s) \
-    < (SCM_I_CURRENT_THREAD->base - SCM_STACK_LIMIT))
-# endif
-# define SCM_CHECK_STACK\
-    {\
-       SCM_STACKITEM stack;\
-       if (SCM_STACK_OVERFLOW_P (&stack) && scm_stack_checking_enabled_p)\
-	 scm_report_stack_overflow ();\
-    }
-#else
-# define SCM_CHECK_STACK /**/
-#endif /* STACK_CHECKING */
-
-//SCM_API int scm_stack_checking_enabled_p;
-
-
 
 SCM_API void scm_report_stack_overflow (void);
 SCM_API int64_t scm_stack_size (SCM_STACKITEM *start);
 SCM_API void scm_stack_report (void);
 SCM_API SCM scm_sys_get_stack_size (void);
 SCM_API void scm_init_stackchk (void);
+
+/* With debug options we have the possibility to disable stack checking.
+ */
+#define SCM_STACK_CHECKING_P SCM_STACK_LIMIT
+
+#ifdef STACK_CHECKING
+inline int SCM_STACK_OVERFLOW_P(void *s);
+inline void SCM_CHECK_STACK(void);
+#else
+inline void SCM_CHECK_STACK(void);
+#endif /* STACK_CHECKING */
+
+//SCM_API int scm_stack_checking_enabled_p;
+
+
+
+
 
 #endif  /* SCM_STACKCHK_H */
 

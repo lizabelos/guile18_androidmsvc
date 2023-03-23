@@ -9,7 +9,7 @@
 #include <limits.h>
 #include <time.h>
 
-#define SCM_HAVE_STDC_HEADERS 1 /* 0 or 1 */
+#define SCM_HAVE_STDC_HEADERS 0 /* 0 or 1 */
 #include <stdlib.h>
 #include <sys/types.h>
 #include <stddef.h>
@@ -44,7 +44,7 @@ typedef SSIZE_T ssize_t;
 #define SCM_ENABLE_DEPRECATED 1
 
 /* Set to 1 to add Elisp support (in addition to Scheme). */
-#define SCM_ENABLE_ELISP 1 /* 0 or 1 */
+#define SCM_ENABLE_ELISP 0 /* 0 or 1 */
 
 /* Set to 1 if the stack grows up, 0 otherwise. */
 extern int SCM_STACK_GROWS_UP; /* 0 or 1 */
@@ -107,9 +107,9 @@ typedef struct
 
 /*** Threading model (scmconfig.h support not finished) ***/
 /* Define to 1 if using pthread multithreading. */
-#define SCM_USE_PTHREAD_THREADS 1 /* 0 or 1 */
+#define SCM_USE_PTHREAD_THREADS 0 /* 0 or 1 */
 /* Define to 1 if using one-thread 'multi'threading. */
-#define SCM_USE_NULL_THREADS 0 /* 0 or 1 */
+#define SCM_USE_NULL_THREADS 1 /* 0 or 1 */
 /* Define to 1 if need braces around PTHREAD_ONCE_INIT (for Solaris). */
 #define SCM_NEED_BRACES_ON_PTHREAD_ONCE_INIT 0 /* 0 or 1 */
 /* Define to 1 if need braces around PTHREAD_MUTEX_INITIALIZER

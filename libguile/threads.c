@@ -668,8 +668,9 @@ if (SCM_STACK_GROWS_UP) {
 }
 
 void
-scm_init_guile (SCM_STACKITEM *base)
+scm_init_guile (SCM_STACKITEM *base, size_t stack_size)
 {
+    SCM_STACK_LIMIT = stack_size;
   scm_i_init_thread_for_guile (base, scm_i_default_dynamic_state);
 }
 

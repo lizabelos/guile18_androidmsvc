@@ -87,6 +87,37 @@ SCM_DEFINE (scm_sys_get_stack_size, "%get-stack-size", 0, 0, 0,
 }
 #undef FUNC_NAME
 
+#ifdef STACK_CHECKING
+
+int SCM_STACK_OVERFLOW_P(void *s)
+{
+    uint64_t stack_base = (uint64_t)SCM_I_CURRENT_THREAD->base;
+    int64_t stack_size = SCM_STACK_LIMIT;
+    uint64_t stack_ptr = (uint64_t)s;
+
+    if (SCM_STACK_GROWS_UP)
+    {
+        return (stack_ptr > (stack_base + stack_size));
+    }
+    else
+    {
+        return (stack_ptr < (stack_base - stack_size));
+    }
+}
+
+void SCM_CHECK_STACK(void)
+{
+    SCM_STACKITEM stack;
+    if (SCM_STACK_OVERFLOW_P(&stack) && scm_stack_checking_enabled_p)
+    {
+        scm_report_stack_overflow();
+    }
+}
+#else
+void SCM_CHECK_STACK(void)
+{
+}
+#endif /* STACK_CHECKING */
 
 void
 scm_init_stackchk ()

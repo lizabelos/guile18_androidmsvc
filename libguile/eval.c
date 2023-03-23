@@ -89,6 +89,7 @@ void *alloca (size_t);
 #include "libguile/vectors.h"
 
 #include "libguile/eval.h"
+#include "libguile/stackchk.h"
 
 
 
