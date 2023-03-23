@@ -29,7 +29,7 @@
 SCM_API scm_i_pthread_mutex_t scm_i_init_mutex;
 SCM_API int scm_initialized_p;
 
-SCM_API void scm_init_guile (void);
+SCM_API void scm_init_guile (SCM_STACKITEM *base);
 
 SCM_API void scm_boot_guile (int argc, char **argv,
 			     void (*main_func) (void *closure,

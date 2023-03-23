@@ -106,6 +106,8 @@ struct pre_unwind_data {
     int lazy_catch_p;
 };
 
+extern int scm_stack_checking_enabled_p;
+
 
 /* scm_c_catch is the guts of catch.  It handles all the mechanics of
    setting up a catch target, invoking the catch body, and perhaps

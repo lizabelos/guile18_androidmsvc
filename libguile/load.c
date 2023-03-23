@@ -412,24 +412,13 @@ SCM_DEFINE (scm_search_path, "search-path", 2, 1, 0,
 	  
 	  /* If the file exists at all, we should return it.  If the
 	     file is inaccessible, then that's an error.  */
-        SCM p = scm_current_error_port();
-        scm_puts("searching for ", p);
-        scm_puts(buf.buf, p);
-        scm_newline(p);
 
 	  if (stat (buf.buf, &mode) == 0
 	      && ! (mode.st_mode & S_IFDIR))
 	    {
-            scm_puts("found ", p);
-            scm_puts(buf.buf, p);
-            scm_newline(p);
 	      result = scm_from_locale_string (buf.buf);
 	      goto end;
-	    } else {
-            scm_puts("not found ", p);
-            scm_puts(buf.buf, p);
-            scm_newline(p);
-      }
+	    }
 	}
       
       if (!SCM_NULL_OR_NIL_P (exts))

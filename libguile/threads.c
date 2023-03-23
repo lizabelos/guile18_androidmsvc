@@ -667,16 +667,11 @@ if (SCM_STACK_GROWS_UP) {
     }
 }
 
-#ifdef HAVE_GET_THREAD_STACK_BASE
-
 void
-scm_init_guile ()
+scm_init_guile (SCM_STACKITEM *base)
 {
-  scm_i_init_thread_for_guile (get_thread_stack_base (),
-			       scm_i_default_dynamic_state);
+  scm_i_init_thread_for_guile (base, scm_i_default_dynamic_state);
 }
-
-#endif
 
 void *
 scm_with_guile (void *(*func)(void *), void *data)

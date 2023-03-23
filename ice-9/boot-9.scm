@@ -2943,7 +2943,10 @@
 		  (cond ((not var)
 			 (error "Undefined variable:" name))
 			((eq? var (module-local-variable m name))
-			 (error "re-exporting local variable:" name))
+			 (display "re-exporting local variable: ")
+			 (display name)
+			 (display "\n")
+			 )
 			(else
 			 (module-add! public-i name var)))))
 	      names)))

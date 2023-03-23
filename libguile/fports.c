@@ -325,12 +325,6 @@ SCM_DEFINE (scm_open_file, "open-file", 2, 0, 0,
 	    "requested, @code{open-file} throws an exception.")
 #define FUNC_NAME s_scm_open_file
 {
-
-    SCM p = scm_current_error_port();
-    scm_puts("scm_open_file: ", p);
-    scm_display(filename, p);
-    scm_newline(p);
-
   SCM port;
   int fdes;
   int flags = 0;
@@ -384,9 +378,6 @@ SCM_DEFINE (scm_open_file, "open-file", 2, 0, 0,
   SCM_SYSCALL (fdes = open_or_open64 (file, flags, 0666));
   if (fdes == -1)
     {
-        scm_puts("error loading " , p);
-        scm_display(filename, p);
-        scm_newline(p);
       int en = errno;
 
       SCM_SYSERROR_MSG ("~A: ~S",

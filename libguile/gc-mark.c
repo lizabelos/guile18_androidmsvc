@@ -200,6 +200,10 @@ scm_mark_all(void) {
  */
 void
 scm_gc_mark(SCM ptr) {
+    if (ptr == NULL) {
+        return;
+    }
+
     if (SCM_IMP (ptr))
         return;
 
@@ -431,6 +435,10 @@ scm_gc_mark_dependencies(SCM p)
             fprintf(stderr, "rogue pointer in heap");
             call_error_callback();
         }
+    }
+
+    if (ptr == NULL) {
+        return;
     }
 
     if (SCM_GC_MARK_P (ptr)) {

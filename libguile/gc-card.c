@@ -438,7 +438,7 @@ typedef struct scm_dbg_t_double_cell {
 
 int scm_dbg_gc_marked_p (SCM obj);
 scm_t_cell * scm_dbg_gc_get_card (SCM obj);
-scm_t_c_bvec_int64_t * scm_dbg_gc_get_bvec (SCM obj);
+scm_t_c_bvec_long * scm_dbg_gc_get_bvec (SCM obj);
 
 
 int
@@ -459,7 +459,7 @@ scm_dbg_gc_get_card (SCM obj)
     return NULL;
 }
 
-scm_t_c_bvec_int64_t *
+scm_t_c_bvec_long *
 scm_dbg_gc_get_bvec (SCM obj)
 {
   if (!SCM_IMP (obj))

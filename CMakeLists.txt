@@ -26,7 +26,7 @@ target_include_directories(minigmp INTERFACE ${CMAKE_CURRENT_SOURCE_DIR}/mini-gm
 
 add_library(guile STATIC)
 # use -fno-strict-aliasing
-target_compile_options(guile PRIVATE -fno-strict-aliasing)
+target_compile_options(guile PUBLIC -fno-strict-aliasing)
 
 option(GUILE_ENABLE_CHECK_PTR OFF)
 if (GUILE_ENABLE_CHECK_PTR)
@@ -62,7 +62,7 @@ target_sources(guile
         ${CMAKE_CURRENT_SOURCE_DIR}/libguile/cpp_errno.c
         ${CMAKE_CURRENT_SOURCE_DIR}/libguile/cpp_sig_symbols.c
         ${CMAKE_CURRENT_SOURCE_DIR}/libguile/cpp_signal.c
-        #        debug-malloc.c
+        # ${CMAKE_CURRENT_SOURCE_DIR}/libguile/debug-malloc.c
         ${CMAKE_CURRENT_SOURCE_DIR}/libguile/debug.c
         ${CMAKE_CURRENT_SOURCE_DIR}/libguile/deprecated.c
         ${CMAKE_CURRENT_SOURCE_DIR}/libguile/deprecation.c

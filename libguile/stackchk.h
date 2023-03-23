@@ -27,6 +27,8 @@
 #include "libguile/continuations.h"
 #include "libguile/debug.h"
 
+extern int scm_stack_checking_enabled_p;
+
 
 
 /* With debug options we have the possibility to disable stack checking.

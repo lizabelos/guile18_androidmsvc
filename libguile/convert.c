@@ -73,7 +73,7 @@
    SCM scm_c_uints2uvect (const unsigned int *src, int64_t n);
 */
 
-#define CTYPE            int
+#define CTYPE            int32_t
 #define FROM_CTYPE       scm_from_int
 #define SCM2CTYPES       scm_c_scm2ints
 #define CTYPES2SCM       scm_c_ints2scm
@@ -82,7 +82,7 @@
 #define UVEC_CTYPE       scm_t_int32
 
 #define CTYPES2UVECT_2   scm_c_uints2uvect
-#define CTYPE_2          unsigned int
+#define CTYPE_2          uint32_t
 #define UVEC_TAG_2       u32
 #define UVEC_CTYPE_2     scm_t_uint32
 
@@ -99,13 +99,13 @@
 #define SCM2CTYPES       scm_c_scm2longs
 #define CTYPES2SCM       scm_c_longs2scm
 #define CTYPES2UVECT     scm_c_longs2ivect
-#define UVEC_TAG         s32
-#define UVEC_CTYPE       scm_t_int32
+#define UVEC_TAG         s64
+#define UVEC_CTYPE       scm_t_int64
 
 #define CTYPES2UVECT_2   scm_c_ulongs2uvect
-#define CTYPE_2          unsigned int
-#define UVEC_TAG_2       u32
-#define UVEC_CTYPE_2     scm_t_uint32
+#define CTYPE_2          uint64_t
+#define UVEC_TAG_2       u64
+#define UVEC_CTYPE_2     scm_t_uint64
 
 #include "libguile/convert.i.c"
 

@@ -9,7 +9,7 @@
 #include <limits.h>
 #include <time.h>
 
-#define SCM_HAVE_STDC_HEADERS 0 /* 0 or 1 */
+#define SCM_HAVE_STDC_HEADERS 1 /* 0 or 1 */
 #include <stdlib.h>
 #include <sys/types.h>
 #include <stddef.h>
@@ -30,10 +30,10 @@ typedef SSIZE_T ssize_t;
 #endif
 
 /* Define to include various undocumented debugging functions. */
-/* #undef GUILE_DEBUG */
+#define GUILE_DEBUG 1
 
 /* Define this to debug the free list (helps w/ GC bugs). */
-/* #undef GUILE_DEBUG_FREELIST */
+#define GUILE_DEBUG_FREELIST 1
 
 /* Set to 1 if you want to enable discouraged features. */
 /* (value will be 0 or 1). */
@@ -107,9 +107,9 @@ typedef struct
 
 /*** Threading model (scmconfig.h support not finished) ***/
 /* Define to 1 if using pthread multithreading. */
-#define SCM_USE_PTHREAD_THREADS 0 /* 0 or 1 */
+#define SCM_USE_PTHREAD_THREADS 1 /* 0 or 1 */
 /* Define to 1 if using one-thread 'multi'threading. */
-#define SCM_USE_NULL_THREADS 1 /* 0 or 1 */
+#define SCM_USE_NULL_THREADS 0 /* 0 or 1 */
 /* Define to 1 if need braces around PTHREAD_ONCE_INIT (for Solaris). */
 #define SCM_NEED_BRACES_ON_PTHREAD_ONCE_INIT 0 /* 0 or 1 */
 /* Define to 1 if need braces around PTHREAD_MUTEX_INITIALIZER

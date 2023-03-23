@@ -191,12 +191,13 @@ typedef uint64_t scm_t_c_bvec_long;
 #define SCM_CELL_WORD_2(x) SCM_CELL_WORD ((x), 2)
 #define SCM_CELL_WORD_3(x) SCM_CELL_WORD ((x), 3)
 
-#define SCM_CELL_OBJECT(x, n) \
-  SCM_VALIDATE_CELL ((x), SCM_GC_CELL_OBJECT ((x), (n)))
+#define SCM_CELL_OBJECT(x, n) SCM_VALIDATE_CELL ((x), SCM_GC_CELL_OBJECT ((x), (n)))
+#define SCM_CELL_OBJECT_NO_CHECK(x, n) (SCM_GC_CELL_OBJECT ((x), (n)))
 #define SCM_CELL_OBJECT_0(x) SCM_CELL_OBJECT ((x), 0)
 #define SCM_CELL_OBJECT_1(x) SCM_CELL_OBJECT ((x), 1)
 #define SCM_CELL_OBJECT_2(x) SCM_CELL_OBJECT ((x), 2)
 #define SCM_CELL_OBJECT_3(x) SCM_CELL_OBJECT ((x), 3)
+#define SCM_CELL_OBJECT_3_NO_CHECK(x) SCM_CELL_OBJECT_NO_CHECK ((x), 3)
 
 #define SCM_SET_CELL_WORD(x, n, v) \
   SCM_VALIDATE_CELL ((x), SCM_GC_SET_CELL_WORD ((x), (n), (v)))

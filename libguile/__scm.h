@@ -141,7 +141,7 @@
 
 /* Random options (not yet supported or in final form). */
 
-//#undef STACK_CHECKING
+#define STACK_CHECKING
 #undef NO_CEVAL_STACK_CHECKING
 
 
@@ -185,7 +185,7 @@
  * debugging options by simply defining SCM_DEBUG as 1.
  */
 #ifndef SCM_DEBUG
-#define SCM_DEBUG 0
+#define SCM_DEBUG 1
 #endif
 
 /* If SCM_DEBUG_CELL_ACCESSES is set to 1, cell accesses will perform
