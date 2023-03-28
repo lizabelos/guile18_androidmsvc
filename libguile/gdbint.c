@@ -36,6 +36,7 @@
 #include "libguile/fluids.h"
 #include "libguile/strings.h"
 #include "libguile/init.h"
+#include "libguile/gc.h"
 
 #include "libguile/gdbint.h"
 

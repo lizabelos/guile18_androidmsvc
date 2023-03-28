@@ -66,7 +66,7 @@ SCM_API SCM scm_eval_options_interface (SCM setting);
 /* {Promises}
  */
 
-#define SCM_F_PROMISE_COMPUTED (1L << 0)
+#define SCM_F_PROMISE_COMPUTED (((int64_t)1) << 0)
 #define SCM_PROMISE_COMPUTED_P(promise) \
   (SCM_F_PROMISE_COMPUTED & SCM_SMOB_FLAGS (promise))
 #define SCM_SET_PROMISE_COMPUTED(promise) \

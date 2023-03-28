@@ -31,6 +31,7 @@
 
 #include "libguile/validate.h"
 #include "libguile/hashtab.h"
+#include "libguile/gc.h"
 
 
 /* NOTES

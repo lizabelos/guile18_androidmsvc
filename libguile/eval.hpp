@@ -83,6 +83,7 @@ inline SCM register_callback(std::string name, std::function<SCM(SCM)> callback,
         default:
             throw std::runtime_error("Too many arguments");
     }
+    assert(scm_callbacks.find(proc) == scm_callbacks.end());
     scm_callbacks[proc] = std::move(callback);
     return proc;
 }

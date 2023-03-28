@@ -78,9 +78,9 @@
 static scm_t_bits scm_tc16_arbiter;
 
 
-#define SCM_LOCK_VAL         (scm_tc16_arbiter | (1L << 16))
+#define SCM_LOCK_VAL         (scm_tc16_arbiter | (((int64_t)1) << 16))
 #define SCM_UNLOCK_VAL       scm_tc16_arbiter
-#define SCM_ARB_LOCKED(arb)  ((SCM_CELL_WORD_0 (arb)) & (1L << 16))
+#define SCM_ARB_LOCKED(arb)  ((SCM_CELL_WORD_0 (arb)) & (((int64_t)1) << 16))
 
 
 static int 

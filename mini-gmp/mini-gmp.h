@@ -1,6 +1,6 @@
 /* mini-gmp, a minimalistic implementation of a GNU GMP subset.
 
-Copyright 2011-2015 Free Software Foundation, Inc.
+Copyright 2011-2015, 2017, 2019-2020 Free Software Foundation, Inc.
 
 This file is part of the GNU MP Library.
 
@@ -38,14 +38,8 @@ see https://www.gnu.org/licenses/.  */
 #ifndef __MINI_GMP_H__
 #define __MINI_GMP_H__
 
-#ifndef DBL_MANT_DIG
-#define DBL_MANT_DIG 53
-#endif
-
-#ifndef KERNEL
 /* For size_t */
-# include <stddef.h>
-#endif
+#include <stddef.h>
 
 #if defined (__cplusplus)
 extern "C" {
@@ -59,7 +53,11 @@ void mp_get_memory_functions (void *(**) (size_t),
 			      void *(**) (void *, size_t, size_t),
 			      void (**) (void *, size_t));
 
-typedef unsigned long mp_limb_t;
+#ifndef MINI_GMP_LIMB_TYPE
+#define MINI_GMP_LIMB_TYPE long
+#endif
+
+typedef unsigned MINI_GMP_LIMB_TYPE mp_limb_t;
 typedef long mp_size_t;
 typedef unsigned long mp_bitcnt_t;
 
@@ -114,6 +112,9 @@ mp_limb_t mpn_rshift (mp_ptr, mp_srcptr, mp_size_t, unsigned int);
 mp_bitcnt_t mpn_scan0 (mp_srcptr, mp_bitcnt_t);
 mp_bitcnt_t mpn_scan1 (mp_srcptr, mp_bitcnt_t);
 
+void mpn_com (mp_ptr, mp_srcptr, mp_size_t);
+mp_limb_t mpn_neg (mp_ptr, mp_srcptr, mp_size_t);
+
 mp_bitcnt_t mpn_popcount (mp_srcptr, mp_size_t);
 
 mp_limb_t mpn_invert_3by2 (mp_limb_t, mp_limb_t);
@@ -135,10 +136,8 @@ int mpz_cmp_ui (const mpz_t, unsigned long);
 int mpz_cmp (const mpz_t, const mpz_t);
 int mpz_cmpabs_ui (const mpz_t, unsigned long);
 int mpz_cmpabs (const mpz_t, const mpz_t);
-#ifndef KERNEL
 int mpz_cmp_d (const mpz_t, double);
 int mpz_cmpabs_d (const mpz_t, double);
-#endif
 
 void mpz_abs (mpz_t, const mpz_t);
 void mpz_neg (mpz_t, const mpz_t);
@@ -222,6 +221,8 @@ void mpz_rootrem (mpz_t, mpz_t, const mpz_t, unsigned long);
 int mpz_root (mpz_t, const mpz_t, unsigned long);
 
 void mpz_fac_ui (mpz_t, unsigned long);
+void mpz_2fac_ui (mpz_t, unsigned long);
+void mpz_mfac_uiui (mpz_t, unsigned long, unsigned long);
 void mpz_bin_uiui (mpz_t, unsigned long, unsigned long);
 
 int mpz_probab_prime_p (const mpz_t, int);
@@ -245,9 +246,7 @@ int mpz_fits_slong_p (const mpz_t);
 int mpz_fits_ulong_p (const mpz_t);
 long int mpz_get_si (const mpz_t);
 unsigned long int mpz_get_ui (const mpz_t);
-#ifndef KERNEL
 double mpz_get_d (const mpz_t);
-#endif
 size_t mpz_size (const mpz_t);
 mp_limb_t mpz_getlimbn (const mpz_t, mp_size_t);
 
@@ -263,16 +262,12 @@ mpz_srcptr mpz_roinit_n (mpz_t, mp_srcptr, mp_size_t);
 void mpz_set_si (mpz_t, signed long int);
 void mpz_set_ui (mpz_t, unsigned long int);
 void mpz_set (mpz_t, const mpz_t);
-#ifndef KERNEL
 void mpz_set_d (mpz_t, double);
-#endif
 
 void mpz_init_set_si (mpz_t, signed long int);
 void mpz_init_set_ui (mpz_t, unsigned long int);
 void mpz_init_set (mpz_t, const mpz_t);
-#ifndef KERNEL
 void mpz_init_set_d (mpz_t, double);
-#endif
 
 size_t mpz_sizeinbase (const mpz_t, int);
 char *mpz_get_str (char *, int, const mpz_t);
@@ -282,7 +277,7 @@ int mpz_init_set_str (mpz_t, const char *, int);
 /* This long list taken from gmp.h. */
 /* For reference, "defined(EOF)" cannot be used here.  In g++ 2.95.4,
    <iostream> defines EOF but not FILE.  */
-#if defined (FILE) && !defined(KERNEL)                          \
+#if defined (FILE)                                              \
   || defined (H_STDIO)                                          \
   || defined (_H_STDIO)               /* AIX */                 \
   || defined (_STDIO_H)               /* glibc, Sun, SCO */     \
@@ -296,32 +291,13 @@ int mpz_init_set_str (mpz_t, const char *, int);
   || defined (_MSL_STDIO_H)           /* Metrowerks */          \
   || defined (_STDIO_H_INCLUDED)      /* QNX4 */		\
   || defined (_ISO_STDIO_ISO_H)       /* Sun C++ */		\
-  || defined (__STDIO_LOADED)         /* VMS */
+  || defined (__STDIO_LOADED)         /* VMS */			\
+  || defined (__DEFINED_FILE)         /* musl */
 size_t mpz_out_str (FILE *, int, const mpz_t);
 #endif
 
 void mpz_import (mpz_t, size_t, int, size_t, int, size_t, const void *);
 void *mpz_export (void *, size_t *, int, size_t, int, size_t, const mpz_t);
-
-#define __gmpz_add mpz_add
-#define __gmpz_clear mpz_clear
-#define __gmpz_cmp mpz_cmp
-#define __gmpz_com mpz_com
-#define __gmpz_get_si mpz_get_si
-#define __gmpz_get_ui mpz_get_ui
-#define __gmpz_init mpz_init
-#define __gmpz_init_set mpz_init_set
-#define __gmpz_init_set_si mpz_init_set_si
-#define __gmpz_init_set_str mpz_init_set_str
-#define __gmpz_init_set_ui mpz_init_set_ui
-#define __gmpz_mul mpz_mul
-#define __gmpz_neg mpz_neg
-#define __gmpz_set mpz_set
-#define __gmpz_set_si mpz_set_si
-#define __gmpz_set_ui mpz_set_ui
-#define __gmpz_sub mpz_sub
-#define __gmpz_tdiv_q mpz_tdiv_q
-#define __gmpz_tdiv_r mpz_tdiv_r
 
 #if defined (__cplusplus)
 }

@@ -24,6 +24,7 @@
 #include "libguile/_scm.h"
 #include "libguile/vectors.h"
 #include "libguile/lang.h"
+#include "libguile/gc.h"
 #include "libguile/hashtab.h"
 
 #include "libguile/validate.h"

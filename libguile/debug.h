@@ -97,17 +97,17 @@ typedef struct scm_t_debug_frame
   scm_t_debug_info *info;
 } scm_t_debug_frame;
 
-#define SCM_EVALFRAME    (0L << 11)
-#define SCM_APPLYFRAME   (1L << 11)
-#define SCM_VOIDFRAME    (3L << 11)
-#define SCM_MACROEXPF    (1L << 10)
-#define SCM_TAILREC      (1L << 9)
-#define SCM_TRACED_FRAME (1L << 8)
-#define SCM_ARGS_READY   (1L << 7)
-#define SCM_DOVERFLOW    (1L << 6)
+#define SCM_EVALFRAME    (((int64_t)0) << 11)
+#define SCM_APPLYFRAME   (((int64_t)1) << 11)
+#define SCM_VOIDFRAME    (((int64_t)3) << 11)
+#define SCM_MACROEXPF    (((int64_t)1) << 10)
+#define SCM_TAILREC      (((int64_t)1) << 9)
+#define SCM_TRACED_FRAME (((int64_t)1) << 8)
+#define SCM_ARGS_READY   (((int64_t)1) << 7)
+#define SCM_DOVERFLOW    (((int64_t)1) << 6)
 #define SCM_MAX_FRAME_SIZE 63
 
-#define SCM_FRAMETYPE    (3L << 11)
+#define SCM_FRAMETYPE    (((int64_t)3) << 11)
 
 #define SCM_EVALFRAMEP(x) (((x).status & SCM_FRAMETYPE) == SCM_EVALFRAME)
 #define SCM_APPLYFRAMEP(x) (((x).status & SCM_FRAMETYPE) == SCM_APPLYFRAME)

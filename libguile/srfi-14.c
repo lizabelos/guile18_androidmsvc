@@ -28,11 +28,11 @@
 
 #define SCM_CHARSET_SET(cs, idx)				\
   (((int64_t *) SCM_SMOB_DATA (cs))[(idx) / SCM_BITS_PER_LONG] |=	\
-    (1L << ((idx) % SCM_BITS_PER_LONG)))
+    (((int64_t)1) << ((idx) % SCM_BITS_PER_LONG)))
 
 #define SCM_CHARSET_UNSET(cs, idx)				\
   (((int64_t *) SCM_SMOB_DATA (cs))[(idx) / SCM_BITS_PER_LONG] &=	\
-    (~(1L << ((idx) % SCM_BITS_PER_LONG))))
+    (~(((int64_t)1) << ((idx) % SCM_BITS_PER_LONG))))
 
 #define BYTES_PER_CHARSET (SCM_CHARSET_SIZE / 8)
 #define LONGS_PER_CHARSET (SCM_CHARSET_SIZE / SCM_BITS_PER_LONG)
@@ -453,7 +453,7 @@ SCM_DEFINE (scm_char_set, "char-set", 0, 0, 1,
       SCM_VALIDATE_CHAR_COPY (argnum, SCM_CAR (rest), c);
       argnum++;
       rest = SCM_CDR (rest);
-      p[c / SCM_BITS_PER_LONG] |= 1L << (c % SCM_BITS_PER_LONG);
+      p[c / SCM_BITS_PER_LONG] |= ((int64_t)1) << (c % SCM_BITS_PER_LONG);
     }
   return cs;
 }
@@ -487,7 +487,7 @@ SCM_DEFINE (scm_list_to_char_set, "list->char-set", 1, 1, 0,
       SCM_VALIDATE_CHAR_COPY (0, chr, c);
       list = SCM_CDR (list);
 
-      p[c / SCM_BITS_PER_LONG] |= 1L << (c % SCM_BITS_PER_LONG);
+      p[c / SCM_BITS_PER_LONG] |= ((int64_t)1) << (c % SCM_BITS_PER_LONG);
     }
   return cs;
 }
@@ -514,7 +514,7 @@ SCM_DEFINE (scm_list_to_char_set_x, "list->char-set!", 2, 0, 0,
       SCM_VALIDATE_CHAR_COPY (0, chr, c);
       list = SCM_CDR (list);
 
-      p[c / SCM_BITS_PER_LONG] |= 1L << (c % SCM_BITS_PER_LONG);
+      p[c / SCM_BITS_PER_LONG] |= ((int64_t)1) << (c % SCM_BITS_PER_LONG);
     }
   return base_cs;
 }
@@ -547,7 +547,7 @@ SCM_DEFINE (scm_string_to_char_set, "string->char-set", 1, 1, 0,
   while (k < len)
     {
       int c = s[k++];
-      p[c / SCM_BITS_PER_LONG] |= 1L << (c % SCM_BITS_PER_LONG);
+      p[c / SCM_BITS_PER_LONG] |= ((int64_t)1) << (c % SCM_BITS_PER_LONG);
     }
   scm_remember_upto_here_1 (str);
   return cs;
@@ -574,7 +574,7 @@ SCM_DEFINE (scm_string_to_char_set_x, "string->char-set!", 2, 0, 0,
   while (k < len)
     {
       int c = s[k++];
-      p[c / SCM_BITS_PER_LONG] |= 1L << (c % SCM_BITS_PER_LONG);
+      p[c / SCM_BITS_PER_LONG] |= ((int64_t)1) << (c % SCM_BITS_PER_LONG);
     }
   scm_remember_upto_here_1 (str);
   return base_cs;
@@ -610,7 +610,7 @@ SCM_DEFINE (scm_char_set_filter, "char-set-filter", 2, 1, 0,
 	  SCM res = scm_call_1 (pred, SCM_MAKE_CHAR (k));
 
 	  if (scm_is_true (res))
-	    p[k / SCM_BITS_PER_LONG] |= 1L << (k % SCM_BITS_PER_LONG);
+	    p[k / SCM_BITS_PER_LONG] |= ((int64_t)1) << (k % SCM_BITS_PER_LONG);
 	}
     }
   return ret;
@@ -639,7 +639,7 @@ SCM_DEFINE (scm_char_set_filter_x, "char-set-filter!", 3, 0, 0,
 	  SCM res = scm_call_1 (pred, SCM_MAKE_CHAR (k));
 
 	  if (scm_is_true (res))
-	    p[k / SCM_BITS_PER_LONG] |= 1L << (k % SCM_BITS_PER_LONG);
+	    p[k / SCM_BITS_PER_LONG] |= ((int64_t)1) << (k % SCM_BITS_PER_LONG);
 	}
     }
   return base_cs;
@@ -692,7 +692,7 @@ SCM_DEFINE (scm_ucs_range_to_char_set, "ucs-range->char-set", 2, 2, 0,
   p = (int64_t *) SCM_SMOB_DATA (cs);
   while (clower < cupper)
     {
-      p[clower / SCM_BITS_PER_LONG] |= 1L << (clower % SCM_BITS_PER_LONG);
+      p[clower / SCM_BITS_PER_LONG] |= ((int64_t)1) << (clower % SCM_BITS_PER_LONG);
       clower++;
     }
   return cs;
@@ -734,7 +734,7 @@ SCM_DEFINE (scm_ucs_range_to_char_set_x, "ucs-range->char-set!", 4, 0, 0,
   p = (int64_t *) SCM_SMOB_DATA (base_cs);
   while (clower < cupper)
     {
-      p[clower / SCM_BITS_PER_LONG] |= 1L << (clower % SCM_BITS_PER_LONG);
+      p[clower / SCM_BITS_PER_LONG] |= ((int64_t)1) << (clower % SCM_BITS_PER_LONG);
       clower++;
     }
   return base_cs;
@@ -922,7 +922,7 @@ SCM_DEFINE (scm_char_set_adjoin, "char-set-adjoin", 1, 0, 1,
       SCM_VALIDATE_CHAR_COPY (1, chr, c);
       rest = SCM_CDR (rest);
 
-      p[c / SCM_BITS_PER_LONG] |= 1L << (c % SCM_BITS_PER_LONG);
+      p[c / SCM_BITS_PER_LONG] |= ((int64_t)1) << (c % SCM_BITS_PER_LONG);
     }
   return cs;
 }
@@ -950,7 +950,7 @@ SCM_DEFINE (scm_char_set_delete, "char-set-delete", 1, 0, 1,
       SCM_VALIDATE_CHAR_COPY (1, chr, c);
       rest = SCM_CDR (rest);
 
-      p[c / SCM_BITS_PER_LONG] &= ~(1L << (c % SCM_BITS_PER_LONG));
+      p[c / SCM_BITS_PER_LONG] &= ~(((int64_t)1) << (c % SCM_BITS_PER_LONG));
     }
   return cs;
 }
@@ -977,7 +977,7 @@ SCM_DEFINE (scm_char_set_adjoin_x, "char-set-adjoin!", 1, 0, 1,
       SCM_VALIDATE_CHAR_COPY (1, chr, c);
       rest = SCM_CDR (rest);
 
-      p[c / SCM_BITS_PER_LONG] |= 1L << (c % SCM_BITS_PER_LONG);
+      p[c / SCM_BITS_PER_LONG] |= ((int64_t)1) << (c % SCM_BITS_PER_LONG);
     }
   return cs;
 }
@@ -1004,7 +1004,7 @@ SCM_DEFINE (scm_char_set_delete_x, "char-set-delete!", 1, 0, 1,
       SCM_VALIDATE_CHAR_COPY (1, chr, c);
       rest = SCM_CDR (rest);
 
-      p[c / SCM_BITS_PER_LONG] &= ~(1L << (c % SCM_BITS_PER_LONG));
+      p[c / SCM_BITS_PER_LONG] &= ~(((int64_t)1) << (c % SCM_BITS_PER_LONG));
     }
   return cs;
 }

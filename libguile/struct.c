@@ -29,6 +29,7 @@
 #include "libguile/strings.h"
 
 #include "libguile/validate.h"
+#include "libguile/gc.h"
 #include "libguile/struct.h"
 
 #include "libguile/eq.h"

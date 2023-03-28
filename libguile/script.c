@@ -56,13 +56,13 @@ scm_cat_path (char *str1, const char *str2, int64_t n)
       size_t len = strlen (str1);
       str1 = (char *) realloc (str1, (size_t) (len + n + 1));
       if (!str1)
-	return 0L;
+	return ((int64_t)0);
       strncat (str1 + len, str2, n);
       return str1;
     }
   str1 = (char *) scm_malloc ((size_t) (n + 1));
   if (!str1)
-    return 0L;
+    return ((int64_t)0);
   str1[0] = 0;
   strncat (str1, str2, n);
   return str1;
@@ -75,7 +75,7 @@ scm_try_path (char *path)
   FILE *f;
   /* fprintf(stderr, "Trying %s\n", path);fflush(stderr); */
   if (!path)
-    return 0L;
+    return ((int64_t)0);
   SCM_SYSCALL (f = fopen (path, "r");
     );
   if (f)
@@ -84,16 +84,16 @@ scm_try_path (char *path)
       return path;
     }
   free (path);
-  return 0L;
+  return ((int64_t)0);
 }
 
 static char *
 scm_sep_init_try (char *path, const char *sep, const char *initname)
 {
   if (path)
-    path = scm_cat_path (path, sep, 0L);
+    path = scm_cat_path (path, sep, ((int64_t)0));
   if (path)
-    path = scm_cat_path (path, initname, 0L);
+    path = scm_cat_path (path, initname, ((int64_t)0));
   return scm_try_path (path);
 }
 #endif 
@@ -123,10 +123,10 @@ scm_find_executable (const char *name)
 
   /* fprintf(stderr, "s_f_e checking access %s ->%d\n", name, access(name, X_OK)); fflush(stderr); */
   if (access (name, X_OK))
-    return 0L;
+    return ((int64_t)0);
   f = fopen (name, "r");
   if (!f)
-    return 0L;
+    return ((int64_t)0);
   if ((fgetc (f) == '#') && (fgetc (f) == '!'))
     {
       while (1)
@@ -139,14 +139,14 @@ scm_find_executable (const char *name)
 	  case EOF:
 	    tbuf[i] = 0;
 	    fclose (f);
-	    return scm_cat_path (0L, tbuf, 0L);
+	    return scm_cat_path (((int64_t)0), tbuf, ((int64_t)0));
 	  default:
 	    tbuf[i++] = c;
 	    break;
 	  }
     }
   fclose (f);
-  return scm_cat_path (0L, name, 0L);
+  return scm_cat_path (((int64_t)0), name, ((int64_t)0));
 }
 
 
@@ -272,7 +272,7 @@ static int
 script_meta_arg_P (char *arg)
 {
   if ('\\' != arg[0])
-    return 0L;
+    return ((int64_t)0);
 #ifdef MSDOS
   return !arg[1];
 #else
@@ -283,7 +283,7 @@ script_meta_arg_P (char *arg)
     case WHITE_SPACES:
       return !0;
     default:
-      return 0L;
+      return ((int64_t)0);
     }
 #endif
 }
@@ -294,9 +294,9 @@ scm_get_meta_args (int argc, char **argv)
   int nargc = argc, argi = 1, nargi = 1;
   char *narg, **nargv;
   if (!(argc > 2 && script_meta_arg_P (argv[1])))
-    return 0L;
+    return ((int64_t)0);
   if (!(nargv = (char **) scm_malloc ((1 + nargc) * sizeof (char *))))
-      return 0L;
+      return ((int64_t)0);
   nargv[0] = argv[0];
   while (((argi + 1) < argc) && (script_meta_arg_P (argv[argi])))
     {
@@ -308,7 +308,7 @@ scm_get_meta_args (int argc, char **argv)
 	    switch (getc (f))
 	      {
 	      case EOF:
-		return 0L;
+		return ((int64_t)0);
 	      default:
 		continue;
 	      case '\n':
@@ -318,7 +318,7 @@ scm_get_meta_args (int argc, char **argv)
 	  while ((narg = script_read_arg (f)))
 	    if (!(nargv = (char **) realloc (nargv,
 					     (1 + ++nargc) * sizeof (char *))))
-	        return 0L;
+	        return ((int64_t)0);
 	    else
 	      nargv[nargi++] = narg;
 	  fclose (f);

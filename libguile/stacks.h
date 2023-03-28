@@ -73,11 +73,11 @@ SCM_API SCM scm_stack_type;
 #define SCM_FRAME_PREV(frame) scm_frame_previous (frame)
 #define SCM_FRAME_NEXT(frame) scm_frame_next (frame)
 
-#define SCM_FRAMEF_VOID		(1L << 2)
-#define SCM_FRAMEF_REAL		(1L << 3)
-#define SCM_FRAMEF_PROC 	(1L << 4)
-#define SCM_FRAMEF_EVAL_ARGS 	(1L << 5)
-#define SCM_FRAMEF_OVERFLOW	(1L << 6)
+#define SCM_FRAMEF_VOID		(((int64_t)1) << 2)
+#define SCM_FRAMEF_REAL		(((int64_t)1) << 3)
+#define SCM_FRAMEF_PROC 	(((int64_t)1) << 4)
+#define SCM_FRAMEF_EVAL_ARGS 	(((int64_t)1) << 5)
+#define SCM_FRAMEF_OVERFLOW	(((int64_t)1) << 6)
 
 #define SCM_FRAME_VOID_P(f)       (SCM_FRAME_FLAGS (f) & SCM_FRAMEF_VOID)
 #define SCM_FRAME_REAL_P(f)       (SCM_FRAME_FLAGS (f) & SCM_FRAMEF_REAL)

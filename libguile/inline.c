@@ -17,5 +17,7 @@
 
 #include <config.h>
 
+#include "libguile/gc.h"
+
 #define SCM_INLINE_C_INCLUDING_INLINE_H 1
 #include "libguile/inline.h"

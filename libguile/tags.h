@@ -476,7 +476,7 @@ typedef uint64_t scm_t_bits;
 
 /* scm_tc_free_cell is the 0th smob type.  We place this in free cells to tell
  * the conservative marker not to trace it.  */
-#define scm_tc_free_cell	(scm_tc7_smob + 0 * 256L)
+#define scm_tc_free_cell	(scm_tc7_smob + 0 * ((int64_t)256))
 
 
 

@@ -79,15 +79,15 @@ scm_i_uniform32 (scm_t_i_rstate *state)
   scm_t_uint64 x = (scm_t_uint64) A * state->w + state->c;
   scm_t_uint32 w = x & 0xffffffffUL;
   state->w = w;
-  state->c = x >> 32L;
+  state->c = x >> ((int64_t)32);
   return w;
 }
 
 void
 scm_i_init_rstate (scm_t_i_rstate *state, const char *seed, int n)
 {
-  scm_t_uint32 w = 0L;
-  scm_t_uint32 c = 0L;
+  scm_t_uint32 w = ((int64_t)0);
+  scm_t_uint32 c = ((int64_t)0);
   int i, m;
   for (i = 0; i < n; ++i)
     {

@@ -49,16 +49,16 @@
  */
 
 
-void (*scm_error_callback) (const char *message) = NULL;
+void (*scm_error_callback) () = NULL;
 
 void call_error_callback() {
     if (scm_error_callback != NULL) {
-        scm_error_callback("");
+        scm_error_callback();
     }
     abort();
 }
 
-void set_error_callback(void (*callback)(const char *message)) {
+void set_error_callback(void (*callback)()) {
     scm_error_callback = callback;
 }
 

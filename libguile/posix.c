@@ -1811,7 +1811,7 @@ static int flock (int fd, int operation)
   /* Save current file pointer and seek to beginning. */
   if ((pos = lseek (fd, 0, SEEK_CUR)) == -1 || (len = filelength (fd)) == -1)
     return -1;
-  lseek (fd, 0L, SEEK_SET);
+  lseek (fd, ((int64_t)0), SEEK_SET);
 
   /* Deadlock if necessary. */
   do
@@ -1939,7 +1939,7 @@ SCM_DEFINE (scm_gethostname, "gethostname", 0, 0, 0,
    * in gnu/linux glibc 2.3.2.  */
   {
     const int64_t n = sysconf (_SC_HOST_NAME_MAX);
-    if (n != -1L)
+    if (n != -((int64_t)1))
       len = n;
   }
 

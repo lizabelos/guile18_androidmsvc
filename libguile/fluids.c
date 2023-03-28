@@ -31,6 +31,7 @@
 #include "libguile/deprecation.h"
 #include "libguile/lang.h"
 #include "libguile/validate.h"
+#include "libguile/gc.h"
 
 #define FLUID_GROW 20
 

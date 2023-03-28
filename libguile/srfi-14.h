@@ -33,7 +33,7 @@
 
 #define SCM_CHARSET_GET(cs, idx) (((int64_t *) SCM_SMOB_DATA (cs))\
 			           [((unsigned char) (idx)) / SCM_BITS_PER_LONG] &\
-			 	   (1L << (((unsigned char) (idx)) % SCM_BITS_PER_LONG)))
+			 	   (((int64_t)1) << (((unsigned char) (idx)) % SCM_BITS_PER_LONG)))
 
 #define SCM_CHARSETP(x) (!SCM_IMP (x) && (SCM_TYP16 (x) == scm_tc16_charset))
 

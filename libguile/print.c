@@ -182,7 +182,7 @@ SCM_DEFINE (scm_current_pstate, "current-pstate", 0, 0, 0,
 
 #endif
 
-#define PSTATE_SIZE 50L
+#define PSTATE_SIZE ((int64_t)50)
 
 static SCM
 make_print_state (void)

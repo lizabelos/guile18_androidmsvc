@@ -75,6 +75,9 @@ typedef int32_t gmp_number;
 #define M_PI       3.14159265358979323846
 #endif
 
+#define GMP_NUMB_BITS (sizeof(mp_limb_t) * CHAR_BIT)
+#define DBL_MANT_DIG 53
+
 
 
 /*
@@ -300,10 +303,6 @@ double
 scm_i_big2dbl (SCM b)
 {
     (void)b;
-#ifndef USE_REAL_GMP
-    call_error_callback();
-    abort();
-#else
   double result;
   size_t bits;
 
@@ -344,7 +343,6 @@ scm_i_big2dbl (SCM b)
 
   scm_remember_upto_here_1 (b);
   return result;
-#endif
 }
 
 SCM
@@ -507,7 +505,7 @@ SCM_DEFINE (scm_odd_p, "odd?", 1, 0, 0,
   if (SCM_I_INUMP (n))
     {
       int64_t val = SCM_I_INUM (n);
-      return scm_from_bool ((val & 1L) != 0);
+      return scm_from_bool ((val & ((int64_t)1)) != 0);
     }
   else if (SCM_BIGP (n))
     {
@@ -542,7 +540,7 @@ SCM_DEFINE (scm_even_p, "even?", 1, 0, 0,
   if (SCM_I_INUMP (n))
     {
       int64_t val = SCM_I_INUM (n);
-      return scm_from_bool ((val & 1L) == 0);
+      return scm_from_bool ((val & ((int64_t)1)) == 0);
     }
   else if (SCM_BIGP (n))
     {
@@ -1146,8 +1144,8 @@ scm_lcm (SCM n1, SCM n2)
   if (SCM_UNBNDP (n2))
     {
       if (SCM_UNBNDP (n1))
-        return SCM_I_MAKINUM (1L);
-      n2 = SCM_I_MAKINUM (1L);
+        return SCM_I_MAKINUM (((int64_t)1));
+      n2 = SCM_I_MAKINUM (((int64_t)1));
     }
 
   SCM_GASSERT2 (SCM_I_INUMP (n1) || SCM_BIGP (n1),
@@ -1554,7 +1552,7 @@ SCM_DEFINE (scm_logbit_p, "logbit?", 2, 0, 0,
     {
       /* bits above what's in an inum follow the sign bit */
       iindex = min (iindex, SCM_LONG_BIT - 1);
-      return scm_from_bool ((1L << iindex) & SCM_I_INUM (j));
+      return scm_from_bool ((((int64_t)1) << iindex) & SCM_I_INUM (j));
     }
   else if (SCM_BIGP (j))
     {
@@ -1738,12 +1736,12 @@ SCM_DEFINE (scm_integer_expt, "integer-expt", 2, 0, 0,
   int64_t i2 = 0;
   SCM z_i2 = SCM_BOOL_F;
   int i2_is_big = 0;
-  SCM acc = SCM_I_MAKINUM (1L);
+  SCM acc = SCM_I_MAKINUM (((int64_t)1));
 
   /* 0^0 == 1 according to R5RS */
   if (scm_is_eq (n, SCM_INUM0) || scm_is_eq (n, acc))
     return scm_is_false (scm_zero_p(k)) ? n : acc;
-  else if (scm_is_eq (n, SCM_I_MAKINUM (-1L)))
+  else if (scm_is_eq (n, SCM_I_MAKINUM (-((int64_t)1))))
     return scm_is_false (scm_even_p (k)) ? n : acc;
 
   if (SCM_I_INUMP (k))
@@ -1946,7 +1944,7 @@ SCM_DEFINE (scm_bit_extract, "bit-extract", 3, 0, 0,
 
       /* mask down to requisite bits */
       bits = min (bits, SCM_I_FIXNUM_BIT);
-      return SCM_I_MAKINUM (in & ((1L << bits) - 1));
+      return SCM_I_MAKINUM (in & ((((int64_t)1) << bits) - 1));
     }
   else if (SCM_BIGP (n))
     {
@@ -4437,7 +4435,7 @@ scm_product (SCM x, SCM y)
   if (SCM_UNLIKELY (SCM_UNBNDP (y)))
     {
       if (SCM_UNBNDP (x))
-	return SCM_I_MAKINUM (1L);
+	return SCM_I_MAKINUM (((int64_t)1));
       else if (SCM_NUMBERP (x))
 	return x;
       else
@@ -4859,14 +4857,10 @@ scm_i_divide (SCM x, SCM y, int inexact)
                      but one or both x and y be too big to fit a double,
                      hence the use of mpq_get_d rather than converting and
                      dividing.  */
-#ifdef USE_REAL_GMP
                   mpq_t q;
                   *mpq_numref(q) = *SCM_I_BIG_MPZ (x);
                   *mpq_denref(q) = *SCM_I_BIG_MPZ (y);
                   return scm_from_double (mpq_get_d (q));
-#else
-                  call_error_callback();
-#endif
                 }
               else
                 {
@@ -5626,9 +5620,6 @@ SCM_DEFINE (scm_inexact_to_exact, "inexact->exact", 1, 0, 0,
 	SCM_OUT_OF_RANGE (1, z);
       else
 	{
-#ifndef USE_REAL_GMP
-          call_error_callback();
-#else
 	  mpq_t frac;
 	  SCM q;
 
@@ -5642,7 +5633,6 @@ SCM_DEFINE (scm_inexact_to_exact, "inexact->exact", 1, 0, 0,
 	   */
 	  mpq_clear (frac);
 	  return q;
-#endif
 	}
     }
   else if (SCM_FRACTIONP (z))

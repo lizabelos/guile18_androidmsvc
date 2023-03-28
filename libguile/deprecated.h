@@ -29,8 +29,8 @@
 
 /* From eval.h: Macros for handling ilocs.  These were deprecated in guile
  * 1.7.0 on 2004-04-22.  */
-#define SCM_IFRINC             (0x00000100L)
-#define SCM_ICDR               (0x00080000L)
+#define SCM_IFRINC             (((int64_t)0x00000100))
+#define SCM_ICDR               (((int64_t)0x00080000))
 #define SCM_IFRAME(n)          ((long)((SCM_ICDR-SCM_IFRINC)>>8) \
                                 & (SCM_UNPACK (n) >> 8))
 #define SCM_IDIST(n)           (SCM_UNPACK (n) >> 20)
@@ -58,8 +58,8 @@ SCM_API char *scm_isymnames[];
 
 /* From eval.h: Macros for handling ilocs.  These were deprecated in guile
  * 1.7.0 on 2003-06-04.  */
-#define SCM_ILOC00		SCM_MAKE_ITAG8(0L, scm_tc8_iloc)
-#define SCM_IDINC		(0x00100000L)
+#define SCM_ILOC00		SCM_MAKE_ITAG8(((int64_t)0), scm_tc8_iloc)
+#define SCM_IDINC		(((int64_t)0x00100000))
 #define SCM_IDSTMSK		(-SCM_IDINC)
 
 
@@ -476,7 +476,7 @@ SCM_API SCM scm_i_keywordsym (SCM keyword);
 /* Deprecated because we don't want to hand out unprotected pointers
    to arrays, vectors, etc. */
 
-#define SCM_VECTOR_MAX_LENGTH ((1L << 24) - 1)
+#define SCM_VECTOR_MAX_LENGTH ((((int64_t)1) << 24) - 1)
 
 SCM_API int scm_i_vectorp (SCM x);
 SCM_API uint64_t scm_i_vector_length (SCM x);

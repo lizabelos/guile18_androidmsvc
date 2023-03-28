@@ -53,7 +53,7 @@
 #define SCM_CLASSF_ENTITY	SCM_STRUCTF_ENTITY
 /* Operator classes need to be identified in the evaluator.
    (Entities also have SCM_CLASSF_OPERATOR set in their vtable.) */
-#define SCM_CLASSF_OPERATOR	(1L << 29)
+#define SCM_CLASSF_OPERATOR	(((int64_t)1) << 29)
 
 #define SCM_I_OPERATORP(obj)\
 	((SCM_OBJ_CLASS_FLAGS (obj) & SCM_CLASSF_OPERATOR) != 0)

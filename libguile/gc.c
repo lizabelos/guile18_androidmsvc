@@ -39,6 +39,7 @@
 #include "libguile/weaks.h"
 #include "libguile/hashtab.h"
 #include "libguile/tags.h"
+#include "libguile/gc.h"
 
 #include "libguile/private-gc.h"
 #include "libguile/validate.h"
@@ -496,16 +497,16 @@ scm_gc_for_newcell (scm_t_cell_type_statistics *freelist, SCM *free_cells)
 	//with the advent of lazy sweep, GC yield is only known just
     //	before doing the GC.
 
-      //scm_i_adjust_min_yield (freelist);
+      scm_i_adjust_min_yield (freelist);
 
 
 	//out of fresh cells. Try to get some new ones.
 
 
-      //did_gc = 1;
-      //scm_i_gc ("cells");
+      did_gc = 1;
+      scm_i_gc ("cells");
 
-      //*free_cells = scm_i_sweep_some_segments (freelist);
+      *free_cells = scm_i_sweep_some_segments (freelist);
     }
 
   if (*free_cells == SCM_EOL)

@@ -24,6 +24,8 @@
 #include <string.h>
 #include <assert.h>
 
+#include "libguile/gc.h"
+
 #ifdef __ia64__
 #include <ucontext.h>
 extern uint64_t * __libc_ia64_register_backing_store_base;

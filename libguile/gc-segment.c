@@ -25,6 +25,7 @@
 #include "libguile/pairs.h"
 #include "libguile/gc.h"
 #include "libguile/private-gc.h"
+#include "libguile/gc.h"
 
 
 size_t scm_max_segment_size;
@@ -75,8 +76,7 @@ scm_i_initialize_heap_segment_data(scm_t_heap_segment *segment, size_t requested
     /*
       one card extra due to alignment
     */
-    size_t mem_needed = (1 + card_count) * SCM_GC_SIZEOF_CARD
-                        + SCM_GC_CARD_BVEC_SIZE_IN_LONGS * card_count * sizeof(int64_t);;
+    size_t mem_needed = (1 + card_count) * SCM_GC_SIZEOF_CARD + SCM_GC_CARD_BVEC_SIZE_IN_LONGS * card_count * sizeof(int64_t);
     scm_t_cell *memory = 0;
 
     /*

@@ -141,8 +141,8 @@
 
 /* Random options (not yet supported or in final form). */
 
-#define STACK_CHECKING
-#undef NO_CEVAL_STACK_CHECKING
+#undef STACK_CHECKING
+#define NO_CEVAL_STACK_CHECKING
 
 
 
@@ -185,7 +185,7 @@
  * debugging options by simply defining SCM_DEBUG as 1.
  */
 #ifndef SCM_DEBUG
-#define SCM_DEBUG 1
+#define SCM_DEBUG 0
 #endif
 
 /* If SCM_DEBUG_CELL_ACCESSES is set to 1, cell accesses will perform
@@ -338,9 +338,9 @@
 #endif
 
 #ifdef UCHAR_MAX
-# define SCM_CHAR_CODE_LIMIT (UCHAR_MAX + 1L)
+# define SCM_CHAR_CODE_LIMIT (UCHAR_MAX + ((int64_t)1))
 #else
-# define SCM_CHAR_CODE_LIMIT 256L
+# define SCM_CHAR_CODE_LIMIT ((int64_t)256)
 #endif
 
 #define SCM_I_UTYPE_MAX(type)      ((type)-1)
@@ -379,7 +379,7 @@
 
 #include "libguile/tags.h"
 
-
+
 #ifdef vms
 # ifndef CHEAP_CONTINUATIONS
    typedef int jmp_buf[17];

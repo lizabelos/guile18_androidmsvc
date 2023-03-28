@@ -56,12 +56,12 @@
  */
 #define SCM_DEFAULT_MIN_YIELD_2 40
 
-#define SCM_DEFAULT_MAX_SEGMENT_SIZE  (20*1024*1024L)
+#define SCM_DEFAULT_MAX_SEGMENT_SIZE  (20*1024*((int64_t)1024))
 
 
 
 #define SCM_MIN_HEAP_SEG_SIZE (8 * SCM_GC_SIZEOF_CARD)
-#define SCM_HEAP_SEG_SIZE (16384L * sizeof (scm_t_cell))
+#define SCM_HEAP_SEG_SIZE (((int64_t)16384) * sizeof (scm_t_cell))
 
 
 #define SCM_DOUBLECELL_ALIGNED_P(x)  (((2 * sizeof (scm_t_cell) - 1) & SCM_UNPACK (x)) == 0)

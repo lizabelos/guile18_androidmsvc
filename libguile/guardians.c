@@ -52,6 +52,7 @@
 #include "libguile/weaks.h"
 #include "libguile/deprecation.h"
 #include "libguile/eval.h"
+#include "libguile/gc.h"
 
 #include "libguile/guardians.h"
 

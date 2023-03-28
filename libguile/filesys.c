@@ -20,7 +20,7 @@
 /* See stime.c for comments on why _POSIX_C_SOURCE is not always defined. */
 #define _LARGEFILE64_SOURCE      /* ask for stat64 etc */
 #ifdef __hpux
-#define _POSIX_C_SOURCE 199506L  /* for readdir_r */
+#define _POSIX_C_SOURCE ((int64_t)199506)  /* for readdir_r */
 #endif
 #if defined(__INTERIX) && !defined(_REENTRANT)
 # define _REENTRANT   /* ask Interix for readdir_r prototype */
@@ -525,7 +525,7 @@ scm_stat2scm (struct stat_or_stat64 *stat_temp)
 #ifdef HAVE_STRUCT_STAT_ST_BLKSIZE
   SCM_SIMPLE_VECTOR_SET(ans, 11, scm_from_uint64 (stat_temp->st_blksize));
 #else
-  SCM_SIMPLE_VECTOR_SET(ans, 11, scm_from_uint64 (4096L));
+  SCM_SIMPLE_VECTOR_SET(ans, 11, scm_from_uint64 (((int64_t)4096)));
 #endif
 #ifdef HAVE_STRUCT_STAT_ST_BLOCKS
   SCM_SIMPLE_VECTOR_SET(ans, 12, scm_from_blkcnt_t_or_blkcnt64_t (stat_temp->st_blocks));

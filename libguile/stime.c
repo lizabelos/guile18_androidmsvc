@@ -37,7 +37,7 @@ extern char ** environ;
 # define _REENTRANT   /* ask solaris for gmtime_r prototype */
 #endif
 #ifdef __hpux
-#define _POSIX_C_SOURCE 199506L  /* for gmtime_r prototype */
+#define _POSIX_C_SOURCE ((int64_t)199506)  /* for gmtime_r prototype */
 #endif
 
 #include <config.h>

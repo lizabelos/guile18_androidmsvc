@@ -51,8 +51,8 @@
 typedef void (*scm_t_struct_free) (scm_t_bits * vtable, scm_t_bits * data);
 
 #define SCM_STRUCTF_MASK   (0xFFF << 20)
-#define SCM_STRUCTF_ENTITY (1L << 30) /* Indicates presence of proc slots */
-#define SCM_STRUCTF_LIGHT  (1L << 31) /* Light representation
+#define SCM_STRUCTF_ENTITY (((int64_t)1) << 30) /* Indicates presence of proc slots */
+#define SCM_STRUCTF_LIGHT  (((int64_t)1) << 31) /* Light representation
 					 (no hidden words) */
 
 #define SCM_STRUCTP(X)  		(!SCM_IMP(X) && (SCM_TYP3(X) == scm_tc3_struct))

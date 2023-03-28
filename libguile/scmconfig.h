@@ -41,10 +41,10 @@ typedef SSIZE_T ssize_t;
 
 /* Set to 1 if you want to enable deprecated features. */
 /* (value will be 0 or 1). */
-#define SCM_ENABLE_DEPRECATED 1
+#define SCM_ENABLE_DEPRECATED 0
 
 /* Set to 1 to add Elisp support (in addition to Scheme). */
-#define SCM_ENABLE_ELISP 0 /* 0 or 1 */
+#define SCM_ENABLE_ELISP 1 /* 0 or 1 */
 
 /* Set to 1 if the stack grows up, 0 otherwise. */
 extern int SCM_STACK_GROWS_UP; /* 0 or 1 */

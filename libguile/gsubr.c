@@ -75,7 +75,7 @@ create_gsubr (int define, const char *name,
       return subr;
     default:
       {
-	SCM cclo = scm_makcclo (scm_f_gsubr_apply, 3L);
+	SCM cclo = scm_makcclo (scm_f_gsubr_apply, ((int64_t)3));
 	SCM subr = scm_c_make_subr (name, scm_tc7_subr_0, fcn);
 	SCM sym = SCM_SUBR_ENTRY(subr).name;
 	if (SCM_GSUBR_MAX < req + opt + rst)

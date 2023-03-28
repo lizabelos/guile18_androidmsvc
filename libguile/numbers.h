@@ -23,6 +23,7 @@
 
 
 #include <mini-gmp.h>
+#include <mini-mpq.h>
 
 #include "libguile/__scm.h"
 #include "libguile/print.h"
@@ -132,10 +133,10 @@
 
 /* Number subtype 1 to 3 (note the dependency on the predicates SCM_INEXACTP
  * and SCM_NUMP)  */
-#define scm_tc16_big		(scm_tc7_number + 1 * 256L)
-#define scm_tc16_real           (scm_tc7_number + 2 * 256L)
-#define scm_tc16_complex        (scm_tc7_number + 3 * 256L)
-#define scm_tc16_fraction       (scm_tc7_number + 4 * 256L)
+#define scm_tc16_big		(scm_tc7_number + 1 * ((int64_t)256))
+#define scm_tc16_real           (scm_tc7_number + 2 * ((int64_t)256))
+#define scm_tc16_complex        (scm_tc7_number + 3 * ((int64_t)256))
+#define scm_tc16_fraction       (scm_tc7_number + 4 * ((int64_t)256))
 
 #define SCM_INEXACTP(x) \
   (!SCM_IMP (x) && (0xfeff & SCM_CELL_TYPE (x)) == scm_tc16_real)

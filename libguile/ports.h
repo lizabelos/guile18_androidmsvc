@@ -124,11 +124,11 @@ SCM_API scm_i_pthread_mutex_t scm_i_port_table_mutex;
  * Note that we reserve the bits 1 << 24 and above for use by the
  * routines in the port's scm_ptobfuns structure.
  */
-#define SCM_OPN		(1L<<16) /* Is the port open? */
-#define SCM_RDNG	(2L<<16) /* Is it a readable port? */
-#define SCM_WRTNG	(4L<<16) /* Is it writable? */
-#define SCM_BUF0	(8L<<16) /* Is it unbuffered? */
-#define SCM_BUFLINE     (64L<<16) /* Is it line-buffered? */
+#define SCM_OPN		(((int64_t)1)<<16) /* Is the port open? */
+#define SCM_RDNG	(((int64_t)2)<<16) /* Is it a readable port? */
+#define SCM_WRTNG	(((int64_t)4)<<16) /* Is it writable? */
+#define SCM_BUF0	(((int64_t)8)<<16) /* Is it unbuffered? */
+#define SCM_BUFLINE     (((int64_t)64)<<16) /* Is it line-buffered? */
 
 #define SCM_PORTP(x) (!SCM_IMP (x) && (SCM_TYP7 (x) == scm_tc7_port))
 #define SCM_OPPORTP(x) (!SCM_IMP(x) && (((0x7f | SCM_OPN) & SCM_CELL_WORD_0(x))==(scm_tc7_port | SCM_OPN)))

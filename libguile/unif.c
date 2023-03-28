@@ -1659,7 +1659,7 @@ scm_c_bitvector_ref (SCM vec, size_t idx)
       if (idx >= BITVECTOR_LENGTH (vec))
 	scm_out_of_range (NULL, scm_from_size_t (idx));
       bits = BITVECTOR_BITS(vec);
-      return scm_from_bool (bits[idx/32] & (1L << (idx%32)));
+      return scm_from_bool (bits[idx/32] & (((int64_t)1) << (idx%32)));
     }
   else
     {
@@ -1671,7 +1671,7 @@ scm_c_bitvector_ref (SCM vec, size_t idx)
       if (idx >= len)
 	scm_out_of_range (NULL, scm_from_size_t (idx));
       idx = idx*inc + off;
-      res = scm_from_bool (bits[idx/32] & (1L << (idx%32)));
+      res = scm_from_bool (bits[idx/32] & (((int64_t)1) << (idx%32)));
       scm_array_handle_release (&handle);
       return res;
     }
@@ -1710,7 +1710,7 @@ scm_c_bitvector_set_x (SCM vec, size_t idx, SCM val)
       idx = idx*inc + off;
     }
 
-  mask = 1L << (idx%32);
+  mask = ((int64_t)1) << (idx%32);
   if (scm_is_true (val))
     bits[idx/32] |= mask;
   else
@@ -2268,11 +2268,11 @@ scm_istr2bve (SCM str)
 
   for (k = 0; k < (len + 31) / 32; k++)
     {
-      data[k] = 0L;
+      data[k] = ((int64_t)0);
       j = len - k * 32;
       if (j > 32)
 	j = 32;
-      for (mask = 1L; j--; mask <<= 1)
+      for (mask = ((int64_t)1); j--; mask <<= 1)
 	switch (*c_str++)
 	  {
 	  case '0':

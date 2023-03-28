@@ -140,7 +140,7 @@ if (!SCM_STACK_GROWS_UP) {
       memcpy (continuation->backing_store, 
               (void *) thread->register_backing_store_base, 
               continuation->backing_store_size);
-#endif /* __ia64__ */
+#endif // __ia64__
       return cont;
     }
   else
