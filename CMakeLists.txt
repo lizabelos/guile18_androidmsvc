@@ -21,7 +21,7 @@ configure_file (${CMAKE_CURRENT_SOURCE_DIR}/cmake/libguile/libpath.h.cmake      
 
 
 add_library(minigmp INTERFACE)
-target_sources(minigmp INTERFACE ${CMAKE_CURRENT_SOURCE_DIR}/mini-gmp/mini-gmp.c)
+target_sources(minigmp INTERFACE ${CMAKE_CURRENT_SOURCE_DIR}/mini-gmp/mini-gmp.c ${CMAKE_CURRENT_SOURCE_DIR}/mini-gmp/mini-mpq.c)
 target_include_directories(minigmp INTERFACE ${CMAKE_CURRENT_SOURCE_DIR}/mini-gmp)
 
 add_library(guile STATIC)
