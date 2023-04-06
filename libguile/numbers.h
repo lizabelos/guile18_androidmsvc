@@ -22,8 +22,8 @@
 
 
 
-#include <mini-gmp.h>
-#include <mini-mpq.h>
+#include "mini-gmp.h"
+#include "mini-mpq.h"
 
 #include "libguile/__scm.h"
 #include "libguile/print.h"

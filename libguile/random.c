@@ -22,7 +22,7 @@
 
 #include "libguile/_scm.h"
 
-#include <mini-gmp.h>
+#include "mini-gmp.h"
 #include <stdio.h>
 #include <math.h>
 #include <string.h>
