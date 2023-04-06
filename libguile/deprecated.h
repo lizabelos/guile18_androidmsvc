@@ -39,7 +39,7 @@
 
 /* From tags.h: Macros to access internal symbol names of isyms.  Deprecated
  * in guile 1.7.0 on 2004-04-22.  */
-SCM_API char *scm_isymnames[];
+extern char *scm_isymnames[];
 #define SCM_ISYMNUM(n) 	       0
 #define SCM_ISYMCHARS(n)       "#@<deprecated>"
 
@@ -65,13 +65,13 @@ SCM_API char *scm_isymnames[];
 
 /* From eval.h: Error messages of the evaluator.  These were deprecated in
  * guile 1.7.0 on 2003-06-02.  */
-SCM_API const char scm_s_expression[];
-SCM_API const char scm_s_test[];
-SCM_API const char scm_s_body[];
-SCM_API const char scm_s_bindings[];
-SCM_API const char scm_s_variable[];
-SCM_API const char scm_s_clauses[];
-SCM_API const char scm_s_formals[];
+extern const char scm_s_expression[];
+extern const char scm_s_test[];
+extern const char scm_s_body[];
+extern const char scm_s_bindings[];
+extern const char scm_s_variable[];
+extern const char scm_s_clauses[];
+extern const char scm_s_formals[];
 
 
 /* From eval.h: Helper macros for evaluation and application.  These were

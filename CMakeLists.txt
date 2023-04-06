@@ -7,7 +7,7 @@ set(CMAKE_C_STANDARD 11)
 set(CMAKE_CXX_STANDARD 11)
 set (CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
 
-include(cmake/AutotoolCheck.cmake)
+# include(cmake/AutotoolCheck.cmake)
 
 find_package(Threads REQUIRED)
 find_package(Math REQUIRED)
@@ -24,13 +24,13 @@ add_library(minigmp INTERFACE)
 target_sources(minigmp INTERFACE ${CMAKE_CURRENT_SOURCE_DIR}/mini-gmp/mini-gmp.c ${CMAKE_CURRENT_SOURCE_DIR}/mini-gmp/mini-mpq.c)
 target_include_directories(minigmp INTERFACE ${CMAKE_CURRENT_SOURCE_DIR}/mini-gmp)
 
-add_library(guile STATIC)
+add_library(guile INTERFACE)
 # use -fno-strict-aliasing
-target_compile_options(guile PUBLIC -fno-strict-aliasing)
+target_compile_options(guile INTERFACE -fno-strict-aliasing)
 
 option(GUILE_ENABLE_CHECK_PTR OFF)
 if (GUILE_ENABLE_CHECK_PTR)
-    target_compile_definitions(guile PUBLIC GUILE_ENABLE_CHECK_PTR)
+    target_compile_definitions(guile INTERFACE GUILE_ENABLE_CHECK_PTR)
 endif()
 
 #target_compile_options(guile PUBLIC -Werror -Wall -Wextra)
@@ -38,12 +38,12 @@ endif()
 
 option(GUILE_ENABLE_SANITIZE OFF)
 if (GUILE_ENABLE_SANITIZE)
-    target_compile_options(guile PUBLIC -fsanitize=address)
-    target_link_options(guile PUBLIC -fsanitize=address)
+    target_compile_options(guile INTERFACE -fsanitize=address)
+    target_link_options(guile INTERFACE -fsanitize=address)
 endif()
 
 target_sources(guile
-        PRIVATE
+        INTERFACE
         ${CMAKE_CURRENT_SOURCE_DIR}/libguile/alist.c
         ${CMAKE_CURRENT_SOURCE_DIR}/libguile/alloca.c
         ${CMAKE_CURRENT_SOURCE_DIR}/libguile/arbiters.c
@@ -171,19 +171,19 @@ target_sources(guile
         ${CMAKE_CURRENT_SOURCE_DIR}/libguile/eval.cpp
         )
 if (WIN32)
-    target_sources(guile PRIVATE
+    target_sources(guile INTERFACE
             ${CMAKE_CURRENT_SOURCE_DIR}/libguile/win32-dirent.c
             ${CMAKE_CURRENT_SOURCE_DIR}/libguile/win32-socket.c
             ${CMAKE_CURRENT_SOURCE_DIR}/libguile/win32-uname.c
             )
 endif ()
-target_include_directories(guile PUBLIC ${CMAKE_CURRENT_BINARY_DIR} ${CMAKE_CURRENT_SOURCE_DIR})
+target_include_directories(guile INTERFACE ${CMAKE_CURRENT_BINARY_DIR} ${CMAKE_CURRENT_SOURCE_DIR})
 
-target_link_libraries(guile PUBLIC Threads::Threads minigmp)
+target_link_libraries(guile INTERFACE Threads::Threads minigmp)
 
 # Fix undefined reference to `__imp_WSAGetLastError' with mingw
 if (MINGW)
-    target_link_libraries(guile PUBLIC ws2_32)
+    target_link_libraries(guile INTERFACE ws2_32)
 endif ()
 
 function(GenerateResourcesQRC)
@@ -210,7 +210,7 @@ function(GenerateResourcesQRC)
     configure_file("${CMAKE_CURRENT_SOURCE_DIR}/resources.qrc.in" "${CMAKE_CURRENT_BINARY_DIR}/resources.qrc" @ONLY)
 
     # add the qrc to the texmacs target
-    target_sources(guile PUBLIC "${CMAKE_CURRENT_BINARY_DIR}/resources.qrc")
+    target_sources(guile INTERFACE "${CMAKE_CURRENT_BINARY_DIR}/resources.qrc")
 
 endfunction()
 
@@ -218,8 +218,8 @@ option(USE_GUILE_QT5 "Use Qt for GUILE" OFF)
 if (USE_GUILE_QT5)
     set(CMAKE_AUTORCC ON)
     find_package(Qt5 COMPONENTS Core REQUIRED)
-    target_link_libraries(guile PUBLIC Qt5::Core)
-    target_compile_definitions(guile PUBLIC USE_GUILE_QT)
+    target_link_libraries(guile INTERFACE Qt5::Core)
+    target_compile_definitions(guile INTERFACE USE_GUILE_QT)
     GenerateResourcesQRC()
 endif()
 
@@ -227,11 +227,11 @@ option(USE_GUILE_QT6 "Use Qt for GUILE" OFF)
 if (USE_GUILE_QT6)
     set(CMAKE_AUTORCC ON)
     find_package(Qt6 COMPONENTS Core REQUIRED)
-    target_link_libraries(guile PUBLIC Qt6::Core)
-    target_compile_definitions(guile PUBLIC USE_GUILE_QT)
+    target_link_libraries(guile INTERFACE Qt6::Core)
+    target_compile_definitions(guile INTERFACE USE_GUILE_QT)
     GenerateResourcesQRC()
 endif()
 
 
 add_executable(guile-test test.cpp)
-target_link_libraries(guile-test PUBLIC guile)
+target_link_libraries(guile-test INTERFACE guile)

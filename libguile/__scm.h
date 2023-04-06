@@ -150,14 +150,15 @@
    which should be exported or imported in the resulting dynamic link
    library (DLL) in the Win32 port. */
 
-#if defined (SCM_IMPORT)
+/*#if defined (SCM_IMPORT)
 # define SCM_API __declspec (dllimport) extern
 #elif defined (SCM_EXPORT) || defined (DLL_EXPORT)
 # define SCM_API __declspec (dllexport) extern
 #else
 # define SCM_API extern
 #endif
-
+*/
+#define SCM_API
 
 
 /* {Debugging Options}

@@ -196,9 +196,9 @@ void scm_reset_self();
 #define SCM_PROCEDURE(obj) SCM_CELL_OBJECT_1 (obj)
 #define SCM_SETTER(obj) SCM_CELL_OBJECT_2 (obj)
 
-SCM_API scm_t_subr_entry *scm_subr_table;
-SCM_API int64_t scm_subr_table_size;
-SCM_API int64_t scm_subr_table_room;
+extern scm_t_subr_entry *scm_subr_table;
+extern int64_t scm_subr_table_size;
+extern int64_t scm_subr_table_room;
 
 
 

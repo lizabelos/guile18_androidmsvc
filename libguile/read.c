@@ -180,15 +180,7 @@ static SCM *scm_read_hash_procedures;
   (((_chr) <= UCHAR_MAX) ? tolower (_chr) : (_chr))
 
 
-#ifndef HAVE_DECL_STRNCASECMP
-extern int strncasecmp (char const *s1, char const *s2, size_t n);
-#endif
-
-#ifndef HAVE_STRNCASECMP
-/* XXX: Use Gnulib's `strncasecmp ()'.  */
-
-static int
-strncasecmp (const char *s1, const char *s2, size_t len2)
+static int scm_strncasecmp (const char *s1, const char *s2, size_t len2)
 {
   while (*s1 && *s2 && len2 > 0)
     {
@@ -205,7 +197,6 @@ strncasecmp (const char *s1, const char *s2, size_t len2)
     }
   return !(*s1 || *s2 || len2 > 0);
 }
-#endif
 
 
 /* Read an SCSH block comment.  */
@@ -804,7 +795,7 @@ scm_read_character (int chr, SCM port)
 
   for (c = 0; c < scm_n_charnames; c++)
     if (scm_charnames[c]
-	&& (!strncasecmp (scm_charnames[c], charname, charname_len)))
+	&& (!scm_strncasecmp (scm_charnames[c], charname, charname_len)))
       return SCM_MAKE_CHAR (scm_charnums[c]);
 
  char_error:

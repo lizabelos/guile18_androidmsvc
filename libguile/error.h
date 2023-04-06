@@ -24,14 +24,14 @@
 
 #include "libguile/__scm.h"
 
-
-SCM_API SCM scm_system_error_key;
-SCM_API SCM scm_num_overflow_key;
-SCM_API SCM scm_out_of_range_key;
-SCM_API SCM scm_args_number_key;
-SCM_API SCM scm_arg_type_key;
-SCM_API SCM scm_memory_alloc_key;
-SCM_API SCM scm_misc_error_key;
+
+extern SCM scm_system_error_key;
+extern SCM scm_num_overflow_key;
+extern SCM scm_out_of_range_key;
+extern SCM scm_args_number_key;
+extern SCM scm_arg_type_key;
+extern SCM scm_memory_alloc_key;
+extern SCM scm_misc_error_key;
 
 
 

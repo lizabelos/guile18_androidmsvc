@@ -51,7 +51,7 @@ typedef struct scm_t_rng {
   scm_t_rstate *(*copy_rstate) (scm_t_rstate *state);
 } scm_t_rng;
 
-SCM_API scm_t_rng scm_the_rng;
+extern scm_t_rng scm_the_rng;
 
 
 /*
@@ -88,13 +88,13 @@ SCM_API SCM scm_c_random_bignum (scm_t_rstate *, SCM m);
 /*
  * Scheme level interface
  */
-SCM_API scm_t_bits scm_tc16_rstate;
+extern scm_t_bits scm_tc16_rstate;
 #define SCM_RSTATEP(obj) SCM_SMOB_PREDICATE (scm_tc16_rstate, obj)
 #define SCM_RSTATE(obj)  ((scm_t_rstate *) SCM_SMOB_DATA (obj))
 
-SCM_API unsigned char scm_masktab[256];
+extern unsigned char scm_masktab[256];
 
-SCM_API SCM scm_var_random_state;
+extern SCM scm_var_random_state;
 SCM_API SCM scm_random (SCM n, SCM state);
 SCM_API SCM scm_copy_random_state (SCM state);
 SCM_API SCM scm_seed_to_random_state (SCM seed);

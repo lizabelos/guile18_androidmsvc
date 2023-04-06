@@ -64,15 +64,8 @@
 
 /* SIGRETTYPE is the type that signal handlers return.  See <signal.h> */
 
-#ifdef RETSIGTYPE
-# define SIGRETTYPE RETSIGTYPE
-#else
-# ifdef STDC_HEADERS
-#  define SIGRETTYPE void
-# else
-#  define SIGRETTYPE int
-# endif
-#endif
+
+#define SIGRETTYPE void
 
 #if defined(_MSC_VER)
 #include <windows.h>

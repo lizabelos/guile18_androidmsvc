@@ -36,9 +36,9 @@
 #define SCM_OPOUTSTRPORTP(x) (SCM_OPSTRPORTP (x) && \
                               (SCM_CELL_WORD_0 (x) & SCM_WRTNG))
 
-
 
-SCM_API scm_t_bits scm_tc16_strport;
+
+extern scm_t_bits scm_tc16_strport;
 
 
 

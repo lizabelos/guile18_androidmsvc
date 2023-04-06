@@ -24,11 +24,11 @@
 
 #include "libguile/__scm.h"
 
-
 
-SCM_API SCM scm_sym_name;
-SCM_API SCM scm_sym_arity;
-SCM_API SCM scm_sym_system_procedure;
+
+extern SCM scm_sym_name;
+extern SCM scm_sym_arity;
+extern SCM scm_sym_system_procedure;
 
 
 

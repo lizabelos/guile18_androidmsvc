@@ -145,8 +145,8 @@ typedef struct scm_i_t_array
   uint64_t base;
 } scm_i_t_array;
 
-SCM_API scm_t_bits scm_i_tc16_array;
-SCM_API scm_t_bits scm_i_tc16_enclosed_array;
+extern scm_t_bits scm_i_tc16_array;
+extern scm_t_bits scm_i_tc16_enclosed_array;
 
 #define SCM_I_ARRAY_FLAG_CONTIGUOUS (1 << 16)
 

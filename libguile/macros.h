@@ -34,7 +34,7 @@
 #define SCM_BUILTIN_MACRO_P(x) (SCM_MACROP (x) && SCM_MACRO_TYPE (x) == 3)
 #define SCM_MACRO_CODE(m) SCM_SMOB_OBJECT (m)
 
-SCM_API scm_t_bits scm_tc16_macro;
+extern scm_t_bits scm_tc16_macro;
 
 SCM_API SCM scm_i_makbimacro (SCM code);
 SCM_API SCM scm_makmmacro (SCM code);

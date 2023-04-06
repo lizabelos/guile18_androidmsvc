@@ -69,18 +69,8 @@
 #define HAVE_FTRUNCATE 1
 #endif
 
-#if SIZEOF_OFF_T == SIZEOF_INT
-#define OFF_T_MAX  INT_MAX
-#define OFF_T_MIN  INT_MIN
-#elif SIZEOF_OFF_T == SIZEOF_LONG
-#define OFF_T_MAX  LONG_MAX
-#define OFF_T_MIN  LONG_MIN
-#elif SIZEOF_OFF_T == SIZEOF_LONG_LONG
 #define OFF_T_MAX  LONG_LONG_MAX
 #define OFF_T_MIN  LONG_LONG_MIN
-#else
-#error Oops, unknown OFF_T size
-#endif
 
 
 void (*scm_fport_log_function) (const char *, int) = NULL;
@@ -625,22 +615,7 @@ fport_seek_or_seek64 (SCM port, off_t_or_off64_t offset, int whence)
    case on NetBSD apparently), then fport_seek_or_seek64 is right to be
    fport_seek already.  */
 
-#if GUILE_USE_64_CALLS && HAVE_STAT64 && SIZEOF_OFF_T != SIZEOF_OFF64_T
-static off_t
-fport_seek (SCM port, off_t offset, int whence)
-{
-  off64_t rv = fport_seek_or_seek64 (port, (off64_t) offset, whence);
-  if (rv > OFF_T_MAX || rv < OFF_T_MIN)
-    {
-      errno = EOVERFLOW;
-      scm_syserror ("fport_seek");
-    }
-  return (off_t) rv;
-
-}
-#else
 #define fport_seek   fport_seek_or_seek64
-#endif
 
 /* `how' has been validated and is one of SEEK_SET, SEEK_CUR or SEEK_END */
 SCM

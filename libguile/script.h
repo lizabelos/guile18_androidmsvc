@@ -35,7 +35,7 @@ SCM_API int scm_count_argv (char **argv);
 SCM_API void scm_shell_usage (int fatal, char *message);
 SCM_API SCM scm_compile_shell_switches (int argc, char **argv);
 SCM_API void scm_shell (int argc, char **argv);
-SCM_API char *scm_usage_name;
+extern char *scm_usage_name;
 SCM_API void scm_init_script (void);
 
 #endif  /* SCM_SCRIPT_H */

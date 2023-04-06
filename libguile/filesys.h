@@ -24,9 +24,9 @@
 
 #include "libguile/__scm.h"
 
-
 
-SCM_API scm_t_bits scm_tc16_dir;
+
+extern scm_t_bits scm_tc16_dir;
 
 #define SCM_DIR_FLAG_OPEN (((int64_t)1) << 16)
 

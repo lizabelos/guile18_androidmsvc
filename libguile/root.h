@@ -43,7 +43,7 @@
 #define scm_source_whash scm_sys_protects[12]
 #define SCM_NUM_PROTECTS 13
 
-SCM_API SCM scm_sys_protects[];
+extern SCM scm_sys_protects[];
 
 
 

@@ -2959,6 +2959,14 @@ SCM_DEFINE (scm_evaluator_traps, "evaluator-traps-interface", 0, 1, 0,
 static SCM
 deval_args (SCM l, SCM env, SCM proc, SCM *lloc)
 {
+  static int deval_args_recursion_depth = 0;
+  deval_args_recursion_depth++;
+
+  if (deval_args_recursion_depth > 10)
+    {
+      scm_misc_error (proc, "deval_args recursion depth exceeded", SCM_EOL);
+    }
+
   SCM *results = lloc;
   while (scm_is_pair (l))
     {
@@ -2968,6 +2976,9 @@ deval_args (SCM l, SCM env, SCM proc, SCM *lloc)
       lloc = SCM_CDRLOC (*lloc);
       l = SCM_CDR (l);
     }
+
+  deval_args_recursion_depth--;
+
   if (!scm_is_null (l))
     scm_wrong_num_args (proc);
   return *results;
@@ -4544,8 +4555,7 @@ SCM_APPLY(SCM proc, SCM arg1, SCM args) {
   ENTER_APPLY;
 #endif
     tail:
-    auto proctype = SCM_TYP7 (proc);
-    switch (proctype) {
+    switch (SCM_TYP7 (proc)) {
         case scm_tc7_subr_2o:
             if (SCM_UNLIKELY (SCM_UNBNDP(arg1)))
                 scm_wrong_num_args(proc);

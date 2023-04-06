@@ -76,11 +76,11 @@ typedef void (*scm_t_struct_free) (scm_t_bits * vtable, scm_t_bits * data);
 #define SCM_SET_STRUCT_TABLE_NAME(X, NAME) SCM_SETCAR (X, NAME)
 #define SCM_STRUCT_TABLE_CLASS(X) SCM_CDR (X)
 #define SCM_SET_STRUCT_TABLE_CLASS(X, CLASS) SCM_SETCDR (X, CLASS)
-SCM_API SCM scm_struct_table;
+extern SCM scm_struct_table;
 
 #define SCM_STRUCT_GC_CHAIN(X) SCM_CELL_OBJECT_3 (X)
 #define SCM_SET_STRUCT_GC_CHAIN(X, Y) SCM_SET_CELL_OBJECT_3 (X, Y)
-SCM_API SCM scm_i_structs_to_free;
+extern SCM scm_i_structs_to_free;
 
 
 

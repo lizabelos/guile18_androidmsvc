@@ -42,7 +42,7 @@
 /* scm_debug_opts is  defined in eval.c.
  */
 
-SCM_API scm_t_option scm_debug_opts[];
+extern scm_t_option scm_debug_opts[];
 
 #define SCM_BREAKPOINTS_P	scm_debug_opts[1].val
 #define SCM_TRACE_P		scm_debug_opts[2].val
@@ -60,10 +60,10 @@ SCM_API scm_t_option scm_debug_opts[];
 #define SCM_WARN_DEPRECATED	scm_debug_opts[14].val
 #define SCM_N_DEBUG_OPTIONS 15
 
-SCM_API int scm_debug_mode_p;
-SCM_API int scm_check_entry_p;
-SCM_API int scm_check_apply_p;
-SCM_API int scm_check_exit_p;
+extern int scm_debug_mode_p;
+extern int scm_check_entry_p;
+extern int scm_check_apply_p;
+extern int scm_check_exit_p;
 
 #define SCM_RESET_DEBUG_MODE \
 do {\
@@ -87,7 +87,7 @@ typedef union scm_t_debug_info
   SCM id;
 } scm_t_debug_info;
 
-SCM_API int64_t scm_debug_eframe_size;
+extern int64_t scm_debug_eframe_size;
 
 typedef struct scm_t_debug_frame
 {
@@ -129,7 +129,7 @@ typedef struct scm_t_debug_frame
 /* {Debug Objects}
  */
 
-SCM_API scm_t_bits scm_tc16_debugobj;
+extern scm_t_bits scm_tc16_debugobj;
 
 #define SCM_DEBUGOBJP(x) \
   SCM_TYP16_PREDICATE (scm_tc16_debugobj, x)
@@ -140,7 +140,7 @@ SCM_API scm_t_bits scm_tc16_debugobj;
 /* {Memoized Source}
  */
 
-SCM_API scm_t_bits scm_tc16_memoized;
+extern scm_t_bits scm_tc16_memoized;
 
 #define SCM_MEMOIZEDP(x)	SCM_TYP16_PREDICATE (scm_tc16_memoized, x)
 #define SCM_MEMOIZED_EXP(x)	SCM_CAR (SCM_CELL_OBJECT_1 (x))

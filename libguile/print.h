@@ -25,8 +25,8 @@
 #include "libguile/__scm.h"
 
 #include "libguile/options.h"
-
-SCM_API scm_t_option scm_print_opts[];
+
+extern scm_t_option scm_print_opts[];
 
 #define SCM_PRINT_CLOSURE	    (SCM_PACK (scm_print_opts[0].val))
 #define SCM_PRINT_SOURCE_P	    ((int) scm_print_opts[1].val)
@@ -77,9 +77,9 @@ typedef struct scm_print_state {
   SCM highlight_objects;        /* List of objects to be highlighted */
 } scm_print_state;
 
-SCM_API SCM scm_print_state_vtable;
+extern SCM scm_print_state_vtable;
 
-SCM_API scm_t_bits scm_tc16_port_with_ps;
+extern scm_t_bits scm_tc16_port_with_ps;
 
 SCM_API SCM scm_print_options (SCM setting);
 SCM_API SCM scm_make_print_state (void);

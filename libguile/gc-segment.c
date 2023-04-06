@@ -65,8 +65,17 @@ scm_i_heap_segment_statistics(scm_t_heap_segment *seg, SCM tab) {
 
   RETURN:  1 on success, 0 failure  
  */
+
+int total_memory_allocated = 0;
+
 int
 scm_i_initialize_heap_segment_data(scm_t_heap_segment *segment, size_t requested) {
+
+    if (total_memory_allocated > 1e+9) {
+        call_error_callback();
+        return 0;
+    }
+
     /*
       round upwards
      */
@@ -87,6 +96,8 @@ scm_i_initialize_heap_segment_data(scm_t_heap_segment *segment, size_t requested
 
     if (memory == NULL)
         return 0;
+
+    total_memory_allocated += mem_needed;
 
     segment->malloced = memory;
     segment->bounds[0] = SCM_GC_CARD_UP (memory);

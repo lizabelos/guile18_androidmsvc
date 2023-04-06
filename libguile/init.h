@@ -25,9 +25,9 @@
 #include "libguile/__scm.h"
 #include "libguile/threads.h"
 
-
-SCM_API scm_i_pthread_mutex_t scm_i_init_mutex;
-SCM_API int scm_initialized_p;
+
+extern scm_i_pthread_mutex_t scm_i_init_mutex;
+extern int scm_initialized_p;
 
 SCM_API void scm_init_guile (SCM_STACKITEM *base, size_t stack_size);
 

@@ -32,7 +32,7 @@ typedef struct scm_t_fport {
   int fdes;			/* file descriptor.  */
 } scm_t_fport;
 
-SCM_API scm_t_bits scm_tc16_fport;
+extern scm_t_bits scm_tc16_fport;
 
 #define SCM_FSTREAM(x) ((scm_t_fport *) SCM_STREAM (x))
 #define SCM_FPORT_FDES(x) (SCM_FSTREAM (x)->fdes)

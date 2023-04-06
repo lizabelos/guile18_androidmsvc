@@ -38,7 +38,7 @@
 	   in the num_stack_items field of the structure.
 */
 
-SCM_API scm_t_bits scm_tc16_continuation;
+extern scm_t_bits scm_tc16_continuation;
 
 typedef struct 
 {

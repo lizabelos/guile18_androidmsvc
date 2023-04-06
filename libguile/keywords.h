@@ -24,9 +24,9 @@
 
 #include "libguile/__scm.h"
 
-
 
-SCM_API scm_t_bits scm_tc16_keyword;
+
+extern scm_t_bits scm_tc16_keyword;
 
 
 

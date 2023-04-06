@@ -8,8 +8,8 @@
  scm_c_define_gsubr (s_scm_environ, 0, 1, 0, (SCM (*)()) scm_environ); ;
  scm_c_define_gsubr (s_scm_tmpnam, 0, 0, 0, (SCM (*)()) scm_tmpnam); ;
  scm_c_define_gsubr (s_scm_mkstemp, 1, 0, 0, (SCM (*)()) scm_mkstemp); ;
- scm_c_define_gsubr (s_scm_utime, 1, 2, 0, (SCM (*)()) scm_utime); ;
+ //scm_c_define_gsubr (s_scm_utime, 1, 2, 0, (SCM (*)()) scm_utime); ;
  scm_c_define_gsubr (s_scm_access, 2, 0, 0, (SCM (*)()) scm_access); ;
  scm_c_define_gsubr (s_scm_getpid, 0, 0, 0, (SCM (*)()) scm_getpid); ;
  scm_c_define_gsubr (s_scm_putenv, 1, 0, 0, (SCM (*)()) scm_putenv); ;
- scm_c_define_gsubr (s_scm_setlocale, 1, 1, 0, (SCM (*)()) scm_setlocale); ;
+ //scm_c_define_gsubr (s_scm_setlocale, 1, 1, 0, (SCM (*)()) scm_setlocale); ;

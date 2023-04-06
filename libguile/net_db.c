@@ -44,7 +44,7 @@
 
 #include <sys/types.h>
 
-#ifdef HAVE_WINSOCK2_H
+#ifdef WIN32
 #include <winsock2.h>
 #else
 #include <sys/socket.h>

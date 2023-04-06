@@ -63,7 +63,7 @@ struct scm_environment_funcs {
 #define SCM_ENVIRONMENT_LOCATION_IMMUTABLE scm_from_int (1)
 #define SCM_ENVIRONMENT_LOCATION_NO_CELL SCM_BOOL_F
 
-SCM_API scm_t_bits scm_tc16_environment;
+extern scm_t_bits scm_tc16_environment;
 
 #define SCM_ENVIRONMENT_P(x) \
   (!SCM_IMP (x) && SCM_CELL_TYPE (x) == scm_tc16_environment)
@@ -88,7 +88,7 @@ SCM_API scm_t_bits scm_tc16_environment;
 #define SCM_ENVIRONMENT_UNOBSERVE(env, token) \
   ((*(SCM_ENVIRONMENT_FUNCS (env)->unobserve)) (env, token))
 
-SCM_API scm_t_bits scm_tc16_observer;
+extern scm_t_bits scm_tc16_observer;
 
 #define SCM_OBSERVER_P(x) \
   (!SCM_IMP (x) && (SCM_CELL_TYPE (x) == scm_tc16_observer))
@@ -99,7 +99,7 @@ SCM_API scm_t_bits scm_tc16_observer;
 #define SCM_OBSERVER_PROC(x) \
   ((scm_environment_observer) SCM_CELL_WORD_3 (x))
 
-SCM_API SCM scm_system_environment;
+extern SCM scm_system_environment;
 
 SCM_API void scm_error_environment_unbound (const char *, SCM, SCM) SCM_NORETURN;
 SCM_API void scm_error_environment_immutable_binding (const char *, SCM, SCM) SCM_NORETURN;
@@ -125,9 +125,9 @@ SCM_API SCM scm_environment_unobserve (SCM token);
 SCM_API void scm_environments_prehistory (void);
 SCM_API void scm_init_environments (void);
 
-
 
-SCM_API void *scm_type_leaf_environment;
+
+extern void *scm_type_leaf_environment;
 
 #define SCM_LEAF_ENVIRONMENT_P(env) \
   (SCM_ENVIRONMENT_P (env) \
@@ -136,9 +136,9 @@ SCM_API void *scm_type_leaf_environment;
 SCM_API SCM scm_make_leaf_environment (void);
 SCM_API SCM scm_leaf_environment_p (SCM env);
 
-
 
-SCM_API void *scm_type_eval_environment;
+
+extern void *scm_type_eval_environment;
 
 #define SCM_EVAL_ENVIRONMENT_P(env) \
   (SCM_ENVIRONMENT_P (env) \
@@ -151,9 +151,9 @@ SCM_API SCM scm_eval_environment_set_local_x (SCM env, SCM local);
 SCM_API SCM scm_eval_environment_imported (SCM env);
 SCM_API SCM scm_eval_environment_set_imported_x (SCM env, SCM imported);
 
-
 
-SCM_API void *scm_type_import_environment;
+
+extern void *scm_type_import_environment;
 
 #define SCM_IMPORT_ENVIRONMENT_P(env) \
   (SCM_ENVIRONMENT_P (env) \
@@ -164,9 +164,9 @@ SCM_API SCM scm_import_environment_p (SCM env);
 SCM_API SCM scm_import_environment_imports (SCM env);
 SCM_API SCM scm_import_environment_set_imports_x (SCM env, SCM imports);
 
-
 
-SCM_API void *scm_type_export_environment;
+
+extern void *scm_type_export_environment;
 
 #define SCM_EXPORT_ENVIRONMENT_P(env) \
   (SCM_ENVIRONMENT_P (env) \

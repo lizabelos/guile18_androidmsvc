@@ -24,8 +24,8 @@
 
 #include "libguile/__scm.h"
 
-
-SCM_API scm_t_bits scm_tc16_malloc;
+
+extern scm_t_bits scm_tc16_malloc;
 
 #define SCM_MALLOCP(X)  (SCM_SMOB_PREDICATE (scm_tc16_malloc, (X)))
 #define SCM_MALLOCDATA(obj) ((char *) SCM_SMOB_DATA (obj))

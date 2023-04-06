@@ -45,7 +45,7 @@
 
 #define SCM_WHITE_SPACES  SCM_SINGLE_SPACES: case '\t'
 
-SCM_API scm_t_option scm_read_opts[];
+extern scm_t_option scm_read_opts[];
 
 #define SCM_COPY_SOURCE_P      scm_read_opts[0].val
 #define SCM_RECORD_POSITIONS_P scm_read_opts[1].val
@@ -59,9 +59,9 @@ SCM_API scm_t_option scm_read_opts[];
 #define SCM_N_READ_OPTIONS 4
 #endif
 
-
 
-SCM_API SCM scm_sym_dot;
+
+extern SCM scm_sym_dot;
 
 SCM_API SCM scm_read_options (SCM setting);
 SCM_API SCM scm_read (SCM port);

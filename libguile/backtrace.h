@@ -24,7 +24,7 @@
 
 #include "libguile/__scm.h"
 
-SCM_API SCM scm_the_last_stack_fluid_var;
+extern SCM scm_the_last_stack_fluid_var;
 
 SCM_API void scm_display_error_message (SCM message, SCM args, SCM port);
 SCM_API void scm_i_display_error (SCM stack, SCM port, SCM subr, SCM message, SCM args, SCM rest);

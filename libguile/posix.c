@@ -1197,41 +1197,6 @@ SCM_DEFINE (scm_mkstemp, "mkstemp!", 1, 0, 0,
 }
 #undef FUNC_NAME
 
-SCM_DEFINE (scm_utime, "utime", 1, 2, 0,
-            (SCM pathname, SCM actime, SCM modtime),
-	    "@code{utime} sets the access and modification times for the\n"
-	    "file named by @var{path}.  If @var{actime} or @var{modtime} is\n"
-	    "not supplied, then the current time is used.  @var{actime} and\n"
-	    "@var{modtime} must be integer time values as returned by the\n"
-	    "@code{current-time} procedure.\n"
-	    "@lisp\n"
-	    "(utime \"foo\" (- (current-time) 3600))\n"
-	    "@end lisp\n"
-	    "will set the access time to one hour in the past and the\n"
-	    "modification time to the current time.")
-#define FUNC_NAME s_scm_utime
-{
-  int rv;
-  struct utimbuf utm_tmp;
-
-  if (SCM_UNBNDP (actime))
-    SCM_SYSCALL (time (&utm_tmp.actime));
-  else
-    utm_tmp.actime = SCM_NUM2ULONG (2, actime);
-
-  if (SCM_UNBNDP (modtime))
-    SCM_SYSCALL (time (&utm_tmp.modtime));
-  else
-    utm_tmp.modtime = SCM_NUM2ULONG (3, modtime);
-
-  STRING_SYSCALL (pathname, c_pathname,
-		  rv = utime (c_pathname, &utm_tmp));
-  if (rv != 0)
-    SCM_SYSERROR;
-  return SCM_UNSPECIFIED;
-}
-#undef FUNC_NAME
-
 SCM_DEFINE (scm_access, "access?", 2, 0, 0,
             (SCM path, SCM how),
 	    "Test accessibility of a file under the real UID and GID of the\n"
@@ -1621,6 +1586,7 @@ SCM_DEFINE (scm_chroot, "chroot", 1, 0, 0,
 
 
 #ifdef __MINGW32__
+#include <windows.h>
 /* Wrapper function to supplying `getlogin()' under Windows.  */
 static char * getlogin (void)
 {

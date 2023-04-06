@@ -38,7 +38,7 @@
 #define SCM_CHARSETP(x) (!SCM_IMP (x) && (SCM_TYP16 (x) == scm_tc16_charset))
 
 /* Smob type code for character sets.  */
-SCM_API int scm_tc16_charset;
+extern int scm_tc16_charset;
 
 SCM_API SCM scm_char_set_p (SCM obj);
 SCM_API SCM scm_char_set_eq (SCM char_sets);
@@ -88,23 +88,23 @@ SCM_API SCM scm_char_set_difference_x (SCM cs1, SCM rest);
 SCM_API SCM scm_char_set_xor_x (SCM cs1, SCM rest);
 SCM_API SCM scm_char_set_diff_plus_intersection_x (SCM cs1, SCM cs2, SCM rest);
 
-SCM_API SCM scm_char_set_lower_case;
-SCM_API SCM scm_char_set_upper_case;
-SCM_API SCM scm_char_set_title_case;
-SCM_API SCM scm_char_set_letter;
-SCM_API SCM scm_char_set_digit;
-SCM_API SCM scm_char_set_letter_and_digit;
-SCM_API SCM scm_char_set_graphic;
-SCM_API SCM scm_char_set_printing;
-SCM_API SCM scm_char_set_whitespace;
-SCM_API SCM scm_char_set_iso_control;
-SCM_API SCM scm_char_set_punctuation;
-SCM_API SCM scm_char_set_symbol;
-SCM_API SCM scm_char_set_hex_digit;
-SCM_API SCM scm_char_set_blank;
-SCM_API SCM scm_char_set_ascii;
-SCM_API SCM scm_char_set_empty;
-SCM_API SCM scm_char_set_full;
+extern SCM scm_char_set_lower_case;
+extern SCM scm_char_set_upper_case;
+extern SCM scm_char_set_title_case;
+extern SCM scm_char_set_letter;
+extern SCM scm_char_set_digit;
+extern SCM scm_char_set_letter_and_digit;
+extern SCM scm_char_set_graphic;
+extern SCM scm_char_set_printing;
+extern SCM scm_char_set_whitespace;
+extern SCM scm_char_set_iso_control;
+extern SCM scm_char_set_punctuation;
+extern SCM scm_char_set_symbol;
+extern SCM scm_char_set_hex_digit;
+extern SCM scm_char_set_blank;
+extern SCM scm_char_set_ascii;
+extern SCM scm_char_set_empty;
+extern SCM scm_char_set_full;
 
 SCM_API void scm_srfi_14_compute_char_sets (void);
 SCM_API void scm_init_srfi_14 (void);

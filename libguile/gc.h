@@ -353,12 +353,12 @@ SCM_API int scm_debug_cells_gc_interval ;
 void scm_i_expensive_validation_check (SCM cell);
 #endif
 
-SCM_API scm_i_pthread_mutex_t scm_i_gc_admin_mutex;
+extern scm_i_pthread_mutex_t scm_i_gc_admin_mutex;
 #if USE_64IMPL
-SCM_API int scm_i_terminating;
+extern int scm_i_terminating;
 #endif
 #define scm_gc_running_p (SCM_I_CURRENT_THREAD->gc_running_p)
-SCM_API scm_i_pthread_mutex_t scm_i_sweep_mutex;
+extern scm_i_pthread_mutex_t scm_i_sweep_mutex;
 
 #ifdef __ia64__
 void *scm_ia64_register_backing_store_base (void);
@@ -368,11 +368,11 @@ void *scm_ia64_ar_bsp (const void *);
 
 
 #if (SCM_ENABLE_DEPRECATED == 1)
-SCM_API size_t scm_default_init_heap_size_1;
-SCM_API int scm_default_min_yield_1;
-SCM_API size_t scm_default_init_heap_size_2;
-SCM_API int scm_default_min_yield_2;
-SCM_API size_t scm_default_max_segment_size;
+extern size_t scm_default_init_heap_size_1;
+extern int scm_default_min_yield_1;
+extern size_t scm_default_init_heap_size_2;
+extern int scm_default_min_yield_2;
+extern size_t scm_default_max_segment_size;
 #else
 #define  scm_default_init_heap_size_1 deprecated
 #define  scm_default_min_yield_1 deprecated
@@ -382,42 +382,42 @@ SCM_API size_t scm_default_max_segment_size;
 #endif
 
 
-SCM_API size_t scm_max_segment_size;
+extern size_t scm_max_segment_size;
 
 #define SCM_SET_FREELIST_LOC(key,ptr) scm_i_pthread_setspecific ((key), (ptr))
 #define SCM_FREELIST_LOC(key) ((SCM *) scm_i_pthread_getspecific (key))
-SCM_API scm_i_pthread_key_t scm_i_freelist;
-SCM_API scm_i_pthread_key_t scm_i_freelist2;
-SCM_API struct scm_t_cell_type_statistics scm_i_master_freelist;
-SCM_API struct scm_t_cell_type_statistics scm_i_master_freelist2;
+extern scm_i_pthread_key_t scm_i_freelist;
+extern scm_i_pthread_key_t scm_i_freelist2;
+extern struct scm_t_cell_type_statistics scm_i_master_freelist;
+extern struct scm_t_cell_type_statistics scm_i_master_freelist2;
 #ifdef __MINGW32__
-SCM_API scm_i_pthread_key_t *scm_i_freelist_ptr;
-SCM_API scm_i_pthread_key_t *scm_i_freelist2_ptr;
-SCM_API struct scm_t_cell_type_statistics *scm_i_master_freelist_ptr;
-SCM_API struct scm_t_cell_type_statistics *scm_i_master_freelist2_ptr;
+extern scm_i_pthread_key_t *scm_i_freelist_ptr;
+extern scm_i_pthread_key_t *scm_i_freelist2_ptr;
+extern struct scm_t_cell_type_statistics *scm_i_master_freelist_ptr;
+extern struct scm_t_cell_type_statistics *scm_i_master_freelist2_ptr;
 #endif
 
-SCM_API uint64_t scm_gc_cells_swept;
-SCM_API uint64_t scm_gc_cells_collected;
-SCM_API uint64_t scm_gc_malloc_collected;
-SCM_API uint64_t scm_gc_ports_collected;
-SCM_API uint64_t scm_cells_allocated;
-SCM_API uint64_t scm_last_cells_allocated;
-SCM_API int scm_gc_cell_yield_percentage;
-SCM_API int scm_gc_malloc_yield_percentage;
-SCM_API uint64_t scm_mallocated;
-SCM_API uint64_t scm_mtrigger;
-SCM_API double scm_gc_cells_allocated_acc;
+extern uint64_t scm_gc_cells_swept;
+extern uint64_t scm_gc_cells_collected;
+extern uint64_t scm_gc_malloc_collected;
+extern uint64_t scm_gc_ports_collected;
+extern uint64_t scm_cells_allocated;
+extern uint64_t scm_last_cells_allocated;
+extern int scm_gc_cell_yield_percentage;
+extern int scm_gc_malloc_yield_percentage;
+extern uint64_t scm_mallocated;
+extern uint64_t scm_mtrigger;
+extern double scm_gc_cells_allocated_acc;
 
 
 
-SCM_API SCM scm_after_gc_hook;
+extern SCM scm_after_gc_hook;
 
-SCM_API scm_t_c_hook scm_before_gc_c_hook;
-SCM_API scm_t_c_hook scm_before_mark_c_hook;
-SCM_API scm_t_c_hook scm_before_sweep_c_hook;
-SCM_API scm_t_c_hook scm_after_sweep_c_hook;
-SCM_API scm_t_c_hook scm_after_gc_c_hook;
+extern scm_t_c_hook scm_before_gc_c_hook;
+extern scm_t_c_hook scm_before_mark_c_hook;
+extern scm_t_c_hook scm_before_sweep_c_hook;
+extern scm_t_c_hook scm_after_sweep_c_hook;
+extern scm_t_c_hook scm_after_gc_c_hook;
 
 #if defined (GUILE_DEBUG) || defined (GUILE_DEBUG_FREELIST)
 #if (SCM_ENABLE_DEPRECATED == 1)

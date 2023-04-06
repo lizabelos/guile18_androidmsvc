@@ -41,9 +41,9 @@
 
 
 /* smob tags for the thread datatypes */
-SCM_API scm_t_bits scm_tc16_thread;
-SCM_API scm_t_bits scm_tc16_mutex;
-SCM_API scm_t_bits scm_tc16_condvar;
+extern scm_t_bits scm_tc16_thread;
+extern scm_t_bits scm_tc16_mutex;
+extern scm_t_bits scm_tc16_condvar;
 
 typedef struct scm_i_thread {
   struct scm_i_thread *next_thread;
@@ -187,7 +187,7 @@ SCM_API void scm_dynwind_critical_section (SCM mutex);
 
 #define SCM_I_CURRENT_THREAD \
   ((scm_i_thread *) scm_i_pthread_getspecific (scm_i_thread_key))
-SCM_API scm_i_pthread_key_t scm_i_thread_key;
+extern scm_i_pthread_key_t scm_i_thread_key;
 
 #define scm_i_dynwinds()         (SCM_I_CURRENT_THREAD->dynwinds)
 #define scm_i_set_dynwinds(w)    (SCM_I_CURRENT_THREAD->dynwinds = (w))
@@ -195,7 +195,7 @@ SCM_API scm_i_pthread_key_t scm_i_thread_key;
 #define scm_i_set_last_debug_frame(f) \
                                  (SCM_I_CURRENT_THREAD->last_debug_frame = (f))
 
-SCM_API scm_i_pthread_mutex_t scm_i_misc_mutex;
+extern scm_i_pthread_mutex_t scm_i_misc_mutex;
 
 /* Convenience functions for working with the pthread API in guile
    mode.

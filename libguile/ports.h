@@ -109,9 +109,9 @@ typedef struct
   size_t putback_buf_size;        /* allocated size of putback_buf.  */
 } scm_t_port;
 
-SCM_API scm_t_port **scm_i_port_table;
-SCM_API int64_t scm_i_port_table_size; /* Number of ports in scm_i_port_table.  */
-SCM_API scm_i_pthread_mutex_t scm_i_port_table_mutex;
+extern scm_t_port **scm_i_port_table;
+extern int64_t scm_i_port_table_size; /* Number of ports in scm_i_port_table.  */
+extern scm_i_pthread_mutex_t scm_i_port_table_mutex;
 
 #define SCM_READ_BUFFER_EMPTY_P(c_port) (c_port->read_pos >= c_port->read_end)
 
@@ -191,11 +191,11 @@ typedef struct scm_t_ptob_descriptor
 /* SCM_PTOBNAME can be 0 if name is missing */
 #define SCM_PTOBNAME(ptobnum) scm_ptobs[ptobnum].name
 
-
 
-SCM_API scm_t_ptob_descriptor *scm_ptobs;
-SCM_API int64_t scm_numptob;
-SCM_API int64_t scm_i_port_table_room;
+
+extern scm_t_ptob_descriptor *scm_ptobs;
+extern int64_t scm_numptob;
+extern int64_t scm_i_port_table_room;
 
 
 

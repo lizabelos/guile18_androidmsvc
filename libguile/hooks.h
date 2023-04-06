@@ -71,7 +71,7 @@ SCM_API void *scm_c_hook_run (scm_t_c_hook *hook, void *data);
  * Scheme level hooks
  */
 
-SCM_API scm_t_bits scm_tc16_hook;
+extern scm_t_bits scm_tc16_hook;
 
 #define SCM_HOOKP(x)			SCM_SMOB_PREDICATE (scm_tc16_hook, x)
 #define SCM_HOOK_ARITY(hook)		SCM_SMOB_FLAGS (hook)

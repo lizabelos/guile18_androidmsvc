@@ -24,9 +24,9 @@
 
 #include "libguile/__scm.h"
 
-
 
-SCM_API int scm_print_carefully_p;
+
+extern int scm_print_carefully_p;
 
 SCM_API void scm_init_gdbint (void);
 

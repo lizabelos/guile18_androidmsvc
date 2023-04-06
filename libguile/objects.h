@@ -176,8 +176,8 @@ typedef struct scm_effective_slot_definition {
 #define SCM_INOUT_PCLASS_INDEX 0x200
 
 /* Plugin proxy classes for basic types. */
-SCM_API SCM scm_metaclass_standard;
-SCM_API SCM scm_metaclass_operator;
+extern SCM scm_metaclass_standard;
+extern SCM scm_metaclass_operator;
 
 /* Goops functions. */
 SCM_API SCM scm_make_extended_class (char const *type_name, int applicablep);

@@ -46,7 +46,7 @@ typedef struct scm_t_stack {
   scm_t_info_frame tail[1];
 } scm_t_stack;
 
-SCM_API SCM scm_stack_type;
+extern SCM scm_stack_type;
 
 #define SCM_STACKP(obj) (SCM_STRUCTP (obj) && scm_is_eq (SCM_STRUCT_VTABLE (obj), scm_stack_type))
 #define SCM_STACK_LENGTH(stack) (SCM_STACK (stack) -> length)

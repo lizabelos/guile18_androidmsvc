@@ -31,11 +31,11 @@
 #define SCM_CHAR(x) ((unsigned int)SCM_ITAG8_DATA(x))
 #define SCM_MAKE_CHAR(x) SCM_MAKE_ITAG8((scm_t_bits) (unsigned char) (x), scm_tc8_char)
 
-
 
-SCM_API char *const scm_charnames[];
-SCM_API int scm_n_charnames;
-SCM_API const char scm_charnums[];
+
+extern char *const scm_charnames[];
+extern int scm_n_charnames;
+extern const char scm_charnums[];
 
 
 

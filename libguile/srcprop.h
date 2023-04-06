@@ -54,13 +54,13 @@ do { \
 #define SCM_PROCTRACEP(x) (scm_is_true (scm_procedure_property (x, scm_sym_trace)))
 #define SCM_SOURCE_PROPERTY_FLAG_BREAK 1
 
-SCM_API scm_t_bits scm_tc16_srcprops;
+extern scm_t_bits scm_tc16_srcprops;
 
-SCM_API SCM scm_sym_filename;
-SCM_API SCM scm_sym_copy;
-SCM_API SCM scm_sym_line;
-SCM_API SCM scm_sym_column;
-SCM_API SCM scm_sym_breakpoint;
+extern SCM scm_sym_filename;
+extern SCM scm_sym_copy;
+extern SCM scm_sym_line;
+extern SCM scm_sym_column;
+extern SCM scm_sym_breakpoint;
 
 
 

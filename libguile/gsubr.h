@@ -37,7 +37,7 @@
 #define SCM_GSUBR_PROC(cclo) (SCM_CCLO_REF ((cclo), 2))
 #define SCM_SET_GSUBR_PROC(cclo, proc) (SCM_CCLO_SET ((cclo), 2, (proc)))
 
-SCM_API SCM scm_f_gsubr_apply;
+extern SCM scm_f_gsubr_apply;
 
 SCM_API SCM scm_c_make_gsubr (const char *name, 
 			      int req, int opt, int rst, SCM (*fcn) ());

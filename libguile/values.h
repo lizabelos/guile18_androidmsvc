@@ -24,7 +24,7 @@
 
 #include "libguile/__scm.h"
 
-SCM_API SCM scm_values_vtable;
+extern SCM scm_values_vtable;
 
 #define SCM_VALUESP(x) (SCM_STRUCTP (x)\
                         && scm_is_eq (scm_struct_vtable (x), scm_values_vtable))

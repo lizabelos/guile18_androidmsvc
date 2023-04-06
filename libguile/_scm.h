@@ -140,15 +140,15 @@
 #define scm_from_blkcnt_t_or_blkcnt64_t CHOOSE_LARGEFILE(scm_from_uint64,scm_from_uint64)
 #define scm_to_off_t_or_off64_t         CHOOSE_LARGEFILE(scm_to_off_t,scm_to_int64)
 
-#if SIZEOF_OFF_T == 4
-#  define scm_to_off_t    scm_to_int32
-#  define scm_from_off_t  scm_from_int32
-#elif SIZEOF_OFF_T == 8
+//#if SIZEOF_OFF_T == 4
+//#  define scm_to_off_t    scm_to_int32
+//#  define scm_from_off_t  scm_from_int32
+//#elif SIZEOF_OFF_T == 8
 #  define scm_to_off_t    scm_to_int64
 #  define scm_from_off_t  scm_from_int64
-#else
-#  error sizeof(off_t) is not 4 or 8.
-#endif
+//#else
+//#  error sizeof(off_t) is not 4 or 8.
+//#endif
 #define scm_to_off64_t    scm_to_int64
 #define scm_from_off64_t  scm_from_int64
 

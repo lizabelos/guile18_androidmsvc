@@ -32,16 +32,16 @@
 /* {Options}
  */
 
-SCM_API scm_t_option scm_eval_opts[];
+extern scm_t_option scm_eval_opts[];
 
 #define SCM_EVAL_STACK         scm_eval_opts[0].val
 #define SCM_N_EVAL_OPTIONS 1
 
-SCM_API int64_t scm_eval_stack;
+extern int64_t scm_eval_stack;
 
-SCM_API scm_t_option scm_evaluator_trap_table[];
+extern scm_t_option scm_evaluator_trap_table[];
 
-SCM_API SCM scm_eval_options_interface (SCM setting);
+extern SCM scm_eval_options_interface (SCM setting);
 
 #define SCM_TRAPS_P	       scm_evaluator_trap_table[0].val
 #define SCM_ENTER_FRAME_P      scm_evaluator_trap_table[1].val
@@ -76,7 +76,7 @@ SCM_API SCM scm_eval_options_interface (SCM setting);
 #define SCM_SET_PROMISE_DATA  SCM_SET_SMOB_OBJECT
 
 
-SCM_API scm_t_bits scm_tc16_promise;
+extern scm_t_bits scm_tc16_promise;
 
 
 
@@ -95,33 +95,33 @@ typedef SCM (*scm_t_trampoline_2) (SCM proc, SCM arg1, SCM arg2);
 
 #define SCM_TOP_LEVEL_LOOKUP_CLOSURE (scm_current_module_lookup_closure())
 
-
 
-SCM_API SCM scm_sym_and;
-SCM_API SCM scm_sym_begin;
-SCM_API SCM scm_sym_case;
-SCM_API SCM scm_sym_cond;
-SCM_API SCM scm_sym_define;
-SCM_API SCM scm_sym_do;
-SCM_API SCM scm_sym_if;
-SCM_API SCM scm_sym_lambda;
-SCM_API SCM scm_sym_let;
-SCM_API SCM scm_sym_letstar;
-SCM_API SCM scm_sym_letrec;
-SCM_API SCM scm_sym_quote;
-SCM_API SCM scm_sym_quasiquote;
-SCM_API SCM scm_sym_unquote;
-SCM_API SCM scm_sym_uq_splicing;
 
-SCM_API SCM scm_sym_atapply;
-SCM_API SCM scm_sym_atcall_cc;
-SCM_API SCM scm_sym_at_call_with_values;
-SCM_API SCM scm_sym_delay;
-SCM_API SCM scm_sym_arrow;
-SCM_API SCM scm_sym_else;
-SCM_API SCM scm_sym_apply;
-SCM_API SCM scm_sym_set_x;
-SCM_API SCM scm_sym_args;
+extern SCM scm_sym_and;
+extern SCM scm_sym_begin;
+extern SCM scm_sym_case;
+extern SCM scm_sym_cond;
+extern SCM scm_sym_define;
+extern SCM scm_sym_do;
+extern SCM scm_sym_if;
+extern SCM scm_sym_lambda;
+extern SCM scm_sym_let;
+extern SCM scm_sym_letstar;
+extern SCM scm_sym_letrec;
+extern SCM scm_sym_quote;
+extern SCM scm_sym_quasiquote;
+extern SCM scm_sym_unquote;
+extern SCM scm_sym_uq_splicing;
+
+extern SCM scm_sym_atapply;
+extern SCM scm_sym_atcall_cc;
+extern SCM scm_sym_at_call_with_values;
+extern SCM scm_sym_delay;
+extern SCM scm_sym_arrow;
+extern SCM scm_sym_else;
+extern SCM scm_sym_apply;
+extern SCM scm_sym_set_x;
+extern SCM scm_sym_args;
 
 
 
@@ -214,7 +214,7 @@ SCM_API SCM scm_macroexp (SCM x, SCM env);
 /* Deprecated in guile 1.7.0 on 2004-03-29.  */
 SCM_API SCM scm_ceval (SCM x, SCM env);
 SCM_API SCM scm_deval (SCM x, SCM env);
-SCM_API SCM (*scm_ceval_ptr) (SCM x, SCM env);
+extern SCM (*scm_ceval_ptr) (SCM x, SCM env);
 
 #endif
 
