@@ -4258,12 +4258,15 @@ start:
                 case scm_tc7_subr_3:
                     if (SCM_UNLIKELY (!scm_is_null(SCM_CDR(x))))
                         scm_wrong_num_args(proc);
-                    else
-                        RETURN (SCM_SUBRF3(proc)(arg1, arg2, EVALCAR(x, env)));
+                    else {
+                        SCM evalcarres = EVALCAR(x, env);
+                        RETURN (SCM_SUBRF3(proc)(arg1, arg2, evalcarres));
+                    }
                 case scm_tc7_asubr:
                     arg1 = SCM_SUBRF2 (proc)(arg1, arg2);
                     do {
-                        arg1 = SCM_SUBRF2(proc)(arg1, EVALCAR(x, env));
+                        SCM evalcarres = EVALCAR(x, env);
+                        arg1 = SCM_SUBRF2(proc)(arg1, evalcarres);
                         x = SCM_CDR(x);
                     } while (!scm_is_null (x));
                     RETURN (arg1);

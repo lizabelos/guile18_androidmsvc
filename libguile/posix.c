@@ -153,12 +153,6 @@ extern char *ttyname();
 #define F_OK 0
 #endif
 
-/* No prototype for this on Solaris 10.  The man page says it's in
-   <unistd.h> ... but it lies. */
-#if ! HAVE_DECL_SETHOSTNAME
-int sethostname (char *name, size_t namelen);
-#endif
-
 /* On NextStep, <utime.h> doesn't define struct utime, unless we
    #define _POSIX_SOURCE before #including it.  I think this is less
    of a kludge than defining struct utimbuf ourselves.  */

@@ -25,7 +25,7 @@
 #include <stdio.h>
 #include <sys/stat.h>
 #include <fcntl.h>
-#include <mini-gmp.h>
+#include "mini-gmp.h"
 
 #include "libguile/_scm.h"
 
@@ -496,9 +496,7 @@ scm_i_init_guile (SCM_STACKITEM *base)
   scm_init_pairs ();
   scm_init_ports ();
   scm_init_filesys ();
-#ifdef HAVE_POSIX
   scm_init_posix ();
-#endif
 #ifdef HAVE_REGCOMP
   scm_init_regex_posix ();
 #endif

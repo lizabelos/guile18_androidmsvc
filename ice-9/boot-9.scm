@@ -1626,6 +1626,7 @@
 	      (if (and oldname
 		       (> (string-length filename) 0)
 		       (not (char=? (string-ref filename 0) #\/))
+           (not (char=? (string-ref filename 1) #\:))
 		       (not (string=? (dirname oldname) ".")))
 		  (string-append (dirname oldname) "/" filename)
 		  filename)

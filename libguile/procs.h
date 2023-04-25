@@ -93,7 +93,7 @@ typedef SCM(*SCM_fun12)(SCM, SCM, SCM, SCM, SCM, SCM, SCM, SCM, SCM, SCM, SCM, S
 #define SCM_SUBRF12(x) ((SCM_fun12) SCM_SUBRF (x))
 
 SCM scm_self();
-void scm_reset_self();
+void scm_reset_self(SCM x);
 
 
 #define SCM_SET_SUBRF(x, v) (SCM_SET_CELL_WORD_1 ((x), (v)))

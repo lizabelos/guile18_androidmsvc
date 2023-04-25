@@ -21,7 +21,7 @@
 
 /* This needs to be included outside of the extern "C" block.
  */
-#include <mini-gmp.h>
+#include <mini-gmp/mini-gmp.h>
 
 #ifdef __cplusplus
 extern "C" {

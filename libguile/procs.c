@@ -362,19 +362,44 @@ scm_init_procs ()
 }
 
 // Liza
-SCM guile_self = NULL;
+// SCM guile_self = NULL;
+// replace guile_sef with a linked list
+
+typedef struct scm_self_list {
+    SCM self;
+    struct scm_self_list *next;
+} scm_self_list;
+
+scm_self_list  *guile_self_list = NULL;
 
 SCM_fun SCM_SUBRF(SCM x) {
-    guile_self = x;
+    scm_self_list *new_self = (scm_self_list *) malloc(sizeof(scm_self_list));
+    new_self->self = x;
+    new_self->next = guile_self_list;
+    guile_self_list = new_self;
     return (SCM(*)()) SCM_CELL_WORD_1 (x);
 }
 
-SCM scm_self() {
-    return guile_self;
+void scm_append_self(SCM x) {
+    scm_self_list *new_self = (scm_self_list *) malloc(sizeof(scm_self_list));
+    new_self->self = x;
+    new_self->next = guile_self_list;
+    guile_self_list = new_self;
 }
 
-void scm_reset_self() {
-    guile_self = NULL;
+SCM scm_self() {
+    assert(guile_self_list != NULL);
+    return guile_self_list->self;
+}
+
+void scm_reset_self(SCM x) {
+    if (guile_self_list == NULL || guile_self_list->self != x) {
+        return;
+    }
+
+    scm_self_list *tmp = guile_self_list;
+    guile_self_list = guile_self_list->next;
+    free(tmp);
 }
 
 /*

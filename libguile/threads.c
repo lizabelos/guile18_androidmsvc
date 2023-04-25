@@ -567,25 +567,6 @@ init_thread_key (void)
 int SCM_STACK_GROWS_UP;
 
 // If not windows or mingw
-#if defined(__MINGW32__) || (!defined(_WIN32) && !defined(__WIN32__) && !defined(__WIN32) && !defined(__CYGWIN__))
-#include <pthread.h>
-int stack_direction(int *a)
-{
-    pthread_attr_t attr;
-    void* stack_addr;
-    size_t stack_size;
-
-    pthread_attr_init(&attr);
-    pthread_attr_getstack(&attr, &stack_addr, &stack_size);
-
-    int local_var;
-    if ((intptr_t)&local_var > (intptr_t)stack_addr) {
-        return 0;
-    } else {
-        return 1;
-    }
-}
-#else
 int stack_direction(int *a)
 {
     if (a == NULL) {
@@ -600,7 +581,6 @@ int stack_direction(int *a)
         return 0;
     }
 }
-#endif
 
 static int
 scm_i_init_thread_for_guile (SCM_STACKITEM *base, SCM parent)

@@ -181,13 +181,14 @@ scm_c_define_gsubr_with_generic (const char *name,
 }
 
 
-extern SCM guile_self;
+void scm_append_self(SCM x);
 
 SCM
 scm_gsubr_apply (SCM args)
 #define FUNC_NAME "scm_gsubr_apply"
 {
-  guile_self = SCM_CAR (args);
+  SCM guile_self = SCM_CAR (args);
+  scm_append_self(guile_self);
   SCM (*fcn)() = SCM_SUBRF_PROC (SCM_GSUBR_PROC (guile_self));
   SCM v[SCM_GSUBR_MAX];
   int typ = scm_to_int (SCM_GSUBR_TYPE (guile_self));
