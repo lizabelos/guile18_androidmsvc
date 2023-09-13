@@ -21,9 +21,9 @@
 { "pkgdatadir",	       "@PREFIX@/share/guile" }, \
 { "pkglibdir",	       "@PREFIX@/lib/guile" }, \
 { "pkgincludedir",     "@PREFIX@/include/guile" }, \
-{ "guileversion",      "@guile_VERSION@" }, \
+{ "guileversion",      "1.8.8" }, \
 { "libguileinterface", "21:0:4" }, \
-{ "LIBS",	           "  -lgmp -lcrypt -lm -lltdl " }, \
-{ "CFLAGS",	           " -pthread" }, \
+{ "LIBS",	           "" }, \
+{ "CFLAGS",	           "" }, \
 { "buildstamp",        "@BUILDSTAMP@" }, \
 }

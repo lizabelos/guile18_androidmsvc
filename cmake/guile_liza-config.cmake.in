@@ -1,0 +1,30 @@
+@PACKAGE_INIT@
+
+include("${CMAKE_CURRENT_LIST_DIR}/guile_liza-targets.cmake")
+
+# Define package components (if needed)
+# list(APPEND guile_liza_components your_component_name)
+
+# Create imported targets for each component (if needed)
+# foreach(component ${guile_liza_components})
+#     add_library(guile_liza::${component} UNKNOWN IMPORTED)
+#     set_target_properties(guile_liza::${component} PROPERTIES
+#         INTERFACE_INCLUDE_DIRECTORIES "${CMAKE_INSTALL_INCLUDEDIR}"
+#         IMPORTED_LOCATION "${CMAKE_INSTALL_LIBDIR}/lib${component}${CMAKE_IMPORT_LIBRARY_SUFFIX}"
+#     )
+# endforeach()
+
+# Create an imported target for the main library
+add_library(guile_liza::guile_liza INTERFACE IMPORTED)
+set_target_properties(guile_liza::guile_liza PROPERTIES
+    INTERFACE_INCLUDE_DIRECTORIES "${CMAKE_INSTALL_INCLUDEDIR}"
+    # INTERFACE_LINK_LIBRARIES guile_liza::your_component_name (if applicable)
+)
+
+# Link against required libraries (if needed)
+# target_link_libraries(guile_liza::guile_liza INTERFACE guile_liza::your_component_name)
+
+# Add any other configuration options you might need
+
+# Alias to the main library target
+add_library(guile_liza::guile_liza_alias ALIAS guile_liza::guile_liza)

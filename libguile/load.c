@@ -77,9 +77,9 @@ SCM_DEFINE (scm_primitive_load, "primitive-load", 1, 0, 0,
 {
 
     SCM p = scm_current_error_port();
-    scm_puts("primitive-load: ", p);
-    scm_display(filename, p);
-    scm_newline(p);
+    //scm_puts("primitive-load: ", p);
+    //scm_display(filename, p);
+    //scm_newline(p);
 
   SCM hook = *scm_loc_load_hook;
   SCM_VALIDATE_STRING (1, filename);
@@ -116,9 +116,9 @@ SCM_DEFINE (scm_primitive_load, "primitive-load", 1, 0, 0,
     scm_dynwind_end ();
     scm_close_port (port);
   }
-    scm_puts("done loading ", p);
-    scm_display(filename, p);
-    scm_newline(p);
+   // scm_puts("done loading ", p);
+   // scm_display(filename, p);
+   // scm_newline(p);
   return SCM_UNSPECIFIED;
 }
 #undef FUNC_NAME
@@ -216,7 +216,6 @@ scm_init_load_path ()
 
   env = getenv ("GUILE_LOAD_PATH");
   if (env) {
-      printf("GUILE_LOAD_PATH=%s", env);
       path = scm_parse_path(scm_from_locale_string(env), path);
   }
 

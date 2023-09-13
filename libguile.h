@@ -21,7 +21,7 @@
 
 /* This needs to be included outside of the extern "C" block.
  */
-#include <mini-gmp/mini-gmp.h>
+#include "libguile/mini-gmp.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -114,7 +114,7 @@ extern "C" {
 #include "libguile/inline.h"
 
 #include "libguile/discouraged.h"
-#include "libguile/deprecated.h"
+//#include "libguile/deprecated.h"
 
 #ifdef __cplusplus
 }

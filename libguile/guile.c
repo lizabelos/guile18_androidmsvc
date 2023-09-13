@@ -30,27 +30,14 @@
 #include <libguile.h>
 
 #include <libguile/scmconfig.h>
-#include <ltdl.h>
-
-#ifdef HAVE_WINSOCK2_H
-#include <winsock2.h>
-#endif
 
 static void
 inner_main (void *closure SCM_UNUSED, int argc, char **argv)
 {
-#ifdef __MINGW32__
-  /* This is necessary to startup the Winsock API under Win32. */
-  WSADATA WSAData;
-  WSAStartup (0x0202, &WSAData);
-#endif /* __MINGW32__ */
 
   /* module initializations would go here */
   scm_shell (argc, argv);
 
-#ifdef __MINGW32__
-  WSACleanup ();
-#endif /* __MINGW32__ */
 }
 
 int

@@ -25,7 +25,7 @@
 #include <stdio.h>
 #include <sys/stat.h>
 #include <fcntl.h>
-#include "mini-gmp.h"
+#include "libguile/mini-gmp.h"
 
 #include "libguile/_scm.h"
 
@@ -345,12 +345,6 @@ scm_boot_guile (int argc, char ** argv,
                                    char **argv),
                 void *closure)
 {
-
-#if USE_64IMPL
-    printf("Booting Guile using 64 bit implementation");
-#else
-    printf("Booting Guile using 32 bit implementation");
-#endif
 
   void *res;
   struct main_func_closure c;

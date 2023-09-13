@@ -732,9 +732,8 @@ scm_shell (int argc, char **argv)
       }
   }
 
-  //exit (scm_exit_status (scm_eval_x (scm_compile_shell_switches (argc, argv),
-	//			     scm_current_module ())));
-    call_error_callback();
+  exit (scm_exit_status (scm_eval_x (scm_compile_shell_switches (argc, argv),
+				     scm_current_module ())));
 }
 
 

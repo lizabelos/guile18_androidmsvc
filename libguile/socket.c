@@ -22,7 +22,7 @@
 #include <config.h>
 
 #include <errno.h>
-#include "mini-gmp.h"
+#include "libguile/mini-gmp.h"
 
 #include "libguile/_scm.h"
 #include "libguile/unif.h"

@@ -20,10 +20,6 @@ configure_file (${CMAKE_CURRENT_SOURCE_DIR}/cmake/libguile/version.h.cmake      
 configure_file (${CMAKE_CURRENT_SOURCE_DIR}/cmake/libguile/libpath.h.cmake       ${CMAKE_CURRENT_BINARY_DIR}/libguile/libpath.h)
 
 
-add_library(minigmp INTERFACE)
-target_sources(minigmp INTERFACE ${CMAKE_CURRENT_SOURCE_DIR}/mini-gmp/mini-gmp.c ${CMAKE_CURRENT_SOURCE_DIR}/mini-gmp/mini-mpq.c)
-target_include_directories(minigmp INTERFACE ${CMAKE_CURRENT_SOURCE_DIR}/mini-gmp)
-
 add_library(guile STATIC)
 # use -fno-strict-aliasing
 target_compile_options(guile PUBLIC -fno-strict-aliasing)
@@ -43,7 +39,7 @@ if (GUILE_ENABLE_SANITIZE)
 endif()
 
 target_sources(guile
-        PUBLIC
+        PRIVATE
         ${CMAKE_CURRENT_SOURCE_DIR}/libguile/alist.c
         ${CMAKE_CURRENT_SOURCE_DIR}/libguile/alloca.c
         ${CMAKE_CURRENT_SOURCE_DIR}/libguile/arbiters.c
@@ -64,7 +60,7 @@ target_sources(guile
         ${CMAKE_CURRENT_SOURCE_DIR}/libguile/cpp_signal.c
         # ${CMAKE_CURRENT_SOURCE_DIR}/libguile/debug-malloc.c
         ${CMAKE_CURRENT_SOURCE_DIR}/libguile/debug.c
-        ${CMAKE_CURRENT_SOURCE_DIR}/libguile/deprecated.c
+        #${CMAKE_CURRENT_SOURCE_DIR}/libguile/deprecated.c
         ${CMAKE_CURRENT_SOURCE_DIR}/libguile/deprecation.c
         ${CMAKE_CURRENT_SOURCE_DIR}/libguile/discouraged.c
         ${CMAKE_CURRENT_SOURCE_DIR}/libguile/dynl.c
@@ -169,17 +165,26 @@ target_sources(guile
         ${CMAKE_CURRENT_SOURCE_DIR}/libguile/weaks.c
 
         ${CMAKE_CURRENT_SOURCE_DIR}/libguile/eval.cpp
+
+
+        ${CMAKE_CURRENT_SOURCE_DIR}/libguile/mini-gmp.c
+        ${CMAKE_CURRENT_SOURCE_DIR}/libguile/mini-mpq.c
         )
 if (WIN32)
-    target_sources(guile PUBLIC
+    target_sources(guile PRIVATE
             ${CMAKE_CURRENT_SOURCE_DIR}/libguile/win32-dirent.c
             ${CMAKE_CURRENT_SOURCE_DIR}/libguile/win32-socket.c
             ${CMAKE_CURRENT_SOURCE_DIR}/libguile/win32-uname.c
             )
 endif ()
-target_include_directories(guile PUBLIC ${CMAKE_CURRENT_BINARY_DIR} ${CMAKE_CURRENT_SOURCE_DIR})
+target_include_directories(guile PRIVATE ${CMAKE_CURRENT_BINARY_DIR} ${CMAKE_CURRENT_SOURCE_DIR})
 
-target_link_libraries(guile PUBLIC Threads::Threads minigmp)
+target_link_libraries(guile PUBLIC Threads::Threads)
+
+# Add executable
+add_executable(guileinterpreter libguile/guile.c)
+set_target_properties(guileinterpreter PROPERTIES OUTPUT_NAME "guile")
+target_link_libraries(guileinterpreter PUBLIC guile)
 
 # Fix undefined reference to `__imp_WSAGetLastError' with mingw
 if (MINGW)
@@ -214,21 +219,67 @@ function(GenerateResourcesQRC)
 
 endfunction()
 
-option(USE_GUILE_QT5 "Use Qt for GUILE" OFF)
-if (USE_GUILE_QT5)
-    set(CMAKE_AUTORCC ON)
-    find_package(Qt5 COMPONENTS Core REQUIRED)
-    target_link_libraries(guile PUBLIC Qt5::Core)
-    target_compile_definitions(guile PUBLIC USE_GUILE_QT)
-    GenerateResourcesQRC()
-endif()
 
-option(USE_GUILE_QT6 "Use Qt for GUILE" OFF)
-if (USE_GUILE_QT6)
-    set(CMAKE_AUTORCC ON)
-    find_package(Qt6 COMPONENTS Core REQUIRED)
-    target_link_libraries(guile PUBLIC Qt6::Core)
-    target_compile_definitions(guile PUBLIC USE_GUILE_QT)
-    GenerateResourcesQRC()
-endif()
+# Specify installation paths
+include(GNUInstallDirs)
 
+# Install the library
+install(TARGETS guile
+    EXPORT guile_liza-targets
+    ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
+    LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+    INCLUDES DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
+)
+
+# Install header files
+install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/libguile/
+    DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/libguile
+    FILES_MATCHING PATTERN "*.h"
+)
+
+# Install libguile.h
+install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/libguile.h
+    DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
+)
+
+# Install guile-config, guile-snarf, and guile-tools from ./tools to bin directory
+install(PROGRAMS ${CMAKE_CURRENT_SOURCE_DIR}/tools/guile-config
+    DESTINATION ${CMAKE_INSTALL_BINDIR}
+)
+
+install(PROGRAMS ${CMAKE_CURRENT_SOURCE_DIR}/tools/guile-snarf
+    DESTINATION ${CMAKE_INSTALL_BINDIR}
+)
+
+install(PROGRAMS ${CMAKE_CURRENT_SOURCE_DIR}/tools/guile-tools
+    DESTINATION ${CMAKE_INSTALL_BINDIR}
+)
+
+# Install guileinterpreter as bin/guile
+install(TARGETS guileinterpreter
+    DESTINATION ${CMAKE_INSTALL_BINDIR}
+    RENAME guile
+)
+
+# Install the directory ice-9 to share/guile/1.8
+install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/ice-9
+    DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/guile/1.8
+)
+
+# Export targets for use by downstream projects
+install(EXPORT guile_liza-targets
+    FILE guile_liza-targets.cmake
+    NAMESPACE guile_liza::
+    DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/guile_liza
+)
+
+# Create and install a package configuration file
+include(CMakePackageConfigHelpers)
+configure_package_config_file(
+    ${CMAKE_CURRENT_SOURCE_DIR}/cmake/guile_liza-config.cmake.in
+    ${CMAKE_CURRENT_BINARY_DIR}/guile_liza-config.cmake
+    INSTALL_DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/guile_liza
+)
+install(FILES ${CMAKE_CURRENT_BINARY_DIR}/guile_liza-config.cmake
+    DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/guile_liza
+)
