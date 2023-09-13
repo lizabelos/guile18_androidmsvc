@@ -26,9 +26,10 @@
 
 
 
-#define SCM_MAJOR_VERSION @-GUILE_MAJOR_VERSION-@
-#define SCM_MINOR_VERSION @-GUILE_MINOR_VERSION-@
-#define SCM_MICRO_VERSION @-GUILE_MICRO_VERSION-@
+#define SCM_MAJOR_VERSION 1
+#define SCM_MINOR_VERSION 8
+#define SCM_MICRO_VERSION 8
+#define SCM_GUILEPP
 
 SCM_API SCM scm_major_version (void);
 SCM_API SCM scm_minor_version (void);

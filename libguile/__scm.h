@@ -288,7 +288,7 @@
  * deprecated functions.
  */
 #ifndef SCM_ENABLE_DEPRECATED
-#define SCM_ENABLE_DEPRECATED 0
+#define SCM_ENABLE_DEPRECATED 1
 #endif
 
 

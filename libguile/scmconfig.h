@@ -37,11 +37,11 @@ typedef SSIZE_T ssize_t;
 
 /* Set to 1 if you want to enable discouraged features. */
 /* (value will be 0 or 1). */
-#define SCM_ENABLE_DISCOURAGED 0
+#define SCM_ENABLE_DISCOURAGED 1
 
 /* Set to 1 if you want to enable deprecated features. */
 /* (value will be 0 or 1). */
-#define SCM_ENABLE_DEPRECATED 0
+#define SCM_ENABLE_DEPRECATED 1
 
 /* Set to 1 to add Elisp support (in addition to Scheme). */
 #define SCM_ENABLE_ELISP 1 /* 0 or 1 */

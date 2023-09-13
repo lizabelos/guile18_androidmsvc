@@ -60,7 +60,7 @@ target_sources(guile
         ${CMAKE_CURRENT_SOURCE_DIR}/libguile/cpp_signal.c
         # ${CMAKE_CURRENT_SOURCE_DIR}/libguile/debug-malloc.c
         ${CMAKE_CURRENT_SOURCE_DIR}/libguile/debug.c
-        #${CMAKE_CURRENT_SOURCE_DIR}/libguile/deprecated.c
+        ${CMAKE_CURRENT_SOURCE_DIR}/libguile/deprecated.c
         ${CMAKE_CURRENT_SOURCE_DIR}/libguile/deprecation.c
         ${CMAKE_CURRENT_SOURCE_DIR}/libguile/discouraged.c
         ${CMAKE_CURRENT_SOURCE_DIR}/libguile/dynl.c
