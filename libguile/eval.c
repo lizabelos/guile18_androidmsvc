@@ -2962,10 +2962,10 @@ deval_args (SCM l, SCM env, SCM proc, SCM *lloc)
   static int deval_args_recursion_depth = 0;
   deval_args_recursion_depth++;
 
-  if (deval_args_recursion_depth > 10)
+  /*if (deval_args_recursion_depth > 10)
     {
       scm_misc_error (proc, "deval_args recursion depth exceeded", SCM_EOL);
-    }
+    }*/
 
   SCM *results = lloc;
   while (scm_is_pair (l))
