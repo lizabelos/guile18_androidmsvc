@@ -183,8 +183,12 @@ target_link_libraries(guile PUBLIC Threads::Threads)
 
 # Add executable
 add_executable(guileinterpreter libguile/guile.c)
+add_executable(guiletest libguile/test.c)
+
 set_target_properties(guileinterpreter PROPERTIES OUTPUT_NAME "guile")
+
 target_link_libraries(guileinterpreter PUBLIC guile)
+target_link_libraries(guiletest PUBLIC guile)
 
 # Fix undefined reference to `__imp_WSAGetLastError' with mingw
 if (MINGW)

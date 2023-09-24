@@ -79,6 +79,15 @@ TYPE SCM_TO_TYPE_PROTO (SCM val) {
     }
 }
 
+
+SCM
+SCM_MPZ_FROM_TYPE_PROTOU (TYPE val) {
+    SCM z = scm_double_cell(scm_tc16_big, 0, 0, 0);
+    mpz_init(SCM_I_BIG_MPZ (z));
+    mpz_import(SCM_I_BIG_MPZ (z), 1, 1, sizeof(TYPE), 0, 0, &val);
+    return z;
+}
+
 SCM
 SCM_FROM_TYPE_PROTO (TYPE val) {
     if (SIZEOF_TYPE != 0 && SIZEOF_TYPE < sizeof(void*)) {
@@ -103,4 +112,4 @@ SCM_FROM_TYPE_PROTO (TYPE val) {
 #undef SIZEOF_TYPE
 #undef SCM_TO_TYPE_PROTO
 #undef SCM_FROM_TYPE_PROTO
-
+#undef SCM_MPZ_FROM_TYPE_PROTO

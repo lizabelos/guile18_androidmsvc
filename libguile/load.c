@@ -212,7 +212,10 @@ scm_init_load_path ()
   char *env;
   SCM path = SCM_EOL;
 
-  path = scm_list_1 (scm_from_locale_string ("./guile"));
+  //path = scm_list_1 (scm_from_locale_string ("./guile"));
+  path = scm_list_3 (scm_from_locale_string ("./guile"),
+                     scm_from_locale_string ("."),
+                     scm_from_locale_string (".."));
 
   env = getenv ("GUILE_LOAD_PATH");
   if (env) {
