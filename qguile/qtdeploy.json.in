@@ -1,0 +1,17 @@
+{
+ "description": "This file is to be read by androiddeployqt",
+ "qt": "@QT_ANDROID_QT_ROOT@",
+ "sdk": "@QT_ANDROID_SDK_ROOT@",
+ "sdkBuildToolsRevision": "@QT_ANDROID_SDK_BUILDTOOLS_REVISION@",
+ "ndk": "@QT_ANDROID_NDK_ROOT@",
+ "toolchain-prefix": "@QT_ANDROID_TOOLCHAIN_PREFIX@",
+ "tool-prefix": "@QT_ANDROID_TOOL_PREFIX@",
+ "ndk-host": "@ANDROID_NDK_HOST_SYSTEM_NAME@",
+ "architectures": { @QT_ANDROID_ARCHITECTURES@ },
+ "android-min-sdk-version": "31",
+ "android-target-sdk-version": "30",
+ "qml-root-path": "@CMAKE_SOURCE_DIR@",
+ "stdcpp-path": "@QT_ANDROID_STL_PATH@",
+ "application-binary": "@QT_ANDROID_APPLICATION_BINARY@",
+ "android-package-source-directory": "@QT_ANDROID_APP_PACKAGE_SOURCE_ROOT@"
+}

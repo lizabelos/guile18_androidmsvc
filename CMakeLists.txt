@@ -195,34 +195,12 @@ if (MINGW)
     target_link_libraries(guile PUBLIC ws2_32)
 endif ()
 
-function(GenerateResourcesQRC)
-
-    # Generate resources.qrc
-    file(GLOB_RECURSE Guile_Resources "${CMAKE_CURRENT_SOURCE_DIR}/ice-9/*")
-
-    set(Guile_Resources_List "")
-
-    # For each file
-    foreach (Guile_Resource ${Guile_Resources})
-        # Get the file name
-        get_filename_component(Guile_Resource_Name ${Guile_Resource} NAME)
-        # Get the file path
-        get_filename_component(Guile_Resource_Path ${Guile_Resource} PATH)
-        # Remove the path prefix
-        string(REPLACE "${CMAKE_CURRENT_SOURCE_DIR}" "" Guile_Resource_Path ${Guile_Resource_Path})
-        # Add the file to the resources
-        # list(APPEND Guile_Resources_List "<file alias=\"${Guile_Resource_Path}/${Guile_Resource_Name}\">${Guile_Resource}</file>")
-        set(Guile_Resources_List "${Guile_Resources_List}<file alias=\"${Guile_Resource_Path}/${Guile_Resource_Name}\">${Guile_Resource}</file>\n")
-    endforeach ()
-
-    # Generate the qrc file
-    configure_file("${CMAKE_CURRENT_SOURCE_DIR}/resources.qrc.in" "${CMAKE_CURRENT_BINARY_DIR}/resources.qrc" @ONLY)
-
-    # add the qrc to the texmacs target
-    target_sources(guile PUBLIC "${CMAKE_CURRENT_BINARY_DIR}/resources.qrc")
-
-endfunction()
-
+### Interpreter
+# An option to enable the qt gui
+option(GUILE_ENABLE_QTGUI OFF)
+if (GUILE_ENABLE_QTGUI)
+    add_subdirectory(qguile)
+endif ()
 
 # Specify installation paths
 include(GNUInstallDirs)
