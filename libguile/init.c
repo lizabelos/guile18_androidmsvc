@@ -121,6 +121,7 @@
 #include "libguile/srfi-4.h"
 #include "libguile/discouraged.h"
 #include "libguile/deprecated.h"
+#include "libguile/regex-posix.h"
 
 #include "libguile/init.h"
 
@@ -442,7 +443,7 @@ scm_i_init_guile (SCM_STACKITEM *base)
   scm_environments_prehistory (); /* requires storage */
   scm_modules_prehistory ();      /* requires storage and hash tables */
   scm_init_variable ();           /* all bindings need variables */
-  scm_init_continuations ();
+// scm_init_continuations ();
   scm_init_root ();		  /* requires continuations */
   scm_init_threads ();            /* requires fluids */
   scm_init_gsubr ();
@@ -491,9 +492,7 @@ scm_i_init_guile (SCM_STACKITEM *base)
   scm_init_ports ();
   scm_init_filesys ();
   scm_init_posix ();
-#ifdef HAVE_REGCOMP
   scm_init_regex_posix ();
-#endif
   scm_init_procs ();
   scm_init_scmsigs ();
 #ifdef HAVE_NETWORKING

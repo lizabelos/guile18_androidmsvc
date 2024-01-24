@@ -17,7 +17,6 @@
 
 
 
-#if 0 // no posix
 
 /* regex-posix.c -- POSIX regular expression support.
 
@@ -37,7 +36,6 @@
    POSIX regular expressions.  But we still put this in an #ifdef so
    the file is CPP'able (for dependency scanning) even on systems that
    don't have a <regex.h> header.  */
-#ifdef HAVE_REGCOMP
 #ifdef HAVE_REGEX_H
 #include <regex.h>
 #else
@@ -49,7 +47,7 @@
 #endif
 #endif
 #endif
-#endif
+
 
 #include "libguile/async.h"
 #include "libguile/smob.h"
@@ -315,4 +313,3 @@ scm_init_regex_posix ()
   End:
 */
 
-#endif

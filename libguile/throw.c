@@ -517,8 +517,9 @@ scm_handle_by_message (void *handler_data, SCM tag, SCM args)
 SCM
 scm_handle_by_message_noexit (void *handler_data, SCM tag, SCM args)
 {
-    if (scm_is_true (scm_eq_p (tag, scm_from_locale_symbol ("quit"))))
-        call_error_callback();
+    if (scm_is_true (scm_eq_p (tag, scm_from_locale_symbol ("quit")))) {
+        exit (scm_exit_status (args));
+    }
 
     handler_message (handler_data, tag, args);
 
