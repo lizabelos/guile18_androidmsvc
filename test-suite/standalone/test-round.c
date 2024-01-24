@@ -20,6 +20,7 @@
 #include <assert.h>
 #include <math.h>
 #include <stdio.h>
+#include <float.h>
 
 #if HAVE_FENV_H
 #include <fenv.h>

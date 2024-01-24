@@ -45,6 +45,7 @@
 #include <math.h>
 #include <ctype.h>
 #include <string.h>
+#include <float.h>
 
 #if HAVE_COMPLEX_H
 #include <complex.h>
@@ -76,7 +77,6 @@ typedef int32_t gmp_number;
 #endif
 
 #define GMP_NUMB_BITS (sizeof(mp_limb_t) * CHAR_BIT)
-#define DBL_MANT_DIG 53
 
 
 

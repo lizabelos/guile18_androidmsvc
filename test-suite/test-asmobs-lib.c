@@ -16,25 +16,27 @@
  */
 
 # include <config.h>
+#include "libguile/_scm.h"
+#include "libguile/gc.h"
+#include "libguile/smob.h"
+#include "libguile/tags.h"
 
-#include <libguile.h>
-
-int64_t asmob000;
-int64_t asmob100;
-int64_t asmob010;
-int64_t asmob001;
-int64_t asmob200;
-int64_t asmob110;
-int64_t asmob020;
-int64_t asmob101;
-int64_t asmob011;
-int64_t asmob300;
-int64_t asmob210;
-int64_t asmob120;
-int64_t asmob030;
-int64_t asmob201;
-int64_t asmob021;
-int64_t asmob111;
+scm_t_bits asmob000;
+scm_t_bits asmob100;
+scm_t_bits asmob010;
+scm_t_bits asmob001;
+scm_t_bits asmob200;
+scm_t_bits asmob110;
+scm_t_bits asmob020;
+scm_t_bits asmob101;
+scm_t_bits asmob011;
+scm_t_bits asmob300;
+scm_t_bits asmob210;
+scm_t_bits asmob120;
+scm_t_bits asmob030;
+scm_t_bits asmob201;
+scm_t_bits asmob021;
+scm_t_bits asmob111;
 
 /* since we don't have SCM_DEFINE_STATIC or similar */
 SCM scm_make_asmob000 (void);

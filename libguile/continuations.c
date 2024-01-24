@@ -176,7 +176,7 @@ static void scm_dynthrow (SCM, SCM);
 
 scm_t_bits scm_i_dummy;
 
-static void 
+static void
 grow_stack (SCM cont, SCM val)
 {
   scm_t_bits growth[100];

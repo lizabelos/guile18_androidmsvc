@@ -360,7 +360,7 @@ scm_boot_guile (int argc, char ** argv,
   /* If the caller doesn't want this, they should exit from main_func
      themselves.
   */
-  call_error_callback();
+  return;
 }
 
 static void *
@@ -443,7 +443,7 @@ scm_i_init_guile (SCM_STACKITEM *base)
   scm_environments_prehistory (); /* requires storage */
   scm_modules_prehistory ();      /* requires storage and hash tables */
   scm_init_variable ();           /* all bindings need variables */
-// scm_init_continuations ();
+ scm_init_continuations ();
   scm_init_root ();		  /* requires continuations */
   scm_init_threads ();            /* requires fluids */
   scm_init_gsubr ();

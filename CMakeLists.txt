@@ -169,6 +169,8 @@ target_sources(guile
 
         ${CMAKE_CURRENT_SOURCE_DIR}/libguile/mini-gmp.c
         ${CMAKE_CURRENT_SOURCE_DIR}/libguile/mini-mpq.c
+
+        ${CMAKE_CURRENT_SOURCE_DIR}/test-suite/test-asmobs-lib.c
         )
 if (WIN32)
     target_sources(guile PRIVATE
@@ -180,6 +182,9 @@ endif ()
 target_include_directories(guile PRIVATE ${CMAKE_CURRENT_BINARY_DIR} ${CMAKE_CURRENT_SOURCE_DIR})
 
 target_link_libraries(guile PUBLIC Threads::Threads)
+
+# use O0
+target_compile_options(guile PUBLIC -O0)
 
 # Add executable
 add_executable(guileinterpreter libguile/guile.c)
@@ -207,6 +212,19 @@ foreach (test_file ${TEST_FILES})
     add_test(NAME ${test_name}
             COMMAND ${CMAKE_CURRENT_BINARY_DIR}/guile -e main -s guile-test ${test_name}.test
             WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/test-suite
+    )
+endforeach ()
+
+file(GLOB TEST_FILES_STANDARD ${CMAKE_CURRENT_SOURCE_DIR}/test-suite/standalone/*.c)
+foreach (test_file ${TEST_FILES_STANDARD})
+    # build the test file
+    get_filename_component(test_name ${test_file} NAME_WE)
+    add_executable(${test_name} ${test_file})
+    target_link_libraries(${test_name} PUBLIC guile)
+    # run the test file
+    add_test(NAME ${test_name}
+            COMMAND ${CMAKE_CURRENT_BINARY_DIR}/${test_name}
+            WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
     )
 endforeach ()
 
