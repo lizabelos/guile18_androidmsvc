@@ -196,9 +196,6 @@ endif ()
 # link to regex pcre
 target_link_libraries(guile PUBLIC regex)
 
-### Documentation
-add_subdirectory(doc)
-
 ### Tests
 
 # The directory test-suite/tests contains a bunch of test files
@@ -208,7 +205,8 @@ file(GLOB TEST_FILES ${CMAKE_CURRENT_SOURCE_DIR}/test-suite/tests/*.test)
 foreach (test_file ${TEST_FILES})
     get_filename_component(test_name ${test_file} NAME_WE)
     add_test(NAME ${test_name}
-            COMMAND ${CMAKE_CURRENT_BINARY_DIR}/guile ${test_file}
+            COMMAND ${CMAKE_CURRENT_BINARY_DIR}/guile -e main -s guile-test ${test_name}.test
+            WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/test-suite
     )
 endforeach ()
 

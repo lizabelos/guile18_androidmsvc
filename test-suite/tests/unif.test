@@ -13,7 +13,7 @@
 ;;;; Lesser General Public License for more details.
 ;;;; 
 ;;;; You should have received a copy of the GNU Lesser General Public
-;;;; License with this library; if not, write to the Free Software
+;;;; License along with this library; if not, write to the Free Software
 ;;;; Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
 
 (define-module (test-suite test-unif)
@@ -122,7 +122,7 @@
       (pass-if (eq? #f (typed-array? complex  's32)))
       (pass-if (eq? #f (typed-array? scm      's32))))
 
-    (with-test-prefix "is int64_t"
+    (with-test-prefix "is long long"
       (pass-if (eq? #f (typed-array? bool     's64)))
       (pass-if (eq? #f (typed-array? char     's64)))
       (pass-if (eq? #f (typed-array? byte     's64)))
@@ -297,7 +297,7 @@
     (pass-if "long"
       (eq? 's32 (array-type (make-s32vector 1))))
 
-    (pass-if "int64_t"
+    (pass-if "long long"
       (eq? 's64 (array-type (make-s64vector 1))))
 
     (pass-if "float"

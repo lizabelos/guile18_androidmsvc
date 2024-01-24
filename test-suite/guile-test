@@ -89,8 +89,7 @@
 
 
 ;;; User configurable settings:
-(define default-test-suite
-  (string-append (getenv "HOME") "/bogus-path/test-suite"))
+(define default-test-suite "./tests")
 
 
 ;;; Variables that will receive their actual values later.
