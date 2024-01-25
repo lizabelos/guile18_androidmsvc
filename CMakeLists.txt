@@ -215,10 +215,29 @@ foreach (test_file ${TEST_FILES})
     )
 endforeach ()
 
-file(GLOB TEST_FILES_STANDARD ${CMAKE_CURRENT_SOURCE_DIR}/test-suite/standalone/*.c)
+# find sh
+find_program(SH sh /bin /usr/bin /usr/local/bin C:/msys64/usr/bin C:/tools/msys64/usr/bin)
+
+file(GLOB TEST_FILES_STANDARD ${CMAKE_CURRENT_SOURCE_DIR}/test-suite/standalone/*)
 foreach (test_file ${TEST_FILES_STANDARD})
-    # build the test file
     get_filename_component(test_name ${test_file} NAME_WE)
+    # if the file end with .in, continue
+    if (test_file MATCHES ".in$")
+        continue()
+    endif ()
+    # if the file start with test-
+    if (NOT test_name MATCHES "test-")
+        continue()
+    endif ()
+    # if the file does not end with .c, this means its a shell script
+    if (NOT test_file MATCHES ".c$")
+        add_test(NAME ${test_name}
+                COMMAND ${SH} ${test_file}
+                WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
+        )
+        continue()
+    endif ()
+    # build the test file
     add_executable(${test_name} ${test_file})
     target_link_libraries(${test_name} PUBLIC guile)
     # run the test file
