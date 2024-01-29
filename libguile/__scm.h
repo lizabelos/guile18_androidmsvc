@@ -453,11 +453,8 @@
 # define SHORT_ALIGN
 #endif
 
-#ifdef SHORT_ALIGN
-typedef short SCM_STACKITEM;
-#else
-typedef int64_t SCM_STACKITEM;
-#endif
+typedef uintptr_t SCM_STACKITEM;
+
 
 /* Cast pointer through (void *) in order to avoid compiler warnings
    when strict aliasing is enabled */

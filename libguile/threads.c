@@ -574,7 +574,7 @@ int stack_direction(int *a)
         return stack_direction(&b);
     }
     int b = 2;
-    if (&a < &b) {
+    if (a < &b) {
         return 1;
     }
     else {
@@ -1345,16 +1345,16 @@ scm_threads_mark_stacks (void)
 
       int test = stack_direction(NULL);
 
-      if (SCM_STACK_GROWS_UP) {
-          scm_mark_locations(t->base, t->top - t->base);
-      }
-      else {
-          scm_mark_locations(t->top, t->base - t->top);
-      }
+        if (SCM_STACK_GROWS_UP) {
+            scm_mark_locations(t->base, t->top - t->base);
+        }
+        else {
+            scm_mark_locations(t->top, t->base - t->top);
+        }
 
-      scm_mark_locations ((void *) &t->regs,
-			  ((size_t) sizeof(t->regs)
-			   / sizeof (SCM_STACKITEM)));
+        scm_mark_locations ((void *) &t->regs,
+                            ((size_t) sizeof(t->regs)
+                             / sizeof (SCM_STACKITEM)));
     }
 
   SCM_MARK_BACKING_STORE ();
