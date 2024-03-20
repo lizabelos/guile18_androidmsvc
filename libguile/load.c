@@ -206,9 +206,12 @@ scm_init_load_path ()
   SCM path = SCM_EOL;
 
 #ifdef SCM_LIBRARY_DIR
-  path = scm_list_3 (scm_from_locale_string (SCM_SITE_DIR),
+  path = scm_list_5 (scm_from_locale_string (SCM_SITE_DIR),
 		     scm_from_locale_string (SCM_LIBRARY_DIR),
-		     scm_from_locale_string (SCM_PKGDATA_DIR));
+		     scm_from_locale_string (SCM_PKGDATA_DIR),
+                     scm_from_locale_string("."),
+                     scm_from_locale_string("..")
+             );
 #endif /* SCM_LIBRARY_DIR */
 
   env = getenv ("GUILE_LOAD_PATH");
