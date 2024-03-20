@@ -11,12 +11,14 @@
  * Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public
- * License with this library; if not, write to the Free Software
+ * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
 
-#include <config.h>
+#ifdef HAVE_CONFIG_H
+#  include <config.h>
+#endif
 
 #include "libguile/_scm.h"
 #include "libguile/async.h"
@@ -29,12 +31,9 @@
 #include "libguile/strings.h"
 
 #include "libguile/validate.h"
-#include "libguile/gc.h"
 #include "libguile/struct.h"
 
 #include "libguile/eq.h"
-
-#include "srcprop.h"
 
 #ifdef HAVE_STRING_H
 #include <string.h>
@@ -810,11 +809,7 @@ SCM_DEFINE (scm_struct_vtable_tag, "struct-vtable-tag", 1, 0, 0,
 #define FUNC_NAME s_scm_struct_vtable_tag
 {
   SCM_VALIDATE_VTABLE (1, handle);
-#if USE_64IMPL
   return scm_from_uint64 (((uint64_t)SCM_STRUCT_DATA (handle)) >> 3);
-#else
-  return scm_from_uint64 (((uint64_t)SCM_STRUCT_DATA (handle)) >> 3);
-#endif  
 }
 #undef FUNC_NAME
 
@@ -826,7 +821,7 @@ SCM_DEFINE (scm_struct_vtable_tag, "struct-vtable-tag", 1, 0, 0,
  */
 
 uint64_t
-scm_struct_ihashq (SCM obj, uint64_t n, scm_t_ihashx_closure *closure)
+scm_struct_ihashq (SCM obj, uint64_t n)
 {
   /* The length of the hash table should be a relative prime it's not
      necessary to shift down the address.  */
@@ -836,12 +831,12 @@ scm_struct_ihashq (SCM obj, uint64_t n, scm_t_ihashx_closure *closure)
 SCM
 scm_struct_create_handle (SCM obj)
 {
-  SCM handle = scm_hash_fn_create_handle_x(scm_struct_table,
-                                           obj,
-                                           SCM_BOOL_F,
-                                           scm_struct_ihashq,
-                                           hashmap_assoc_fn_assq,
-                                           0);
+  SCM handle = scm_hash_fn_create_handle_x (scm_struct_table,
+					    obj,
+					    SCM_BOOL_F,
+					    scm_struct_ihashq_var,
+					    scm_sloppy_assq_var,
+					    0);
   if (scm_is_false (SCM_CDR (handle)))
     SCM_SETCDR (handle, scm_cons (SCM_BOOL_F, SCM_BOOL_F));
   return handle;

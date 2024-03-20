@@ -11,14 +11,16 @@
  * Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public
- * License with this library; if not, write to the Free Software
+ * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
 
 
 
-#include <config.h>
+#ifdef HAVE_CONFIG_H
+#  include <config.h>
+#endif
 
 #include <stdio.h>
 #include <errno.h>
@@ -48,7 +50,6 @@
 /* {Errors and Exceptional Conditions}
  */
 
-
 void (*scm_error_callback) () = NULL;
 
 void call_error_callback() {
@@ -60,6 +61,12 @@ void call_error_callback() {
 
 void set_error_callback(void (*callback)()) {
     scm_error_callback = callback;
+}
+
+void
+scm_abort (void)
+{
+  abort ();
 }
 
 /* Scheme interface to scm_error_scm.  */
@@ -97,14 +104,14 @@ SCM_DEFINE (scm_error_scm, "scm-error", 5, 0, 0,
     {
       /* The error occured during GC --- abort */
       fprintf (stderr, "Guile: error during GC.\n"),
-      call_error_callback();
+      scm_abort ();
     }
 
   scm_ithrow (key, scm_list_4 (subr, message, args, data), 1);
   
   /* No return, but just in case: */
   fprintf (stderr, "Guile scm_ithrow returned!\n");
-    call_error_callback();
+  exit (1);
 }
 #undef FUNC_NAME
 
@@ -269,8 +276,7 @@ void
 scm_memory_error (const char *subr)
 {
   fprintf (stderr, "FATAL: memory error in %s\n", subr);
-  call_error_callback();
-    abort ();
+  scm_abort ();
 }
 
 SCM_GLOBAL_SYMBOL (scm_misc_error_key, "misc-error");

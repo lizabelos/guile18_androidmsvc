@@ -12,14 +12,16 @@
  * Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public
- * License with this library; if not, write to the Free Software
+ * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
 
 
 
-#include <config.h>
+#ifdef HAVE_CONFIG_H
+# include <config.h>
+#endif
 
 #include <stdio.h>
 #include <ctype.h>
@@ -180,7 +182,15 @@ static SCM *scm_read_hash_procedures;
   (((_chr) <= UCHAR_MAX) ? tolower (_chr) : (_chr))
 
 
-static int scm_strncasecmp (const char *s1, const char *s2, size_t len2)
+#ifndef HAVE_DECL_STRNCASECMP
+extern int strncasecmp (char const *s1, char const *s2, size_t n);
+#endif
+
+#ifndef HAVE_STRNCASECMP
+/* XXX: Use Gnulib's `strncasecmp ()'.  */
+
+int
+strncasecmp (const char *s1, const char *s2, size_t len2)
 {
   while (*s1 && *s2 && len2 > 0)
     {
@@ -197,14 +207,15 @@ static int scm_strncasecmp (const char *s1, const char *s2, size_t len2)
     }
   return !(*s1 || *s2 || len2 > 0);
 }
+#endif
 
 
 /* Read an SCSH block comment.  */
-static SCM scm_read_scsh_block_comment (int chr, SCM port);
+static inline SCM scm_read_scsh_block_comment (int chr, SCM port);
 
 /* Read from PORT until a delimiter (e.g., a whitespace) is read.  Return
    zero if the whole token fits in BUF, non-zero otherwise.  */
-static int
+static inline int
 read_token (SCM port, char *buf, size_t buf_size, size_t *read)
 {
   *read = 0;
@@ -308,7 +319,6 @@ static SCM
 scm_read_sexp (int chr, SCM port)
 #define FUNC_NAME "scm_i_lreadparen"
 {
-    (void) chr; /* unused */
   register int c;
   register SCM tmp;
   register SCM tl, ans = SCM_EOL;
@@ -397,7 +407,6 @@ static SCM
 scm_read_string (int chr, SCM port)
 #define FUNC_NAME "scm_lreadr"
 {
-    (void)chr;
   /* For strings smaller than C_STR, this function creates only one Scheme
      object (the string returned).  */
 
@@ -702,8 +711,7 @@ scm_read_quote (int chr, SCM port)
     default:
       fprintf (stderr, "%s: unhandled quote character (%i)\n",
 	       "scm_read_quote", chr);
-      call_error_callback();
-      abort();
+      scm_abort ();
     }
 
   p = scm_cons2 (p, scm_read_expression (port), SCM_EOL);
@@ -722,10 +730,9 @@ scm_read_quote (int chr, SCM port)
   return p;
 }
 
-static SCM
+static inline SCM
 scm_read_semicolon_comment (int chr, SCM port)
 {
-    (void)(chr);
   int c;
 
   for (c = scm_getc (port);
@@ -741,7 +748,6 @@ scm_read_semicolon_comment (int chr, SCM port)
 static SCM
 scm_read_boolean (int chr, SCM port)
 {
-    (void)(port);
   switch (chr)
     {
     case 't':
@@ -760,7 +766,7 @@ static SCM
 scm_read_character (int chr, SCM port)
 #define FUNC_NAME "scm_lreadr"
 {
-  int c;
+  unsigned c;
   char charname[READER_CHAR_NAME_MAX_SIZE];
   size_t charname_len;
 
@@ -795,7 +801,7 @@ scm_read_character (int chr, SCM port)
 
   for (c = 0; c < scm_n_charnames; c++)
     if (scm_charnames[c]
-	&& (!scm_strncasecmp (scm_charnames[c], charname, charname_len)))
+	&& (!strncasecmp (scm_charnames[c], charname, charname_len)))
       return SCM_MAKE_CHAR (scm_charnums[c]);
 
  char_error:
@@ -807,7 +813,7 @@ scm_read_character (int chr, SCM port)
 }
 #undef FUNC_NAME
 
-static SCM
+static inline SCM
 scm_read_keyword (int chr, SCM port)
 {
   SCM symbol;
@@ -826,7 +832,7 @@ scm_read_keyword (int chr, SCM port)
   return (scm_symbol_to_keyword (symbol));
 }
 
-static SCM
+static inline SCM
 scm_read_vector (int chr, SCM port)
 {
   /* Note: We call `scm_read_sexp ()' rather than READER here in order to
@@ -836,7 +842,7 @@ scm_read_vector (int chr, SCM port)
   return (scm_vector (scm_read_sexp (chr, port)));
 }
 
-static SCM
+static inline SCM
 scm_read_srfi4_vector (int chr, SCM port)
 {
   return scm_i_read_array (port, chr);
@@ -862,10 +868,9 @@ scm_read_guile_bit_vector (int chr, SCM port)
   return scm_bitvector (scm_reverse_x (s_bits, SCM_EOL));
 }
 
-static SCM
+static inline SCM
 scm_read_scsh_block_comment (int chr, SCM port)
 {
-    (void)(chr);
   int bang_seen = 0;
 
   for (;;)
@@ -1269,7 +1274,7 @@ scm_get_hash_procedure (int c)
       if (scm_is_null (rest))
 	return SCM_BOOL_F;
   
-      if ((int)SCM_CHAR (SCM_CAAR (rest)) == c)
+      if (SCM_CHAR (SCM_CAAR (rest)) == c)
 	return SCM_CDAR (rest);
      
       rest = SCM_CDR (rest);

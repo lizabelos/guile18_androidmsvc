@@ -15,11 +15,13 @@
  * Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public
- * License with this library; if not, write to the Free Software
+ * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include <config.h>
+#ifdef HAVE_CONFIG_H
+#  include <config.h>
+#endif
 
 #include <libguile.h>
 
@@ -51,15 +53,15 @@ scm_uint2num (unsigned int x)
 }
 
 SCM
-scm_long2num (int64_t x)
+scm_long2num (long x)
 {
-  return scm_from_int64 (x);
+  return scm_from_long (x);
 }
 
 SCM
-scm_ulong2num (uint64_t x)
+scm_ulong2num (unsigned long x)
 {
-  return scm_from_uint64 (x);
+  return scm_from_ulong (x);
 }
 
 SCM
@@ -98,16 +100,16 @@ scm_num2uint (SCM x, uint64_t pos, const char *s_caller)
   return scm_to_uint (x);
 }
 
-int64_t
+long
 scm_num2long (SCM x, uint64_t pos, const char *s_caller)
 {
-  return scm_to_int64 (x);
+  return scm_to_long (x);
 }
 
-uint64_t
+unsigned long
 scm_num2ulong (SCM x, uint64_t pos, const char *s_caller)
 {
-  return scm_to_uint64 (x);
+  return scm_to_ulong (x);
 }
 
 size_t
@@ -122,29 +124,28 @@ scm_num2ptrdiff (SCM x, uint64_t pos, const char *s_caller)
   return scm_to_ssize_t (x);
 }
 
-
 SCM
-scm_long_long2num (int64_t x)
+scm_long_long2num (long long x)
 {
-  return scm_from_int64 (x);
+  return scm_from_long_long (x);
 }
 
 SCM
-scm_ulong_long2num (uint64_t x)
+scm_ulong_long2num (unsigned long long x)
 {
-  return scm_from_uint64 (x);
+  return scm_from_ulong_long (x);
 }
 
-int64_t
+long long
 scm_num2long_long (SCM x, uint64_t pos, const char *s_caller)
 {
-  return scm_to_int64 (x);
+  return scm_to_long_long (x);
 }
 
-uint64_t
+unsigned long long
 scm_num2ulong_long (SCM x, uint64_t pos, const char *s_caller)
 {
-  return scm_to_uint64 (x);
+  return scm_to_ulong_long (x);
 }
 
 SCM

@@ -17,7 +17,7 @@
  * Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public
- * License with this library; if not, write to the Free Software
+ * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
@@ -86,11 +86,11 @@ typedef uintptr_t scm_t_bits;
 #else
 
 typedef int64_t scm_t_signed_bits;
-#define SCM_T_SIGNED_BITS_MAX LONG_MAX
-#define SCM_T_SIGNED_BITS_MIN LONG_MIN
+#define SCM_T_SIGNED_BITS_MAX LLONG_MAX
+#define SCM_T_SIGNED_BITS_MIN LLONG_MIN
 typedef uint64_t scm_t_bits;
-#define SIZEOF_SCM_T_BITS SCM_SIZEOF_UNSIGNED_LONG
-#define SCM_T_BITS_MAX ULONG_MAX
+#define SIZEOF_SCM_T_BITS 8
+#define SCM_T_BITS_MAX ULLONG_MAX
 
 #endif
 
@@ -108,14 +108,25 @@ typedef uint64_t scm_t_bits;
  */
     typedef struct scm_unused_struct * SCM;
 
+/*
+  The 0?: constructions makes sure that the code is never executed,
+  and that there is no performance hit.  However, the alternative is
+  compiled, and does generate a warning when used with the wrong
+  pointer type.
 
-#define SCM_UNPACK(x) ((scm_t_bits) (x))
+  The Tru64 and ia64-hp-hpux11.23 compilers fail on `case (0?0=0:x)'
+  statements, so for them type-checking is disabled.  */
+#if defined __DECC || defined __HP_cc
+#   define SCM_UNPACK(x) ((scm_t_bits) (x))
+#else
+#   define SCM_UNPACK(x) ((scm_t_bits) (0? (*(volatile SCM*)0=(x)): x))
+#endif
 
 /*
   There is no typechecking on SCM_PACK, since all kinds of types
-  (uint64_t, void*) go in SCM_PACK
+  (unsigned long, void*) go in SCM_PACK
  */
-#define SCM_PACK(x) ((SCM) (x))
+#   define SCM_PACK(x) ((SCM) (x))
 
 #else
 /* This should be used as a fall back solution for machines on which casting
@@ -123,8 +134,8 @@ typedef uint64_t scm_t_bits;
  * significant bits.
  */
     typedef scm_t_bits SCM;
-#define SCM_UNPACK(x) (x)
-#define SCM_PACK(x) ((SCM) (x))
+#   define SCM_UNPACK(x) (x)
+#   define SCM_PACK(x) ((SCM) (x))
 #endif
 
 
@@ -476,7 +487,7 @@ typedef uint64_t scm_t_bits;
 
 /* scm_tc_free_cell is the 0th smob type.  We place this in free cells to tell
  * the conservative marker not to trace it.  */
-#define scm_tc_free_cell	(scm_tc7_smob + 0 * ((int64_t)256))
+#define scm_tc_free_cell	(scm_tc7_smob + 0 * ((int64_t) 256))
 
 
 

@@ -11,13 +11,15 @@
  * Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public
- * License with this library; if not, write to the Free Software
+ * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
 
 
-#include <config.h>
+#ifdef HAVE_CONFIG_H
+#  include <config.h>
+#endif
 
 #include "libguile/_scm.h"
 #include "libguile/chars.h"
@@ -77,24 +79,18 @@ SCM_DEFINE (scm_sys_symbols, "%symbols", 0, 0, 0,
  */
 
 uint64_t
-scm_i_hash_symbol (SCM obj, uint64_t n, scm_t_ihashx_closure *c)
+scm_i_hash_symbol (SCM obj, uint64_t n, void *closure)
 {
-    (void) c;
   return scm_i_symbol_hash (obj) % n;
 }
 
 static SCM
 lookup_interned_symbol (const char *name, size_t len,
-			uint64_t raw_hash)
+                        uint64_t raw_hash)
 {
   /* Try to find the symbol in the symbols table */
   SCM l;
-  uint64_t n_buckets = SCM_HASHTABLE_N_BUCKETS (symbols);
-  if (n_buckets == 0) {
-      printf("Error, trying to lookup symbol in empty symbol table");
-      return SCM_BOOL_F;
-  }
-  uint64_t hash = raw_hash % n_buckets;
+  uint64_t hash = raw_hash % SCM_HASHTABLE_N_BUCKETS (symbols);
 
   for (l = SCM_HASHTABLE_BUCKET (symbols, hash);
        !scm_is_null (l);

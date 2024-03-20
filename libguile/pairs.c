@@ -11,13 +11,15 @@
  * Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public
- * License with this library; if not, write to the Free Software
+ * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
 
 
-#include <config.h>
+#ifdef HAVE_CONFIG_H
+# include <config.h>
+#endif
 
 #include "libguile/_scm.h"
 #include "libguile/validate.h"
@@ -44,7 +46,7 @@ void scm_error_pair_access (SCM non_pair)
       running = 1;
       scm_simple_format (scm_current_error_port (),
 			 message, scm_list_1 (non_pair));
-      call_error_callback();
+      scm_abort ();
     }
 }
 

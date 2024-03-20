@@ -11,13 +11,15 @@
  * Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public
- * License with this library; if not, write to the Free Software
+ * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
 
 
-#include <config.h>
+#ifdef HAVE_CONFIG_H
+# include <config.h>
+#endif
 
 #include <stdio.h>
 
@@ -31,7 +33,6 @@
 
 #include "libguile/validate.h"
 #include "libguile/hashtab.h"
-#include "libguile/gc.h"
 
 
 /* NOTES
@@ -82,36 +83,19 @@ static char *s_hashtable = "hashtable";
 
 SCM weak_hashtables = SCM_EOL;
 
-SCM hashmap_assoc_fn_assq(SCM obj, SCM d, scm_t_ihashx_closure *closure) {
-    (void)closure;
-    return scm_sloppy_assq(obj, d);
-}
-
-SCM hashmap_assoc_fn_assv(SCM obj, SCM d, scm_t_ihashx_closure *closure) {
-    (void)closure;
-    return scm_sloppy_assv(obj, d);
-}
-
-SCM hashmap_assoc_fn(SCM obj, SCM d, scm_t_ihashx_closure *closure) {
-    (void)closure;
-    return scm_sloppy_assoc(obj, d);
-}
-
 static SCM
 make_hash_table (int flags, uint64_t k, const char *func_name)
 {
-    (void)func_name;
   SCM table, vector;
   scm_t_hashtable *t;
-  int64_t i = 0, n = k ? k : 31;
-  while (i < (int64_t)HASHTABLE_SIZE_N && n > (int64_t)hashtable_size[i])
+  int i = 0, n = k ? k : 31;
+  while (i < HASHTABLE_SIZE_N && n > hashtable_size[i])
     ++i;
   n = hashtable_size[i];
   if (flags)
     vector = scm_i_allocate_weak_vector (flags, scm_from_int (n), SCM_EOL);
   else
     vector = scm_c_make_vector (n, SCM_EOL);
-  //int vec_lenght = SCM_SIMPLE_VECTOR_LENGTH(vector);
   t = scm_gc_malloc (sizeof (*t), s_hashtable);
   t->min_size_index = t->size_index = i;
   t->n_items = 0;
@@ -126,23 +110,17 @@ make_hash_table (int flags, uint64_t k, const char *func_name)
     }
   else
     SCM_NEWSMOB3 (table, scm_tc16_hashtable, vector, t, SCM_EOL);
-
-    int n_buckets = SCM_HASHTABLE_N_BUCKETS (table);
-    if (n_buckets != n) {
-        abort();
-    }
-
   return table;
 }
 
 void
 scm_i_rehash (SCM table,
-	      scm_t_hash_fn hash_fn,
-	      void *closure,
-	      const char* func_name)
+              uint64_t (*hash_fn)(SCM, uint64_t, void*),
+              void *closure,
+              const char* func_name)
 {
   SCM buckets, new_buckets;
-  int64_t i;
+  int i;
   uint64_t old_size;
   uint64_t new_size;
 
@@ -158,7 +136,7 @@ scm_i_rehash (SCM table,
   else
     {
       i = SCM_HASHTABLE (table)->size_index + 1;
-      if (i >= (int64_t)HASHTABLE_SIZE_N)
+      if (i >= HASHTABLE_SIZE_N)
 	/* don't rehash */
 	return;
 
@@ -197,7 +175,7 @@ scm_i_rehash (SCM table,
   SCM_SET_HASHTABLE_N_ITEMS (table, 0);
 
   old_size = SCM_SIMPLE_VECTOR_LENGTH (buckets);
-  for (i = 0; i < (int64_t)old_size; ++i)
+  for (i = 0; i < old_size; ++i)
     {
       SCM ls, cell, handle;
 
@@ -435,7 +413,9 @@ SCM_DEFINE (scm_doubly_weak_hash_table_p, "doubly-weak-hash-table?", 1, 0, 0,
 
 
 SCM
-scm_hash_fn_get_handle (SCM table, SCM obj, scm_t_hash_fn hash_fn, scm_t_assoc_fn assoc_fn, void * closure)
+scm_hash_fn_get_handle (SCM table, SCM obj,
+                        uint64_t (*hash_fn)(SCM, uint64_t, void*),
+                        SCM (*assoc_fn)(SCM, SCM, void*), void * closure)
 #define FUNC_NAME "scm_hash_fn_get_handle"
 {
   uint64_t k;
@@ -457,8 +437,9 @@ scm_hash_fn_get_handle (SCM table, SCM obj, scm_t_hash_fn hash_fn, scm_t_assoc_f
 
 
 SCM
-scm_hash_fn_create_handle_x (SCM table, SCM obj, SCM init, scm_t_hash_fn hash_fn,
-                             scm_t_assoc_fn assoc_fn, void * closure)
+scm_hash_fn_create_handle_x (SCM table, SCM obj, SCM init,
+                             uint64_t (*hash_fn)(SCM, uint64_t, void*),
+                             SCM (*assoc_fn)(SCM, SCM, void*), void * closure)
 #define FUNC_NAME "scm_hash_fn_create_handle_x"
 {
   uint64_t k;
@@ -521,8 +502,8 @@ scm_hash_fn_create_handle_x (SCM table, SCM obj, SCM init, scm_t_hash_fn hash_fn
 
 
 SCM 
-scm_hash_fn_ref (SCM table, SCM obj, SCM dflt, scm_t_hash_fn hash_fn,
-                 scm_t_assoc_fn assoc_fn, void * closure)
+scm_hash_fn_ref (SCM table, SCM obj, SCM dflt, uint64_t (*hash_fn)(),
+                 SCM (*assoc_fn)(), void * closure)
 {
   SCM it = scm_hash_fn_get_handle (table, obj, hash_fn, assoc_fn, closure);
   if (scm_is_pair (it))
@@ -535,8 +516,9 @@ scm_hash_fn_ref (SCM table, SCM obj, SCM dflt, scm_t_hash_fn hash_fn,
 
 
 SCM 
-scm_hash_fn_set_x (SCM table, SCM obj, SCM val, scm_t_hash_fn hash_fn,
-                   scm_t_assoc_fn assoc_fn, void * closure)
+scm_hash_fn_set_x (SCM table, SCM obj, SCM val,
+                   uint64_t (*hash_fn)(SCM, uint64_t, void*),
+                   SCM (*assoc_fn)(SCM, SCM, void*), void * closure)
 {
   SCM it;
 
@@ -548,8 +530,8 @@ scm_hash_fn_set_x (SCM table, SCM obj, SCM val, scm_t_hash_fn hash_fn,
 
 SCM 
 scm_hash_fn_remove_x (SCM table, SCM obj,
-		      scm_t_hash_fn hash_fn,
-		      scm_t_assoc_fn assoc_fn,
+                      uint64_t (*hash_fn)(SCM, uint64_t, void*),
+                      SCM (*assoc_fn)(SCM, SCM, void*),
                       void *closure)
 {
   uint64_t k;
@@ -602,6 +584,7 @@ SCM_DEFINE (scm_hash_clear_x, "hash-clear!", 1, 0, 0,
 
 
 
+
 SCM_DEFINE (scm_hashq_get_handle, "hashq-get-handle", 2, 0, 0,
             (SCM table, SCM key),
 	    "This procedure returns the @code{(key . value)} pair from the\n"
@@ -610,7 +593,7 @@ SCM_DEFINE (scm_hashq_get_handle, "hashq-get-handle", 2, 0, 0,
 	    "Uses @code{eq?} for equality testing.")
 #define FUNC_NAME s_scm_hashq_get_handle
 {
-  return scm_hash_fn_get_handle (table, key, scm_ihashq, hashmap_assoc_fn_assq, 0);
+  return scm_hash_fn_get_handle (table, key, scm_ihashq_var, scm_sloppy_assq_var, 0);
 }
 #undef FUNC_NAME
 
@@ -622,7 +605,7 @@ SCM_DEFINE (scm_hashq_create_handle_x, "hashq-create-handle!", 3, 0, 0,
 	    "associates @var{key} with @var{init}.")
 #define FUNC_NAME s_scm_hashq_create_handle_x
 {
-  return scm_hash_fn_create_handle_x (table, key, init, scm_ihashq, hashmap_assoc_fn_assq, 0);
+  return scm_hash_fn_create_handle_x (table, key, init, scm_ihashq_var, scm_sloppy_assq_var, 0);
 }
 #undef FUNC_NAME
 
@@ -637,7 +620,7 @@ SCM_DEFINE (scm_hashq_ref, "hashq-ref", 2, 1, 0,
 {
   if (SCM_UNBNDP (dflt))
     dflt = SCM_BOOL_F;
-  return scm_hash_fn_ref (table, key, dflt, scm_ihashq, hashmap_assoc_fn_assq, 0);
+  return scm_hash_fn_ref (table, key, dflt, scm_ihashq_var, scm_sloppy_assq_var, 0);
 }
 #undef FUNC_NAME
 
@@ -649,7 +632,7 @@ SCM_DEFINE (scm_hashq_set_x, "hashq-set!", 3, 0, 0,
 	    "store @var{value} there. Uses @code{eq?} for equality testing.")
 #define FUNC_NAME s_scm_hashq_set_x
 {
-  return scm_hash_fn_set_x (table, key, val, scm_ihashq, hashmap_assoc_fn_assq, 0);
+  return scm_hash_fn_set_x (table, key, val, scm_ihashq_var, scm_sloppy_assq_var, 0);
 }
 #undef FUNC_NAME
 
@@ -661,7 +644,7 @@ SCM_DEFINE (scm_hashq_remove_x, "hashq-remove!", 2, 0, 0,
 	    "@var{table}.  Uses @code{eq?} for equality tests.")
 #define FUNC_NAME s_scm_hashq_remove_x
 {
-  return scm_hash_fn_remove_x (table, key, scm_ihashq, hashmap_assoc_fn_assq, 0);
+  return scm_hash_fn_remove_x (table, key, scm_ihashq_var, scm_sloppy_assq_var, 0);
 }
 #undef FUNC_NAME
 
@@ -676,7 +659,7 @@ SCM_DEFINE (scm_hashv_get_handle, "hashv-get-handle", 2, 0, 0,
 	    "Uses @code{eqv?} for equality testing.")
 #define FUNC_NAME s_scm_hashv_get_handle
 {
-  return scm_hash_fn_get_handle (table, key, scm_ihashv, hashmap_assoc_fn_assv, 0);
+  return scm_hash_fn_get_handle (table, key, scm_ihashv_var, scm_sloppy_assv_var, 0);
 }
 #undef FUNC_NAME
 
@@ -688,7 +671,8 @@ SCM_DEFINE (scm_hashv_create_handle_x, "hashv-create-handle!", 3, 0, 0,
 	    "associates @var{key} with @var{init}.")
 #define FUNC_NAME s_scm_hashv_create_handle_x
 {
-  return scm_hash_fn_create_handle_x (table, key, init, scm_ihashv, hashmap_assoc_fn_assv, 0);
+  return scm_hash_fn_create_handle_x (table, key, init, scm_ihashv_var,
+				      scm_sloppy_assv_var, 0);
 }
 #undef FUNC_NAME
 
@@ -703,7 +687,7 @@ SCM_DEFINE (scm_hashv_ref, "hashv-ref", 2, 1, 0,
 {
   if (SCM_UNBNDP (dflt))
     dflt = SCM_BOOL_F;
-  return scm_hash_fn_ref (table, key, dflt, scm_ihashv, hashmap_assoc_fn_assv, 0);
+  return scm_hash_fn_ref (table, key, dflt, scm_ihashv_var, scm_sloppy_assv_var, 0);
 }
 #undef FUNC_NAME
 
@@ -715,7 +699,7 @@ SCM_DEFINE (scm_hashv_set_x, "hashv-set!", 3, 0, 0,
 	    "store @var{value} there. Uses @code{eqv?} for equality testing.")
 #define FUNC_NAME s_scm_hashv_set_x
 {
-  return scm_hash_fn_set_x (table, key, val, scm_ihashv, hashmap_assoc_fn_assv, 0);
+  return scm_hash_fn_set_x (table, key, val, scm_ihashv_var, scm_sloppy_assv_var, 0);
 }
 #undef FUNC_NAME
 
@@ -726,7 +710,7 @@ SCM_DEFINE (scm_hashv_remove_x, "hashv-remove!", 2, 0, 0,
 	    "@var{table}.  Uses @code{eqv?} for equality tests.")
 #define FUNC_NAME s_scm_hashv_remove_x
 {
-  return scm_hash_fn_remove_x (table, key, scm_ihashv, hashmap_assoc_fn_assv, 0);
+  return scm_hash_fn_remove_x (table, key, scm_ihashv_var, scm_sloppy_assv_var, 0);
 }
 #undef FUNC_NAME
 
@@ -740,7 +724,7 @@ SCM_DEFINE (scm_hash_get_handle, "hash-get-handle", 2, 0, 0,
 	    "Uses @code{equal?} for equality testing.")
 #define FUNC_NAME s_scm_hash_get_handle
 {
-  return scm_hash_fn_get_handle (table, key, scm_ihash, hashmap_assoc_fn, 0);
+  return scm_hash_fn_get_handle (table, key, scm_ihash_var, scm_sloppy_assoc_var, 0);
 }
 #undef FUNC_NAME
 
@@ -752,7 +736,7 @@ SCM_DEFINE (scm_hash_create_handle_x, "hash-create-handle!", 3, 0, 0,
 	    "associates @var{key} with @var{init}.")
 #define FUNC_NAME s_scm_hash_create_handle_x
 {
-  return scm_hash_fn_create_handle_x (table, key, init, scm_ihash, hashmap_assoc_fn, 0);
+  return scm_hash_fn_create_handle_x (table, key, init, scm_ihash_var, scm_sloppy_assoc_var, 0);
 }
 #undef FUNC_NAME
 
@@ -767,7 +751,7 @@ SCM_DEFINE (scm_hash_ref, "hash-ref", 2, 1, 0,
 {
   if (SCM_UNBNDP (dflt))
     dflt = SCM_BOOL_F;
-  return scm_hash_fn_ref (table, key, dflt, scm_ihash, hashmap_assoc_fn, 0);
+  return scm_hash_fn_ref (table, key, dflt, scm_ihash_var, scm_sloppy_assoc_var, 0);
 }
 #undef FUNC_NAME
 
@@ -780,7 +764,7 @@ SCM_DEFINE (scm_hash_set_x, "hash-set!", 3, 0, 0,
 	    "testing.")
 #define FUNC_NAME s_scm_hash_set_x
 {
-  return scm_hash_fn_set_x (table, key, val, scm_ihash, hashmap_assoc_fn, 0);
+  return scm_hash_fn_set_x (table, key, val, scm_ihash_var, scm_sloppy_assoc_var, 0);
 }
 #undef FUNC_NAME
 
@@ -792,11 +776,19 @@ SCM_DEFINE (scm_hash_remove_x, "hash-remove!", 2, 0, 0,
 	    "@var{table}.  Uses @code{equal?} for equality tests.")
 #define FUNC_NAME s_scm_hash_remove_x
 {
-  return scm_hash_fn_remove_x (table, key, scm_ihash, hashmap_assoc_fn, 0);
+  return scm_hash_fn_remove_x (table, key, scm_ihash_var, scm_sloppy_assoc_var, 0);
 }
 #undef FUNC_NAME
 
 
+
+
+typedef struct scm_t_ihashx_closure
+{
+  SCM hash;
+  SCM assoc;
+} scm_t_ihashx_closure;
+
 
 
 static uint64_t
@@ -806,7 +798,11 @@ scm_ihashx (SCM obj, uint64_t n, scm_t_ihashx_closure *closure)
   return scm_to_uint64 (answer);
 }
 
-
+static inline uint64_t
+scm_ihashx_var (SCM obj, uint64_t n, void* closure)
+{
+  return scm_ihashx (obj, n, (scm_t_ihashx_closure*) closure);
+}
 
 static SCM
 scm_sloppy_assx (SCM obj, SCM alist, scm_t_ihashx_closure *closure)
@@ -814,6 +810,12 @@ scm_sloppy_assx (SCM obj, SCM alist, scm_t_ihashx_closure *closure)
   return scm_call_2 (closure->assoc, obj, alist);
 }
 
+static inline SCM
+scm_sloppy_assx_var (SCM obj1, SCM obj2, void* closure)
+{
+  (void) closure;
+  return scm_sloppy_assx (obj1, obj2, (scm_t_ihashx_closure*) closure);
+}
 
 SCM_DEFINE (scm_hashx_get_handle, "hashx-get-handle", 4, 0, 0, 
             (SCM hash, SCM assoc, SCM table, SCM key),
@@ -828,7 +830,7 @@ SCM_DEFINE (scm_hashx_get_handle, "hashx-get-handle", 4, 0, 0,
   scm_t_ihashx_closure closure;
   closure.hash = hash;
   closure.assoc = assoc;
-  return scm_hash_fn_get_handle (table, key, scm_ihashx, scm_sloppy_assx,
+  return scm_hash_fn_get_handle (table, key, scm_ihashx_var, scm_sloppy_assx_var,
 				 (void *) &closure);
 }
 #undef FUNC_NAME
@@ -847,8 +849,8 @@ SCM_DEFINE (scm_hashx_create_handle_x, "hashx-create-handle!", 5, 0, 0,
   scm_t_ihashx_closure closure;
   closure.hash = hash;
   closure.assoc = assoc;
-  return scm_hash_fn_create_handle_x (table, key, init, scm_ihashx,
-				      scm_sloppy_assx, (void *)&closure);
+  return scm_hash_fn_create_handle_x (table, key, init, scm_ihashx_var,
+				      scm_sloppy_assx_var, (void *)&closure);
 }
 #undef FUNC_NAME
 
@@ -872,7 +874,7 @@ SCM_DEFINE (scm_hashx_ref, "hashx-ref", 4, 1, 0,
     dflt = SCM_BOOL_F;
   closure.hash = hash;
   closure.assoc = assoc;
-  return scm_hash_fn_ref (table, key, dflt, scm_ihashx, scm_sloppy_assx,
+  return scm_hash_fn_ref (table, key, dflt, scm_ihashx_var, scm_sloppy_assx_var,
 			  (void *)&closure);
 }
 #undef FUNC_NAME
@@ -896,7 +898,7 @@ SCM_DEFINE (scm_hashx_set_x, "hashx-set!", 5, 0, 0,
   scm_t_ihashx_closure closure;
   closure.hash = hash;
   closure.assoc = assoc;
-  return scm_hash_fn_set_x (table, key, val, scm_ihashx, scm_sloppy_assx,
+  return scm_hash_fn_set_x (table, key, val, scm_ihashx_var, scm_sloppy_assx_var,
 			    (void *)&closure);
 }
 #undef FUNC_NAME
@@ -917,7 +919,7 @@ SCM_DEFINE (scm_hashx_remove_x, "hashx-remove!", 4, 0, 0,
   scm_t_ihashx_closure closure;
   closure.hash = hash;
   closure.assoc = assoc;
-  return scm_hash_fn_remove_x (table, obj, scm_ihashx, scm_sloppy_assx,
+  return scm_hash_fn_remove_x (table, obj, scm_ihashx_var, scm_sloppy_assx_var,
                                (void *) &closure);
 }
 #undef FUNC_NAME
@@ -939,7 +941,8 @@ SCM_DEFINE (scm_hash_fold, "hash-fold", 3, 0, 0,
   SCM_VALIDATE_PROC (1, proc);
   if (!SCM_HASHTABLE_P (table))
     SCM_VALIDATE_VECTOR (3, table);
-  return scm_internal_hash_fold ((SCM (*) (void *, SCM, SCM, SCM))scm_call_3, (void *) SCM_UNPACK (proc), init, table);
+  return scm_internal_hash_fold ((SCM (*)(void *, SCM, SCM, SCM)) (void*) scm_call_3,
+				 (void *) SCM_UNPACK (proc), init, table);
 }
 #undef FUNC_NAME
 
@@ -979,7 +982,7 @@ SCM_DEFINE (scm_hash_for_each_handle, "hash-for-each-handle", 2, 0, 0,
   if (!SCM_HASHTABLE_P (table))
     SCM_VALIDATE_VECTOR (2, table);
   
-  scm_internal_hash_for_each_handle ((SCM (*) (void *, SCM))call,
+  scm_internal_hash_for_each_handle ((SCM (*)(void *, SCM)) (void*) call,
 				     (void *) SCM_UNPACK (proc),
 				     table);
   return SCM_UNSPECIFIED;
@@ -1013,7 +1016,8 @@ SCM_DEFINE (scm_hash_map_to_list, "hash-map->list", 2, 0, 0,
 
 
 SCM
-scm_internal_hash_fold (SCM (*fn) (void *, SCM, SCM, SCM), void *closure, SCM init, SCM table)
+scm_internal_hash_fold (SCM (*fn) (void*, SCM, SCM, SCM),
+			void *closure, SCM init, SCM table)
 {
   int64_t i, n;
   SCM buckets, result = init;
@@ -1049,7 +1053,8 @@ scm_internal_hash_fold (SCM (*fn) (void *, SCM, SCM, SCM), void *closure, SCM in
    an API. */
 
 void
-scm_internal_hash_for_each_handle (SCM (*fn) (void *, SCM), void *closure, SCM table)
+scm_internal_hash_for_each_handle (SCM (*fn) (void*, SCM),
+				   void *closure, SCM table)
 {
   int64_t i, n;
   SCM buckets;

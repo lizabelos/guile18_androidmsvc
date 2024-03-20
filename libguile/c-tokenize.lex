@@ -164,7 +164,7 @@ L?\"(\\.|[^\\\"])*\"                       { OUT_S; IS_NOT_COOKIE; }
       break;
     default:
       /* whoops */
-      call_error_callback();
+      abort ();
       break;
     }
   else

@@ -16,7 +16,7 @@
  * Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public
- * License with this library; if not, write to the Free Software
+ * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
@@ -32,16 +32,14 @@
  * used for recording of source code positions...)
  */
 
-SCM hashmap_assoc_fn_assq(SCM obj, SCM d, scm_t_ihashx_closure *closure);
-
 #define scm_whash_handle SCM
 
-#define scm_whash_get_handle(whash, key) scm_hash_fn_get_handle (whash, key, scm_ihashq, hashmap_assoc_fn_assq, 0)
+#define scm_whash_get_handle(whash, key) scm_hash_fn_get_handle (whash, key, scm_ihashq_var, scm_sloppy_assq_var, 0)
 #define SCM_WHASHFOUNDP(h) (scm_is_true (h))
 #define SCM_WHASHREF(whash, handle) SCM_CDR (handle)
 #define SCM_WHASHSET(whash, handle, obj) SCM_SETCDR (handle, obj)
-#define scm_whash_create_handle(whash, key) scm_hash_fn_create_handle_x (whash, key, SCM_UNSPECIFIED, scm_ihashq, hashmap_assoc_fn_assq, 0)
-#define scm_whash_lookup(whash, obj) scm_hash_fn_ref (whash, obj, SCM_BOOL_F, scm_ihashq, hashmap_assoc_fn_assq, 0)
+#define scm_whash_create_handle(whash, key) scm_hash_fn_create_handle_x (whash, key, SCM_UNSPECIFIED, scm_ihashq_var, scm_sloppy_assq_var, 0)
+#define scm_whash_lookup(whash, obj) scm_hash_fn_ref (whash, obj, SCM_BOOL_F, scm_ihashq_var, scm_sloppy_assq_var, 0)
 #define scm_whash_insert(whash, key, obj) \
 do { \
   register SCM w = (whash); \

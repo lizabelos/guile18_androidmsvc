@@ -10,7 +10,7 @@
  * Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public
- * License with this library; if not, write to the Free Software
+ * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
@@ -32,7 +32,9 @@
  * quicksort code.
  */
 
-#include <config.h>
+#ifdef HAVE_CONFIG_H
+# include <config.h>
+#endif
 
 #include "libguile/_scm.h"
 #include "libguile/eval.h"
@@ -244,8 +246,8 @@ SCM_DEFINE (scm_merge, "merge", 3, 0, 0,
 
 static SCM 
 scm_merge_list_x (SCM alist, SCM blist,
-		  int64_t alen, int64_t blen,
-		  scm_t_trampoline_2 cmp, SCM less)
+                  int64_t alen, int64_t blen,
+                  scm_t_trampoline_2 cmp, SCM less)
 {
   SCM build, last;
 
@@ -395,7 +397,6 @@ SCM_DEFINE (scm_sort_x, "sort!", 2, 0, 0,
     }
   else
     SCM_WRONG_TYPE_ARG (1, items);
-    return SCM_UNSPECIFIED;
 }
 #undef FUNC_NAME
 
@@ -416,7 +417,6 @@ SCM_DEFINE (scm_sort, "sort", 2, 0, 0,
     return scm_sort_x (scm_vector_copy (items), less);
   else
     SCM_WRONG_TYPE_ARG (1, items);
-  return SCM_UNSPECIFIED;
 }
 #undef FUNC_NAME
 
@@ -524,7 +524,6 @@ SCM_DEFINE (scm_stable_sort_x, "stable-sort!", 2, 0, 0,
     }
   else
     SCM_WRONG_TYPE_ARG (1, items);
-    return SCM_UNSPECIFIED;
 }
 #undef FUNC_NAME
 
@@ -545,7 +544,6 @@ SCM_DEFINE (scm_stable_sort, "stable-sort", 2, 0, 0,
     return scm_stable_sort_x (scm_vector_copy (items), less);
   else
     SCM_WRONG_TYPE_ARG (1, items);
-    return SCM_UNSPECIFIED;
 }
 #undef FUNC_NAME
 

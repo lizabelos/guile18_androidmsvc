@@ -11,7 +11,7 @@
  * Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public
- * License with this library; if not, write to the Free Software
+ * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
@@ -20,12 +20,14 @@
 /* Include the headers for just about everything.
    We call all their initialization functions.  */
 
-#include <config.h>
+#ifdef HAVE_CONFIG_H
+#  include <config.h>
+#endif
 
 #include <stdio.h>
 #include <sys/stat.h>
 #include <fcntl.h>
-#include "libguile/mini-gmp.h"
+#include <libguile/mini-gmp.h>
 
 #include "libguile/_scm.h"
 
@@ -121,7 +123,6 @@
 #include "libguile/srfi-4.h"
 #include "libguile/discouraged.h"
 #include "libguile/deprecated.h"
-#include "libguile/regex-posix.h"
 
 #include "libguile/init.h"
 
@@ -146,7 +147,7 @@ fixconfig (char *s1, char *s2, int s)
   fputs ("\nin ", stderr);
   fputs (s ? "setjump" : "scmfig", stderr);
   fputs (".h and recompile scm\n", stderr);
-  call_error_callback();
+  exit (1);
 }
 
 
@@ -165,6 +166,7 @@ if (SCM_STACK_GROWS_UP) {
 } else {
   if ((stack_start_ptr - (SCM_STACKITEM *) & j) < 0)
     fixconfig (addmsg, "SCM_STACK_GROWS_UP", 1);
+}
 }
 #endif
 
@@ -240,8 +242,8 @@ scm_init_standard_ports ()
      and scsh, read stdin unbuffered.  Applications that can tolerate
      buffered input on stdin can reset \ex{(current-input-port)} to
      block buffering for higher performance.  */
-/*
-  scm_set_current_input_port
+
+  scm_set_current_input_port 
     (scm_standard_stream_to_port (0, 
 				  isatty (0) ? "r0" : "r",
 				  "standard input"));
@@ -253,11 +255,6 @@ scm_init_standard_ports ()
     (scm_standard_stream_to_port (2,
 				  isatty (2) ? "w0" : "w",
 				  "standard error"));
-				  */
-  // We are never in the console
-    scm_set_current_input_port(scm_standard_stream_to_port (0, "r", "standard input"));
-    scm_set_current_output_port(scm_standard_stream_to_port (1, "w", "standard output"));
-    scm_set_current_error_port(scm_standard_stream_to_port (2,"w","standard error"));
 }
 
 
@@ -316,7 +313,7 @@ static void *invoke_main_func(void *body_data);
    Call MAIN_FUNC, passing it CLOSURE, ARGC, and ARGV.  MAIN_FUNC
    should do all the work of the program (initializing other packages,
    reading user input, etc.) before returning.  When MAIN_FUNC
-   returns, call call_error_callback(); this function never returns.  If you want
+   returns, call exit (0); this function never returns.  If you want
    some other exit value, MAIN_FUNC may call exit itself.
 
    scm_boot_guile arranges for program-arguments to return the strings
@@ -340,13 +337,8 @@ static void *invoke_main_func(void *body_data);
 
 
 void
-scm_boot_guile (int argc, char ** argv,
-                void (*main_func) (void *closure,
-                                   int argc,
-                                   char **argv),
-                void *closure)
+scm_boot_guile (int argc, char ** argv, void (*main_func) (), void *closure)
 {
-
   void *res;
   struct main_func_closure c;
 
@@ -360,7 +352,10 @@ scm_boot_guile (int argc, char ** argv,
   /* If the caller doesn't want this, they should exit from main_func
      themselves.
   */
-  return;
+  if (res == NULL)
+    exit (EXIT_FAILURE);
+  else
+    exit (0);
 }
 
 static void *
@@ -390,7 +385,6 @@ int scm_initialized_p = 0;
 static void *
 really_cleanup_for_exit (void *unused)
 {
-    (void)unused;
   scm_flush_all_ports ();
   return NULL;
 }
@@ -413,7 +407,7 @@ scm_i_init_guile (SCM_STACKITEM *base)
   if (base == NULL)
     {
       fprintf (stderr, "cannot determine stack base!\n");
-      call_error_callback();
+      scm_abort ();
     }
 
   if (sizeof (mpz_t) > (3 * sizeof (scm_t_bits)))
@@ -435,7 +429,7 @@ scm_i_init_guile (SCM_STACKITEM *base)
   if (scm_init_storage ())        /* requires threads_prehistory,
 				     smob_prehistory and
 				     hashtab_prehistory */
-    call_error_callback();
+    scm_abort ();
   
   scm_struct_prehistory ();	  /* requires storage */
   scm_symbols_prehistory ();      /* requires storage */
@@ -443,7 +437,7 @@ scm_i_init_guile (SCM_STACKITEM *base)
   scm_environments_prehistory (); /* requires storage */
   scm_modules_prehistory ();      /* requires storage and hash tables */
   scm_init_variable ();           /* all bindings need variables */
- scm_init_continuations ();
+  scm_init_continuations ();
   scm_init_root ();		  /* requires continuations */
   scm_init_threads ();            /* requires fluids */
   scm_init_gsubr ();
@@ -479,7 +473,7 @@ scm_i_init_guile (SCM_STACKITEM *base)
   scm_init_properties ();
   scm_init_hooks ();            /* Requires smob_prehistory */
   scm_init_gc ();		/* Requires hooks, async */
-//  scm_init_i18n ();
+  scm_init_i18n ();
   scm_init_ioext ();
   scm_init_keywords ();
   scm_init_list ();
@@ -490,9 +484,13 @@ scm_i_init_guile (SCM_STACKITEM *base)
   scm_init_options ();
   scm_init_pairs ();
   scm_init_ports ();
+#ifdef HAVE_POSIX
   scm_init_filesys ();
   scm_init_posix ();
+#endif
+#ifdef HAVE_REGCOMP
   scm_init_regex_posix ();
+#endif
   scm_init_procs ();
   scm_init_scmsigs ();
 #ifdef HAVE_NETWORKING
@@ -529,11 +527,13 @@ scm_i_init_guile (SCM_STACKITEM *base)
   scm_init_unif ();
   scm_init_simpos ();
   scm_init_load_path ();
-  scm_init_standard_ports ();  // Requires fports
-  //scm_init_dynamic_linking ();
+  scm_init_standard_ports ();  /* Requires fports */
+#ifdef HAVE_LTDL
+  scm_init_dynamic_linking ();
+#endif
 #if SCM_ENABLE_ELISP
   scm_init_lang ();
-#endif // SCM_ENABLE_ELISP
+#endif /* SCM_ENABLE_ELISP */
   scm_init_script ();
   scm_init_srfi_4 ();
 
@@ -557,7 +557,9 @@ scm_i_init_guile (SCM_STACKITEM *base)
 
   scm_init_rdelim ();
   scm_init_rw ();
-  //scm_init_extensions ();
+#ifdef HAVE_LTDL
+  scm_init_extensions ();
+#endif
 
   atexit (cleanup_for_exit);
   scm_load_startup_files ();

@@ -11,7 +11,7 @@
  * Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public
- * License with this library; if not, write to the Free Software
+ * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
@@ -23,7 +23,9 @@
  * libguile.  See the comments in objects.h.
  */
 
-#include <config.h>
+#ifdef HAVE_CONFIG_H
+# include <config.h>
+#endif
 
 #include "libguile/_scm.h"
 
@@ -283,8 +285,8 @@ SCM_DEFINE (scm_object_procedure, "object-procedure", 1, 0, 0,
 
 SCM
 scm_i_make_class_object (SCM meta,
-			 SCM layout_string,
-			 uint64_t flags)
+                         SCM layout_string,
+                         uint64_t flags)
 {
   SCM c;
   SCM layout = scm_make_struct_layout (layout_string);

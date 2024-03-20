@@ -11,11 +11,13 @@
  * Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public
- * License with this library; if not, write to the Free Software
+ * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include <config.h>
+#ifdef HAVE_CONFIG_H
+# include <config.h>
+#endif
 
 #include <string.h>
 #include <stdio.h>
@@ -162,9 +164,9 @@ scm_malloc_unregister (void *obj)
     {
       fprintf (stderr,
 	       "scm_gc_free called on object not allocated with scm_gc_malloc\n");
-      call_error_callback();
+      scm_abort ();
     }
-  type->data = (void *) ((int) type->data - 1);
+  type->data = (void *) ((int64_t) type->data - 1);
   object->key = 0;
 }  
 
@@ -184,7 +186,7 @@ scm_malloc_reregister (void *old, void *new, const char *newwhat)
 	  fprintf (stderr,
 		   "scm_gc_realloc called on object not allocated "
 		   "with scm_gc_malloc\n");
-	  call_error_callback();
+	  scm_abort ();
 	}
       if (strcmp ((char *) type->key, newwhat) != 0)
 	{
@@ -194,7 +196,7 @@ scm_malloc_reregister (void *old, void *new, const char *newwhat)
 		       "scm_gc_realloc called with arg %s, was %s\n",
 		       newwhat,
 		       (char *) type->key);
-	      call_error_callback();
+	      scm_abort ();
 	    }
 	}
       if (new != old)
@@ -219,7 +221,7 @@ SCM_DEFINE (scm_malloc_stats, "malloc-stats", 0, 0, 0,
   for (i = 0; i < malloc_type_size + N_SEEK; ++i)
     if (malloc_type[i].key)
       res = scm_acons (scm_from_locale_string ((char *) malloc_type[i].key),
-		       scm_from_int ((int) malloc_type[i].data),
+		       scm_from_int ((int64_t) malloc_type[i].data),
 		       res);
   return res;
 }

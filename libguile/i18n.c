@@ -11,11 +11,13 @@
  * Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public
- * License with this library; if not, write to the Free Software
+ * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include <config.h>
+#ifdef HAVE_CONFIG_H
+# include <config.h>
+#endif
 
 #include "libguile/_scm.h"
 #include "libguile/feature.h"
@@ -78,8 +80,6 @@ scm_i_to_lc_category (SCM category, int allow_lc_all)
     }
   scm_wrong_type_arg (0, 0, category);
 }
-
-#if 0
 
 SCM_DEFINE (scm_gettext, "gettext", 1, 2, 0,
 	    (SCM msgid, SCM domain, SCM category),
@@ -324,5 +324,3 @@ scm_init_i18n ()
   c-file-style: "gnu"
   End:
 */
-
-#endif

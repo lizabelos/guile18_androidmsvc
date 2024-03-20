@@ -15,12 +15,13 @@ find_package(Math REQUIRED)
 include_directories(${CMAKE_BINARY_DIR})
 include_directories(${CMAKE_SOURCE_DIR})
 configure_file (${CMAKE_CURRENT_SOURCE_DIR}/cmake/config.h.cmake                 ${CMAKE_CURRENT_BINARY_DIR}/config.h)
+add_definitions(-DHAVE_CONFIG_H)
 configure_file (${CMAKE_CURRENT_SOURCE_DIR}/cmake/libguile/gen-scmconfig.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/libguile/gen-scmconfig.h)
 configure_file (${CMAKE_CURRENT_SOURCE_DIR}/cmake/libguile/version.h.cmake       ${CMAKE_CURRENT_BINARY_DIR}/libguile/version.h)
 configure_file (${CMAKE_CURRENT_SOURCE_DIR}/cmake/libguile/libpath.h.cmake       ${CMAKE_CURRENT_BINARY_DIR}/libguile/libpath.h)
 
 
-add_library(guile STATIC)
+add_library(guile SHARED)
 # use -fno-strict-aliasing
 target_compile_options(guile PUBLIC -fno-strict-aliasing)
 
@@ -198,8 +199,31 @@ if (MINGW)
     target_link_libraries(guile PUBLIC ws2_32)
 endif ()
 
-# link to regex pcre
-target_link_libraries(guile PUBLIC regex)
+# if we have regex, link it
+find_library(regex regex)
+if (regex)
+    target_link_libraries(guile PUBLIC regex)
+endif ()
+
+# if we have dl, link it
+find_library(dl dl)
+if (dl)
+    target_link_libraries(guile PUBLIC dl)
+endif ()
+
+# if we have intl, link it
+find_library(intl intl)
+if (intl)
+    target_link_libraries(guile PUBLIC intl)
+endif ()
+
+# if we have ltdl, link it
+find_library(ltdl ltdl)
+if (ltdl)
+    target_link_libraries(guile PUBLIC ltdl)
+    target_compile_definitions(guile PUBLIC HAVE_LTDL)
+endif ()
+
 
 ### Tests
 

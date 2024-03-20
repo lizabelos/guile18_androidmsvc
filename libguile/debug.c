@@ -12,12 +12,14 @@
  * Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public
- * License with this library; if not, write to the Free Software
+ * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
 
-#include <config.h>
+#ifdef HAVE_CONFIG_H
+# include <config.h>
+#endif
 
 #include "libguile/_scm.h"
 #include "libguile/async.h"
@@ -67,7 +69,7 @@ SCM_DEFINE (scm_debug_options, "debug-options-interface", 0, 1, 0,
       SCM_OUT_OF_RANGE (1, setting);
     }
   SCM_RESET_DEBUG_MODE;
-//  scm_stack_checking_enabled_p = SCM_STACK_CHECKING_P;
+  scm_stack_checking_enabled_p = SCM_STACK_CHECKING_P;
   scm_debug_eframe_size = 2 * SCM_N_FRAMES;
 
   scm_dynwind_end ();
@@ -484,11 +486,7 @@ static int
 debugobj_print (SCM obj, SCM port, scm_print_state *pstate SCM_UNUSED)
 {
   scm_puts ("#<debug-object ", port);
-#if USE_64IMPL
   scm_intprint ((int64_t) SCM_DEBUGOBJ_FRAME (obj), 16, port);
-#else
-  scm_intprint ((int64_t) SCM_DEBUGOBJ_FRAME (obj), 16, port);
-#endif
   scm_putc ('>', port);
   return 1;
 }

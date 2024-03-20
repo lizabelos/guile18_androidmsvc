@@ -12,7 +12,7 @@
  * Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public
- * License with this library; if not, write to the Free Software
+ * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
@@ -24,7 +24,9 @@
  * Erick Gallesio <eg@unice.fr>.
  */
 
-#include <config.h>
+#ifdef HAVE_CONFIG_H
+# include <config.h>
+#endif
 
 #include <stdio.h>
 #include <assert.h>
@@ -37,6 +39,7 @@
 #include "libguile/dynl.h"
 #include "libguile/dynwind.h"
 #include "libguile/eval.h"
+#include "libguile/hash.h"
 #include "libguile/hashtab.h"
 #include "libguile/keywords.h"
 #include "libguile/macros.h"
@@ -54,8 +57,6 @@
 
 #include "libguile/validate.h"
 #include "libguile/goops.h"
-
-#include "srcprop.h"
 
 #define SPEC_OF(x)  SCM_SLOT (x, scm_si_specializers)
 
@@ -904,7 +905,8 @@ create_basic_classes (void)
   /* SCM slots_of_class = build_class_class_slots (); */
 
   /**** <scm_class_class> ****/
-  SCM cs = scm_from_locale_string (&SCM_CLASS_CLASS_LAYOUT[2 * scm_vtable_offset_user]);
+  SCM cs = scm_from_locale_string (&(SCM_CLASS_CLASS_LAYOUT
+				     [2 * scm_vtable_offset_user]));
   SCM name = scm_from_locale_symbol ("<class>");
   scm_class_class = scm_permanent_object (scm_make_vtable_vtable (cs,
 								  SCM_INUM0,
@@ -1335,7 +1337,7 @@ set_slot_value (SCM class SCM_UNUSED, SCM obj, SCM slotdef, SCM value)
 
       code = SCM_CADR (access);
       if (!SCM_CLOSUREP (code))
-	SCM_SUBRF2 (code) (obj, value);
+          SCM_SUBRF2 (code) (obj, value);
       else
 	{
 	  env  = SCM_EXTEND_ENV (SCM_CLOSURE_FORMALS (code),
@@ -2391,7 +2393,7 @@ fix_cpl (SCM c, SCM before, SCM after)
   SCM tail = scm_delq1_x (before, SCM_CDR (ls));
   if (scm_is_false (ls))
     /* if this condition occurs, fix_cpl should not be applied this way */
-    call_error_callback();
+    scm_abort ();
   SCM_SETCAR (ls, before);
   SCM_SETCDR (ls, scm_cons (after, tail));
   {
@@ -2674,7 +2676,7 @@ scm_i_inherit_applicable (SCM c)
       /* patch scm_class_applicable into cpl */
       top = scm_c_memq (scm_class_top, cpl);
       if (scm_is_false (top))
-	call_error_callback();
+	scm_abort ();
       else
 	{
 	  SCM_SETCAR (top, scm_class_applicable);
@@ -2916,12 +2918,12 @@ SCM
 scm_wrap_component (SCM class, SCM container, void *data)
 {
   SCM obj = scm_wrap_object (class, data);
-  SCM handle = scm_hash_fn_create_handle_x(scm_components,
-                                           obj,
-                                           SCM_BOOL_F,
-                                           scm_struct_ihashq,
-                                           hashmap_assoc_fn_assq,
-                                           0);
+  SCM handle = scm_hash_fn_create_handle_x (scm_components,
+					    obj,
+					    SCM_BOOL_F,
+					    scm_struct_ihashq_var,
+					    scm_sloppy_assq_var,
+					    0);
   SCM_SETCDR (handle, container);
   return obj;
 }

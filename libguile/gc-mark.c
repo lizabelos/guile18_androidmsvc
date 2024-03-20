@@ -11,24 +11,24 @@
  * Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public
- * License with this library; if not, write to the Free Software
+ * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
 
-
-#include <config.h>
+
+#ifdef HAVE_CONFIG_H
+#  include <config.h>
+#endif
 
 #include <stdio.h>
 #include <errno.h>
 #include <string.h>
 #include <assert.h>
 
-#include "libguile/gc.h"
-
 #ifdef __ia64__
 #include <ucontext.h>
-extern uint64_t * __libc_ia64_register_backing_store_base;
+extern unsigned long * __libc_ia64_register_backing_store_base;
 #endif
 
 #include "libguile/_scm.h"
@@ -57,141 +57,97 @@ extern uint64_t * __libc_ia64_register_backing_store_base;
 #endif
 
 #ifdef HAVE_MALLOC_H
-
 #include <malloc.h>
-
 #endif
 
 #ifdef HAVE_UNISTD_H
-
 #include <unistd.h>
-
 #endif
-
-#ifdef _WIN32
-
-#include <windows.h>
-
-#else
-#include <fcntl.h>
-#include <sys/mman.h>
-#endif
-
-int check_ptr(void *ptr) {
-    (void) (ptr);
-#if GUILE_ENABLE_CHECK_PTR
-    // IsBadReadPtr on Windows or mprotect on Linux
-#ifdef _WIN32
-    return IsBadReadPtr(ptr, 1);
-#else
-   /* ptr = (void *)(((size_t)ptr) & ~(getpagesize() - 1));
-    int val = mprotect(ptr, 1, PROT_READ);
-    if (val != 0) {
-        return 1;
-    }
-    int nullfd = open("/dev/random", O_WRONLY);
-    if (write(nullfd, ptr, 1) < 0)
-    {
-        return 1;
-    }
-    close(nullfd); */
-    return 0;
-#endif
-#else
-    return 0;
-#endif
-}
 
 /*
   Entry point for this file.
  */
 void
-scm_mark_all(void) {
-    int64_t j;
-    int loops;
-    (void) (loops);
+scm_mark_all (void)
+{
+  int64_t j;
+  int loops; (void) loops;
 
-    scm_i_init_weak_vectors_for_gc();
-    scm_i_init_guardians_for_gc();
+  scm_i_init_weak_vectors_for_gc ();
+  scm_i_init_guardians_for_gc ();
+  
+  scm_i_clear_mark_space ();
+  
+  /* Mark every thread's stack and registers */
+  scm_threads_mark_stacks ();
 
-    scm_i_clear_mark_space();
+  j = SCM_NUM_PROTECTS;
+  while (j--)
+    scm_gc_mark (scm_sys_protects[j]);
 
-    /* Mark every thread's stack and registers */
-    scm_threads_mark_stacks();
+  /* mark the registered roots */
+  {
+    size_t i;
+    for (i = 0; i < SCM_HASHTABLE_N_BUCKETS (scm_gc_registered_roots); ++i)
+      {
+	SCM l = SCM_HASHTABLE_BUCKET (scm_gc_registered_roots, i);
+	for (; !scm_is_null (l); l = SCM_CDR (l))
+	  {
+	    SCM *p = (SCM *) (scm_to_uint64 (SCM_CAAR (l)));
+	    scm_gc_mark (*p);
+	  }
+      }
+  }
+  
+  scm_mark_subr_table ();
 
-    j = SCM_NUM_PROTECTS;
-    while (j--)
-        scm_gc_mark(scm_sys_protects[j]);
-
-    /* mark the registered roots */
+  loops = 0;
+  while (1)
     {
-        size_t i;
-        for (i = 0; i < SCM_HASHTABLE_N_BUCKETS (scm_gc_registered_roots); ++i) {
-            SCM l = SCM_HASHTABLE_BUCKET (scm_gc_registered_roots, i);
-            for (; !scm_is_null (l); l = SCM_CDR (l)) {
-#if USE_64IMPL
-                SCM *p = (SCM *) (scm_to_uint64(SCM_CAAR (l)));
-#else
-                SCM *p = (SCM *) (scm_to_uint64 (SCM_CAAR (l)));
-#endif
-                if (check_ptr(p) == 0) {
-                    scm_gc_mark(*p);
-                } else {
-                    printf("Error: scm_mark_all: %p\n", p);
-                    call_error_callback();
-                }
-            }
-        }
+      int again;
+      loops++;
+
+      /* Mark the non-weak references of weak vectors.  For a weak key
+	 alist vector, this would mark the values for keys that are
+	 marked.  We need to do this in a loop until everything
+	 settles down since the newly marked values might be keys in
+	 other weak key alist vectors, for example.
+      */
+      again = scm_i_mark_weak_vectors_non_weaks ();
+      if (again)
+	continue;
+
+      /* Now we scan all marked guardians and move all unmarked objects
+	 from the accessible to the inaccessible list.
+      */
+      scm_i_identify_inaccessible_guardeds ();
+
+      /* When we have identified all inaccessible objects, we can mark
+	 them.
+      */
+      again = scm_i_mark_inaccessible_guardeds ();
+
+      /* This marking might have changed the situation for weak vectors
+	 and might have turned up new guardians that need to be processed,
+	 so we do it all over again.
+      */
+      if (again)
+	continue;
+      
+      /* Nothing new marked in this round, we are done.
+       */
+      break;
     }
 
-    scm_mark_subr_table();
+  /* fprintf (stderr, "%d loops\n", loops); */
 
-    loops = 0;
-    while (1) {
-        int again;
-        loops++;
-
-        /* Mark the non-weak references of weak vectors.  For a weak key
-       alist vector, this would mark the values for keys that are
-       marked.  We need to do this in a loop until everything
-       settles down since the newly marked values might be keys in
-       other weak key alist vectors, for example.
-        */
-        again = scm_i_mark_weak_vectors_non_weaks();
-        if (again)
-            continue;
-
-        /* Now we scan all marked guardians and move all unmarked objects
-       from the accessible to the inaccessible list.
-        */
-        scm_i_identify_inaccessible_guardeds();
-
-        /* When we have identified all inaccessible objects, we can mark
-       them.
-        */
-        again = scm_i_mark_inaccessible_guardeds();
-
-        /* This marking might have changed the situation for weak vectors
-       and might have turned up new guardians that need to be processed,
-       so we do it all over again.
-        */
-        if (again)
-            continue;
-
-        /* Nothing new marked in this round, we are done.
-         */
-        break;
-    }
-
-    /* fprintf (stderr, "%d loops\n", loops); */
-
-    /* Remove all unmarked entries from the weak vectors.
-     */
-    scm_i_remove_weaks_from_weak_vectors();
-
-    /* Bring hashtables upto date.
-     */
-    scm_i_scan_weak_hashtables();
+  /* Remove all unmarked entries from the weak vectors.
+   */
+  scm_i_remove_weaks_from_weak_vectors ();
+  
+  /* Bring hashtables upto date.
+   */
+  scm_i_scan_weak_hashtables ();
 }
 
 /* {Mark/Sweep}
@@ -201,19 +157,16 @@ scm_mark_all(void) {
   Mark an object precisely, then recurse.
  */
 void
-scm_gc_mark(SCM ptr) {
-    if (ptr == NULL) {
-        return;
-    }
+scm_gc_mark (SCM ptr)
+{
+  if (SCM_IMP (ptr))
+    return;
+  
+  if (SCM_GC_MARK_P (ptr))
+    return;
 
-    if (SCM_IMP (ptr))
-        return;
-
-    if (SCM_GC_MARK_P (ptr))
-        return;
-
-    SCM_SET_GC_MARK (ptr);
-    scm_gc_mark_dependencies(ptr);
+  SCM_SET_GC_MARK (ptr);
+  scm_gc_mark_dependencies (ptr);
 }
 
 /*
@@ -241,235 +194,248 @@ Perhaps this would work better with an explicit markstack?
 */
 
 void
-scm_gc_mark_dependencies(SCM p)
+scm_gc_mark_dependencies (SCM p)
 #define FUNC_NAME "scm_gc_mark_dependencies"
 {
-    register int64_t i;
-    register SCM ptr;
-    SCM cell_type;
+  register int64_t i;
+  register SCM ptr;
+  SCM cell_type;
 
-    ptr = p;
-    scm_mark_dependencies_again:
+  ptr = p;
+ scm_mark_dependencies_again:
+  
+  cell_type = SCM_GC_CELL_TYPE (ptr);
+  switch (SCM_ITAG7 (cell_type))
+    {
+    case scm_tcs_cons_nimcar:
+      if (SCM_IMP (SCM_CDR (ptr)))
+	{
+	  ptr = SCM_CAR (ptr);
+	  goto gc_mark_nimp;
+	}
 
-    cell_type = SCM_GC_CELL_TYPE (ptr);
-    switch (SCM_ITAG7 (cell_type)) {
-        case scm_tcs_cons_nimcar:
-            if (SCM_IMP (SCM_CDR(ptr))) {
-                ptr = SCM_CAR (ptr);
-                goto gc_mark_nimp;
-            }
 
+      scm_gc_mark (SCM_CAR (ptr));
+      ptr = SCM_CDR (ptr);
+      goto gc_mark_nimp;
+    case scm_tcs_cons_imcar:
+      ptr = SCM_CDR (ptr);
+      goto gc_mark_loop;
+    case scm_tc7_pws:
 
-            scm_gc_mark(SCM_CAR (ptr));
-            ptr = SCM_CDR (ptr);
-            goto gc_mark_nimp;
-        case scm_tcs_cons_imcar:
-            ptr = SCM_CDR (ptr);
-            goto gc_mark_loop;
-        case scm_tc7_pws:
+      scm_gc_mark (SCM_SETTER (ptr));
+      ptr = SCM_PROCEDURE (ptr);
+      goto gc_mark_loop;
+    case scm_tcs_struct:
+      {
+	/* XXX - use less explicit code. */
+	scm_t_bits word0 = SCM_CELL_WORD_0 (ptr) - scm_tc3_struct;
+	scm_t_bits * vtable_data = (scm_t_bits *) word0;
+	SCM layout = SCM_PACK (vtable_data [scm_vtable_index_layout]);
+	int64_t len = scm_i_symbol_length (layout);
+	const char *fields_desc = scm_i_symbol_chars (layout);
+	scm_t_bits *struct_data = (scm_t_bits *) SCM_STRUCT_DATA (ptr);
 
-            scm_gc_mark(SCM_SETTER (ptr));
-            ptr = SCM_PROCEDURE (ptr);
-            goto gc_mark_loop;
-        case scm_tcs_struct: {
-            /* XXX - use less explicit code. */
-            scm_t_bits word0 = SCM_CELL_WORD_0 (ptr) - scm_tc3_struct;
-            scm_t_bits *vtable_data = (scm_t_bits *) word0;
-            SCM layout = SCM_PACK (vtable_data[scm_vtable_index_layout]);
-            int64_t len = scm_i_symbol_length(layout);
-            const char *fields_desc = scm_i_symbol_chars(layout);
-            scm_t_bits *struct_data = (scm_t_bits *) SCM_STRUCT_DATA (ptr);
+	if (vtable_data[scm_struct_i_flags] & SCM_STRUCTF_ENTITY)
+	  {
+	    scm_gc_mark (SCM_PACK (struct_data[scm_struct_i_procedure]));
+	    scm_gc_mark (SCM_PACK (struct_data[scm_struct_i_setter]));
+	  }
+	if (len)
+	  {
+	    int64_t x;
 
-            if (vtable_data[scm_struct_i_flags] & SCM_STRUCTF_ENTITY) {
-                scm_gc_mark(SCM_PACK (struct_data[scm_struct_i_procedure]));
-                scm_gc_mark(SCM_PACK (struct_data[scm_struct_i_setter]));
-            }
-            if (len) {
-                int64_t x;
-
-                for (x = 0; x < len - 2; x += 2, ++struct_data)
-                    if (fields_desc[x] == 'p')
-                        scm_gc_mark(SCM_PACK (*struct_data));
-                if (fields_desc[x] == 'p') {
-                    if (SCM_LAYOUT_TAILP (fields_desc[x + 1]))
-                        for (x = *struct_data++; x; --x, ++struct_data)
-                            scm_gc_mark(SCM_PACK (*struct_data));
-                    else
-                        scm_gc_mark(SCM_PACK (*struct_data));
-                }
-            }
-            /* mark vtable */
-            ptr = SCM_PACK (vtable_data[scm_vtable_index_vtable]);
-            goto gc_mark_loop;
-        }
-            break;
-        case scm_tcs_closures:
-            if (SCM_IMP (SCM_ENV(ptr))) {
-                ptr = SCM_CLOSCAR (ptr);
-                goto gc_mark_nimp;
-            }
-            scm_gc_mark(SCM_CLOSCAR (ptr));
-            ptr = SCM_ENV (ptr);
-            goto gc_mark_nimp;
-        case scm_tc7_vector:
-            i = SCM_SIMPLE_VECTOR_LENGTH (ptr);
-            if (i == 0)
-                break;
-            while (--i > 0) {
-                SCM elt = SCM_SIMPLE_VECTOR_REF (ptr, i);
-                if (SCM_NIMP (elt))
-                    scm_gc_mark(elt);
-            }
-            ptr = SCM_SIMPLE_VECTOR_REF (ptr, 0);
-            goto gc_mark_loop;
+	    for (x = 0; x < len - 2; x += 2, ++struct_data)
+	      if (fields_desc[x] == 'p')
+		scm_gc_mark (SCM_PACK (*struct_data));
+	    if (fields_desc[x] == 'p')
+	      {
+		if (SCM_LAYOUT_TAILP (fields_desc[x + 1]))
+		  for (x = *struct_data++; x; --x, ++struct_data)
+		    scm_gc_mark (SCM_PACK (*struct_data));
+		else
+		  scm_gc_mark (SCM_PACK (*struct_data));
+	      }
+	  }
+	/* mark vtable */
+	ptr = SCM_PACK (vtable_data [scm_vtable_index_vtable]);
+	goto gc_mark_loop;
+      }
+      break;
+    case scm_tcs_closures:
+      if (SCM_IMP (SCM_ENV (ptr)))
+	{
+	  ptr = SCM_CLOSCAR (ptr);
+	  goto gc_mark_nimp;
+	}
+      scm_gc_mark (SCM_CLOSCAR (ptr));
+      ptr = SCM_ENV (ptr);
+      goto gc_mark_nimp;
+    case scm_tc7_vector:
+      i = SCM_SIMPLE_VECTOR_LENGTH (ptr);
+      if (i == 0)
+	break;
+      while (--i > 0)
+	{
+	  SCM elt = SCM_SIMPLE_VECTOR_REF (ptr, i);
+	  if (SCM_NIMP (elt))
+	    scm_gc_mark (elt);
+	}
+      ptr = SCM_SIMPLE_VECTOR_REF (ptr, 0);
+      goto gc_mark_loop;
 #ifdef CCLO
-        case scm_tc7_cclo: {
-            i = SCM_CCLO_LENGTH (ptr);
-            int64_t j;
-            for (j = 1; j != i; ++j) {
-                SCM obj = SCM_CCLO_REF (ptr, j);
-                if (!SCM_IMP (obj))
-                    scm_gc_mark(obj);
-            }
-            ptr = SCM_CCLO_REF (ptr, 0);
-            goto gc_mark_loop;
-        }
+    case scm_tc7_cclo:
+      {
+	size_t i = SCM_CCLO_LENGTH (ptr);
+	size_t j;
+	for (j = 1; j != i; ++j)
+	  {
+	    SCM obj = SCM_CCLO_REF (ptr, j);
+	    if (!SCM_IMP (obj))
+	      scm_gc_mark (obj);
+	  }
+	ptr = SCM_CCLO_REF (ptr, 0);
+	goto gc_mark_loop;
+      }
 #endif
 
-        case scm_tc7_string:
-            ptr = scm_i_string_mark(ptr);
-            goto gc_mark_loop;
-        case scm_tc7_stringbuf:
-            ptr = scm_i_stringbuf_mark(ptr);
-            goto gc_mark_loop;
+    case scm_tc7_string:
+      ptr = scm_i_string_mark (ptr);
+      goto gc_mark_loop;
+    case scm_tc7_stringbuf:
+      ptr = scm_i_stringbuf_mark (ptr);
+      goto gc_mark_loop;
 
-        case scm_tc7_number:
-            if (SCM_TYP16 (ptr) == scm_tc16_fraction) {
-                scm_gc_mark(SCM_CELL_OBJECT_1 (ptr));
-                ptr = SCM_CELL_OBJECT_2 (ptr);
-                goto gc_mark_loop;
-            }
-            break;
+    case scm_tc7_number:
+      if (SCM_TYP16 (ptr) == scm_tc16_fraction)
+	{
+	  scm_gc_mark (SCM_CELL_OBJECT_1 (ptr));
+	  ptr = SCM_CELL_OBJECT_2 (ptr);
+	  goto gc_mark_loop;
+	}
+      break;
 
-        case scm_tc7_wvect:
-            scm_i_mark_weak_vector(ptr);
-            break;
+    case scm_tc7_wvect:
+      scm_i_mark_weak_vector (ptr);
+      break;
 
-        case scm_tc7_symbol:
-            ptr = scm_i_symbol_mark(ptr);
-            goto gc_mark_loop;
-        case scm_tc7_variable:
-            ptr = SCM_CELL_OBJECT_1 (ptr);
-            goto gc_mark_loop;
-        case scm_tcs_subrs:
-            break;
-        case scm_tc7_port:
-            i = SCM_PTOBNUM (ptr);
+    case scm_tc7_symbol:
+      ptr = scm_i_symbol_mark (ptr);
+      goto gc_mark_loop;
+    case scm_tc7_variable:
+      ptr = SCM_CELL_OBJECT_1 (ptr);
+      goto gc_mark_loop;
+    case scm_tcs_subrs:
+      break;
+    case scm_tc7_port:
+      i = SCM_PTOBNUM (ptr);
+#if (SCM_DEBUG_CELL_ACCESSES == 1) 
+      if (!(i < scm_numptob))
+	{
+	  fprintf (stderr, "undefined port type");
+	  scm_abort();
+	}
+#endif
+      if (SCM_PTAB_ENTRY(ptr))
+	scm_gc_mark (SCM_FILENAME (ptr));
+      if (scm_ptobs[i].mark)
+	{
+	  ptr = (scm_ptobs[i].mark) (ptr);
+	  goto gc_mark_loop;
+	}
+      else
+	return;
+      break;
+    case scm_tc7_smob:
+      switch (SCM_TYP16 (ptr))
+	{ /* should be faster than going through scm_smobs */
+	case scm_tc_free_cell:
+	  /* We have detected a free cell.  This can happen if non-object data
+	   * on the C stack points into guile's heap and is scanned during
+	   * conservative marking.  */
+	  break;
+	default:
+	  i = SCM_SMOBNUM (ptr);
 #if (SCM_DEBUG_CELL_ACCESSES == 1)
-            if (!(i < scm_numptob))
-          {
-            fprintf (stderr, "undefined port type");
-            call_error_callback();
-          }
+	  if (!(i < scm_numsmob))
+	    {
+	      fprintf (stderr, "undefined smob type");
+	      scm_abort();
+	    }
 #endif
-            if (SCM_PTAB_ENTRY(ptr))
-                scm_gc_mark(SCM_FILENAME (ptr));
-            if (scm_ptobs[i].mark) {
-                ptr = (scm_ptobs[i].mark)(ptr);
-                goto gc_mark_loop;
-            } else
-                return;
-            break;
-        case scm_tc7_smob:
-            switch (SCM_TYP16 (ptr)) { /* should be faster than going through scm_smobs */
-                case scm_tc_free_cell:
-                    /* We have detected a free cell.  This can happen if non-object data
-                     * on the C stack points into guile's heap and is scanned during
-                     * conservative marking.  */
-                    break;
-                default:
-                    i = SCM_SMOBNUM (ptr);
-#if (SCM_DEBUG_CELL_ACCESSES == 1)
-                    if (!(i < scm_numsmob))
-                      {
-                        fprintf (stderr, "undefined smob type");
-                        call_error_callback();
-                      }
-#endif
-                    if (scm_smobs[i].mark) {
-                        ptr = (scm_smobs[i].mark)(ptr);
-                        goto gc_mark_loop;
-                    } else
-                        return;
-            }
-            break;
-        default:
-            fprintf(stderr, "unknown type");
-            call_error_callback();
+	  if (scm_smobs[i].mark)
+	    {
+	      ptr = (scm_smobs[i].mark) (ptr);
+	      goto gc_mark_loop;
+	    }
+	  else
+	    return;
+	}
+      break;
+    default:
+      fprintf (stderr, "unknown type");
+      scm_abort();
     }
 
-    /*
-      If we got here, then exhausted recursion options for PTR.  we
-      return (careful not to mark PTR, it might be the argument that we
-      were called with.)
-     */
+  /*
+    If we got here, then exhausted recursion options for PTR.  we
+    return (careful not to mark PTR, it might be the argument that we
+    were called with.)
+   */
+  return ;
+
+ gc_mark_loop:
+  if (SCM_IMP (ptr))
     return;
 
-    gc_mark_loop:
-    if (SCM_IMP (ptr))
-        return;
+ gc_mark_nimp:
+  {
+    int valid_cell = CELL_P (ptr);
 
-    gc_mark_nimp:
-    {
-        int valid_cell = CELL_P (ptr);
-
-
+    
 #if (SCM_DEBUG_CELL_ACCESSES == 1)
-        if (scm_debug_cell_accesses_p)
-          {
-        /* We are in debug mode.  Check the ptr exhaustively. */
-
-        valid_cell = valid_cell && (scm_i_find_heap_segment_containing_object (ptr) >= 0);
-          }
-
+    if (scm_debug_cell_accesses_p)
+      {
+    /* We are in debug mode.  Check the ptr exhaustively. */
+	
+	valid_cell = valid_cell && (scm_i_find_heap_segment_containing_object (ptr) >= 0);
+      }
+    
 #endif
-        if (!valid_cell) {
-            fprintf(stderr, "rogue pointer in heap");
-            call_error_callback();
-        }
-    }
+    if (!valid_cell)
+      {
+	fprintf (stderr, "rogue pointer in heap");
+	scm_abort();
+      }
+  }
+  
+ if (SCM_GC_MARK_P (ptr))
+  {
+    return;
+  }
+  
+  SCM_SET_GC_MARK (ptr);
 
-    if (ptr == NULL) {
-        return;
-    }
-
-    if (SCM_GC_MARK_P (ptr)) {
-        return;
-    }
-
-    SCM_SET_GC_MARK (ptr);
-
-    goto scm_mark_dependencies_again;
-
+  goto   scm_mark_dependencies_again;
+  
 }
-
 #undef FUNC_NAME
 
 
-int check_ptr(void *ptr);
+
 
 /* Mark a region conservatively */
 void
-scm_mark_locations(SCM_STACKITEM x[], uint64_t n) {
-    uint64_t m;
+scm_mark_locations (SCM_STACKITEM x[], uint64_t n)
+{
+  uint64_t m;
 
-    for (m = 0; m < n; ++m) {
-        if (check_ptr(x + m) != 0) {
-            continue;
-        }
-        SCM obj = *(SCM *) &x[m];
-        int64_t segment = scm_i_find_heap_segment_containing_object(obj);
-        if (segment >= 0) scm_gc_mark(obj);
+  for (m = 0; m < n; ++m)
+    {
+      SCM obj = * (SCM *) &x[m];
+      int64_t segment = scm_i_find_heap_segment_containing_object (obj);
+      if (segment >= 0)
+	scm_gc_mark (obj);
     }
 }
 
@@ -478,9 +444,10 @@ scm_mark_locations(SCM_STACKITEM x[], uint64_t n) {
  * pointer to a cell on the heap.
  */
 int
-scm_in_heap_p(SCM value) {
-    int64_t segment = scm_i_find_heap_segment_containing_object(value);
-    return (segment >= 0);
+scm_in_heap_p (SCM value)
+{
+  int64_t segment = scm_i_find_heap_segment_containing_object (value);
+  return (segment >= 0);
 }
 
 
@@ -507,7 +474,7 @@ allocated_mark (SCM cell)
       SCM obj = SCM_CELL_OBJECT (cell, i);
       int64_t obj_segment = scm_i_find_heap_segment_containing_object (obj);
       if (obj_segment >= 0)
-    scm_gc_mark (obj);
+	scm_gc_mark (obj);
     }
   return SCM_BOOL_F;
 }
@@ -534,10 +501,11 @@ scm_deprecated_newcell2 (void)
 
 
 void
-scm_gc_init_mark(void) {
+scm_gc_init_mark(void)
+{
 #if SCM_ENABLE_DEPRECATED == 1
-    scm_tc16_allocated = scm_make_smob_type ("allocated cell", 0);
-    scm_set_smob_mark (scm_tc16_allocated, allocated_mark);
+  scm_tc16_allocated = scm_make_smob_type ("allocated cell", 0);
+  scm_set_smob_mark (scm_tc16_allocated, allocated_mark);
 #endif
 }
 

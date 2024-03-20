@@ -20,24 +20,24 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-
+
 
 #include "libguile/__scm.h"
 
-
 
 
-/* Subrs 
+
+/* Subrs
  */
 
 typedef struct
 {
-  SCM handle;			/* link back to procedure object */
-  SCM name;
-  SCM *generic;			/* 0 if no generic support
+    SCM handle;			/* link back to procedure object */
+    SCM name;
+    SCM *generic;			/* 0 if no generic support
 				 * *generic == 0 until first method
 				 */
-  SCM properties;		/* procedure properties */
+    SCM properties;		/* procedure properties */
 } scm_t_subr_entry;
 
 #define SCM_SUBRNUM(subr) (SCM_CELL_WORD_0 (subr) >> 8)
@@ -200,16 +200,16 @@ extern scm_t_subr_entry *scm_subr_table;
 extern int64_t scm_subr_table_size;
 extern int64_t scm_subr_table_room;
 
-
+
 
 SCM_API void scm_mark_subr_table (void);
 SCM_API void scm_free_subr_entry (SCM subr);
 SCM_API SCM scm_c_make_subr (const char *name, int64_t type, SCM (*fcn)());
 SCM_API SCM scm_c_make_subr_with_generic (const char *name, int64_t type,
-					  SCM (*fcn)(), SCM *gf);
+                                          SCM (*fcn)(), SCM *gf);
 SCM_API SCM scm_c_define_subr (const char *name, int64_t type, SCM (*fcn)());
 SCM_API SCM scm_c_define_subr_with_generic (const char *name, int64_t type,
-					    SCM (*fcn)(), SCM *gf);
+                                            SCM (*fcn)(), SCM *gf);
 SCM_API SCM scm_makcclo (SCM proc, size_t len);
 SCM_API SCM scm_procedure_p (SCM obj);
 SCM_API SCM scm_closure_p (SCM obj);

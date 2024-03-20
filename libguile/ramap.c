@@ -11,7 +11,7 @@
  * Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public
- * License with this library; if not, write to the Free Software
+ * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
@@ -24,7 +24,9 @@
 
 
 
-#include <config.h>
+#ifdef HAVE_CONFIG_H
+# include <config.h>
+#endif
 
 #include "libguile/_scm.h"
 #include "libguile/strings.h"
@@ -84,7 +86,7 @@ static uint64_t
 cind (SCM ra, int64_t *ve)
 {
   uint64_t i;
-  size_t k;
+    size_t k;
   if (!SCM_I_ARRAYP (ra))
     return *ve;
   i = SCM_I_ARRAY_BASE (ra);
@@ -134,7 +136,7 @@ scm_ra_matchp (SCM ra0, SCM ras)
       
       if (scm_is_generalized_vector (ra1))
 	{
-	  ssize_t length;
+        ssize_t length;
 	  
 	  if (1 != ndim)
 	    return 0;
@@ -197,7 +199,7 @@ scm_ra_matchp (SCM ra0, SCM ras)
      SCM lra;           list of source arrays.
      const char *what;  caller, for error reporting. */
 int 
-scm_ramapc (int (*cproc)(SCM, SCM, SCM), SCM data, SCM ra0, SCM lra, const char *what)
+scm_ramapc (int (*cproc)(), SCM data, SCM ra0, SCM lra, const char *what)
 {
   SCM z;
   SCM vra0, ra1, vra1;
@@ -253,7 +255,8 @@ scm_ramapc (int (*cproc)(SCM, SCM, SCM), SCM data, SCM ra0, SCM lra, const char 
 	  *plvra = scm_cons (vra1, SCM_EOL);
 	  plvra = SCM_CDRLOC (*plvra);
 	}
-      return (SCM_UNBNDP (data) ? cproc(vra0, lvra, NULL) : cproc(vra0, data, lvra));
+      return (SCM_UNBNDP (data) ? ((int (*)(SCM, SCM)) cproc) (vra0, lvra)
+	      : ((int (*)(SCM, SCM, SCM)) cproc) (vra0, data, lvra));
     case 1:
     gencase:			/* Have to loop over all dimensions. */
     vra0 = scm_i_make_ra (1, 0);
@@ -325,7 +328,9 @@ scm_ramapc (int (*cproc)(SCM, SCM, SCM), SCM data, SCM ra0, SCM lra, const char 
 	    SCM_I_ARRAY_BASE (vra0) = cind (ra0, vinds);
 	    for (z = lvra; SCM_NIMP (z); z = SCM_CDR (z), y = SCM_CDR (y))
 	      SCM_I_ARRAY_BASE (SCM_CAR (z)) = cind (SCM_CAR (y), vinds);
-	    if (0 == (SCM_UNBNDP (data) ? cproc(vra0, lvra, NULL) : cproc(vra0, data, lvra)))
+	    if (0 == (SCM_UNBNDP (data) ?
+		      ((int (*)(SCM, SCM)) cproc) (vra0, lvra)
+		      : ((int (*)(SCM, SCM, SCM)) cproc) (vra0, data, lvra)))
 	      return 0;
 	    k--;
 	    continue;
@@ -381,7 +386,7 @@ scm_array_fill_int (SCM ra, SCM fill, SCM ignore SCM_UNUSED)
 
 
 static int 
-racp (SCM src, SCM dst, SCM data SCM_UNUSED)
+racp (SCM src, SCM dst)
 {
   int64_t n = (SCM_I_ARRAY_DIMS (src)->ubnd - SCM_I_ARRAY_DIMS (src)->lbnd + 1);
   int64_t inc_d, inc_s = SCM_I_ARRAY_DIMS (src)->inc;
@@ -652,9 +657,9 @@ scm_ra_divide (SCM ra0, SCM ras)
 
 
 int
-scm_array_identity (SCM dst, SCM src, SCM data SCM_UNUSED)
+scm_array_identity (SCM dst, SCM src)
 {
-  return racp (SCM_CAR (src), scm_cons (dst, SCM_EOL), NULL);
+  return racp (SCM_CAR (src), scm_cons (dst, SCM_EOL));
 }
 
 
@@ -1115,7 +1120,7 @@ raeql (SCM ra0, SCM as_equal, SCM ra1)
   scm_t_array_dim dim0, dim1;
   scm_t_array_dim *s0 = &dim0, *s1 = &dim1;
   uint64_t bas0 = 0, bas1 = 0;
-  int k, unroll = 1, vlen = 1, ndim = 1;
+  int k, unroll = 1, vlen = 1, ndim = 1; (void) vlen;
   if (SCM_I_ARRAYP (ra0))
     {
       ndim = SCM_I_ARRAY_NDIM (ra0);

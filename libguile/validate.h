@@ -16,7 +16,7 @@
  * Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public
- * License with this library; if not, write to the Free Software
+ * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
@@ -70,25 +70,25 @@
 #define SCM_NUM2UINT_DEF(pos, arg, def) \
   (SCM_UNBNDP (arg) ? def : scm_to_uint (arg))
 
-#define SCM_NUM2ULONG(pos, arg) (scm_to_uint64 (arg))
+#define SCM_NUM2ULONG(pos, arg) (scm_to_ulong (arg))
 
 #define SCM_NUM2ULONG_DEF(pos, arg, def) \
-  (SCM_UNBNDP (arg) ? def : scm_to_uint64 (arg))
+  (SCM_UNBNDP (arg) ? def : scm_to_ulong (arg))
 
-#define SCM_NUM2LONG(pos, arg) (scm_to_int64 (arg))
+#define SCM_NUM2LONG(pos, arg) (scm_to_long (arg))
 
 #define SCM_NUM2LONG_DEF(pos, arg, def) \
-  (SCM_UNBNDP (arg) ? def : scm_to_int64 (arg))
+  (SCM_UNBNDP (arg) ? def : scm_to_long (arg))
 
-#define SCM_NUM2LONG_LONG(pos, arg) (scm_to_int64 (arg))
+#define SCM_NUM2LONG_LONG(pos, arg) (scm_to_long_long (arg))
 
 #define SCM_NUM2LONG_LONG_DEF(pos, arg, def) \
-  (SCM_UNBNDP (arg) ? def : scm_to_int64 (arg))
+  (SCM_UNBNDP (arg) ? def : scm_to_long_long (arg))
 
-#define SCM_NUM2ULONG_LONG(pos, arg) (scm_to_uint64 (arg))
+#define SCM_NUM2ULONG_LONG(pos, arg) (scm_to_ulong_long (arg))
 
 #define SCM_NUM2ULONG_LONG_DEF(pos, arg, def) \
-  (SCM_UNBNDP (arg) ? def : scm_to_uint64 (arg))
+  (SCM_UNBNDP (arg) ? def : scm_to_ulong_long (arg))
 
 #define SCM_NUM2FLOAT(pos, arg) \
   (scm_num2float (arg, pos, FUNC_NAME))

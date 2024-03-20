@@ -10,7 +10,7 @@
  * Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public
- * License with this library; if not, write to the Free Software
+ * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
@@ -18,7 +18,9 @@
 
 /* Author: Mikael Djurfeldt <djurfeldt@nada.kth.se> */
 
-#include <config.h>
+#ifdef HAVE_CONFIG_H
+#  include <config.h>
+#endif
 
 #include "libguile/_scm.h"
 
@@ -79,15 +81,15 @@ scm_i_uniform32 (scm_t_i_rstate *state)
   scm_t_uint64 x = (scm_t_uint64) A * state->w + state->c;
   scm_t_uint32 w = x & 0xffffffffUL;
   state->w = w;
-  state->c = x >> ((int64_t)32);
+  state->c = x >> 32L;
   return w;
 }
 
 void
 scm_i_init_rstate (scm_t_i_rstate *state, const char *seed, int n)
 {
-  scm_t_uint32 w = ((int64_t)0);
-  scm_t_uint32 c = ((int64_t)0);
+  scm_t_uint32 w = 0L;
+  scm_t_uint32 c = 0L;
   int i, m;
   for (i = 0; i < n; ++i)
     {
@@ -342,7 +344,8 @@ SCM_DEFINE (scm_random, "random", 1, 1, 0,
     {
       uint64_t m = (uint64_t) SCM_I_INUM (n);
       SCM_ASSERT_RANGE (1, n, SCM_I_INUM (n) > 0);
-      return scm_from_uint64 (scm_c_random64 (SCM_RSTATE (state), (scm_t_uint64) m));
+      return scm_from_uint64 (scm_c_random64 (SCM_RSTATE (state),
+                                              (scm_t_uint64) m));
     }
   SCM_VALIDATE_NIM (1, n);
   if (SCM_REALP (n))
@@ -580,9 +583,9 @@ scm_init_random ()
   scm_t_rng rng =
   {
     sizeof (scm_t_i_rstate),
-    (uint64_t (*)()) scm_i_uniform32,
-    (void (*)())          scm_i_init_rstate,
-    (scm_t_rstate *(*)())    scm_i_copy_rstate
+    (uint64_t (*)(scm_t_rstate *)) scm_i_uniform32,
+    (void (*)())              scm_i_init_rstate,
+    (scm_t_rstate *(*)())     scm_i_copy_rstate
   };
   scm_the_rng = rng;
   

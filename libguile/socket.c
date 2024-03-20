@@ -11,15 +11,16 @@
  * Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public
- * License with this library; if not, write to the Free Software
+ * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
 
 
-#if USE_SOCKET
 
-#include <config.h>
+#ifdef HAVE_CONFIG_H
+#  include <config.h>
+#endif
 
 #include <errno.h>
 #include "libguile/mini-gmp.h"
@@ -37,7 +38,7 @@
 
 #include "libguile/iselect.h"
 
-#ifdef __MINGW32__
+#ifdef WIN32
 #include "win32-socket.h"
 #endif
 
@@ -51,7 +52,7 @@
 #include <unistd.h>
 #endif
 #include <sys/types.h>
-#ifdef HAVE_WINSOCK2_H
+#ifdef WIN32
 #include <winsock2.h>
 #else
 #include <sys/socket.h>
@@ -61,6 +62,21 @@
 #include <netinet/in.h>
 #include <netdb.h>
 #include <arpa/inet.h>
+#endif
+
+#if defined (__MINGW32__) && ! defined(HAVE_IPV6)
+# ifdef AF_INET6
+#  undef AF_INET6
+# endif
+# ifdef PF_INET6
+#  undef PF_INET6
+# endif
+# ifdef AF_UNIX
+#  undef AF_UNIX
+# endif
+# ifdef PF_UNIX
+#  undef PF_UNIX
+# endif
 #endif
 
 #if defined (HAVE_UNIX_DOMAIN_SOCKETS) && !defined (SUN_LEN)
@@ -802,7 +818,7 @@ scm_fill_sockaddr (int fam, SCM address, SCM *args, int which_arg,
 	uint64_t addr;
 	int port;
 
-	SCM_VALIDATE_ULONG_COPY (which_arg, address, addr);
+    SCM_VALIDATE_ULONG_COPY (which_arg, address, addr);
 	SCM_VALIDATE_CONS (which_arg + 1, *args);
 	port = scm_to_int (SCM_CAR (*args));
 	*args = SCM_CDR (*args);
@@ -1545,7 +1561,7 @@ SCM_DEFINE (scm_recvfrom, "recvfrom!", 2, 3, 0,
   if (SCM_UNBNDP (flags))
     flg = 0;
   else
-    SCM_VALIDATE_ULONG_COPY (3, flags, flg);
+      SCM_VALIDATE_ULONG_COPY (3, flags, flg);
 
   /* recvfrom will not necessarily return an address.  usually nothing
      is returned for stream sockets.  */
@@ -1800,7 +1816,7 @@ scm_init_socket ()
 #include "libguile/socket.x"
 }
 
-#endif
+
 /*
   Local Variables:
   c-file-style: "gnu"

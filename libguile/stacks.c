@@ -12,13 +12,15 @@
  * Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public
- * License with this library; if not, write to the Free Software
+ * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
 
 
-#include <config.h>
+#ifdef HAVE_CONFIG_H
+# include <config.h>
+#endif
 
 #include "libguile/_scm.h"
 #include "libguile/eval.h"
@@ -230,7 +232,7 @@ do { \
 
 static scm_t_bits
 read_frames (scm_t_debug_frame *dframe, scm_t_ptrdiff offset,
-	     int64_t n, scm_t_info_frame *iframes)
+             int64_t n, scm_t_info_frame *iframes)
 {
   scm_t_info_frame *iframe = iframes;
   scm_t_debug_info *info, *vect;
@@ -550,7 +552,7 @@ SCM_DEFINE (scm_stack_ref, "stack-ref", 2, 0, 0,
 	    "Return the @var{index}'th frame from @var{stack}.")
 #define FUNC_NAME s_scm_stack_ref
 {
-  uint64_t c_index;
+  uint64_t c_index; (void) c_index;
 
   SCM_VALIDATE_STACK (1, stack);
   c_index = scm_to_unsigned_integer (index, 0, SCM_STACK_LENGTH(stack)-1);

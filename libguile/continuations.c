@@ -11,13 +11,15 @@
  * Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public
- * License with this library; if not, write to the Free Software
+ * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
 
 
-#include <config.h>
+#ifdef HAVE_CONFIG_H
+# include <config.h>
+#endif
 
 #include "libguile/_scm.h"
 
@@ -119,9 +121,9 @@ scm_make_continuation (int *first)
   src = thread->continuation_base;
   SCM_NEWSMOB (cont, scm_tc16_continuation, continuation);
 
-if (!SCM_STACK_GROWS_UP) {
+  if (!SCM_STACK_GROWS_UP) {
     src -= stack_size;
-}
+  }
   continuation->offset = continuation->stack - src;
   memcpy (continuation->stack, src, sizeof (SCM_STACKITEM) * stack_size);
 
@@ -140,7 +142,7 @@ if (!SCM_STACK_GROWS_UP) {
       memcpy (continuation->backing_store, 
               (void *) thread->register_backing_store_base, 
               continuation->backing_store_size);
-#endif // __ia64__
+#endif /* __ia64__ */
       return cont;
     }
   else
@@ -176,7 +178,7 @@ static void scm_dynthrow (SCM, SCM);
 
 scm_t_bits scm_i_dummy;
 
-static void
+static void 
 grow_stack (SCM cont, SCM val)
 {
   scm_t_bits growth[100];
@@ -257,18 +259,18 @@ scm_dynthrow (SCM cont, SCM val)
   if (thread->critical_section_level)
     {
       fprintf (stderr, "continuation invoked from within critical section.\n");
-      call_error_callback();
+      scm_abort ();
     }
 
- if (SCM_STACK_GROWS_UP) {
-     if (dst + continuation->num_stack_items >= &stack_top_element)
-         grow_stack(cont, val);
- }
- else {
-     dst -= continuation->num_stack_items;
-     if (dst <= &stack_top_element)
-         grow_stack(cont, val);
- }
+    if (SCM_STACK_GROWS_UP) {
+        if (dst + continuation->num_stack_items >= &stack_top_element)
+            grow_stack(cont, val);
+    }
+    else {
+        dst -= continuation->num_stack_items;
+        if (dst <= &stack_top_element)
+            grow_stack(cont, val);
+    }
 
   SCM_FLUSH_REGISTER_WINDOWS;
   copy_stack_and_call (continuation, val, dst);

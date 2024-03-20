@@ -11,13 +11,15 @@
  * Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public
- * License with this library; if not, write to the Free Software
+ * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include <config.h>
+#ifdef HAVE_CONFIG_H
+# include <config.h>
+#endif
 
-#include <assert.h>
+#include <assert.h> 
 #include <stdio.h>
 #include <string.h>
 
@@ -25,39 +27,46 @@
 #include "libguile/pairs.h"
 #include "libguile/gc.h"
 #include "libguile/private-gc.h"
-#include "libguile/gc.h"
+
+
+
 
 
 size_t scm_max_segment_size;
 
 scm_t_heap_segment *
-scm_i_make_empty_heap_segment(scm_t_cell_type_statistics *fl) {
-    scm_t_heap_segment *shs = malloc(sizeof(scm_t_heap_segment));
+scm_i_make_empty_heap_segment (scm_t_cell_type_statistics *fl)
+{
+  scm_t_heap_segment * shs = malloc (sizeof (scm_t_heap_segment));
 
-    if (!shs) {
-        fprintf(stderr, "scm_i_get_new_heap_segment: out of memory.\n");
-        call_error_callback();
+  if (!shs)
+    {
+      fprintf (stderr, "scm_i_get_new_heap_segment: out of memory.\n");
+      scm_abort ();
     }
-
-    shs->bounds[0] = NULL;
-    shs->bounds[1] = NULL;
-    shs->malloced = NULL;
-    shs->span = fl->span;
-    shs->freelist = fl;
-    shs->next_free_card = NULL;
-
-    return shs;
+  
+  shs->bounds[0] = NULL;
+  shs->bounds[1] = NULL;
+  shs->malloced = NULL;
+  shs->span = fl->span;
+  shs->freelist  = fl;
+  shs->next_free_card = NULL;
+  
+  return shs;
 }
 
 
 void
-scm_i_heap_segment_statistics(scm_t_heap_segment *seg, SCM tab) {
-    scm_t_cell *p = seg->bounds[0];
-    while (p < seg->bounds[1]) {
-        scm_i_card_statistics(p, tab, seg);
-        p += SCM_GC_CARD_N_CELLS;
+scm_i_heap_segment_statistics (scm_t_heap_segment *seg, SCM tab)
+{
+  scm_t_cell *p = seg->bounds[0];
+  while (p <  seg->bounds[1])
+    {
+      scm_i_card_statistics (p, tab, seg); 
+      p += SCM_GC_CARD_N_CELLS;
     }
 }
+
 
 
 /*
@@ -65,76 +74,74 @@ scm_i_heap_segment_statistics(scm_t_heap_segment *seg, SCM tab) {
 
   RETURN:  1 on success, 0 failure  
  */
+int 
+scm_i_initialize_heap_segment_data (scm_t_heap_segment * segment, size_t requested)
+{
+  /*
+    round upwards
+   */
+  int card_data_cell_count = (SCM_GC_CARD_N_CELLS - SCM_GC_CARD_N_HEADER_CELLS);
+  int card_count =1 + (requested / sizeof (scm_t_cell)) /  card_data_cell_count; 
 
-int total_memory_allocated = 0;
+  /*
+    one card extra due to alignment
+  */
+  size_t mem_needed = (1+card_count) * SCM_GC_SIZEOF_CARD
+    + SCM_GC_CARD_BVEC_SIZE_IN_LONGS * card_count * sizeof(int64_t)
+    ;
+  scm_t_c_bvec_ent * bvec_ptr = 0; (void) bvec_ptr;
+  scm_t_cell *  memory = 0;
 
-int
-scm_i_initialize_heap_segment_data(scm_t_heap_segment *segment, size_t requested) {
+  /*
+    We use calloc to alloc the heap. On GNU libc this is 
+    equivalent to mmapping /dev/zero
+   */
+  SCM_SYSCALL (memory = (scm_t_cell * ) calloc (1, mem_needed));
 
-    if (total_memory_allocated > 1e+9) {
-        call_error_callback();
-        return 0;
-    }
+  if (memory == NULL)
+    return 0;
 
-    /*
-      round upwards
-     */
-    int card_data_cell_count = (SCM_GC_CARD_N_CELLS - SCM_GC_CARD_N_HEADER_CELLS);
-    int card_count = 1 + (requested / sizeof(scm_t_cell)) / card_data_cell_count;
+  segment->malloced = memory;
+  segment->bounds[0] = SCM_GC_CARD_UP (memory);
+  segment->bounds[1] = segment->bounds[0] + card_count * SCM_GC_CARD_N_CELLS;
 
-    /*
-      one card extra due to alignment
-    */
-    size_t mem_needed = (1 + card_count) * SCM_GC_SIZEOF_CARD + SCM_GC_CARD_BVEC_SIZE_IN_LONGS * card_count * sizeof(int64_t);
-    scm_t_cell *memory = 0;
+  segment->freelist->heap_size += scm_i_segment_cell_count (segment);
+  
+  bvec_ptr = (scm_t_c_bvec_ent*) segment->bounds[1];
 
-    /*
-      We use calloc to alloc the heap. On GNU libc this is
-      equivalent to mmapping /dev/zero
-     */
-    SCM_SYSCALL (memory = (scm_t_cell *) calloc(1, mem_needed));
-
-    if (memory == NULL)
-        return 0;
-
-    total_memory_allocated += mem_needed;
-
-    segment->malloced = memory;
-    segment->bounds[0] = SCM_GC_CARD_UP (memory);
-    segment->bounds[1] = segment->bounds[0] + card_count * SCM_GC_CARD_N_CELLS;
-
-    segment->freelist->heap_size += scm_i_segment_cell_count(segment);
-
-    /*
-      Don't init the mem or the bitvector. This is handled by lazy
-      sweeping.
-    */
-
-    segment->next_free_card = segment->bounds[0];
-    segment->first_time = 1;
-    return 1;
+  /*
+    Don't init the mem or the bitvector. This is handled by lazy
+    sweeping.
+  */
+  
+  segment->next_free_card = segment->bounds[0];
+  segment->first_time = 1;
+  return 1;
 }
 
 int
-scm_i_segment_card_count(scm_t_heap_segment *seg) {
-    return (seg->bounds[1] - seg->bounds[0]) / SCM_GC_CARD_N_CELLS;
+scm_i_segment_card_count (scm_t_heap_segment * seg)
+{
+  return (seg->bounds[1] - seg->bounds[0]) / SCM_GC_CARD_N_CELLS;
 }
 
 /*
   Return the number of available single-cell data cells. 
  */
 int
-scm_i_segment_cell_count(scm_t_heap_segment *seg) {
-    return scm_i_segment_card_count(seg) * (SCM_GC_CARD_N_CELLS - SCM_GC_CARD_N_HEADER_CELLS)
-           + ((seg->span == 2) ? -1 : 0);
+scm_i_segment_cell_count (scm_t_heap_segment * seg)
+{
+  return scm_i_segment_card_count (seg) * (SCM_GC_CARD_N_CELLS - SCM_GC_CARD_N_HEADER_CELLS)
+    + ((seg->span == 2) ? -1 : 0);
 }
 
 void
-scm_i_clear_segment_mark_space(scm_t_heap_segment *seg) {
-    scm_t_cell *markspace = seg->bounds[1];
+scm_i_clear_segment_mark_space (scm_t_heap_segment *seg)
+{
+  scm_t_cell *  markspace = seg->bounds[1];
 
-    memset(markspace, 0x00,
-           scm_i_segment_card_count(seg) * SCM_GC_CARD_BVEC_SIZE_IN_LONGS * sizeof(int64_t));
+  memset (markspace, 0x00,
+	  scm_i_segment_card_count (seg) *  SCM_GC_CARD_BVEC_SIZE_IN_LONGS * sizeof(int64_t));
 }
 
 /*
@@ -145,41 +152,45 @@ scm_i_clear_segment_mark_space(scm_t_heap_segment *seg) {
   Freelist. 
 */
 SCM
-scm_i_sweep_some_cards(scm_t_heap_segment *seg) {
-    SCM cells = SCM_EOL;
-    int threshold = 512;
-    int collected = 0;
-    int (*sweeper)(scm_t_cell *, SCM *, scm_t_heap_segment *)
+scm_i_sweep_some_cards (scm_t_heap_segment *seg)
+{
+  SCM cells = SCM_EOL;
+  int threshold = 512;
+  int collected = 0;
+  int (*sweeper) (scm_t_cell *, SCM *, scm_t_heap_segment* )
     = (seg->first_time) ? &scm_i_init_card_freelist : &scm_i_sweep_card;
 
-    scm_t_cell *next_free = seg->next_free_card;
-    int cards_swept = 0;
-
-    while (collected < threshold && next_free < seg->bounds[1]) {
-        collected += (*sweeper)(next_free, &cells, seg);
-        next_free += SCM_GC_CARD_N_CELLS;
-        cards_swept++;
+  scm_t_cell * next_free = seg->next_free_card;
+  int cards_swept = 0;
+  
+  while (collected < threshold && next_free < seg->bounds[1])
+    {
+      collected += (*sweeper) (next_free, &cells, seg);
+      next_free += SCM_GC_CARD_N_CELLS;
+      cards_swept ++;
     }
 
-    scm_gc_cells_swept += cards_swept * (SCM_GC_CARD_N_CELLS - SCM_GC_CARD_N_HEADER_CELLS);
-    scm_gc_cells_collected += collected * seg->span;
+  scm_gc_cells_swept +=  cards_swept * (SCM_GC_CARD_N_CELLS - SCM_GC_CARD_N_HEADER_CELLS);
+  scm_gc_cells_collected += collected * seg->span;
 
-    if (!seg->first_time) {
-        scm_gc_cells_allocated_acc +=
-                (scm_cells_allocated - scm_last_cells_allocated);
+  if (!seg->first_time)
+    {
+      scm_gc_cells_allocated_acc +=
+	(scm_cells_allocated - scm_last_cells_allocated);
 
-        scm_cells_allocated -= collected * seg->span;
-        scm_last_cells_allocated = scm_cells_allocated;
+      scm_cells_allocated -= collected * seg->span;
+      scm_last_cells_allocated = scm_cells_allocated;
     }
-    seg->freelist->collected += collected * seg->span;
+  seg->freelist->collected += collected  * seg->span;
+  
 
-
-    if (next_free == seg->bounds[1]) {
-        seg->first_time = 0;
+  if(next_free == seg->bounds[1])
+    {
+      seg->first_time = 0;
     }
 
-    seg->next_free_card = next_free;
-    return cells;
+  seg->next_free_card = next_free;
+  return cells;
 }
 
 
@@ -194,38 +205,41 @@ scm_i_sweep_some_cards(scm_t_heap_segment *seg) {
   segment again, the statistics are off.
  */
 void
-scm_i_sweep_segment(scm_t_heap_segment *seg) {
-    scm_t_cell *p = seg->next_free_card;
-    int yield = scm_gc_cells_collected;
-    int coll = seg->freelist->collected;
-    uint64_t alloc = scm_cells_allocated;
-    uint64_t last_alloc = scm_last_cells_allocated;
-    double last_total
-            = scm_gc_cells_allocated_acc
-              + (alloc - last_alloc);
+scm_i_sweep_segment (scm_t_heap_segment * seg)
+{
+  scm_t_cell * p = seg->next_free_card;
+  int yield = scm_gc_cells_collected;
+  int coll = seg->freelist->collected;
+  uint64_t alloc = scm_cells_allocated ;
+  uint64_t last_alloc = scm_last_cells_allocated;
+  double last_total
+    = scm_gc_cells_allocated_acc
+    + (alloc - last_alloc);
+  
+  while (scm_i_sweep_some_cards (seg) != SCM_EOL)
+    ;
+  
+  scm_gc_cells_collected = yield;
 
-    while (scm_i_sweep_some_cards(seg) != SCM_EOL);
+  /*
+   * restore old stats. 
+   */
+  scm_gc_cells_allocated_acc = last_total;
+  scm_cells_allocated = alloc;
+  scm_last_cells_allocated = alloc;
 
-    scm_gc_cells_collected = yield;
-
-    /*
-     * restore old stats.
-     */
-    scm_gc_cells_allocated_acc = last_total;
-    scm_cells_allocated = alloc;
-    scm_last_cells_allocated = alloc;
-
-    seg->freelist->collected = coll;
-    seg->next_free_card = p;
+  seg->freelist->collected = coll; 
+  seg->next_free_card =p;
 }
 
 void
-scm_i_sweep_all_segments(char const *reason) {
-    (void) reason; /* unused */
-    size_t i = 0;
+scm_i_sweep_all_segments (char const  *reason)
+{
+  int i= 0; 
 
-    for (i = 0; i < scm_i_heap_segment_table_size; i++) {
-        scm_i_sweep_segment(scm_i_heap_segment_table[i]);
+  for (i = 0; i < scm_i_heap_segment_table_size; i++)
+    {
+      scm_i_sweep_segment (scm_i_heap_segment_table[i]);
     }
 }
 
@@ -245,17 +259,19 @@ scm_i_sweep_all_segments(char const *reason) {
   perhaps it is worthwhile to remove the 2nd level of indirection in
   the table, but this certainly makes for cleaner code.
 */
-scm_t_heap_segment **scm_i_heap_segment_table;
+scm_t_heap_segment ** scm_i_heap_segment_table;
 size_t scm_i_heap_segment_table_size;
 scm_t_cell *lowest_cell;
-scm_t_cell *highest_cell;
+scm_t_cell *highest_cell; 
 
 
 void
-scm_i_clear_mark_space(void) {
-    size_t i = 0;
-    for (; i < scm_i_heap_segment_table_size; i++) {
-        scm_i_clear_segment_mark_space(scm_i_heap_segment_table[i]);
+scm_i_clear_mark_space (void)
+{
+  int i = 0;
+  for (; i < scm_i_heap_segment_table_size; i++)
+    {
+      scm_i_clear_segment_mark_space (scm_i_heap_segment_table[i]);
     }
 }
 
@@ -264,93 +280,97 @@ scm_i_clear_mark_space(void) {
   RETURN: index of inserted segment.
  */
 int
-scm_i_insert_segment(scm_t_heap_segment *seg) {
-    size_t size = (scm_i_heap_segment_table_size + 1) * sizeof(scm_t_heap_segment *);
-    SCM_SYSCALL(scm_i_heap_segment_table = ((scm_t_heap_segment **)
-            realloc((char *) scm_i_heap_segment_table, size)));
+scm_i_insert_segment (scm_t_heap_segment * seg)
+{
+  size_t size = (scm_i_heap_segment_table_size + 1) * sizeof (scm_t_heap_segment *);
+  SCM_SYSCALL(scm_i_heap_segment_table = ((scm_t_heap_segment **)
+			       realloc ((char *)scm_i_heap_segment_table, size)));
+
+  /*
+    We can't alloc 4 more bytes. This is hopeless.
+   */
+  if (!scm_i_heap_segment_table)
+    {
+      fprintf (stderr, "scm_i_get_new_heap_segment: Could not grow heap segment table.\n");
+      scm_abort ();
+    }
+
+  if (!lowest_cell)
+    {
+      lowest_cell = seg->bounds[0];
+      highest_cell = seg->bounds[1];
+    }
+  else
+    {
+      lowest_cell = SCM_MIN (lowest_cell, seg->bounds[0]);
+      highest_cell = SCM_MAX (highest_cell, seg->bounds[1]);
+    }
+
+
+  {
+    int i = 0;
+    int j = 0;
+
+    while (i < scm_i_heap_segment_table_size
+	   && scm_i_heap_segment_table[i]->bounds[0] <= seg->bounds[0])
+      i++;
 
     /*
-      We can't alloc 4 more bytes. This is hopeless.
-     */
-    if (!scm_i_heap_segment_table) {
-        fprintf(stderr, "scm_i_get_new_heap_segment: Could not grow heap segment table.\n");
-        call_error_callback();
-    }
+      We insert a new entry; if that happens to be before the
+      "current" segment of a freelist, we must move the freelist index
+      as well.
+    */
+    if (scm_i_master_freelist.heap_segment_idx >= i)
+      scm_i_master_freelist.heap_segment_idx ++;
+    if (scm_i_master_freelist2.heap_segment_idx >= i)
+      scm_i_master_freelist2.heap_segment_idx ++;
 
-    if (!lowest_cell) {
-        lowest_cell = seg->bounds[0];
-        highest_cell = seg->bounds[1];
-    } else {
-        lowest_cell = SCM_MIN (lowest_cell, seg->bounds[0]);
-        highest_cell = SCM_MAX (highest_cell, seg->bounds[1]);
-    }
+    for (j = scm_i_heap_segment_table_size; j > i; --j)
+      scm_i_heap_segment_table[j] = scm_i_heap_segment_table[j - 1];
 
+    scm_i_heap_segment_table [i] = seg;
+    scm_i_heap_segment_table_size ++;
 
-    {
-        int64_t i = 0;
-        int64_t j = 0;
-
-        while (i < (int64_t) scm_i_heap_segment_table_size &&
-               scm_i_heap_segment_table[i]->bounds[0] <= seg->bounds[0]) {
-            i++;
-        }
-
-        /*
-          We insert a new entry; if that happens to be before the
-          "current" segment of a freelist, we must move the freelist index
-          as well.
-        */
-        if (scm_i_master_freelist.heap_segment_idx >= i) {
-            scm_i_master_freelist.heap_segment_idx++;
-        }
-        if (scm_i_master_freelist2.heap_segment_idx >= i) {
-            scm_i_master_freelist2.heap_segment_idx++;
-        }
-
-        for (j = scm_i_heap_segment_table_size; j > i; --j) {
-            scm_i_heap_segment_table[j] = scm_i_heap_segment_table[j - 1];
-        }
-
-        scm_i_heap_segment_table[i] = seg;
-        scm_i_heap_segment_table_size++;
-
-        return i;
-    }
+    return i;
+  }
 }
 
 SCM
-scm_i_sweep_some_segments(scm_t_cell_type_statistics *fl) {
-    int32_t i = fl->heap_segment_idx;
-    SCM collected = SCM_EOL;
+scm_i_sweep_some_segments (scm_t_cell_type_statistics * fl)
+{
+  int i = fl->heap_segment_idx;
+  SCM collected = SCM_EOL;
+  
+  if (i == -1)
+    i++;
+  
+  for (;
+       i < scm_i_heap_segment_table_size; i++)
+    {
+      if (scm_i_heap_segment_table[i]->freelist != fl)
+	continue;
+      
+      collected = scm_i_sweep_some_cards (scm_i_heap_segment_table[i]);
 
-    if (i == -1)
-        i++;
 
-    for (; i < (int32_t) scm_i_heap_segment_table_size; i++) {
-        if (scm_i_heap_segment_table[i]->freelist != fl) {
-            continue;
-        }
-
-        collected = scm_i_sweep_some_cards(scm_i_heap_segment_table[i]);
-
-        if (collected != SCM_EOL) {
-            /* Don't increment i */
-            break;
-        }
+      if (collected != SCM_EOL)       /* Don't increment i */
+	break;
     }
 
-    fl->heap_segment_idx = i;
-
-    return collected;
+  fl->heap_segment_idx = i;
+  
+  return collected;
 }
 
 
 void
-scm_i_reset_segments(void) {
-    int32_t i = 0;
-    for (; i < (int32_t) scm_i_heap_segment_table_size; i++) {
-        scm_t_heap_segment *seg = scm_i_heap_segment_table[i];
-        seg->next_free_card = seg->bounds[0];
+scm_i_reset_segments (void)
+{
+  int i = 0;
+  for (; i < scm_i_heap_segment_table_size; i++)
+    {
+      scm_t_heap_segment * seg = scm_i_heap_segment_table[i];
+      seg->next_free_card = seg->bounds[0];
     }
 }
 
@@ -360,15 +380,19 @@ scm_i_reset_segments(void) {
 
 
 SCM
-scm_i_all_segments_statistics(SCM tab) {
-    int32_t i = 0;
-    for (; i < (int32_t)scm_i_heap_segment_table_size; i++) {
-        scm_t_heap_segment *seg = scm_i_heap_segment_table[i];
-        scm_i_heap_segment_statistics(seg, tab);
+scm_i_all_segments_statistics (SCM tab)
+{
+  int i = 0;
+  for (; i < scm_i_heap_segment_table_size; i++)
+    {
+      scm_t_heap_segment * seg = scm_i_heap_segment_table[i];
+      scm_i_heap_segment_statistics (seg, tab);
     }
 
-    return tab;
+  return tab;
 }
+
+
 
 
 /*
@@ -381,57 +405,65 @@ scm_i_all_segments_statistics(SCM tab) {
   I think this function is too long to be inlined. --hwn
 */
 int64_t
-scm_i_find_heap_segment_containing_object(SCM obj) {
-    if (!CELL_P (obj))
-        return -1;
+scm_i_find_heap_segment_containing_object (SCM obj)
+{
+  if (!CELL_P (obj))
+    return -1;
 
-    if ((scm_t_cell *) obj < lowest_cell || (scm_t_cell *) obj >= highest_cell) {
-        return -1;
+  if ((scm_t_cell* ) obj < lowest_cell || (scm_t_cell*) obj >= highest_cell)
+    return -1;
+
+  scm_t_cell *  ptr = SCM2PTR (obj);
+  uint64_t i = 0;
+  uint64_t j = scm_i_heap_segment_table_size - 1;
+  
+  if (ptr < scm_i_heap_segment_table[i]->bounds[0])
+    return -1;
+  else if (scm_i_heap_segment_table[j]->bounds[1] <= ptr)
+    return -1;
+  else
+    {
+      while (i < j)
+	{
+	  if (ptr < scm_i_heap_segment_table[i]->bounds[1])
+	    {
+	      break;
+	    }
+	  else if (scm_i_heap_segment_table[j]->bounds[0] <= ptr)
+	    {
+	      i = j;
+	      break;
+	    }
+	  else
+	    {
+	      uint64_t k = (i + j) / 2;
+
+	      if (k == i)
+		return -1;
+	      else if (ptr <  scm_i_heap_segment_table[k]->bounds[1])
+		{
+		  j = k;
+		  ++i;
+		  if (ptr <  scm_i_heap_segment_table[i]->bounds[0])
+		    return -1;
+		}
+	      else if (scm_i_heap_segment_table[k]->bounds[0] <= ptr)
+		{
+		  i = k;
+		  --j;
+		  if (scm_i_heap_segment_table[j]->bounds[1] <= ptr)
+		    return -1;
+		}
+	    }
+	}
+
+      if (!SCM_DOUBLECELL_ALIGNED_P (obj) && scm_i_heap_segment_table[i]->span == 2)
+	    return -1;
+      else if (SCM_GC_IN_CARD_HEADERP (ptr))
+	return -1;
+      else
+	return i;
     }
-
-
-    scm_t_cell *ptr = SCM2PTR (obj);
-    uint64_t i = 0;
-    uint64_t j = scm_i_heap_segment_table_size - 1;
-
-    if (ptr < scm_i_heap_segment_table[i]->bounds[0])
-        return -1;
-    else if (scm_i_heap_segment_table[j]->bounds[1] <= ptr)
-        return -1;
-    else {
-        while (i < j) {
-            if (ptr < scm_i_heap_segment_table[i]->bounds[1]) {
-                break;
-            } else if (scm_i_heap_segment_table[j]->bounds[0] <= ptr) {
-                i = j;
-                break;
-            } else {
-                uint64_t k = (i + j) / 2;
-
-                if (k == i)
-                    return -1;
-                else if (ptr < scm_i_heap_segment_table[k]->bounds[1]) {
-                    j = k;
-                    ++i;
-                    if (ptr < scm_i_heap_segment_table[i]->bounds[0])
-                        return -1;
-                } else if (scm_i_heap_segment_table[k]->bounds[0] <= ptr) {
-                    i = k;
-                    --j;
-                    if (scm_i_heap_segment_table[j]->bounds[1] <= ptr)
-                        return -1;
-                }
-            }
-        }
-
-        if (!SCM_DOUBLECELL_ALIGNED_P (obj) && scm_i_heap_segment_table[i]->span == 2)
-            return -1;
-        else if (SCM_GC_IN_CARD_HEADERP (ptr))
-            return -1;
-        else
-            return i;
-    }
-
 }
 
 
@@ -441,88 +473,96 @@ scm_i_find_heap_segment_containing_object(SCM obj) {
 
   RETURN: the index of the segment.
  */
-int
-scm_i_get_new_heap_segment(scm_t_cell_type_statistics *freelist,
-                           policy_on_error error_policy) {
-    size_t len;
+int 
+scm_i_get_new_heap_segment (scm_t_cell_type_statistics *freelist,
+			    policy_on_error error_policy)
+{
+  size_t len;
 
-    {
-        /* Assure that the new segment is predicted to be large enough.
-         *
-         * New yield should at least equal GC fraction of new heap size, i.e.
-         *
-         *   y + dh > f * (h + dh)
-         *
-         *    y : yield
-         *    f : min yield fraction
-         *    h : heap size
-         *   dh : size of new heap segment
-         *
-         * This gives dh > (f * h - y) / (1 - f)
-         */
-        float f = freelist->min_yield_fraction / 100.0;
-        float h = SCM_HEAP_SIZE;
-        float min_cells
-                = (f * h - scm_gc_cells_collected) / (1.0 - f);
+  {
+    /* Assure that the new segment is predicted to be large enough.
+     *
+     * New yield should at least equal GC fraction of new heap size, i.e.
+     *
+     *   y + dh > f * (h + dh)
+     *
+     *    y : yield
+     *    f : min yield fraction
+     *    h : heap size
+     *   dh : size of new heap segment
+     *
+     * This gives dh > (f * h - y) / (1 - f)
+     */
+    float f = freelist->min_yield_fraction / 100.0;
+    float h = SCM_HEAP_SIZE;
+    float min_cells
+      = (f * h - scm_gc_cells_collected) / (1.0 - f);
 
-        /* Make heap grow with factor 1.5 */
-        len = freelist->heap_size / 2;
+    /* Make heap grow with factor 1.5 */
+    len =  freelist->heap_size / 2;
 #ifdef DEBUGINFO
-        fprintf (stderr, "(%ld < %ld)", (int64_t) len, (int64_t) min_cells);
+    fprintf (stderr, "(%ld < %ld)", (int64_t) len, (int64_t) min_cells);
 #endif
 
-        if (len < min_cells)
-            len = (uint64_t) min_cells;
-        len *= sizeof(scm_t_cell);
-        /* force new sampling */
-        freelist->collected = LONG_MAX;
-    }
+    if (len < min_cells)
+      len = (uint64_t) min_cells;
+    len *= sizeof (scm_t_cell);
+    /* force new sampling */
+    freelist->collected = LLONG_MAX;
+  }
 
-    if (len > scm_max_segment_size)
-        len = scm_max_segment_size;
-    if (len < SCM_MIN_HEAP_SEG_SIZE)
-        len = SCM_MIN_HEAP_SEG_SIZE;
+  if (len > scm_max_segment_size)
+    len = scm_max_segment_size;
+  if (len < SCM_MIN_HEAP_SEG_SIZE)
+    len = SCM_MIN_HEAP_SEG_SIZE;
 
+  {
+    scm_t_heap_segment * seg = scm_i_make_empty_heap_segment (freelist);
+
+    /* Allocate with decaying ambition. */
+    while (len >= SCM_MIN_HEAP_SEG_SIZE)
+      {
+	if (scm_i_initialize_heap_segment_data (seg, len))
+	  {
+	    return scm_i_insert_segment (seg);
+	  }
+	
+	len /= 2;
+      }
+  }
+
+  if (error_policy == abort_on_error)
     {
-        scm_t_heap_segment *seg = scm_i_make_empty_heap_segment(freelist);
-
-        /* Allocate with decaying ambition. */
-        while (len >= SCM_MIN_HEAP_SEG_SIZE) {
-            if (scm_i_initialize_heap_segment_data(seg, len)) {
-                return scm_i_insert_segment(seg);
-            }
-
-            len /= 2;
-        }
+      fprintf (stderr, "scm_i_get_new_heap_segment: Could not grow heap.\n");
+      scm_abort ();
     }
-
-    if (error_policy == abort_on_error) {
-        fprintf(stderr, "scm_i_get_new_heap_segment: Could not grow heap.\n");
-        call_error_callback();
-    }
-    return -1;
+  return -1;
 }
 
 void
-scm_i_make_initial_segment(int init_heap_size, scm_t_cell_type_statistics *freelist) {
-    scm_t_heap_segment *seg = scm_i_make_empty_heap_segment(freelist);
+scm_i_make_initial_segment (int init_heap_size, scm_t_cell_type_statistics *freelist)
+{
+  scm_t_heap_segment * seg = scm_i_make_empty_heap_segment (freelist);
 
-    if (init_heap_size < 1) {
-        init_heap_size = SCM_DEFAULT_INIT_HEAP_SIZE_1;
+  if (init_heap_size < 1)
+    {
+      init_heap_size =  SCM_DEFAULT_INIT_HEAP_SIZE_1;
+    }
+ 
+  if (scm_i_initialize_heap_segment_data (seg, init_heap_size))
+    {
+      freelist->heap_segment_idx = scm_i_insert_segment (seg);
     }
 
-    if (scm_i_initialize_heap_segment_data(seg, init_heap_size)) {
-        freelist->heap_segment_idx = scm_i_insert_segment(seg);
+  /*
+    Why the fuck  try twice? --hwn
+   */
+  if (!seg->malloced)
+    {
+      scm_i_initialize_heap_segment_data (seg, SCM_HEAP_SEG_SIZE);
     }
 
-    /*
-      Why the fuck  try twice? --hwn
-     */
-    if (!seg->malloced) {
-        scm_i_initialize_heap_segment_data(seg, SCM_HEAP_SEG_SIZE);
-    }
-
-    if (freelist->min_yield_fraction)
-        freelist->min_yield = (freelist->heap_size * freelist->min_yield_fraction
-                               / 100);
+  if (freelist->min_yield_fraction)
+    freelist->min_yield = (freelist->heap_size * freelist->min_yield_fraction
+			    / 100);
 }

@@ -30,9 +30,11 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  */
-#ifdef USE_SOCKETS
 
-#include <config.h>
+#ifdef HAVE_CONFIG_H
+# include <config.h>
+#endif
+#include <libguile/__scm.h>
 
 #if defined(LIBC_SCCS) && !defined(lint)
 static char sccsid[] = "@(#)inet_addr.c	8.1 (Berkeley) 6/17/93";
@@ -171,5 +173,3 @@ inet_aton(const char *cp_arg, struct in_addr *addr)
   c-file-style: "gnu"
   End:
 */
-
-#endif

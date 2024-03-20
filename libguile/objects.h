@@ -16,7 +16,7 @@
  * Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public
- * License with this library; if not, write to the Free Software
+ * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
@@ -53,7 +53,7 @@
 #define SCM_CLASSF_ENTITY	SCM_STRUCTF_ENTITY
 /* Operator classes need to be identified in the evaluator.
    (Entities also have SCM_CLASSF_OPERATOR set in their vtable.) */
-#define SCM_CLASSF_OPERATOR	(((int64_t)1) << 29)
+#define SCM_CLASSF_OPERATOR	(((int64_t) 1) << 29)
 
 #define SCM_I_OPERATORP(obj)\
 	((SCM_OBJ_CLASS_FLAGS (obj) & SCM_CLASSF_OPERATOR) != 0)
@@ -206,7 +206,7 @@ SCM_API SCM scm_make_class_object (SCM metaclass, SCM layout);
 SCM_API SCM scm_make_subclass_object (SCM c, SCM layout);
 
 SCM_API SCM scm_i_make_class_object (SCM metaclass, SCM layout_string,
-				     uint64_t flags);
+                                     uint64_t flags);
 SCM_API void scm_init_objects (void);
 
 #endif  /* SCM_OBJECTS_H */

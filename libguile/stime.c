@@ -11,7 +11,7 @@
  * Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public
- * License with this library; if not, write to the Free Software
+ * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
@@ -31,20 +31,19 @@
    what it takes away, and decide from that whether to use it, instead of
    hard coding __hpux.  */
 
-extern char ** environ;
-
 #ifndef _REENTRANT
 # define _REENTRANT   /* ask solaris for gmtime_r prototype */
 #endif
 #ifdef __hpux
-#define _POSIX_C_SOURCE ((int64_t)199506)  /* for gmtime_r prototype */
+#define _POSIX_C_SOURCE 199506  /* for gmtime_r prototype */
 #endif
 
-#include <config.h>
+#ifdef HAVE_CONFIG_H
+#  include <config.h>
+#endif
 
 #include <stdio.h>
 #include <errno.h>
-#include <time.h>
 
 #include "libguile/_scm.h"
 #include "libguile/async.h"
@@ -55,6 +54,7 @@ extern char ** environ;
 
 #include "libguile/validate.h"
 #include "libguile/stime.h"
+
 #ifdef HAVE_UNISTD_H
 #include <unistd.h>
 #endif
@@ -96,6 +96,10 @@ extern char *strptime ();
 # define timet time_t
 #else
 # define timet int64_t
+#endif
+
+#if !defined (__MINGW64__)
+extern char ** environ;
 #endif
 
 /* On Apple Darwin in a shared library there's no "environ" to access
@@ -241,40 +245,6 @@ SCM_DEFINE (scm_current_time, "current-time", 0, 0, 0,
 }
 #undef FUNC_NAME
 
-#ifdef WIN32
-// https://stackoverflow.com/questions/10905892/equivalent-of-gettimeofday-for-windows/26085827#26085827
-#define WIN32_LEAN_AND_MEAN
-#include <Windows.h>
-#include <stdint.h> // portable: uint64_t   MSVC: __int64
-
-// MSVC defines this in winsock2.h!?
-// typedef struct timeval {
-//    long tv_sec;
-//    long tv_usec;
-// } timeval;
-
-int gettimeofday(struct timeval * tp, struct timezone * tzp)
-{
-    // Note: some broken versions only have 8 trailing zero's, the correct epoch has 9 trailing zero's
-    // This magic number is the number of 100 nanosecond intervals since January 1, 1601 (UTC)
-    // until 00:00:00 January 1, 1970
-    static const uint64_t EPOCH = ((uint64_t) 116444736000000000ULL);
-
-    SYSTEMTIME  system_time;
-    FILETIME    file_time;
-    uint64_t    time;
-
-    GetSystemTime( &system_time );
-    SystemTimeToFileTime( &system_time, &file_time );
-    time =  ((uint64_t)file_time.dwLowDateTime )      ;
-    time += ((uint64_t)file_time.dwHighDateTime) << 32;
-
-    tp->tv_sec  = (long) ((time - EPOCH) / 10000000L);
-    tp->tv_usec = (long) (system_time.wMilliseconds * 1000);
-    return 0;
-}
-#endif
-
 SCM_DEFINE (scm_gettimeofday, "gettimeofday", 0, 0, 0,
             (void),
 	    "Return a pair containing the number of seconds and microseconds\n"
@@ -346,6 +316,9 @@ filltime (struct tm *bd_time, int zoff, const char *zname)
 }
 
 static char tzvar[3] = "TZ";
+#if defined (__MINGW64__)
+static char oldtzvar[22] = "GUILE_INTERNAL_OLD_TZ";
+#endif
 
 /* if zone is set, create a temporary environment with only a TZ
    string.  other threads or interrupt handlers shouldn't be allowed
@@ -354,26 +327,53 @@ static char tzvar[3] = "TZ";
 static char **
 setzone (SCM zone, int pos, const char *subr)
 {
+#if !defined (__MINGW64__)
   char **oldenv = 0;
+#endif
 
   if (!SCM_UNBNDP (zone))
     {
+#if !defined (__MINGW64__)
       static char *tmpenv[2];
+#endif
       char *buf;
       size_t zone_len;
-      
+
       zone_len = scm_to_locale_stringbuf (zone, NULL, 0);
       buf = scm_malloc (zone_len + sizeof (tzvar) + 1);
       strcpy (buf, tzvar);
       buf[sizeof(tzvar)-1] = '=';
       scm_to_locale_stringbuf (zone, buf+sizeof(tzvar), zone_len);
       buf[sizeof(tzvar)+zone_len] = '\0';
+#if !defined (__MINGW64__)
       oldenv = environ;
       tmpenv[0] = buf;
       tmpenv[1] = 0;
       environ = tmpenv;
+#else
+      char *oldbuf, *oldzone;
+      size_t oldzone_len;
+
+      oldzone = getenv (tzvar);
+      oldzone_len = oldzone == NULL ? 0 : strlen (oldzone);
+      oldbuf = malloc (oldzone_len + sizeof (oldtzvar) + 1);
+      strcpy (oldbuf, oldtzvar);
+      oldbuf[sizeof(oldtzvar)-1] = '=';
+      if (oldzone != NULL)
+	strcpy (oldbuf+sizeof(oldtzvar), oldzone);
+      oldbuf[sizeof(oldtzvar)+oldzone_len] = '\0';
+      putenv (oldbuf);
+      char *buf_copy = malloc (zone_len + sizeof (tzvar) + 1);
+      strcpy (buf_copy, buf);
+      free (buf);
+      putenv (buf_copy);
+#endif
     }
+#if !defined (__MINGW64__)
   return oldenv;
+#else
+  return environ;
+#endif
 }
 
 static void
@@ -381,8 +381,22 @@ restorezone (SCM zone, char **oldenv, const char *subr SCM_UNUSED)
 {
   if (!SCM_UNBNDP (zone))
     {
+#if !defined (__MINGW64__)
       free (environ[0]);
       environ = oldenv;
+#else
+      char *buf, *oldzone;
+      size_t oldzone_len;
+      oldzone = getenv (oldtzvar);
+      oldzone_len = oldzone == NULL ? 0 : strlen (oldzone);
+      buf = malloc (oldzone_len + sizeof (tzvar) + 1);
+      strcpy (buf, tzvar);
+      buf[sizeof(tzvar)-1] = '=';
+      if (oldzone != NULL)
+	strcpy (buf+sizeof(tzvar), oldzone);
+      buf[sizeof(tzvar)+oldzone_len] = '\0';
+      putenv (buf);
+#endif
 #ifdef HAVE_TZSET
       /* for the possible benefit of user code linked with libguile.  */
       tzset();
@@ -418,9 +432,14 @@ SCM_DEFINE (scm_localtime, "localtime", 1, 1, 0,
 #endif
   /* POSIX says localtime sets errno, but C99 doesn't say that.
      Give a sensible default value in case localtime doesn't set it.  */
+#if !defined (__MINGW64__)
   errno = EINVAL;
   ltptr = localtime (&itime);
   err = errno;
+#else
+  err = localtime_s (&lt, &itime);
+  ltptr = err == EINVAL ? NULL : &lt;
+#endif
   if (ltptr)
     {
       const char *ptr;
@@ -438,7 +457,9 @@ SCM_DEFINE (scm_localtime, "localtime", 1, 1, 0,
     }
   /* the struct is copied in case localtime and gmtime share a buffer.  */
   if (ltptr)
+#if !defined (__MINGW64__)
     lt = *ltptr;
+#endif
   /* POSIX says gmtime sets errno, but C99 doesn't say that.
      Give a sensible default value in case gmtime doesn't set it.  */
   errno = EINVAL;
@@ -693,7 +714,7 @@ SCM_DEFINE (scm_strftime, "strftime", 2, 0, 0,
 
   tbuf = scm_malloc (size);
   {
-#if !defined (HAVE_TM_ZONE)
+#if !defined (HAVE_TM_ZONE) && !defined (__MINGW64__)
     /* it seems the only way to tell non-GNU versions of strftime what
        zone to use (for the %Z format) is to set TZ in the
        environment.  interrupts and thread switching must be deferred
@@ -732,7 +753,7 @@ SCM_DEFINE (scm_strftime, "strftime", 2, 0, 0,
 	tbuf = scm_malloc (size);
       }
 
-#if !defined (HAVE_TM_ZONE)
+#if !defined (HAVE_TM_ZONE ) && !defined (__MINGW64__)
     if (have_zone)
       {
 	restorezone (zone_spec, oldenv, FUNC_NAME);

@@ -15,11 +15,13 @@
  * Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public
- * License with this library; if not, write to the Free Software
+ * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include <config.h>
+#ifdef HAVE_CONFIG_H
+# include <config.h>
+#endif
 
 #include "libguile/_scm.h"
 #include "libguile/async.h"
@@ -81,11 +83,7 @@ scm_wta (SCM arg, const char *pos, const char *s_subr)
 {
   if (!s_subr || !*s_subr)
     s_subr = NULL;
-#if USE_64IMPL
-  if ((~0x1fL) & (int64_t) pos)
-#else
-  if ((~0x1fL) & (int64_t) pos)
-#endif
+  if ((~((int64_t) 0x1fL)) & (int64_t) pos)
     {
       /* error string supplied.  */
       scm_misc_error (s_subr, pos, scm_list_1 (arg));
@@ -190,11 +188,7 @@ SCM_DEFINE (scm_registered_modules, "c-registered-modules", 0, 0, 0,
   res = SCM_EOL;
   for (md = registered_mods; md; md = md->link)
     res = scm_cons (scm_cons (scm_from_locale_string (md->module_name),
-#if USE_64IMPL
-			      scm_from_uint64 ((uint64_t) md->init_func)),
-#else
-			      scm_from_uint64 ((uint64_t) md->init_func)),
-#endif
+                              scm_from_uint64 ((uint64_t) md->init_func)),
 		    res);
   return res;
 }
@@ -574,7 +568,7 @@ typedef int64_t setjmp_type;
 #endif
 
 struct cce_handler_data {
-  SCM (*err_filter) ();
+  SCM (*err_filter) (SCM, void*);
   void *closure;
 };
 
@@ -622,10 +616,10 @@ scm_make_smob_type_mfpe (char *name, size_t size,
 
 void
 scm_set_smob_mfpe (int64_t tc,
-		   SCM (*mark) (SCM),
-		   size_t (*free) (SCM),
-		   int (*print) (SCM, SCM, scm_print_state *),
-		   SCM (*equalp) (SCM, SCM))
+                   SCM (*mark) (SCM),
+                   size_t (*free) (SCM),
+                   int (*print) (SCM, SCM, scm_print_state *),
+                   SCM (*equalp) (SCM, SCM))
 {
   scm_c_issue_deprecation_warning
     ("'scm_set_smob_mfpe' is deprecated.  "
@@ -663,7 +657,6 @@ scm_strprint_obj (SCM obj)
   return scm_object_to_string (obj, SCM_UNDEFINED);
 }
 
-#if SCM_ENABLE_DISCOURAGED
 char *
 scm_i_object_chars (SCM obj)
 {
@@ -673,7 +666,7 @@ scm_i_object_chars (SCM obj)
     return SCM_STRING_CHARS (obj);
   if (SCM_SYMBOLP (obj))
     return SCM_SYMBOL_CHARS (obj);
-  call_error_callback();
+  scm_abort ();
 }
 
 int64_t
@@ -688,9 +681,8 @@ scm_i_object_length (SCM obj)
     return SCM_SYMBOL_LENGTH (obj);
   if (SCM_VECTORP (obj))
     return SCM_VECTOR_LENGTH (obj);
-  call_error_callback();
+  scm_abort ();
 }
-#endif
 
 SCM 
 scm_sym2ovcell_soft (SCM sym, SCM obarray)
@@ -1243,7 +1235,6 @@ scm_i_keywordp (SCM obj)
   return scm_is_keyword (obj);
 }
 
-#if SCM_ENABLE_DISCOURAGED
 SCM
 scm_i_keywordsym (SCM keyword)
 {
@@ -1251,7 +1242,6 @@ scm_i_keywordsym (SCM keyword)
     ("SCM_KEYWORDSYM is deprecated.  See scm_keyword_to_symbol instead.");
   return scm_keyword_dash_symbol (keyword);
 }
-#endif
 
 int
 scm_i_vectorp (SCM x)

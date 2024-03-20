@@ -117,7 +117,9 @@
 
  **********************************************************************/
 
-#include <config.h>
+#ifdef HAVE_CONFIG_H
+#  include <config.h>
+#endif
 
 #include <libguile/gen-scmconfig.h>
 
@@ -140,7 +142,6 @@ main (int argc, char *argv[])
   pf ("/* Important headers */\n");
   if (SCM_I_GSC_NEEDS_STDINT_H)
     pf ("#include <stdint.h>\n");
-    pf ("#include <stddef.h>\n");
   if (SCM_I_GSC_NEEDS_INTTYPES_H)
     pf ("#include <inttypes.h>\n");
 
@@ -266,25 +267,29 @@ main (int argc, char *argv[])
   pf ("#define SCM_SIZEOF_UNSIGNED_CHAR %d\n", SIZEOF_UNSIGNED_CHAR);
   pf ("#define SCM_SIZEOF_SHORT %d\n", SIZEOF_SHORT);
   pf ("#define SCM_SIZEOF_UNSIGNED_SHORT %d\n", SIZEOF_UNSIGNED_SHORT);
+  pf ("#define SCM_SIZEOF_LONG %d\n", SIZEOF_LONG);
+  pf ("#define SCM_SIZEOF_UNSIGNED_LONG %d\n", SIZEOF_UNSIGNED_LONG);
   pf ("#define SCM_SIZEOF_INT %d\n", SIZEOF_INT);
   pf ("#define SCM_SIZEOF_UNSIGNED_INT %d\n", SIZEOF_UNSIGNED_INT);
   pf ("#define SCM_SIZEOF_SIZE_T %d\n", SIZEOF_SIZE_T);
 
   pf ("\n");
-  pf ("/* Size of (unsigned) int64_t or 0 if not available (scm_t_*64 may\n"
+  pf ("/* Size of (unsigned) long long or 0 if not available (scm_t_*64 may\n"
       "   be more likely to be what you want */\n");
+  pf ("#define SCM_SIZEOF_LONG_LONG %d\n", SIZEOF_LONG_LONG);
+  pf ("#define SCM_SIZEOF_UNSIGNED_LONG_LONG %d\n", SIZEOF_UNSIGNED_LONG_LONG);
 
   pf("\n");
   pf("/* handling for the deprecated long_long and ulong_long types */\n");  
   pf("/* If anything suitable is available, it'll be defined here.  */\n");  
   pf("#if (SCM_ENABLE_DEPRECATED == 1)\n");
   if (SIZEOF_LONG_LONG != 0)
-    pf ("typedef int64_t long_long;\n");
+    pf ("typedef long long long_long;\n");
   else if (SIZEOF___INT64 != 0)
     pf ("typedef __int64 long_long;\n");
   
   if (SIZEOF_UNSIGNED_LONG_LONG != 0)
-    pf ("typedef uint64_t ulong_long;\n");
+    pf ("typedef unsigned long long ulong_long;\n");
   else if (SIZEOF_UNSIGNED___INT64 != 0)
     pf ("typedef unsigned __int64 ulong_long;\n");
   pf("#endif /* SCM_ENABLE_DEPRECATED == 1 */\n");
@@ -302,7 +307,7 @@ main (int argc, char *argv[])
 
   if (0 == strcmp ("intmax_t", SCM_I_GSC_T_INTMAX))
     pf ("#define SCM_SIZEOF_INTMAX %d\n", SIZEOF_INTMAX_T);
-  else if (0 == strcmp ("int64_t", SCM_I_GSC_T_INTMAX))
+  else if (0 == strcmp ("long long", SCM_I_GSC_T_INTMAX))
     pf ("#define SCM_SIZEOF_INTMAX %d\n", SIZEOF_LONG_LONG);
   else if (0 == strcmp ("__int64", SCM_I_GSC_T_INTMAX))
     pf ("#define SCM_SIZEOF_INTMAX %d\n", SIZEOF___INT64);

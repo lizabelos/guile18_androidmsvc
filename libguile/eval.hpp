@@ -9,6 +9,7 @@
 #include <algorithm>
 #include <functional>
 #include <string>
+#include <cassert>
 
 extern std::unordered_map<SCM, std::function<SCM(SCM)>> scm_callbacks;
 

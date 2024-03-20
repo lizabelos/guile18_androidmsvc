@@ -11,12 +11,14 @@
  * Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public
- * License with this library; if not, write to the Free Software
+ * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
 
-#include <config.h>
+#ifdef HAVE_CONFIG_H
+# include <config.h>
+#endif
 
 #include "libguile/_scm.h"
 #include "libguile/alist.h"
@@ -245,14 +247,12 @@ SCM_DEFINE (scm_environment_define, "environment-define", 3, 0, 0,
 
   status = SCM_ENVIRONMENT_DEFINE (env, sym, val);
 
-  if (scm_is_eq (status, SCM_ENVIRONMENT_SUCCESS)) {
-      return SCM_UNSPECIFIED;
-  } else if (scm_is_eq (status, SCM_ENVIRONMENT_BINDING_IMMUTABLE)) {
-      scm_error_environment_immutable_binding(FUNC_NAME, env, sym);
-  } else {
-      call_error_callback();
-  }
-  return SCM_UNSPECIFIED;
+  if (scm_is_eq (status, SCM_ENVIRONMENT_SUCCESS))
+    return SCM_UNSPECIFIED;
+  else if (scm_is_eq (status, SCM_ENVIRONMENT_BINDING_IMMUTABLE))
+    scm_error_environment_immutable_binding (FUNC_NAME, env, sym);
+  else
+    scm_abort();
 }
 #undef FUNC_NAME
 
@@ -273,16 +273,12 @@ SCM_DEFINE (scm_environment_undefine, "environment-undefine", 2, 0, 0,
 
   status = SCM_ENVIRONMENT_UNDEFINE (env, sym);
 
-  if (scm_is_eq (status, SCM_ENVIRONMENT_SUCCESS)) {
-      return SCM_UNSPECIFIED;
-  }
-  else if (scm_is_eq (status, SCM_ENVIRONMENT_BINDING_IMMUTABLE)) {
-      scm_error_environment_immutable_binding(FUNC_NAME, env, sym);
-  }
-  else {
-      call_error_callback();
-  }
-  return SCM_UNSPECIFIED;
+  if (scm_is_eq (status, SCM_ENVIRONMENT_SUCCESS))
+    return SCM_UNSPECIFIED;
+  else if (scm_is_eq (status, SCM_ENVIRONMENT_BINDING_IMMUTABLE))
+    scm_error_environment_immutable_binding (FUNC_NAME, env, sym);
+  else
+    scm_abort();
 }
 #undef FUNC_NAME
 
@@ -305,17 +301,14 @@ SCM_DEFINE (scm_environment_set_x, "environment-set!", 3, 0, 0,
 
   status = SCM_ENVIRONMENT_SET (env, sym, val);
 
-  if (scm_is_eq (status, SCM_ENVIRONMENT_SUCCESS)) {
-      return SCM_UNSPECIFIED;
-  } else if (SCM_UNBNDP (status)) {
-      scm_error_environment_unbound(FUNC_NAME, env, sym);
-  } else if (scm_is_eq (status, SCM_ENVIRONMENT_LOCATION_IMMUTABLE)) {
-      scm_error_environment_immutable_binding(FUNC_NAME, env, sym);
-  }
-  else {
-      call_error_callback();
-  }
+  if (scm_is_eq (status, SCM_ENVIRONMENT_SUCCESS))
     return SCM_UNSPECIFIED;
+  else if (SCM_UNBNDP (status))
+    scm_error_environment_unbound (FUNC_NAME, env, sym);
+  else if (scm_is_eq (status, SCM_ENVIRONMENT_LOCATION_IMMUTABLE))
+    scm_error_environment_immutable_binding (FUNC_NAME, env, sym);
+  else
+    scm_abort();
 }
 #undef FUNC_NAME
 
@@ -705,7 +698,7 @@ core_environments_unobserve (SCM env, SCM observer)
 	    }
 
 	  do {
-	    rest = SCM_CDR (l);
+	    SCM rest = SCM_CDR (l);
 
 	    if (!scm_is_null (rest)) 
 	      {
@@ -1144,7 +1137,7 @@ eval_environment_lookup (SCM env, SCM sym, int for_write)
 	  if (scm_is_eq (mutability, UNKNOWN))
 	    {
 	      SCM source_env = CACHED_SOURCE_ENVIRONMENT (entry);
-          location = SCM_ENVIRONMENT_CELL (source_env, sym, 1);
+	      SCM location = SCM_ENVIRONMENT_CELL (source_env, sym, 1);
 
 	      if (scm_is_pair (location))
 		{
@@ -1234,12 +1227,8 @@ eval_environment_folder (SCM extended_data, SCM symbol, SCM value, SCM tail)
   if (!SCM_ENVIRONMENT_BOUND_P (local, symbol))
     {
       SCM proc_as_nr = SCM_CADR (extended_data);
-#if USE_64IMPL
-      scm_environment_folder proc = (scm_environment_folder) scm_to_uint64 (proc_as_nr);
-#else
       uint64_t proc_as_ul = scm_to_uint64 (proc_as_nr);
       scm_environment_folder proc = (scm_environment_folder) proc_as_ul;
-#endif
       SCM data = SCM_CDDR (extended_data);
 
       return (*proc) (data, symbol, value, tail);
@@ -1256,11 +1245,7 @@ eval_environment_fold (SCM env, scm_environment_folder proc, SCM data, SCM init)
 {
   SCM local = EVAL_ENVIRONMENT (env)->local;
   SCM imported = EVAL_ENVIRONMENT (env)->imported;
-#if USE_64IMPL
   SCM proc_as_nr = scm_from_uint64 ((uint64_t) proc);
-#else
-  SCM proc_as_nr = scm_from_uint64 ((uint64_t) proc);
-#endif
   SCM extended_data = scm_cons2 (local, proc_as_nr, data);
   SCM tmp_result = scm_c_environment_fold (imported, eval_environment_folder, extended_data, init);
 
@@ -1647,12 +1632,8 @@ import_environment_folder (SCM extended_data, SCM symbol, SCM value, SCM tail)
   SCM imported_env = SCM_CADR (extended_data);
   SCM owner = import_environment_lookup (import_env, symbol);
   SCM proc_as_nr = SCM_CADDR (extended_data);
-#if USE_64IMPL
-  scm_environment_folder proc = (scm_environment_folder) scm_to_uint64 (proc_as_nr);
-#else
   uint64_t proc_as_ul = scm_to_uint64 (proc_as_nr);
   scm_environment_folder proc = (scm_environment_folder) proc_as_ul;
-#endif
   SCM data = SCM_CDDDR (extended_data);
 
   if (scm_is_pair (owner) && scm_is_eq (SCM_CAR (owner), imported_env))
@@ -1669,11 +1650,7 @@ import_environment_folder (SCM extended_data, SCM symbol, SCM value, SCM tail)
 static SCM
 import_environment_fold (SCM env, scm_environment_folder proc, SCM data, SCM init)
 {
-#if USE_64IMPL
   SCM proc_as_nr = scm_from_uint64 ((uint64_t) proc);
-#else
-  SCM proc_as_nr = scm_from_uint64 ((uint64_t) proc);
-#endif
   SCM result = init;
   SCM l;
 

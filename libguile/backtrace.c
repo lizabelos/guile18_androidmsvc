@@ -12,11 +12,13 @@
  * Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public
- * License with this library; if not, write to the Free Software
+ * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include <config.h>
+#ifdef HAVE_CONFIG_H
+#  include <config.h>
+#endif
 
 #include <stdio.h>
 #include <ctype.h>
@@ -91,9 +93,9 @@ display_header (SCM source, SCM port)
       if (scm_is_true (line) && scm_is_true (col))
 	{
 	  scm_putc (':', port);
-	  scm_intprint (scm_to_int64 (line) + 1, 10, port);
-	  scm_putc (':', port);
-	  scm_intprint (scm_to_int64 (col) + 1, 10, port);
+      scm_intprint (scm_to_int64 (line) + 1, 10, port);
+      scm_putc (':', port);
+      scm_intprint (scm_to_int64 (col) + 1, 10, port);
 	}
     }
   else
@@ -469,11 +471,8 @@ display_backtrace_get_file_line (SCM frame, SCM *file, SCM *line)
 }
 
 static void
-display_backtrace_file (
-     SCM frame,
-     SCM *last_file,
-     SCM port,
-     scm_print_state *pstate)
+display_backtrace_file (SCM frame, SCM *last_file,
+			SCM port, scm_print_state *pstate)
 {
   SCM file, line;
 

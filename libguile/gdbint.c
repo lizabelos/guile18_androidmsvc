@@ -13,11 +13,13 @@
  * Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public
- * License with this library; if not, write to the Free Software
+ * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include <config.h>
+#ifdef HAVE_CONFIG_H
+#  include <config.h>
+#endif
 
 #include "libguile/_scm.h"
 
@@ -36,7 +38,6 @@
 #include "libguile/fluids.h"
 #include "libguile/strings.h"
 #include "libguile/init.h"
-#include "libguile/gc.h"
 
 #include "libguile/gdbint.h"
 
@@ -105,7 +106,7 @@ static int port_mark_p, stream_mark_p, string_mark_p;
 static SCM gdb_output_port;
 
 
-void
+static void
 unmark_port (SCM port)
 {
   SCM stream, string;
@@ -120,7 +121,7 @@ unmark_port (SCM port)
 }
 
 
-void
+static void
 remark_port (SCM port)
 {
   SCM stream = SCM_PACK (SCM_STREAM (port));
@@ -141,7 +142,6 @@ gdb_maybe_valid_type_p (SCM value)
 }
 
 
-#if 0
 int
 gdb_read (char *str)
 {
@@ -202,7 +202,6 @@ exit:
   SCM_END_FOREIGN_BLOCK;
   return status;
 }
-#endif
 
 
 int
@@ -224,7 +223,6 @@ gdb_eval (SCM exp)
 }
 
 
-#if 0
 int
 gdb_print (SCM obj)
 {
@@ -249,7 +247,6 @@ gdb_print (SCM obj)
     }
   return 0;
 }
-#endif
 
 
 int

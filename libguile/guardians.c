@@ -11,7 +11,7 @@
  * Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public
- * License with this library; if not, write to the Free Software
+ * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
@@ -39,7 +39,9 @@
  * monsters we had...
  */
 
-#include <config.h>
+#ifdef HAVE_CONFIG_H
+# include <config.h>
+#endif
 
 #include "libguile/_scm.h"
 #include "libguile/async.h"
@@ -52,7 +54,6 @@
 #include "libguile/weaks.h"
 #include "libguile/deprecation.h"
 #include "libguile/eval.h"
-#include "libguile/gc.h"
 
 #include "libguile/guardians.h"
 
@@ -256,7 +257,6 @@ scm_i_get_one_zombie (SCM guardian)
 static SCM
 guardian_apply (SCM guardian, SCM obj, SCM throw_p)
 {
-    (void) throw_p; /* unused */
 #if ENABLE_DEPRECATED
   if (!SCM_UNBNDP (throw_p))
     scm_c_issue_deprecation_warning

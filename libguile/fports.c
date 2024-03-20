@@ -11,7 +11,7 @@
  * Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public
- * License with this library; if not, write to the Free Software
+ * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
@@ -19,7 +19,9 @@
 
 #define _LARGEFILE64_SOURCE      /* ask for stat64 etc */
 
-#include <config.h>
+#ifdef HAVE_CONFIG_H
+#  include <config.h>
+#endif
 
 #include <stdio.h>
 #include <fcntl.h>
@@ -69,24 +71,18 @@
 #define HAVE_FTRUNCATE 1
 #endif
 
+#if SIZEOF_OFF_T == SIZEOF_INT
+#define OFF_T_MAX  INT_MAX
+#define OFF_T_MIN  INT_MIN
+#elif SIZEOF_OFF_T == SIZEOF_LONG
+#define OFF_T_MAX  LONG_MAX
+#define OFF_T_MIN  LONG_MIN
+#elif SIZEOF_OFF_T == SIZEOF_LONG_LONG
 #define OFF_T_MAX  LONG_LONG_MAX
 #define OFF_T_MIN  LONG_LONG_MIN
-
-
-void (*scm_fport_log_function) (const char *, int) = NULL;
-void scm_set_log_function(void (*log_function)(const char *, int)) {
-    scm_fport_log_function = log_function;
-}
-
-ssize_t scm_write_proxy(int fd, const void *buf, size_t count) {
-    if ((fd == 0 || fd == 1 || fd == 2) && scm_fport_log_function != NULL) {
-        scm_fport_log_function(buf, count);
-        return count;
-    }
-    return write(fd, buf, count);
-}
-
-
+#else
+#error Oops, unknown OFF_T size
+#endif
 
 scm_t_bits scm_tc16_fport;
 
@@ -382,6 +378,49 @@ SCM_DEFINE (scm_open_file, "open-file", 2, 0, 0,
 }
 #undef FUNC_NAME
 
+
+#ifdef __MINGW32__
+/*
+ * Try getting the appropiate file flags for a given file descriptor
+ * under Windows. This incorporates some fancy operations because Windows
+ * differentiates between file, pipe and socket descriptors.
+ */
+#ifndef O_ACCMODE
+# define O_ACCMODE 0x0003
+#endif
+
+static int getflags (int fdes)
+{
+  int flags = 0;
+  struct stat buf;
+  int error, optlen = sizeof (int);
+
+  /* Is this a socket ? */
+  if (getsockopt (fdes, SOL_SOCKET, SO_ERROR, (void *) &error, &optlen) >= 0)
+    flags = O_RDWR;
+  /* Maybe a regular file ? */
+  else if (fstat (fdes, &buf) < 0)
+    flags = -1;
+  else
+    {
+      /* Or an anonymous pipe handle ? */
+      if (buf.st_mode & _S_IFIFO)
+	flags = PeekNamedPipe ((HANDLE) _get_osfhandle (fdes), NULL, 0, 
+			       NULL, NULL, NULL) ? O_RDONLY : O_WRONLY;
+      /* stdin ? */
+      else if (fdes == fileno (stdin) && isatty (fdes))
+	flags = O_RDONLY;
+      /* stdout / stderr ? */
+      else if ((fdes == fileno (stdout) || fdes == fileno (stderr)) && 
+	       isatty (fdes))
+	flags = O_WRONLY;
+      else
+	flags = buf.st_mode;
+    }
+  return flags;
+}
+#endif /* __MINGW32__ */
+
 /* Building Guile ports from a file descriptor.  */
 
 /* Build a Scheme port from an open file descriptor `fdes'.
@@ -395,6 +434,23 @@ scm_i_fdes_to_port (int fdes, int64_t mode_bits, SCM name)
 {
   SCM port;
   scm_t_port *pt;
+  int flags;
+
+  /* test that fdes is valid.  */
+#ifdef __MINGW32__
+  flags = getflags (fdes);
+#else
+  flags = fcntl (fdes, F_GETFL, 0);
+#endif
+  if (flags == -1)
+    SCM_SYSERROR;
+  flags &= O_ACCMODE;
+  if (flags != O_RDWR
+      && ((flags != O_WRONLY && (mode_bits & SCM_WRTNG))
+	  || (flags != O_RDONLY && (mode_bits & SCM_RDNG))))
+    {
+      SCM_MISC_ERROR ("requested file mode not available on fdes", SCM_EOL);
+    }
 
   scm_i_scm_pthread_mutex_lock (&scm_i_port_table_mutex);
 
@@ -429,7 +485,6 @@ scm_fdes_to_port (int fdes, char *mode, SCM name)
 static int
 fport_input_waiting (SCM port)
 {
-    (void) port; /* unused */
 #ifdef HAVE_SELECT
   int fdes = SCM_FSTREAM (port)->fdes;
   struct timeval timeout;
@@ -501,7 +556,7 @@ fport_print (SCM exp, SCM port, scm_print_state *pstate SCM_UNUSED)
   return 1;
 }
 
-#if 0
+#ifndef __MINGW32__
 /* thread-local block for input on fport's fdes.  */
 static void
 fport_wait_for_input (SCM port)
@@ -539,7 +594,7 @@ fport_fill_input (SCM port)
   scm_t_port *pt = SCM_PTAB_ENTRY (port);
   scm_t_fport *fp = SCM_FSTREAM (port);
 
-#if 0
+#ifndef __MINGW32__
   fport_wait_for_input (port);
 #endif /* !__MINGW32__ */
   SCM_SYSCALL (count = read (fp->fdes, pt->read_buf, pt->read_buf_size));
@@ -615,7 +670,22 @@ fport_seek_or_seek64 (SCM port, off_t_or_off64_t offset, int whence)
    case on NetBSD apparently), then fport_seek_or_seek64 is right to be
    fport_seek already.  */
 
+#if GUILE_USE_64_CALLS && HAVE_STAT64 && SIZEOF_OFF_T != SIZEOF_OFF64_T
+static off_t
+fport_seek (SCM port, off_t offset, int whence)
+{
+  off64_t rv = fport_seek_or_seek64 (port, (off64_t) offset, whence);
+  if (rv > OFF_T_MAX || rv < OFF_T_MIN)
+    {
+      errno = EOVERFLOW;
+      scm_syserror ("fport_seek");
+    }
+  return (off_t) rv;
+
+}
+#else
 #define fport_seek   fport_seek_or_seek64
+#endif
 
 /* `how' has been validated and is one of SEEK_SET, SEEK_CUR or SEEK_END */
 SCM
@@ -625,15 +695,12 @@ scm_i_fport_seek (SCM port, SCM offset, int how)
     (fport_seek_or_seek64 (port, scm_to_off_t_or_off64_t (offset), how));
 }
 
-
-int truncate_fd (int fd, off_t length);
-
 static void
 fport_truncate (SCM port, off_t length)
 {
   scm_t_fport *fp = SCM_FSTREAM (port);
 
-  if (truncate_fd (fp->fdes, length) == -1)
+  if (ftruncate (fp->fdes, length) == -1)
     scm_syserror ("ftruncate");
 }
 
@@ -641,7 +708,7 @@ int
 scm_i_fport_truncate (SCM port, SCM length)
 {
   scm_t_fport *fp = SCM_FSTREAM (port);
-  return truncate_fd (fp->fdes, scm_to_off_t_or_off64_t (length));
+  return ftruncate_or_ftruncate64 (fp->fdes, scm_to_off_t_or_off64_t (length));
 }
 
 /* helper for fport_write: try to write data, using multiple system
@@ -653,9 +720,9 @@ static void write_all (SCM port, const void *data, size_t remaining)
 
   while (remaining > 0)
     {
-        int done;
+      size_t done;
 
-      SCM_SYSCALL (done = scm_write_proxy (fdes, data, remaining));
+      done = scm_write_proxy (fdes, data, remaining);
 
       if (done == -1)
 	SCM_SYSERROR;
@@ -671,7 +738,8 @@ fport_write (SCM port, const void *data, size_t size)
   /* this procedure tries to minimize the number of writes/flushes.  */
   scm_t_port *pt = SCM_PTAB_ENTRY (port);
 
- // if (pt->write_buf == &pt->shortbuf || (pt->write_pos == pt->write_buf && (ssize_t)size >= pt->write_buf_size))
+  if (pt->write_buf == &pt->shortbuf
+      || (pt->write_pos == pt->write_buf && size >= pt->write_buf_size))
     {
       /* "unbuffered" port, or
 	 port with empty buffer and data won't fit in buffer. */
@@ -682,7 +750,7 @@ fport_write (SCM port, const void *data, size_t size)
   {
     off_t space = pt->write_end - pt->write_pos;
 
-    if ((ssize_t)size <= space)
+    if (size <= space)
       {
 	/* data fits in buffer.  */
 	memcpy (pt->write_pos, data, size);
@@ -703,7 +771,7 @@ fport_write (SCM port, const void *data, size_t size)
 	  const void *ptr = ((const char *) data) + space;
 	  size_t remaining = size - space;
 
-	  if ((ssize_t)size >= pt->write_buf_size)
+	  if (size >= pt->write_buf_size)
 	    {
 	      write_all (port, ptr, remaining);
 	      return;
@@ -739,7 +807,7 @@ fport_flush (SCM port)
     {
       int64_t count;
 
-      SCM_SYSCALL (count = scm_write_proxy (fp->fdes, ptr, remaining));
+      count = scm_write_proxy (fp->fdes, ptr, remaining);
       if (count < 0)
 	{
 	  /* error.  assume nothing was written this call, but
@@ -760,10 +828,11 @@ fport_flush (SCM port)
 	    {
 	      const char *msg = "Error: could not flush file-descriptor ";
 	      char buf[11];
+	      size_t written; (void) written;
 
-          scm_write_proxy (2, msg, strlen (msg));
+	      written = scm_write_proxy (2, msg, strlen (msg));
 	      sprintf (buf, "%d\n", fp->fdes);
-          scm_write_proxy (2, buf, strlen (buf));
+	      written = scm_write_proxy (2, buf, strlen (buf));
 
 	      count = remaining;
 	    }
@@ -865,6 +934,19 @@ scm_init_fports ()
   scm_c_define ("_IONBF", scm_from_int (_IONBF));
 
 #include "libguile/fports.x"
+}
+
+void (*scm_fport_log_function) (const char *, int) = NULL;
+void scm_set_log_function(void (*log_function)(const char *, int)) {
+    scm_fport_log_function = log_function;
+}
+
+ssize_t scm_write_proxy(int fd, const void *buf, size_t count) {
+    if ((fd == 0 || fd == 1 || fd == 2) && scm_fport_log_function != NULL) {
+        scm_fport_log_function(buf, count);
+        return count;
+    }
+    return write(fd, buf, count);
 }
 
 /*

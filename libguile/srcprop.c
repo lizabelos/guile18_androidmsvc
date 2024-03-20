@@ -11,13 +11,15 @@
  * Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public
- * License with this library; if not, write to the Free Software
+ * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
 
 
-#include <config.h>
+#ifdef HAVE_CONFIG_H
+# include <config.h>
+#endif
 
 #include <errno.h>
 
@@ -72,15 +74,9 @@ SCM_GLOBAL_SYMBOL (scm_sym_breakpoint, "breakpoint");
 #define SRCPROPBRK(p) (SCM_SMOB_FLAGS (p) & SCM_SOURCE_PROPERTY_FLAG_BREAK)
 #define SRCPROPPOS(p) (SCM_CELL_WORD(p,1))
 #define SRCPROPLINE(p) (SRCPROPPOS(p) >> 12)
-#define SRCPROPCOL(p) (SRCPROPPOS(p) & 0x0fffL)
-
+#define SRCPROPCOL(p) (SRCPROPPOS(p) & ((int64_t) 0x0fffL))
 #define SRCPROPCOPY(p) (SCM_CELL_OBJECT(p,2))
 #define SRCPROPPLIST(p) (SCM_CELL_OBJECT_3(p))
-
-#define SRCPROPCOPY_NOCHECK(p) (SCM_CELL_OBJECT_NO_CHECK(p,2))
-#define SRCPROPPLIST_NOCHECK(p) (SCM_CELL_OBJECT_3_NO_CHECK(p))
-
-
 #define SETSRCPROPBRK(p) \
  (SCM_SET_SMOB_FLAGS ((p), \
                       SCM_SMOB_FLAGS (p) | SCM_SOURCE_PROPERTY_FLAG_BREAK))
@@ -91,6 +87,8 @@ SCM_GLOBAL_SYMBOL (scm_sym_breakpoint, "breakpoint");
 #define SETSRCPROPPOS(p, l, c) (SCM_SET_CELL_WORD(p,1, SRCPROPMAKPOS (l, c)))
 #define SETSRCPROPLINE(p, l) SETSRCPROPPOS (p, l, SRCPROPCOL (p))
 #define SETSRCPROPCOL(p, c) SETSRCPROPPOS (p, SRCPROPLINE (p), c)
+
+
 
 scm_t_bits scm_tc16_srcprops;
 
@@ -307,8 +305,8 @@ SCM_DEFINE (scm_set_source_property_x, "set-source-property!", 3, 0, 0,
   else if (scm_is_eq (scm_sym_copy, key))
     {
       if (SRCPROPSP (p)) {
-          SRCPROPCOPY (p);
-          SRCPROPCOPY_NOCHECK (p) = datum;
+	SCM* aux= (SCM*) SRCPROPCOPY (p);
+	*aux= datum;
       }
       else
 	SCM_WHASHSET (scm_source_whash, h, scm_make_srcprops (0, 0, SCM_UNDEFINED, datum, p));
@@ -316,8 +314,8 @@ SCM_DEFINE (scm_set_source_property_x, "set-source-property!", 3, 0, 0,
   else
     {
       if (SRCPROPSP (p)) {
-          SRCPROPPLIST (p);
-          SRCPROPPLIST_NOCHECK (p) = scm_acons(key, datum, SRCPROPPLIST (p));
+	SCM* aux= (SCM*) SRCPROPCOPY (p);
+	*aux = scm_acons (key, datum, SRCPROPPLIST (p));
       }
       else
 	SCM_WHASHSET (scm_source_whash, h, scm_acons (key, datum, p));

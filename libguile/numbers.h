@@ -16,14 +16,13 @@
  * Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public
- * License with this library; if not, write to the Free Software
+ * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
 
 
-#include "libguile/mini-gmp.h"
-#include "libguile/mini-mpq.h"
+#include <mini-gmp/mini-gmp.h>
 
 #include "libguile/__scm.h"
 #include "libguile/print.h"
@@ -57,14 +56,9 @@
  * which is the same as                (/ (- (expt 2 n) 4) 4)
  */
 
-#define SCM_I_FIXNUM_BIT         (SCM_LONG_BIT - 2)
-#if USE_64IMPL
-#define SCM_MOST_POSITIVE_FIXNUM (int64_t)((SCM_T_SIGNED_BITS_MAX-3)/4)
-#define SCM_MOST_NEGATIVE_FIXNUM (int64_t)(-SCM_MOST_POSITIVE_FIXNUM-1)
-#else
 #define SCM_MOST_POSITIVE_FIXNUM ((SCM_T_SIGNED_BITS_MAX-3)/4)
 #define SCM_MOST_NEGATIVE_FIXNUM (-SCM_MOST_POSITIVE_FIXNUM-1)
-#endif
+
 /* SCM_SRS is signed right shift */
 #if (-1 == (((-1) << 2) + 2) >> 2)
 # define SCM_SRS(x, y) ((x) >> (y))
@@ -75,7 +69,8 @@
 
 #define SCM_I_INUMP(x)	(2 & SCM_UNPACK (x))
 #define SCM_I_NINUMP(x) (!SCM_I_INUMP (x))
-#define SCM_I_MAKINUM(x) (SCM_PACK ((((scm_t_signed_bits) (x)) << 2) + scm_tc2_int))
+#define SCM_I_MAKINUM(x) \
+  (SCM_PACK (((scm_t_signed_bits)(((scm_t_bits) (x)) << 2)) + scm_tc2_int))
 #define SCM_I_INUM(x)   (SCM_SRS ((scm_t_signed_bits) SCM_UNPACK (x), 2))
 
 /* SCM_FIXABLE is true if its long argument can be encoded in an SCM_INUM. */
@@ -133,10 +128,10 @@
 
 /* Number subtype 1 to 3 (note the dependency on the predicates SCM_INEXACTP
  * and SCM_NUMP)  */
-#define scm_tc16_big		(scm_tc7_number + 1 * ((int64_t)256))
-#define scm_tc16_real           (scm_tc7_number + 2 * ((int64_t)256))
-#define scm_tc16_complex        (scm_tc7_number + 3 * ((int64_t)256))
-#define scm_tc16_fraction       (scm_tc7_number + 4 * ((int64_t)256))
+#define scm_tc16_big		(scm_tc7_number + 1 * ((int64_t) 256L))
+#define scm_tc16_real           (scm_tc7_number + 2 * ((int64_t) 256L))
+#define scm_tc16_complex        (scm_tc7_number + 3 * ((int64_t) 256L))
+#define scm_tc16_fraction       (scm_tc7_number + 4 * ((int64_t) 256L))
 
 #define SCM_INEXACTP(x) \
   (!SCM_IMP (x) && (0xfeff & SCM_CELL_TYPE (x)) == scm_tc16_real)
@@ -271,8 +266,10 @@ SCM_API int scm_i_bigcmp (SCM a, SCM b);
 SCM_API SCM scm_i_dbl2big (double d);
 SCM_API SCM scm_i_dbl2num (double d);
 SCM_API double scm_i_big2dbl (SCM b);
-SCM_API SCM scm_i_long2big (int64_t n);
-SCM_API SCM scm_i_ulong2big (uint64_t n);
+SCM_API SCM scm_i_long2big (long n);
+SCM_API SCM scm_i_ulong2big (unsigned long n);
+SCM_API SCM scm_i_int64_t2big (int64_t n);
+SCM_API SCM scm_i_uint64_t2big (uint64_t n);
 SCM_API SCM scm_i_clonebig (SCM src_big, int same_sign_p);
 
 /* ratio functions */
@@ -333,6 +330,7 @@ SCM_API SCM          scm_from_uint64 (scm_t_uint64 x);
 
 SCM_API void scm_to_mpz (SCM x, mpz_t rop);
 SCM_API SCM  scm_from_mpz (mpz_t rop);
+
 
 /* The conversion functions for other types are aliased to the
    appropriate ones from above.  We pick the right one based on the
@@ -400,6 +398,11 @@ SCM_API SCM  scm_from_mpz (mpz_t rop);
 #endif
 #endif
 
+#define scm_to_long    scm_to_int64
+#define scm_from_long  scm_from_int64
+#define scm_to_ulong   scm_to_uint64
+#define scm_from_ulong scm_from_uint64
+
 #if SCM_SIZEOF_INTMAX == 4
 #define scm_to_intmax    scm_to_int32
 #define scm_from_intmax  scm_from_int32
@@ -416,6 +419,11 @@ SCM_API SCM  scm_from_mpz (mpz_t rop);
 #endif
 #endif
 
+#define scm_to_long_long    scm_to_int64
+#define scm_from_long_long  scm_from_int64
+#define scm_to_ulong_long   scm_to_uint64
+#define scm_from_ulong_long scm_from_uint64
+
 #if SCM_SIZEOF_SIZE_T == 4
 #define scm_to_ssize_t    scm_to_int32
 #define scm_from_ssize_t  scm_from_int32
@@ -431,6 +439,11 @@ SCM_API SCM  scm_from_mpz (mpz_t rop);
 #error sizeof(size_t) is not 4 or 8.
 #endif
 #endif
+
+#define scm_to_int64   scm_to_int64
+#define scm_from_int64 scm_from_int64
+#define scm_to_uint64   scm_to_uint64
+#define scm_from_uint64 scm_from_uint64
 
 /* conversion functions for double */
 

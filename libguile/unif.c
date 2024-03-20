@@ -11,7 +11,7 @@
  * Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public
- * License with this library; if not, write to the Free Software
+ * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
@@ -25,7 +25,9 @@
 */
 
 
-#include <config.h>
+#ifdef HAVE_CONFIG_H
+#  include <config.h>
+#endif
 
 #include <stdio.h>
 #include <errno.h>
@@ -69,12 +71,12 @@
  * char			byvect     s8 or u8, depending on signedness of 'char'
  * boolean		bvect      
  * signed long		ivect      s32
- * uint64_t	uvect      u32
+ * unsigned long	uvect      u32
  * float		fvect      f32
  * double		dvect      d32
  * complex double	cvect      c64
  * short		svect      s16
- * int64_t		llvect     s64
+ * long long		llvect     s64
  */
 
 scm_t_bits scm_i_tc16_array;
@@ -132,7 +134,6 @@ type_to_creator (SCM type)
       return type_creator_table[i].creator;
 
   scm_misc_error (NULL, "unknown array type: ~a", scm_list_1 (type));
-    return NULL;
 }
 
 static SCM
@@ -479,7 +480,6 @@ scm_array_handle_elements (scm_t_array_handle *h)
   if (SCM_I_IS_VECTOR (vec))
     return SCM_I_VECTOR_ELTS (vec) + h->base;
   scm_wrong_type_arg_msg (NULL, 0, h->array, "non-uniform array");
-    return SCM_UNSPECIFIED;
 }
 
 SCM *
@@ -491,7 +491,6 @@ scm_array_handle_writable_elements (scm_t_array_handle *h)
   if (SCM_I_IS_VECTOR (vec))
     return SCM_I_VECTOR_WELTS (vec) + h->base;
   scm_wrong_type_arg_msg (NULL, 0, h->array, "non-uniform array");
-  return SCM_UNSPECIFIED;
 }
 
 #if SCM_ENABLE_DEPRECATED
@@ -617,7 +616,6 @@ SCM_DEFINE (scm_shared_array_root, "shared-array-root", 1, 0, 0,
   else if (scm_is_generalized_vector (ra))
     return ra;
   scm_wrong_type_arg_msg (NULL, 0, ra, "array");
-    return SCM_UNSPECIFIED;
 }
 #undef FUNC_NAME
 
@@ -1047,7 +1045,6 @@ SCM_DEFINE (scm_transpose_array, "transpose-array", 1, 0, 1,
     }
 
   scm_wrong_type_arg_msg (NULL, 0, ra, "array");
-    return SCM_UNSPECIFIED;
 }
 #undef FUNC_NAME
 
@@ -1314,7 +1311,6 @@ SCM_DEFINE (scm_array_contents, "array-contents", 1, 1, 0,
     scm_wrong_type_arg_msg (NULL, 0, ra, "non-enclosed array");
   else
     scm_wrong_type_arg_msg (NULL, 0, ra, "array");
-    return SCM_UNSPECIFIED;
 }
 #undef FUNC_NAME
 
@@ -1409,7 +1405,6 @@ SCM_DEFINE (scm_uniform_array_read_x, "uniform-array-read!", 1, 3, 0,
     scm_wrong_type_arg_msg (NULL, 0, ura, "non-enclosed array");    
   else
     scm_wrong_type_arg_msg (NULL, 0, ura, "array");
-    return SCM_UNSPECIFIED;
 }
 #undef FUNC_NAME
 
@@ -1462,7 +1457,6 @@ SCM_DEFINE (scm_uniform_array_write, "uniform-array-write", 1, 3, 0,
     scm_wrong_type_arg_msg (NULL, 0, ura, "non-enclosed array");    
   else
     scm_wrong_type_arg_msg (NULL, 0, ura, "array");
-    return SCM_UNSPECIFIED;
 }
 #undef FUNC_NAME
 
@@ -1610,7 +1604,6 @@ scm_array_handle_bit_writable_elements (scm_t_array_handle *h)
   if (IS_BITVECTOR (vec))
     return BITVECTOR_BITS (vec) + h->base/32;
   scm_wrong_type_arg_msg (NULL, 0, h->array, "bit array");
-    return SCM_UNSPECIFIED;
 }
 
 size_t
@@ -1659,7 +1652,7 @@ scm_c_bitvector_ref (SCM vec, size_t idx)
       if (idx >= BITVECTOR_LENGTH (vec))
 	scm_out_of_range (NULL, scm_from_size_t (idx));
       bits = BITVECTOR_BITS(vec);
-      return scm_from_bool (bits[idx/32] & (((int64_t)1) << (idx%32)));
+      return scm_from_bool (bits[idx/32] & (((int64_t) 1) << (idx % 32)));
     }
   else
     {
@@ -1671,7 +1664,7 @@ scm_c_bitvector_ref (SCM vec, size_t idx)
       if (idx >= len)
 	scm_out_of_range (NULL, scm_from_size_t (idx));
       idx = idx*inc + off;
-      res = scm_from_bool (bits[idx/32] & (((int64_t)1) << (idx%32)));
+      res = scm_from_bool (bits[idx/32] & (((int64_t) 1) << (idx % 32)));
       scm_array_handle_release (&handle);
       return res;
     }
@@ -1710,7 +1703,7 @@ scm_c_bitvector_set_x (SCM vec, size_t idx, SCM val)
       idx = idx*inc + off;
     }
 
-  mask = ((int64_t)1) << (idx%32);
+  mask = ((int64_t) 1) << (idx % 32);
   if (scm_is_true (val))
     bits[idx/32] |= mask;
   else
@@ -2268,11 +2261,11 @@ scm_istr2bve (SCM str)
 
   for (k = 0; k < (len + 31) / 32; k++)
     {
-      data[k] = ((int64_t)0);
+      data[k] = 0;
       j = len - k * 32;
       if (j > 32)
 	j = 32;
-      for (mask = ((int64_t)1); j--; mask <<= 1)
+      for (mask = (int64_t) 1; j--; mask <<= 1)
 	switch (*c_str++)
 	  {
 	  case '0':
@@ -2331,7 +2324,6 @@ SCM_DEFINE (scm_array_to_list, "array->list", 1, 0, 0,
     return ra2l (v, SCM_I_ARRAY_BASE (v), 0);
 
   scm_wrong_type_arg_msg (NULL, 0, v, "array");
-    return SCM_UNSPECIFIED;
 }
 #undef FUNC_NAME
 
@@ -2684,7 +2676,7 @@ SCM
 scm_i_read_array (SCM port, int c)
 {
   ssize_t rank;
-  int got_rank;
+  int got_rank; (void) got_rank;
   char tag[80];
   int tag_len;
 
@@ -2825,7 +2817,6 @@ SCM_DEFINE (scm_array_type, "array-type", 1, 0, 0,
     scm_wrong_type_arg_msg (NULL, 0, ra, "non-enclosed array");
   else
     scm_wrong_type_arg_msg (NULL, 0, ra, "array");
-    return SCM_UNSPECIFIED;
 }
 #undef FUNC_NAME
 

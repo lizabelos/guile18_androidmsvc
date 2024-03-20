@@ -16,10 +16,11 @@
  * Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public
- * License with this library; if not, write to the Free Software
+ * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
+
 
 #include "libguile/__scm.h"
 
@@ -54,13 +55,15 @@ SCM_API SCM scm_fdes_to_port (int fdes, char *mode, SCM name);
 SCM_API SCM scm_file_port_p (SCM obj);
 SCM_API void scm_init_fports (void);
 
+ssize_t scm_write_proxy(int fd, const void *buf, size_t count);
+void scm_set_log_function(void (*log_function)(const char *, int));
+
 /* internal functions */
 
 SCM_API SCM scm_i_fdes_to_port (int fdes, int64_t mode_bits, SCM name);
 SCM_API int scm_i_fport_truncate (SCM, SCM);
 SCM_API SCM scm_i_fport_seek (SCM, SCM, int);
 
-void scm_set_log_function(void (*log_function)(const char *, int));
 
 #endif  /* SCM_FPORTS_H */
 

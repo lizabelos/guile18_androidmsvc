@@ -16,17 +16,17 @@
  * Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public
- * License with this library; if not, write to the Free Software
+ * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
 #include "libguile/__scm.h"
 
-#ifdef SCM_HAVE_WINSOCK2_H
+#ifdef WIN32
 # include <winsock2.h>
+# include <ws2tcpip.h>
 #endif
 
-#include<ws2tcpip.h>
 int scm_i_socket_errno (void);
 char * scm_i_socket_strerror (int error);
 void scm_i_init_socket_Win32 (void);

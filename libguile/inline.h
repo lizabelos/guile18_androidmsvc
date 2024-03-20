@@ -16,7 +16,7 @@
  * Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public
- * License with this library; if not, write to the Free Software
+ * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
@@ -54,7 +54,17 @@
    C99 mode and doesn't define `__GNUC_STDC_INLINE__'.  Fall back to "static
    inline" in that case.  */
 
+# if (defined __GNUC__) && (!(((defined __APPLE_CC__) && (__APPLE_CC__ > 5400)) && __STDC_VERSION__ >= 199901L))
+#  define SCM_C_USE_EXTERN_INLINE 1
+#  if (defined __GNUC_STDC_INLINE__) || (__GNUC__ == 4 && __GNUC_MINOR__ == 2)
+#   define SCM_C_EXTERN_INLINE					\
+           extern __inline__ __attribute__ ((__gnu_inline__))
+#  else
+#   define SCM_C_EXTERN_INLINE extern __inline__
+#  endif
+# elif (defined SCM_C_INLINE)
 #  define SCM_C_EXTERN_INLINE static SCM_C_INLINE
+# endif
 
 #endif /* SCM_INLINE_C_INCLUDING_INLINE_H */
 
@@ -130,12 +140,12 @@ scm_cell (scm_t_bits car, scm_t_bits cdr)
 	if (SCM_GC_MARK_P (z))
 	  {
 	    fprintf(stderr, "scm_cell tried to allocate a marked cell.\n");
-	    call_error_callback();
+	    scm_abort();
 	  }
 	else if (SCM_GC_CELL_WORD(z, 0) != scm_tc_free_cell)
 	  {
 	    fprintf(stderr, "cell from freelist is not a free cell.\n");
-	    call_error_callback();
+	    scm_abort();
 	  }
       }
 
@@ -215,7 +225,7 @@ scm_double_cell (scm_t_bits car, scm_t_bits cbr,
 	{
 	  fprintf(stderr,
 		  "scm_double_cell tried to allocate a marked cell.\n");
-	  call_error_callback();
+	  scm_abort();
 	}
     }
 
@@ -236,9 +246,13 @@ scm_double_cell (scm_t_bits car, scm_t_bits cbr,
      by Guile users.  Instead, the following statements prevent the
      reordering.
    */
-
+#ifdef __GNUC__
+  __asm__ volatile ("" : : : "memory");
+#else
+  /* portable version, just in case any other compiler does the same
+     thing.  */
   scm_remember_upto_here_1 (z);
-
+#endif
 
   return z;
 }

@@ -11,13 +11,15 @@
  * Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public
- * License with this library; if not, write to the Free Software
+ * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
 
 
-#include <config.h>
+#ifdef HAVE_CONFIG_H
+# include <config.h>
+#endif
 
 #include <errno.h>
 
@@ -44,6 +46,27 @@
 
 #include "libguile/validate.h"
 #include "libguile/print.h"
+
+#if defined(__ANDROID__)
+#include <android/log.h>
+
+int
+__scm_android_fprintf (FILE* stream, const char* format, ...) {
+  int ret;
+  va_list args;
+  va_start(args, format);
+  if (stream == stdout)
+    ret= __android_log_print (ANDROID_LOG_DEFAULT, "libguile",
+			      format, args);
+  else if (stream == stderr)
+    ret= __android_log_print (ANDROID_LOG_ERROR, "libguile",
+			      format, args);
+  else ret= fprintf (stream, format, args);
+  va_end(args);
+  return ret;
+}
+#endif
+
 
 
 /* {Names of immediate symbols}
@@ -76,23 +99,11 @@ scm_t_option scm_print_opts[] = {
     "Hook for printing closures (should handle macros as well)." },
   { SCM_OPTION_BOOLEAN, "source", 0,
     "Print closures with source." },
-#if USE_64IMPL
   { SCM_OPTION_SCM, "highlight-prefix", (uint64_t)SCM_BOOL_F,
-#else
-  { SCM_OPTION_SCM, "highlight-prefix", (uint64_t)SCM_BOOL_F,
-#endif
     "The string to print before highlighted values." },
-#if USE_64IMPL
   { SCM_OPTION_SCM, "highlight-suffix", (uint64_t)SCM_BOOL_F,
-#else  
-  { SCM_OPTION_SCM, "highlight-suffix", (uint64_t)SCM_BOOL_F,
-#endif  
     "The string to print after highlighted values." },
-#if USE_64IMPL
   { SCM_OPTION_SCM, "quote-keywordish-symbols", (uint64_t)SCM_BOOL_F,
-#else  
-  { SCM_OPTION_SCM, "quote-keywordish-symbols", (uint64_t)SCM_BOOL_F,
-#endif  
     "How to print symbols that have a colon as their first or last character. "
     "The value '#f' does not quote the colons; '#t' quotes them; "
     "'reader' quotes them when the reader option 'keywords' is not '#f'." 
@@ -182,7 +193,7 @@ SCM_DEFINE (scm_current_pstate, "current-pstate", 0, 0, 0,
 
 #endif
 
-#define PSTATE_SIZE ((int64_t)50)
+#define PSTATE_SIZE 50
 
 static SCM
 make_print_state (void)

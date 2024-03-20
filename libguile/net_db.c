@@ -12,7 +12,7 @@
  * Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public
- * License with this library; if not, write to the Free Software
+ * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
@@ -25,7 +25,9 @@
  */
 
 
-#include <config.h>
+#ifdef HAVE_CONFIG_H
+#  include <config.h>
+#endif
 
 #include <errno.h>
 
@@ -77,7 +79,6 @@ SCM_SYMBOL (scm_no_data_key, "no-data");
 
 static void scm_resolv_error (const char *subr, SCM bad_value)
 {
-    (void) bad_value;  /* unused */
 #ifdef NETDB_INTERNAL
   if (h_errno == NETDB_INTERNAL)
     {
@@ -297,7 +298,7 @@ SCM_DEFINE (scm_getproto, "getproto", 0, 1, 0,
     }
   else
     {
-      uint64_t protonum = scm_to_uint64 (protocol);
+        uint64_t protonum = scm_to_uint64 (protocol);
       entry = getprotobynumber (protonum);
       eno = errno;
     }

@@ -12,35 +12,10 @@
   Lesser General Public License for more details.
  
   You should have received a copy of the GNU Lesser General Public
-  License with this library; if not, write to the Free Software
+  License along with this library; if not, write to the Free Software
   Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
 */
 
-
-#if USE_64IMPL
-#include <stdlib.h>
-char *
-strerror (int errnum)
-{
-//    extern char *sys_errlist[];
-//    extern int sys_nerr;
-
-//    if (errnum >= 0 && errnum < sys_nerr)
-//        return sys_errlist[errnum];
-    return (char *) "Unknown error";
-}
-#else
-char *
-strerror (int errnum)
-{
-  extern char *sys_errlist[];
-  extern int sys_nerr;
-
-  //if (errnum >= 0 && errnum < sys_nerr)
-  //  return sys_errlist[errnum];
-  return (char *) "Unknown error";
-}
-#endif
 /*
   Local Variables:
   c-file-style: "gnu"

@@ -16,7 +16,7 @@
  * Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public
- * License with this library; if not, write to the Free Software
+ * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
@@ -28,7 +28,7 @@
 
 struct dirstream
 {
-  HANDLE fd;		/* File descriptor.  */
+  int fd;		/* File descriptor.  */
   char *data;		/* Directory block.  */
   size_t allocation;	/* Space allocated for the block.  */
   size_t size;		/* Total valid data in the block.  */
@@ -39,7 +39,7 @@ struct dirstream
 
 struct dirent
 {
-  int64_t d_ino;
+  long d_ino;
   off_t d_off;
   unsigned short int d_reclen;
   unsigned char d_type;
@@ -59,6 +59,6 @@ int closedir (DIR * dir);
 void rewinddir (DIR * dir);
 void seekdir (DIR * dir, off_t offset);
 off_t telldir (DIR * dir);
-HANDLE dirfd (DIR * dir);
+int dirfd (DIR * dir);
 
 #endif /* SCM_WIN32_DIRENT_H */

@@ -16,7 +16,7 @@
  * Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public
- * License with this library; if not, write to the Free Software
+ * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
@@ -43,6 +43,27 @@ SCM_API SCM scm_assq_remove_x (SCM alist, SCM key);
 SCM_API SCM scm_assv_remove_x (SCM alist, SCM key);
 SCM_API SCM scm_assoc_remove_x (SCM alist, SCM key);
 SCM_API void scm_init_alist (void);
+
+static inline SCM
+scm_sloppy_assoc_var (SCM obj1, SCM obj2, void* closure)
+{
+  (void) closure;
+  return scm_sloppy_assoc (obj1, obj2);
+}
+
+static inline SCM
+scm_sloppy_assq_var (SCM obj1, SCM obj2, void* closure)
+{
+  (void) closure;
+  return scm_sloppy_assq (obj1, obj2);
+}
+
+static inline SCM
+scm_sloppy_assv_var (SCM obj1, SCM obj2, void* closure)
+{
+  (void) closure;
+  return scm_sloppy_assv (obj1, obj2);
+}
 
 #endif  /* SCM_ALIST_H */
 

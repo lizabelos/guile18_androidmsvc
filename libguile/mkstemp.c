@@ -18,7 +18,9 @@
    Boston, MA 02110-1301, USA. 
 */
 
-#include <config.h>
+#ifdef HAVE_CONFIG_H
+#  include <config.h>
+#endif
 
 #include "libguile/__scm.h"
 
@@ -61,7 +63,8 @@ int mkstemp (char *);
 
    Returns a file descriptor open on the file for reading and writing.  */
 int
-mkstemp (char *template)
+mkstemp (template)
+     char *template;
 {
   static const char letters[]
     = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";

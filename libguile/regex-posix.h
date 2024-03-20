@@ -16,13 +16,17 @@
  * Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public
- * License with this library; if not, write to the Free Software
+ * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
 
 
 #include "libguile/__scm.h"
+
+#if HAVE_REGEX_H
+
+#include <regex.h>
 
 extern scm_t_bits scm_tc16_regex;
 #define SCM_RGX(X)	((regex_t *) SCM_SMOB_DATA (X))
@@ -32,6 +36,8 @@ SCM_API SCM scm_make_regexp (SCM pat, SCM flags);
 SCM_API SCM scm_regexp_p (SCM x);
 SCM_API SCM scm_regexp_exec (SCM rx, SCM str, SCM start, SCM flags);
 SCM_API void scm_init_regex_posix (void);
+
+#endif  /* HAVE_REGEX_H */
 
 #endif  /* SCM_REGEX_POSIX_H */
 

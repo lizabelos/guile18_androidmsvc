@@ -11,11 +11,13 @@
  * Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public
- * License with this library; if not, write to the Free Software
+ * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include <config.h>
+#ifdef HAVE_CONFIG_H
+# include <config.h>
+#endif
 
 #include <assert.h>
 #include <stdio.h>
@@ -55,6 +57,7 @@ SCM_DEFINE (scm_map_free_list, "map-free-list", 0, 0, 0,
 	    "DEPRECATED\n")
 #define FUNC_NAME "s_scm_map_free_list"
 {
+  (void) s_scm_map_free_list;
   scm_c_issue_deprecation_warning ("map-free-list has been removed from GUILE. Doing nothing\n");
   return SCM_UNSPECIFIED;
 }  
@@ -65,6 +68,7 @@ SCM_DEFINE (scm_gc_set_debug_check_freelist_x, "gc-set-debug-check-freelist!", 1
 	    "DEPRECATED.\n")
 #define FUNC_NAME "s_scm_gc_set_debug_check_freelist_x"
 {
+  (void) s_scm_gc_set_debug_check_freelist_x;
   scm_c_issue_deprecation_warning ("gc-set-debug-check-freelist! has been removed from GUILE. Doing nothing\n");
   return SCM_UNSPECIFIED;
 }
@@ -103,7 +107,7 @@ scm_i_adjust_min_yield (scm_t_cell_type_statistics *freelist)
     {
       /* Pick largest of last two yields. */
       int64_t delta = ((SCM_HEAP_SIZE * freelist->min_yield_fraction / 100)
-		   - (int64_t) SCM_MAX (scm_gc_cells_collected_1, scm_gc_cells_collected));
+                       - (int64_t) SCM_MAX (scm_gc_cells_collected_1, scm_gc_cells_collected));
 #ifdef DEBUGINFO
       fprintf (stderr, " after GC = %lu, delta = %ld\n",
 	       (uint64_t) scm_cells_allocated,
@@ -192,5 +196,5 @@ scm_i_gc_sweep_freelist_reset (scm_t_cell_type_statistics *freelist)
 int
 scm_i_gc_grow_heap_p (scm_t_cell_type_statistics * freelist)
 {
-  return (int64_t)SCM_MAX (freelist->collected,freelist->collected_1)  < freelist->min_yield;
+  return SCM_MAX (freelist->collected,freelist->collected_1)  < freelist->min_yield;
 }

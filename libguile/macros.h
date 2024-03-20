@@ -16,7 +16,7 @@
  * Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public
- * License with this library; if not, write to the Free Software
+ * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
@@ -34,7 +34,7 @@
 #define SCM_BUILTIN_MACRO_P(x) (SCM_MACROP (x) && SCM_MACRO_TYPE (x) == 3)
 #define SCM_MACRO_CODE(m) SCM_SMOB_OBJECT (m)
 
-extern scm_t_bits scm_tc16_macro;
+SCM_API scm_t_bits scm_tc16_macro;
 
 SCM_API SCM scm_i_makbimacro (SCM code);
 SCM_API SCM scm_makmmacro (SCM code);

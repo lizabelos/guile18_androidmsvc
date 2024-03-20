@@ -11,11 +11,13 @@
  * Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public
- * License with this library; if not, write to the Free Software
+ * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include <config.h>
+#ifdef HAVE_CONFIG_H
+# include <config.h>
+#endif
 
 #include <stdlib.h>
 #include "libguile/_scm.h"
@@ -23,8 +25,16 @@
 #if SCM_USE_NULL_THREADS
 
 #include "libguile/null-threads.h"
+#include "libguile/error.h"
 
 static scm_i_pthread_key_t *all_keys = NULL;
+
+int
+null_thread_cond_wait_abort (void)
+{
+  scm_abort ();
+  return 0;
+}
 
 static void
 destroy_keys (void)

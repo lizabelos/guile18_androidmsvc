@@ -26,7 +26,7 @@
  * Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public
- * License with this library; if not, write to the Free Software
+ * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
@@ -69,31 +69,39 @@ SCM_API SCM scm_short2num (short n);
 SCM_API SCM scm_ushort2num (unsigned short n);
 SCM_API SCM scm_int2num (int n);
 SCM_API SCM scm_uint2num (unsigned int n);
-SCM_API SCM scm_long2num (int64_t n);
-SCM_API SCM scm_ulong2num (uint64_t n);
+SCM_API SCM scm_long2num (long n);
+SCM_API SCM scm_ulong2num (unsigned long n);
 SCM_API SCM scm_size2num (size_t n);
 SCM_API SCM scm_ptrdiff2num (scm_t_ptrdiff n);
+SCM_API SCM scm_ent2num (int64_t n);
+SCM_API SCM scm_nat2num (uint64_t n);
+
 SCM_API short scm_num2short (SCM num, uint64_t pos,
-			     const char *s_caller);
+                             const char *s_caller);
 SCM_API unsigned short scm_num2ushort (SCM num, uint64_t pos,
-				       const char *s_caller);
+                                       const char *s_caller);
 SCM_API int scm_num2int (SCM num, uint64_t pos,
-			 const char *s_caller);
+                         const char *s_caller);
 SCM_API unsigned int scm_num2uint (SCM num, uint64_t pos,
-				   const char *s_caller);
-SCM_API int64_t scm_num2long (SCM num, uint64_t pos,
-			   const char *s_caller);
-SCM_API uint64_t scm_num2ulong (SCM num, uint64_t pos,
-				     const char *s_caller);
+                                   const char *s_caller);
+SCM_API long scm_num2long (SCM num, uint64_t pos,
+                           const char *s_caller);
+SCM_API unsigned long scm_num2ulong (SCM num, uint64_t pos,
+                                     const char *s_caller);
 SCM_API scm_t_ptrdiff scm_num2ptrdiff (SCM num, uint64_t pos,
                                        const char *s_caller);
 SCM_API size_t scm_num2size (SCM num, uint64_t pos,
-			     const char *s_caller);
-SCM_API SCM scm_long_long2num (int64_t sl);
-SCM_API SCM scm_ulong_long2num (uint64_t sl);
-SCM_API int64_t scm_num2long_long (SCM num, uint64_t pos,
+                             const char *s_caller);
+SCM_API int64_t scm_num2ent (SCM num, uint64_t pos,
+                             const char *s_caller);
+SCM_API uint64_t scm_num2nat (SCM num, uint64_t pos,
+                              const char *s_caller);
+
+SCM_API SCM scm_long_long2num (long long sl);
+SCM_API SCM scm_ulong_long2num (unsigned long long sl);
+SCM_API long long scm_num2long_long (SCM num, uint64_t pos,
 				     const char *s_caller);
-SCM_API uint64_t scm_num2ulong_long (SCM num, uint64_t pos,
+SCM_API unsigned long long scm_num2ulong_long (SCM num, uint64_t pos,
 					       const char *s_caller);
 
 SCM_API SCM scm_make_real (double x);
@@ -105,9 +113,9 @@ SCM_API SCM scm_double2num (double n);
    only available there.
 */
 SCM_API float scm_num2float (SCM num, uint64_t pos,
-			     const char *s_caller);
+                             const char *s_caller);
 SCM_API double scm_num2double (SCM num, uint64_t pos,
-			       const char *s_caller);
+                               const char *s_caller);
 
 SCM_API SCM scm_make_complex (double x, double y);
 

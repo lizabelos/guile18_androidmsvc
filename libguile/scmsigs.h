@@ -16,7 +16,7 @@
  * Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public
- * License with this library; if not, write to the Free Software
+ * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
@@ -30,9 +30,7 @@ SCM_API SCM scm_sigaction (SCM signum, SCM handler, SCM flags);
 SCM_API SCM scm_sigaction_for_thread (SCM signum, SCM handler, SCM flags,
 				      SCM thread);
 SCM_API SCM scm_restore_signals (void);
-#if 0
 SCM_API SCM scm_alarm (SCM i);
-#endif
 SCM_API SCM scm_setitimer (SCM which_timer,
 			   SCM interval_seconds, SCM interval_microseconds,
 			   SCM value_seconds, SCM value_microseconds);

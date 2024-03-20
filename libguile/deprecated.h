@@ -18,7 +18,7 @@
  * Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public
- * License with this library; if not, write to the Free Software
+ * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
@@ -29,9 +29,9 @@
 
 /* From eval.h: Macros for handling ilocs.  These were deprecated in guile
  * 1.7.0 on 2004-04-22.  */
-#define SCM_IFRINC             (((int64_t)0x00000100))
-#define SCM_ICDR               (((int64_t)0x00080000))
-#define SCM_IFRAME(n)          ((long)((SCM_ICDR-SCM_IFRINC)>>8) \
+#define SCM_IFRINC             ((int64_t) 0x00000100)
+#define SCM_ICDR               ((int64_t) 0x00080000)
+#define SCM_IFRAME(n)          ((int64_t)((SCM_ICDR-SCM_IFRINC)>>8) \
                                 & (SCM_UNPACK (n) >> 8))
 #define SCM_IDIST(n)           (SCM_UNPACK (n) >> 20)
 #define SCM_ICDRP(n)           (SCM_ICDR & SCM_UNPACK (n))
@@ -58,8 +58,8 @@ extern char *scm_isymnames[];
 
 /* From eval.h: Macros for handling ilocs.  These were deprecated in guile
  * 1.7.0 on 2003-06-04.  */
-#define SCM_ILOC00		SCM_MAKE_ITAG8(((int64_t)0), scm_tc8_iloc)
-#define SCM_IDINC		(((int64_t)0x00100000))
+#define SCM_ILOC00		SCM_MAKE_ITAG8(((int64_t) 0), scm_tc8_iloc)
+#define SCM_IDINC		((int64_t) 0x00100000)
 #define SCM_IDSTMSK		(-SCM_IDINC)
 
 
@@ -210,17 +210,17 @@ SCM_API SCM scm_call_catching_errors (SCM (*thunk)(), SCM (*err_filter)(),
 				      void * closure);
 
 SCM_API int64_t scm_make_smob_type_mfpe (char *name, size_t size,
-				      SCM (*mark) (SCM),
-				      size_t (*free) (SCM),
-				      int (*print) (SCM, SCM,
-						    scm_print_state*),
-				      SCM (*equalp) (SCM, SCM));
+                                         SCM (*mark) (SCM),
+                                         size_t (*free) (SCM),
+                                         int (*print) (SCM, SCM,
+						   scm_print_state*),
+                                         SCM (*equalp) (SCM, SCM));
 
 SCM_API void scm_set_smob_mfpe (int64_t tc,
-				SCM (*mark) (SCM),
-				size_t (*free) (SCM),
-				int (*print) (SCM, SCM, scm_print_state*),
-				SCM (*equalp) (SCM, SCM));
+                                SCM (*mark) (SCM),
+                                size_t (*free) (SCM),
+                                int (*print) (SCM, SCM, scm_print_state*),
+                                SCM (*equalp) (SCM, SCM));
 
 SCM_API SCM scm_strprint_obj (SCM obj);
 SCM_API SCM scm_read_0str (char *expr);
@@ -476,7 +476,7 @@ SCM_API SCM scm_i_keywordsym (SCM keyword);
 /* Deprecated because we don't want to hand out unprotected pointers
    to arrays, vectors, etc. */
 
-#define SCM_VECTOR_MAX_LENGTH ((((int64_t)1) << 24) - 1)
+#define SCM_VECTOR_MAX_LENGTH ((((int64_t) 1L) << 24) - 1)
 
 SCM_API int scm_i_vectorp (SCM x);
 SCM_API uint64_t scm_i_vector_length (SCM x);

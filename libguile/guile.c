@@ -11,7 +11,7 @@
  * Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public
- * License with this library; if not, write to the Free Software
+ * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
@@ -22,22 +22,38 @@
    based on the list of installed, statically linked libraries on the
    system.  For now, please don't put interesting code in here.  */
 
-#include <config.h>
+#ifdef HAVE_CONFIG_H
+#  include <config.h>
+#endif
 
 #ifdef __MINGW32__
 # define SCM_IMPORT 1
 #endif
 #include <libguile.h>
 
+#ifdef HAVE_CONFIG_H
 #include <libguile/scmconfig.h>
+#endif
+
+#ifdef __MINGW32__
+#include <winsock2.h>
+#endif
 
 static void
 inner_main (void *closure SCM_UNUSED, int argc, char **argv)
 {
+#ifdef __MINGW32__
+  /* This is necessary to startup the Winsock API under Win32. */
+  WSADATA WSAData;
+  WSAStartup (0x0202, &WSAData);
+#endif /* __MINGW32__ */
 
   /* module initializations would go here */
   scm_shell (argc, argv);
 
+#ifdef __MINGW32__
+  WSACleanup ();
+#endif /* __MINGW32__ */
 }
 
 int

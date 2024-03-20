@@ -3,8 +3,6 @@
 #ifndef SCM_GC_H
 #define SCM_GC_H
 
-#include <stdio.h>
-
 /* Copyright (C) 1995,1996,1998,1999,2000,2001, 2002, 2003, 2004, 2006 Free Software Foundation, Inc.
  *
  * This library is free software; you can redistribute it and/or
@@ -18,13 +16,11 @@
  * Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public
- * License with this library; if not, write to the Free Software
+ * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
 
-
-#include <assert.h>
 
 #include "libguile/__scm.h"
 
@@ -63,53 +59,9 @@
 
 typedef struct scm_t_cell
 {
-    //SCM bait_0;
-    SCM word_0;
-    //SCM bait_1;
-    SCM word_1;
+  SCM word_0;
+  SCM word_1;
 } scm_t_cell;
-
-static inline void scm_check_cell_integrity(scm_t_cell *cell)
-{
-    assert(cell != NULL);
-    //assert(cell->bait_0 == NULL);
-    //assert(cell->bait_1 == NULL);
-}
-
-/* low level bit banging aids */
-typedef int64_t scm_t_c_bvec_long;
-
-#define SCM_C_BVEC_LONG_BITS    64
-#define SCM_C_BVEC_OFFSET_SHIFT 6
-#define SCM_C_BVEC_POS_MASK     63
-#define SCM_CELL_SIZE_SHIFT     4
-
-#define SCM_C_BVEC_OFFSET(pos) (pos >> SCM_C_BVEC_OFFSET_SHIFT)
-
-static inline int64_t SCM_C_BVEC_GET(scm_t_c_bvec_long *bvec, int64_t pos)
-{
-    assert(bvec != NULL);
-    assert(pos >= 0);
-    return bvec[SCM_C_BVEC_OFFSET (pos)] & (((int64_t)1) << (pos & SCM_C_BVEC_POS_MASK));
-}
-
-static inline void SCM_C_BVEC_SET(scm_t_c_bvec_long *bvec, int64_t pos)
-{
-    assert(bvec != NULL);
-    assert(pos >= 0);
-    bvec[SCM_C_BVEC_OFFSET (pos)] |= (((int64_t)1) << (pos & SCM_C_BVEC_POS_MASK));
-}
-
-static inline void SCM_C_BVEC_CLEAR(scm_t_c_bvec_long *bvec, int64_t pos)
-{
-    assert(bvec != NULL);
-    assert(pos >= 0);
-    bvec[SCM_C_BVEC_OFFSET (pos)] &= ~(((int64_t)1) << (pos & SCM_C_BVEC_POS_MASK));
-}
-
-//#define SCM_C_BVEC_GET(bvec, pos) (bvec[SCM_C_BVEC_OFFSET (pos)] & (((int64_t)1) << (pos & SCM_C_BVEC_POS_MASK)))
-//#define SCM_C_BVEC_SET(bvec, pos) (bvec[SCM_C_BVEC_OFFSET (pos)] |= (((int64_t)1) << (pos & SCM_C_BVEC_POS_MASK)))
-//#define SCM_C_BVEC_CLEAR(bvec, pos) (bvec[SCM_C_BVEC_OFFSET (pos)] &= ~(((int64_t)1) << (pos & SCM_C_BVEC_POS_MASK)))
 
 /*
   CARDS
@@ -144,39 +96,19 @@ static inline void SCM_C_BVEC_CLEAR(scm_t_c_bvec_long *bvec, int64_t pos)
 #define SCM_GC_CARD_N_CELLS        256
 #define SCM_GC_SIZEOF_CARD 	   SCM_GC_CARD_N_CELLS * sizeof (scm_t_cell)
 
-static inline scm_t_c_bvec_long* SCM_GC_CARD_BVEC(scm_t_cell *card)
-{
-    scm_check_cell_integrity(card);
-    assert(card != NULL);
-    //assert(card->word_1 != NULL);
-    scm_t_c_bvec_long *bvec = (scm_t_c_bvec_long *) card->word_0;
-    assert(bvec != NULL);
-    //printf("SCM_GC_CARD_BVEC(card=%p) = %p\n", card, bvec);
-    return bvec;
-}
-//#define SCM_GC_CARD_BVEC(card)  ((scm_t_c_bvec_long *) ((card)->word_0))
-
-static inline void SCM_GC_SET_CARD_BVEC(scm_t_cell *card, scm_t_c_bvec_long *bvec)
-{
-    //printf("SCM_GC_SET_CARD_BVEC(card=%p, bvec=%p)\n", card, bvec);
-    scm_check_cell_integrity(card);
-    assert(card != NULL);
-    assert(bvec != NULL);
-    card->word_0 = (SCM) bvec;
-}
-
-//#define SCM_GC_SET_CARD_BVEC(card, bvec) \
-//    ((card)->word_0 = (SCM) (bvec))
+#define SCM_GC_CARD_BVEC(card)  ((scm_t_c_bvec_ent *) ((card)->word_0))
+#define SCM_GC_SET_CARD_BVEC(card, bvec) \
+    ((card)->word_0 = (SCM) (bvec))
 #define SCM_GC_GET_CARD_FLAGS(card) ((int64_t) ((card)->word_1))
 #define SCM_GC_SET_CARD_FLAGS(card, flags) \
     ((card)->word_1 = (SCM) (flags))
 
 #define SCM_GC_GET_CARD_FLAG(card, shift) \
- (SCM_GC_GET_CARD_FLAGS (card) & (((int64_t)1) << (shift)))
+  (SCM_GC_GET_CARD_FLAGS (card) & (((int64_t) 1) << (shift)))
 #define SCM_GC_SET_CARD_FLAG(card, shift) \
- (SCM_GC_SET_CARD_FLAGS (card, SCM_GC_GET_CARD_FLAGS(card) | (((int64_t)1) << (shift))))
+  (SCM_GC_SET_CARD_FLAGS (card, SCM_GC_GET_CARD_FLAGS(card) | (((int64_t) 1) << (shift))))
 #define SCM_GC_CLEAR_CARD_FLAG(card, shift) \
- (SCM_GC_SET_CARD_FLAGS (card, SCM_GC_GET_CARD_FLAGS(card) & ~(((int64_t)1) << (shift))))
+  (SCM_GC_SET_CARD_FLAGS (card, SCM_GC_GET_CARD_FLAGS(card) & ~(((int64_t) 1) << (shift))))
 
 /*
   Remove card flags. They hamper lazy initialization, and aren't used
@@ -189,85 +121,35 @@ static inline void SCM_GC_SET_CARD_BVEC(scm_t_cell *card, scm_t_c_bvec_long *bve
 #define SCM_GC_CARD_SIZE_MASK  (SCM_GC_SIZEOF_CARD-1)
 #define SCM_GC_CARD_ADDR_MASK  (~SCM_GC_CARD_SIZE_MASK)
 
-static inline scm_t_cell *SCM_GC_CELL_CARD(SCM x)
-{
-    assert(x != NULL);
-    scm_t_cell *card = (scm_t_cell *) ((int64_t) (x) & SCM_GC_CARD_ADDR_MASK);
-    scm_check_cell_integrity(card);
-    return card;
-}
-
-static inline int64_t SCM_GC_CELL_OFFSET(SCM x)
-{
-    assert(x != NULL);
-    return (((int64_t) (x) & SCM_GC_CARD_SIZE_MASK) >> SCM_CELL_SIZE_SHIFT);
-}
-
-static inline scm_t_c_bvec_long* SCM_GC_CELL_BVEC(SCM x)
-{
-    assert(x != NULL);
-    scm_t_c_bvec_long* bvec = SCM_GC_CARD_BVEC (SCM_GC_CELL_CARD (x));
-    assert(bvec != NULL);
-    return bvec;
-}
-
-
-// #define SCM_GC_CELL_BVEC(x)    SCM_GC_CARD_BVEC (SCM_GC_CELL_CARD (x))
-
-static inline void SCM_GC_SET_CELL_BVEC(SCM x, scm_t_c_bvec_long* bvec)
-{
-    assert(x != NULL);
-    SCM_GC_SET_CARD_BVEC (SCM_GC_CELL_CARD (x), bvec);
-}
-
-// #define SCM_GC_SET_CELL_BVEC(x, bvec)    SCM_GC_SET_CARD_BVEC (SCM_GC_CELL_CARD (x), bvec)
-
-static inline int64_t SCM_GC_CELL_GET_BIT(SCM x)
-{
-    assert(x != NULL);
-
-    scm_t_c_bvec_long *bvec = SCM_GC_CELL_BVEC (x);
-    assert(bvec != NULL);
-
-    int64_t offset = SCM_GC_CELL_OFFSET (x);
-    assert(offset >= 0);
-
-    return SCM_C_BVEC_GET (bvec, offset);
-}
-
-static inline void SCM_GC_CELL_SET_BIT(SCM x)
-{
-    assert(x != NULL);
-    SCM_C_BVEC_SET (SCM_GC_CELL_BVEC (x), SCM_GC_CELL_OFFSET (x));
-}
-
-static inline void SCM_GC_CELL_CLEAR_BIT(SCM x)
-{
-    assert(x != NULL);
-    SCM_C_BVEC_CLEAR (SCM_GC_CELL_BVEC (x), SCM_GC_CELL_OFFSET (x));
-}
+#define SCM_GC_CELL_CARD(x)    ((scm_t_cell *) ((int64_t) (x) & SCM_GC_CARD_ADDR_MASK))
+#define SCM_GC_CELL_OFFSET(x)  (((int64_t) (x) & SCM_GC_CARD_SIZE_MASK) >> SCM_CELL_SIZE_SHIFT)
+#define SCM_GC_CELL_BVEC(x)    SCM_GC_CARD_BVEC (SCM_GC_CELL_CARD (x))
+#define SCM_GC_SET_CELL_BVEC(x, bvec)    SCM_GC_SET_CARD_BVEC (SCM_GC_CELL_CARD (x), bvec)
+#define SCM_GC_CELL_GET_BIT(x) SCM_C_BVEC_GET (SCM_GC_CELL_BVEC (x), SCM_GC_CELL_OFFSET (x))
+#define SCM_GC_CELL_SET_BIT(x) SCM_C_BVEC_SET (SCM_GC_CELL_BVEC (x), SCM_GC_CELL_OFFSET (x))
+#define SCM_GC_CELL_CLEAR_BIT(x) SCM_C_BVEC_CLEAR (SCM_GC_CELL_BVEC (x), SCM_GC_CELL_OFFSET (x))
 
 #define SCM_GC_CARD_UP(x)      SCM_GC_CELL_CARD ((char *) (x) + SCM_GC_SIZEOF_CARD - 1)
 #define SCM_GC_CARD_DOWN       SCM_GC_CELL_CARD
 
+/* low level bit banging aids */
+typedef uint64_t scm_t_c_bvec_ent;
+
+#       define SCM_C_BVEC_LONG_BITS    64
+#       define SCM_C_BVEC_OFFSET_SHIFT 6
+#       define SCM_C_BVEC_POS_MASK     63
+#       define SCM_CELL_SIZE_SHIFT     4
+
+#define SCM_C_BVEC_OFFSET(pos) (pos >> SCM_C_BVEC_OFFSET_SHIFT)
+
+#define SCM_C_BVEC_GET(bvec, pos) (bvec[SCM_C_BVEC_OFFSET (pos)] & (((int64_t) 1) << (pos & SCM_C_BVEC_POS_MASK)))
+#define SCM_C_BVEC_SET(bvec, pos) (bvec[SCM_C_BVEC_OFFSET (pos)] |= (((int64_t) 1) << (pos & SCM_C_BVEC_POS_MASK)))
+#define SCM_C_BVEC_CLEAR(bvec, pos) (bvec[SCM_C_BVEC_OFFSET (pos)] &= ~(((int64_t) 1) << (pos & SCM_C_BVEC_POS_MASK)))
+
 /* testing and changing GC marks */
-static inline int64_t SCM_GC_MARK_P (SCM x)
-{
-    assert(x != NULL);
-    return SCM_GC_CELL_GET_BIT (x);
-}
-
-static inline void SCM_SET_GC_MARK (SCM x)
-{
-    assert(x != NULL);
-    SCM_GC_CELL_SET_BIT (x);
-}
-
-static inline void SCM_CLEAR_GC_MARK (SCM x)
-{
-    assert(x != NULL);
-    SCM_GC_CELL_CLEAR_BIT (x);
-}
+#define SCM_GC_MARK_P(x)   SCM_GC_CELL_GET_BIT (x)
+#define SCM_SET_GC_MARK(x) SCM_GC_CELL_SET_BIT (x)
+#define SCM_CLEAR_GC_MARK(x) SCM_GC_CELL_CLEAR_BIT (x)
 
 /* Low level cell data accessing macros.  These macros should only be used
  * from within code related to garbage collection issues, since they will
@@ -305,13 +187,12 @@ static inline void SCM_CLEAR_GC_MARK (SCM x)
 #define SCM_CELL_WORD_2(x) SCM_CELL_WORD ((x), 2)
 #define SCM_CELL_WORD_3(x) SCM_CELL_WORD ((x), 3)
 
-#define SCM_CELL_OBJECT(x, n) SCM_VALIDATE_CELL ((x), SCM_GC_CELL_OBJECT ((x), (n)))
-#define SCM_CELL_OBJECT_NO_CHECK(x, n) (SCM_GC_CELL_OBJECT ((x), (n)))
+#define SCM_CELL_OBJECT(x, n) \
+  SCM_VALIDATE_CELL ((x), SCM_GC_CELL_OBJECT ((x), (n)))
 #define SCM_CELL_OBJECT_0(x) SCM_CELL_OBJECT ((x), 0)
 #define SCM_CELL_OBJECT_1(x) SCM_CELL_OBJECT ((x), 1)
 #define SCM_CELL_OBJECT_2(x) SCM_CELL_OBJECT ((x), 2)
 #define SCM_CELL_OBJECT_3(x) SCM_CELL_OBJECT ((x), 3)
-#define SCM_CELL_OBJECT_3_NO_CHECK(x) SCM_CELL_OBJECT_NO_CHECK ((x), 3)
 
 #define SCM_SET_CELL_WORD(x, n, v) \
   SCM_VALIDATE_CELL ((x), SCM_GC_SET_CELL_WORD ((x), (n), (v)))
@@ -353,12 +234,10 @@ SCM_API int scm_debug_cells_gc_interval ;
 void scm_i_expensive_validation_check (SCM cell);
 #endif
 
-extern scm_i_pthread_mutex_t scm_i_gc_admin_mutex;
-#if USE_64IMPL
-extern int scm_i_terminating;
-#endif
+SCM_API scm_i_pthread_mutex_t scm_i_gc_admin_mutex;
+
 #define scm_gc_running_p (SCM_I_CURRENT_THREAD->gc_running_p)
-extern scm_i_pthread_mutex_t scm_i_sweep_mutex;
+SCM_API scm_i_pthread_mutex_t scm_i_sweep_mutex;
 
 #ifdef __ia64__
 void *scm_ia64_register_backing_store_base (void);
@@ -368,11 +247,11 @@ void *scm_ia64_ar_bsp (const void *);
 
 
 #if (SCM_ENABLE_DEPRECATED == 1)
-extern size_t scm_default_init_heap_size_1;
-extern int scm_default_min_yield_1;
-extern size_t scm_default_init_heap_size_2;
-extern int scm_default_min_yield_2;
-extern size_t scm_default_max_segment_size;
+SCM_API size_t scm_default_init_heap_size_1;
+SCM_API int scm_default_min_yield_1;
+SCM_API size_t scm_default_init_heap_size_2;
+SCM_API int scm_default_min_yield_2;
+SCM_API size_t scm_default_max_segment_size;
 #else
 #define  scm_default_init_heap_size_1 deprecated
 #define  scm_default_min_yield_1 deprecated
@@ -382,42 +261,43 @@ extern size_t scm_default_max_segment_size;
 #endif
 
 
-extern size_t scm_max_segment_size;
+SCM_API size_t scm_max_segment_size;
+
 
 #define SCM_SET_FREELIST_LOC(key,ptr) scm_i_pthread_setspecific ((key), (ptr))
 #define SCM_FREELIST_LOC(key) ((SCM *) scm_i_pthread_getspecific (key))
-extern scm_i_pthread_key_t scm_i_freelist;
-extern scm_i_pthread_key_t scm_i_freelist2;
-extern struct scm_t_cell_type_statistics scm_i_master_freelist;
-extern struct scm_t_cell_type_statistics scm_i_master_freelist2;
+SCM_API scm_i_pthread_key_t scm_i_freelist;
+SCM_API scm_i_pthread_key_t scm_i_freelist2;
+SCM_API struct scm_t_cell_type_statistics scm_i_master_freelist;
+SCM_API struct scm_t_cell_type_statistics scm_i_master_freelist2;
 #ifdef __MINGW32__
-extern scm_i_pthread_key_t *scm_i_freelist_ptr;
-extern scm_i_pthread_key_t *scm_i_freelist2_ptr;
-extern struct scm_t_cell_type_statistics *scm_i_master_freelist_ptr;
-extern struct scm_t_cell_type_statistics *scm_i_master_freelist2_ptr;
+SCM_API scm_i_pthread_key_t *scm_i_freelist_ptr;
+SCM_API scm_i_pthread_key_t *scm_i_freelist2_ptr;
+SCM_API struct scm_t_cell_type_statistics *scm_i_master_freelist_ptr;
+SCM_API struct scm_t_cell_type_statistics *scm_i_master_freelist2_ptr;
 #endif
 
-extern uint64_t scm_gc_cells_swept;
-extern uint64_t scm_gc_cells_collected;
-extern uint64_t scm_gc_malloc_collected;
-extern uint64_t scm_gc_ports_collected;
-extern uint64_t scm_cells_allocated;
-extern uint64_t scm_last_cells_allocated;
-extern int scm_gc_cell_yield_percentage;
-extern int scm_gc_malloc_yield_percentage;
-extern uint64_t scm_mallocated;
-extern uint64_t scm_mtrigger;
-extern double scm_gc_cells_allocated_acc;
+SCM_API uint64_t scm_gc_cells_swept;
+SCM_API uint64_t scm_gc_cells_collected;
+SCM_API uint64_t scm_gc_malloc_collected;
+SCM_API uint64_t scm_gc_ports_collected;
+SCM_API uint64_t scm_cells_allocated;
+SCM_API uint64_t scm_last_cells_allocated;
+SCM_API int scm_gc_cell_yield_percentage;
+SCM_API int scm_gc_malloc_yield_percentage;
+SCM_API uint64_t scm_mallocated;
+SCM_API uint64_t scm_mtrigger;
+SCM_API double scm_gc_cells_allocated_acc;
 
 
 
-extern SCM scm_after_gc_hook;
+SCM_API SCM scm_after_gc_hook;
 
-extern scm_t_c_hook scm_before_gc_c_hook;
-extern scm_t_c_hook scm_before_mark_c_hook;
-extern scm_t_c_hook scm_before_sweep_c_hook;
-extern scm_t_c_hook scm_after_sweep_c_hook;
-extern scm_t_c_hook scm_after_gc_c_hook;
+SCM_API scm_t_c_hook scm_before_gc_c_hook;
+SCM_API scm_t_c_hook scm_before_mark_c_hook;
+SCM_API scm_t_c_hook scm_before_sweep_c_hook;
+SCM_API scm_t_c_hook scm_after_sweep_c_hook;
+SCM_API scm_t_c_hook scm_after_gc_c_hook;
 
 #if defined (GUILE_DEBUG) || defined (GUILE_DEBUG_FREELIST)
 #if (SCM_ENABLE_DEPRECATED == 1)
@@ -509,7 +389,7 @@ SCM_API void scm_gc_register_roots (SCM *b, uint64_t n);
 SCM_API void scm_gc_unregister_roots (SCM *b, uint64_t n);
 SCM_API void scm_storage_prehistory (void);
 SCM_API int scm_init_storage (void);
-//SCM_API void *scm_get_stack_base (void);
+SCM_API void *scm_get_stack_base (void);
 SCM_API void scm_init_gc (void);
 
 #if SCM_ENABLE_DEPRECATED == 1

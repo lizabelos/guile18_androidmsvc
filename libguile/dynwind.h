@@ -16,7 +16,7 @@
  * Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public
- * License with this library; if not, write to the Free Software
+ * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
@@ -37,7 +37,7 @@ SCM_API SCM scm_internal_dynamic_wind (scm_t_guard before,
 				       void *guard_data);
 SCM_API void scm_dowinds (SCM to, int64_t delta);
 SCM_API void scm_i_dowinds (SCM to, int64_t delta,
-			    void (*turn_func) (void *), void *data);
+                            void (*turn_func) (void *), void *data);
 SCM_API void scm_init_dynwind (void);
 
 SCM_API void scm_swap_bindings (SCM vars, SCM vals);

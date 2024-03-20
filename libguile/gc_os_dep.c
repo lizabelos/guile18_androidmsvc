@@ -21,7 +21,9 @@
  * and modified for Guile by Marius Vollmer.
  */
 
-#include <config.h>
+#ifdef HAVE_CONFIG_H
+#  include <config.h>
+#endif
 
 #include <ctype.h>
 #include "libguile/gc.h"
@@ -988,7 +990,7 @@ scm_get_stack_base ()
 #   endif
 #   ifdef DOS4GW
 #     define OS_TYPE "DOS4GW"
-      extern int64_t __nullarea;
+      extern long __nullarea;
       extern char _end;
       extern char *_STACKTOP;
       /* Depending on calling conventions Watcom C either precedes
@@ -1082,7 +1084,7 @@ scm_get_stack_base ()
 #   define ALIGNMENT 4
 #   define DATASTART ((ptr_t)0x20000000)
     extern int errno;
-#   define STACKBOTTOM ((ptr_t)((ulong)&errno))
+#   define STACKBOTTOM ((ptr_t)((uint64_t)&errno))
 #   define DYNAMIC_LOADING
 	/* For really old versions of AIX, this may have to be removed. */
 # endif
@@ -1304,6 +1306,7 @@ scm_get_stack_base ()
     extern int data_start;
 #   define DATASTART ((ptr_t)(&__data_start != 0? &__data_start : &data_start))
 #endif
+
 
 # ifndef CPP_WORDSZ
 #   define CPP_WORDSZ 32
@@ -1553,7 +1556,7 @@ scm_get_stack_base ()
 #ifdef DJGPP
   /* Apparently necessary for djgpp 2.01.  May casuse problems with	*/
   /* other versions.							*/
-  typedef int64_t unsigned int caddr_t;
+  typedef uint64_t caddr_t;
 #endif
 
 #ifdef PCR
@@ -1643,11 +1646,7 @@ void *scm_get_stack_base()
         GetSystemInfo(&sysinfo);
         GC_page_size = sysinfo.dwPageSize;
     }
-#if USE_64IMPL
-    trunc_sp = (ptr_t)((int64_t)sp & ~(GC_page_size - 1));
-#else
     trunc_sp = (ptr_t)((word)sp & ~(GC_page_size - 1));
-#endif
     size = GC_get_writable_length(trunc_sp, 0);
     return(trunc_sp + size);
 }

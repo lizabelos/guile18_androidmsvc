@@ -16,7 +16,7 @@
  * Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public
- * License with this library; if not, write to the Free Software
+ * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
@@ -27,7 +27,8 @@
 
 
 SCM_API int scm_ra_matchp (SCM ra0, SCM ras);
-SCM_API int scm_ramapc (int (*cproc) (SCM, SCM, SCM), SCM data, SCM ra0, SCM lra, const char *what);
+SCM_API int scm_ramapc (int (*cproc) (), SCM data, SCM ra0, SCM lra,
+			const char *what);
 SCM_API int scm_array_fill_int (SCM ra, SCM fill, SCM ignore);
 SCM_API SCM scm_array_fill_x (SCM ra, SCM fill);
 SCM_API SCM scm_array_copy_x (SCM src, SCM dst);
@@ -40,7 +41,7 @@ SCM_API int scm_ra_sum (SCM ra0, SCM ras);
 SCM_API int scm_ra_difference (SCM ra0, SCM ras);
 SCM_API int scm_ra_product (SCM ra0, SCM ras);
 SCM_API int scm_ra_divide (SCM ra0, SCM ras);
-SCM_API int scm_array_identity (SCM src, SCM dst, SCM data);
+SCM_API int scm_array_identity (SCM src, SCM dst);
 SCM_API SCM scm_array_map_x (SCM ra0, SCM proc, SCM lra);
 SCM_API SCM scm_array_for_each (SCM proc, SCM ra0, SCM lra);
 SCM_API SCM scm_array_index_map_x (SCM ra, SCM proc);

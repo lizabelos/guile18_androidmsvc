@@ -16,7 +16,7 @@
  * Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public
- * License with this library; if not, write to the Free Software
+ * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
@@ -29,10 +29,6 @@
 extern int scm_print_carefully_p;
 
 SCM_API void scm_init_gdbint (void);
-
-SCM_API void unmark_port (SCM port);
-
-SCM_API void remark_port (SCM port);
 
 #endif  /* SCM_GDBINT_H */
 

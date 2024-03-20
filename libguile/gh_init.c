@@ -11,11 +11,13 @@
  * Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public
- * License with this library; if not, write to the Free Software
+ * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include <config.h>
+#ifdef HAVE_CONFIG_H
+# include <config.h>
+#endif
 
 /* Guile high level (gh_) interface, initialization-related stuff */
 
@@ -37,7 +39,7 @@ gh_launch_pad (void *closure, int argc, char **argv)
   main_prog_t c_main_prog = (main_prog_t) closure;
 
   c_main_prog (argc, argv);
-  call_error_callback();
+  exit (0);
 }
 
 /* starts up the Scheme interpreter, and stays in it.  c_main_prog()

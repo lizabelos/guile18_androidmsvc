@@ -16,7 +16,7 @@
  * Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public
- * License with this library; if not, write to the Free Software
+ * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
@@ -41,12 +41,12 @@ typedef struct scm_t_info_frame {
 typedef struct scm_t_stack {
   SCM id;			/* Stack id */
   scm_t_info_frame *frames;	/* Info frames */
-  uint64_t length;		/* Stack length */
+  uint64_t length;		        /* Stack length */
   uint64_t tail_length;
   scm_t_info_frame tail[1];
 } scm_t_stack;
 
-extern SCM scm_stack_type;
+SCM_API SCM scm_stack_type;
 
 #define SCM_STACKP(obj) (SCM_STRUCTP (obj) && scm_is_eq (SCM_STRUCT_VTABLE (obj), scm_stack_type))
 #define SCM_STACK_LENGTH(stack) (SCM_STACK (stack) -> length)
@@ -73,11 +73,11 @@ extern SCM scm_stack_type;
 #define SCM_FRAME_PREV(frame) scm_frame_previous (frame)
 #define SCM_FRAME_NEXT(frame) scm_frame_next (frame)
 
-#define SCM_FRAMEF_VOID		(((int64_t)1) << 2)
-#define SCM_FRAMEF_REAL		(((int64_t)1) << 3)
-#define SCM_FRAMEF_PROC 	(((int64_t)1) << 4)
-#define SCM_FRAMEF_EVAL_ARGS 	(((int64_t)1) << 5)
-#define SCM_FRAMEF_OVERFLOW	(((int64_t)1) << 6)
+#define SCM_FRAMEF_VOID		(((int64_t) 1) << 2)
+#define SCM_FRAMEF_REAL		(((int64_t) 1) << 3)
+#define SCM_FRAMEF_PROC 	(((int64_t) 1) << 4)
+#define SCM_FRAMEF_EVAL_ARGS 	(((int64_t) 1) << 5)
+#define SCM_FRAMEF_OVERFLOW	(((int64_t) 1) << 6)
 
 #define SCM_FRAME_VOID_P(f)       (SCM_FRAME_FLAGS (f) & SCM_FRAMEF_VOID)
 #define SCM_FRAME_REAL_P(f)       (SCM_FRAME_FLAGS (f) & SCM_FRAMEF_REAL)

@@ -11,13 +11,15 @@
  * Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public
- * License with this library; if not, write to the Free Software
+ * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
 
 
-#include <config.h>
+#ifdef HAVE_CONFIG_H
+#  include <config.h>
+#endif
 
 #include <stdlib.h>
 #include <stdio.h>
@@ -38,9 +40,7 @@
 #include "libguile/posix.h"
 #include "libguile/i18n.h"
 #include "libguile/threads.h"
-
-
-extern char ** environ;
+
 
 #ifdef HAVE_STRING_H
 #include <string.h>
@@ -92,13 +92,18 @@ extern char *ttyname();
 # include <sys/wait.h>
 #endif
 #ifndef WEXITSTATUS
-# define WEXITSTATUS(stat_val) ((unsigned)(stat_val) >> 8)
+# define WEXITSTATUS(stat_val) ((unsigned)(stat_val) & 255)
 #endif
 #ifndef WIFEXITED
-# define WIFEXITED(stat_val) (((stat_val) & 255) == 0)
+# define WIFEXITED(stat_val) ((((unsigned) stat_val) & 255) == 0)
 #endif
 
 #include <signal.h>
+
+#ifdef __MINGW64__
+__declspec (dllimport)
+#endif
+extern char ** environ;
 
 #ifdef HAVE_GRP_H
 #include <grp.h>
@@ -151,6 +156,12 @@ extern char *ttyname();
 
 #ifndef F_OK
 #define F_OK 0
+#endif
+
+/* No prototype for this on Solaris 10.  The man page says it's in
+   <unistd.h> ... but it lies. */
+#if ! HAVE_DECL_SETHOSTNAME
+int sethostname (char *name, size_t namelen);
 #endif
 
 /* On NextStep, <utime.h> doesn't define struct utime, unless we
@@ -313,6 +324,7 @@ SCM_DEFINE (scm_setgroups, "setgroups", 1, 0, 0,
   groups = scm_malloc (size);
   for(i = 0; i < ngroups; i++)
     groups [i] = SCM_NUM2ULONG (1, SCM_SIMPLE_VECTOR_REF (group_vec, i));
+
 
   result = setgroups (ngroups, groups);
   save_errno = errno; /* don't let free() touch errno */
@@ -557,7 +569,7 @@ SCM_DEFINE (scm_waitpid, "waitpid", 1, 1, 0,
 #undef FUNC_NAME
 #endif /* HAVE_WAITPID */
 
-#ifndef __MINGW32__
+#if !defined(__MINGW32__) || defined(__MINGW64__)
 SCM_DEFINE (scm_status_exit_val, "status:exit-val", 1, 0, 0, 
             (SCM status),
 	    "Return the exit status value, as would be set if a process\n"
@@ -576,7 +588,9 @@ SCM_DEFINE (scm_status_exit_val, "status:exit-val", 1, 0, 0,
     return SCM_BOOL_F;
 }
 #undef FUNC_NAME
+#endif
 
+#ifndef __MINGW32__
 SCM_DEFINE (scm_status_term_sig, "status:term-sig", 1, 0, 0, 
             (SCM status),
 	    "Return the signal number which terminated the process, if any,\n"
@@ -763,8 +777,8 @@ SCM_DEFINE (scm_getpgrp, "getpgrp", 0, 0, 0,
 	    "This is the POSIX definition, not BSD.")
 #define FUNC_NAME s_scm_getpgrp
 {
-  int (*fn)();
-  fn = (int (*) ()) getpgrp;
+  int (*fn)(int);
+  fn = (int (*)(int)) getpgrp;
   return scm_from_int (fn (0));
 }
 #undef FUNC_NAME
@@ -959,7 +973,12 @@ SCM_DEFINE (scm_execl, "execl", 1, 0, 1,
   scm_dynwind_unwind_handler (free_string_pointers, exec_argv, 
 			    SCM_F_WIND_EXPLICITLY);
 
-  execv (exec_file, exec_argv);
+  execv (exec_file,
+#if defined(__MINGW32__) && !defined(__MINGW64__)
+         /* extra "const" in mingw formals, provokes warning from gcc */
+	 (const char * const *)
+#endif
+         exec_argv);
   SCM_SYSERROR;
 
   /* not reached.  */
@@ -990,7 +1009,12 @@ SCM_DEFINE (scm_execlp, "execlp", 1, 0, 1,
   scm_dynwind_unwind_handler (free_string_pointers, exec_argv, 
 			    SCM_F_WIND_EXPLICITLY);
 
-  execvp (exec_file, exec_argv);
+  execvp (exec_file,
+#if defined(__MINGW32__) && !defined(__MINGW64__)
+          /* extra "const" in mingw formals, provokes warning from gcc */
+	  (const char * const *)
+#endif
+          exec_argv);
   SCM_SYSERROR;
 
   /* not reached.  */
@@ -1029,7 +1053,17 @@ SCM_DEFINE (scm_execle, "execle", 2, 0, 1,
   scm_dynwind_unwind_handler (free_string_pointers, exec_env,
 			    SCM_F_WIND_EXPLICITLY);
 
-  execve (exec_file, exec_argv, exec_env);
+  execve (exec_file,
+#if defined(__MINGW32__) && !defined(__MINGW64__)
+          /* extra "const" in mingw formals, provokes warning from gcc */
+	  (const char * const *)
+#endif
+          exec_argv,
+#if defined(__MINGW32__) && !defined(__MINGW64__)
+          /* extra "const" in mingw formals, provokes warning from gcc */
+          (const char * const *)
+#endif
+          exec_env);
   SCM_SYSERROR;
 
   /* not reached.  */
@@ -1120,6 +1154,14 @@ SCM_DEFINE (scm_environ, "environ", 0, 1, 0,
 #undef FUNC_NAME
 
 #ifdef L_tmpnam
+#ifdef __GNUC__
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
+#endif
+#ifdef __clang__
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
+#endif
 
 SCM_DEFINE (scm_tmpnam, "tmpnam", 0, 0, 0,
             (),
@@ -1140,7 +1182,12 @@ SCM_DEFINE (scm_tmpnam, "tmpnam", 0, 0, 0,
   return scm_from_locale_string (name);
 }
 #undef FUNC_NAME
-
+#ifdef __GNUC__
+#pragma GCC diagnostic pop
+#endif
+#ifdef __clang__
+#pragma __clang__ diagnostic pop
+#endif
 #endif
 
 #ifndef HAVE_MKSTEMP
@@ -1188,6 +1235,45 @@ SCM_DEFINE (scm_mkstemp, "mkstemp!", 1, 0, 0,
 
   scm_dynwind_end ();
   return scm_fdes_to_port (rv, "w+", tmpl);
+}
+#undef FUNC_NAME
+
+SCM_DEFINE (scm_utime, "utime", 1, 2, 0,
+            (SCM pathname, SCM actime, SCM modtime),
+	    "@code{utime} sets the access and modification times for the\n"
+	    "file named by @var{path}.  If @var{actime} or @var{modtime} is\n"
+	    "not supplied, then the current time is used.  @var{actime} and\n"
+	    "@var{modtime} must be integer time values as returned by the\n"
+	    "@code{current-time} procedure.\n"
+	    "@lisp\n"
+	    "(utime \"foo\" (- (current-time) 3600))\n"
+	    "@end lisp\n"
+	    "will set the access time to one hour in the past and the\n"
+	    "modification time to the current time.")
+#define FUNC_NAME s_scm_utime
+{
+#if HAVE_UTIME_H
+  int rv;
+  struct utimbuf utm_tmp;
+
+  if (SCM_UNBNDP (actime))
+    SCM_SYSCALL (time (&utm_tmp.actime));
+  else
+    utm_tmp.actime = SCM_NUM2LONG(2, actime);
+
+  if (SCM_UNBNDP (modtime))
+    SCM_SYSCALL (time (&utm_tmp.modtime));
+  else
+    utm_tmp.modtime = SCM_NUM2LONG (3, modtime);
+
+  STRING_SYSCALL (pathname, c_pathname,
+		  rv = utime (c_pathname, &utm_tmp));
+  if (rv != 0)
+    SCM_SYSERROR;
+  return SCM_UNSPECIFIED;
+#else
+  SCM_MISC_ERROR ("utime not available", SCM_EOL);
+#endif
 }
 #undef FUNC_NAME
 
@@ -1480,7 +1566,7 @@ SCM_DEFINE (scm_nice, "nice", 1, 0, 0,
 	    "The return value is unspecified.")
 #define FUNC_NAME s_scm_nice
 {
-  int nice_value;
+  int nice_value; (void) nice_value;
 
   /* nice() returns "prio-NZERO" on success or -1 on error, but -1 can arise
      from "prio-NZERO", so an error must be detected from errno changed */
@@ -1580,14 +1666,13 @@ SCM_DEFINE (scm_chroot, "chroot", 1, 0, 0,
 
 
 #ifdef __MINGW32__
-#include <windows.h>
 /* Wrapper function to supplying `getlogin()' under Windows.  */
 static char * getlogin (void)
 {
-  static CHAR user[256];
-  static DWORD len = 256;
+  static char user[256];
+  static unsigned long len = 256;
 
-  if (!GetUserNameA (user, &len))
+  if (!GetUserName (user, &len))
     return NULL;
   return user;
 }
@@ -1771,7 +1856,7 @@ static int flock (int fd, int operation)
   /* Save current file pointer and seek to beginning. */
   if ((pos = lseek (fd, 0, SEEK_CUR)) == -1 || (len = filelength (fd)) == -1)
     return -1;
-  lseek (fd, ((int64_t)0), SEEK_SET);
+  lseek (fd, 0, SEEK_SET);
 
   /* Deadlock if necessary. */
   do
@@ -1899,7 +1984,7 @@ SCM_DEFINE (scm_gethostname, "gethostname", 0, 0, 0,
    * in gnu/linux glibc 2.3.2.  */
   {
     const int64_t n = sysconf (_SC_HOST_NAME_MAX);
-    if (n != -((int64_t)1))
+    if (n != -((int64_t) 1))
       len = n;
   }
 

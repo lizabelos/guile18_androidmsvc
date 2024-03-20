@@ -11,13 +11,15 @@
  * Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public
- * License with this library; if not, write to the Free Software
+ * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
 
 
-#include <config.h>
+#ifdef HAVE_CONFIG_H
+# include <config.h>
+#endif
 
 #include <string.h>
 #include <stdio.h>
@@ -392,7 +394,7 @@ scm_i_string_stop_writing (void)
 
 SCM
 scm_i_make_symbol (SCM name, scm_t_bits flags,
-		   uint64_t hash, SCM props)
+                   uint64_t hash, SCM props)
 {
   SCM buf;
   size_t start = STRING_START (name);
@@ -426,7 +428,7 @@ scm_i_make_symbol (SCM name, scm_t_bits flags,
 
 SCM
 scm_i_c_make_symbol (const char *name, size_t len,
-		     scm_t_bits flags, uint64_t hash, SCM props)
+                     scm_t_bits flags, uint64_t hash, SCM props)
 {
   SCM buf = make_stringbuf (len);
   memcpy (STRINGBUF_CHARS (buf), name, len);
@@ -439,7 +441,7 @@ scm_i_c_make_symbol (const char *name, size_t len,
    underlying storage.  */
 SCM
 scm_i_c_take_symbol (char *name, size_t len,
-		     scm_t_bits flags, uint64_t hash, SCM props)
+                     scm_t_bits flags, uint64_t hash, SCM props)
 {
   SCM buf = scm_i_take_stringbufn (name, len);
 

@@ -16,7 +16,7 @@
  * Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public
- * License with this library; if not, write to the Free Software
+ * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
@@ -24,7 +24,6 @@
 
 #include "libguile/__scm.h"
 #include "libguile/print.h"
-#include "hash.h"
 
 
 
@@ -51,8 +50,8 @@
 typedef void (*scm_t_struct_free) (scm_t_bits * vtable, scm_t_bits * data);
 
 #define SCM_STRUCTF_MASK   (0xFFF << 20)
-#define SCM_STRUCTF_ENTITY (((int64_t)1) << 30) /* Indicates presence of proc slots */
-#define SCM_STRUCTF_LIGHT  (((int64_t)1) << 31) /* Light representation
+#define SCM_STRUCTF_ENTITY (((int64_t) 1) << 30) /* Indicates presence of proc slots */
+#define SCM_STRUCTF_LIGHT  (((int64_t) 1) << 31) /* Light representation
 					 (no hidden words) */
 
 #define SCM_STRUCTP(X)  		(!SCM_IMP(X) && (SCM_TYP3(X) == scm_tc3_struct))
@@ -76,11 +75,11 @@ typedef void (*scm_t_struct_free) (scm_t_bits * vtable, scm_t_bits * data);
 #define SCM_SET_STRUCT_TABLE_NAME(X, NAME) SCM_SETCAR (X, NAME)
 #define SCM_STRUCT_TABLE_CLASS(X) SCM_CDR (X)
 #define SCM_SET_STRUCT_TABLE_CLASS(X, CLASS) SCM_SETCDR (X, CLASS)
-extern SCM scm_struct_table;
+SCM_API SCM scm_struct_table;
 
 #define SCM_STRUCT_GC_CHAIN(X) SCM_CELL_OBJECT_3 (X)
 #define SCM_SET_STRUCT_GC_CHAIN(X, Y) SCM_SET_CELL_OBJECT_3 (X, Y)
-extern SCM scm_i_structs_to_free;
+SCM_API SCM scm_i_structs_to_free;
 
 
 
@@ -101,7 +100,7 @@ SCM_API SCM scm_struct_ref (SCM handle, SCM pos);
 SCM_API SCM scm_struct_set_x (SCM handle, SCM pos, SCM val);
 SCM_API SCM scm_struct_vtable (SCM handle);
 SCM_API SCM scm_struct_vtable_tag (SCM handle);
-SCM_API uint64_t scm_struct_ihashq (SCM obj, uint64_t n, scm_t_ihashx_closure *closure);
+SCM_API uint64_t scm_struct_ihashq (SCM obj, uint64_t n);
 SCM_API SCM scm_struct_create_handle (SCM obj);
 SCM_API SCM scm_struct_vtable_name (SCM vtable);
 SCM_API SCM scm_set_struct_vtable_name_x (SCM vtable, SCM name);
@@ -109,6 +108,12 @@ SCM_API void scm_print_struct (SCM exp, SCM port, scm_print_state *);
 SCM_API void scm_struct_prehistory (void);
 SCM_API void scm_init_struct (void);
 
+static inline uint64_t
+scm_struct_ihashq_var (SCM obj, uint64_t n, void* closure)
+{
+  (void) closure;
+  return scm_struct_ihashq (obj, n);
+}
 #endif  /* SCM_STRUCT_H */
 
 /*

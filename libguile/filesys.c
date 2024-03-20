@@ -11,9 +11,10 @@
  * Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public
- * License with this library; if not, write to the Free Software
+ * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
+
 
 
 
@@ -26,7 +27,9 @@
 # define _REENTRANT   /* ask Interix for readdir_r prototype */
 #endif
 
-#include <config.h>
+#ifdef HAVE_CONFIG_H
+#  include <config.h>
+#endif
 
 /* This blob per the Autoconf manual (under "Particular Functions"), updated
    to match that of Gnulib.  */
@@ -110,31 +113,14 @@ void *alloca (size_t);
 #include <pwd.h>
 #endif
 
-#if USE_64IMPL
+
 #if HAVE_DIRENT_H
 # include <dirent.h>
 # define NAMLEN(dirent) strlen((dirent)->d_name)
-#else
-# define dirent direct
-# define NAMLEN(dirent) (dirent)->d_namlen
-# if HAVE_SYS_NDIR_H
-#  include <sys/ndir.h>
-# endif
-# if HAVE_SYS_DIR_H
-#  include <sys/dir.h>
-# endif
-# if HAVE_NDIR_H
-#  include <ndir.h>
-# endif
-#endif
-#else
-#if defined (__MINGW32__) || defined (_MSC_VER) || defined (__BORLANDC__)
+#elif defined (__MINGW32__) || defined (_MSC_VER) || defined (__BORLANDC__)
 # include "win32-dirent.h"
 # define NAMLEN(dirent) strlen((dirent)->d_name)
 /* The following bits are per AC_HEADER_DIRENT doco in the autoconf manual */
-#elif HAVE_DIRENT_H
-# include <dirent.h>
-# define NAMLEN(dirent) strlen((dirent)->d_name)
 #else
 # define dirent direct
 # define NAMLEN(dirent) (dirent)->d_namlen
@@ -147,7 +133,6 @@ void *alloca (size_t);
 # if HAVE_NDIR_H
 #  include <ndir.h>
 # endif
-#endif
 #endif
 
 /* Ultrix has S_IFSOCK, but no S_ISSOCK.  Ipe!  */
@@ -302,9 +287,7 @@ SCM_DEFINE (scm_chown, "chown", 3, 0, 0,
 #undef FUNC_NAME
 #endif /* HAVE_CHOWN */
 
-SCM scm_dot_string;
 
-#ifdef HAVE_POSIX
 SCM_DEFINE (scm_chmod, "chmod", 2, 0, 0,
             (SCM object, SCM mode),
 	    "Changes the permissions of the file referred to by @var{obj}.\n"
@@ -317,7 +300,7 @@ SCM_DEFINE (scm_chmod, "chmod", 2, 0, 0,
 #define FUNC_NAME s_scm_chmod
 {
   int rv;
-  int fdes;
+  int fdes; (void) fdes;
 
   object = SCM_COERCE_OUTPORT (object);
 
@@ -525,7 +508,7 @@ scm_stat2scm (struct stat_or_stat64 *stat_temp)
 #ifdef HAVE_STRUCT_STAT_ST_BLKSIZE
   SCM_SIMPLE_VECTOR_SET(ans, 11, scm_from_uint64 (stat_temp->st_blksize));
 #else
-  SCM_SIMPLE_VECTOR_SET(ans, 11, scm_from_uint64 (((int64_t)4096)));
+  SCM_SIMPLE_VECTOR_SET(ans, 11, scm_from_uint64 ((uint64_t) 4096));
 #endif
 #ifdef HAVE_STRUCT_STAT_ST_BLOCKS
   SCM_SIMPLE_VECTOR_SET(ans, 12, scm_from_blkcnt_t_or_blkcnt64_t (stat_temp->st_blocks));
@@ -922,7 +905,7 @@ SCM_DEFINE (scm_readdir, "readdir", 1, 0, 0,
   {
     struct dirent_or_dirent64 de; /* just for sizeof */
     DIR    *ds = (DIR *) SCM_CELL_WORD_1 (port);
-    size_t namlen;
+    size_t namlen; (void) namlen;
 #ifdef NAME_MAX
     char   buf [SCM_MAX (sizeof (de),
                          sizeof (de) - sizeof (de.d_name) + NAME_MAX + 1)];
@@ -1331,7 +1314,7 @@ SCM_DEFINE (scm_select, "select", 3, 2, 0,
     time_ptr = 0;
   else
     {
-      if (scm_is_unsigned_integer (secs, 0, ULONG_MAX))
+      if (scm_is_unsigned_integer (secs, 0, ULLONG_MAX))
 	{
 	  timeout.tv_sec = scm_to_uint64 (secs);
 	  if (SCM_UNBNDP (usecs))
@@ -1345,7 +1328,7 @@ SCM_DEFINE (scm_select, "select", 3, 2, 0,
 
 	  if (!SCM_UNBNDP (usecs))
 	    SCM_WRONG_TYPE_ARG (4, secs);
-	  if (fl > LONG_MAX)
+	  if (fl > LLONG_MAX)
 	    SCM_OUT_OF_RANGE (4, secs);
 	  timeout.tv_sec = (int64_t) fl;
 	  timeout.tv_usec = (int64_t) ((fl - timeout.tv_sec) * 1000000);
@@ -1592,7 +1575,7 @@ SCM_DEFINE (scm_copy_file, "copy-file", 2, 0, 0,
 
 /* Filename manipulation */
 
-#endif /* HAVE_POSIX */
+SCM scm_dot_string;
 
 SCM_DEFINE (scm_dirname, "dirname", 1, 0, 0, 
             (SCM filename),
@@ -1697,11 +1680,10 @@ SCM_DEFINE (scm_basename, "basename", 1, 1, 0,
 void
 scm_init_filesys ()
 {
-#ifdef HAVE_POSIX
   scm_tc16_dir = scm_make_smob_type ("directory", 0);
   scm_set_smob_free (scm_tc16_dir, scm_dir_free);
   scm_set_smob_print (scm_tc16_dir, scm_dir_print);
-#endif
+
   scm_dot_string = scm_permanent_object (scm_from_locale_string ("."));
   
 #ifdef O_RDONLY

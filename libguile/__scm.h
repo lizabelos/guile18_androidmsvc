@@ -16,7 +16,7 @@
  * Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public
- * License with this library; if not, write to the Free Software
+ * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
@@ -51,7 +51,12 @@
 /* What did the configure script discover about the outside world?  */
 #include "libguile/scmconfig.h"
 
-
+#if defined(__ANDROID__)
+#include <android/log.h>
+int __scm_android_fprintf (FILE* stream, const char* format, ...);
+#define printf(...) __android_log_print (ANDROID_LOG_DEFAULT, "libguile", __VA_ARGS__)
+#define fprintf(...) __scm_android_fprintf (__VA_ARGS__)
+#endif
 
 /* {Compiler hints}
  *
@@ -141,8 +146,8 @@
 
 /* Random options (not yet supported or in final form). */
 
-#undef STACK_CHECKING
-#define NO_CEVAL_STACK_CHECKING
+#define STACK_CHECKING
+#undef NO_CEVAL_STACK_CHECKING
 
 
 
@@ -150,15 +155,14 @@
    which should be exported or imported in the resulting dynamic link
    library (DLL) in the Win32 port. */
 
-/*#if defined (SCM_IMPORT)
+#if defined (SCM_IMPORT)
 # define SCM_API __declspec (dllimport) extern
 #elif defined (SCM_EXPORT) || defined (DLL_EXPORT)
 # define SCM_API __declspec (dllexport) extern
 #else
 # define SCM_API extern
 #endif
-*/
-#define SCM_API
+
 
 
 /* {Debugging Options}
@@ -326,17 +330,10 @@
  * - ... add more
  */
 
-#ifdef CHAR_BIT
-# define SCM_CHAR_BIT CHAR_BIT
-#else
 # define SCM_CHAR_BIT 8
-#endif
-
-#ifdef LONG_BIT
-# define SCM_LONG_BIT LONG_BIT
-#else
 # define SCM_LONG_BIT (SCM_CHAR_BIT * sizeof (int64_t) / sizeof (char))
-#endif
+#define SCM_I_FIXNUM_BIT         (SCM_LONG_BIT - 2)
+
 
 #ifdef UCHAR_MAX
 # define SCM_CHAR_CODE_LIMIT (UCHAR_MAX + ((int64_t)1))
@@ -375,8 +372,6 @@
 #define SCM_I_SIZE_MAX    SCM_I_UTYPE_MAX(size_t)
 #define SCM_I_SSIZE_MIN   SCM_I_TYPE_MIN(ssize_t,SCM_I_SIZE_MAX)
 #define SCM_I_SSIZE_MAX   SCM_I_TYPE_MAX(ssize_t,SCM_I_SIZE_MAX)
-
-
 
 #include "libguile/tags.h"
 
@@ -424,8 +419,13 @@
    scm_i_jmp_buf to setjmp, longjmp and jmp_buf. */
 #ifndef SCM_I_SETJMP
 #define scm_i_jmp_buf jmp_buf
-#define SCM_I_SETJMP setjmp
-#define SCM_I_LONGJMP longjmp
+#if defined (__MINGW64__)
+#  define SCM_I_SETJMP __builtin_setjmp
+#  define SCM_I_LONGJMP __builtin_longjmp
+#else
+#  define SCM_I_SETJMP setjmp
+#  define SCM_I_LONGJMP longjmp
+#endif
 #endif
 
 /* James Clark came up with this neat one instruction fix for
@@ -453,8 +453,11 @@
 # define SHORT_ALIGN
 #endif
 
-typedef uintptr_t SCM_STACKITEM;
-
+#ifdef SHORT_ALIGN
+typedef short SCM_STACKITEM;
+#else
+typedef int64_t SCM_STACKITEM;
+#endif
 
 /* Cast pointer through (void *) in order to avoid compiler warnings
    when strict aliasing is enabled */

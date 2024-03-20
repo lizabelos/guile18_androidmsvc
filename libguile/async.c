@@ -11,13 +11,15 @@
  * Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public
- * License with this library; if not, write to the Free Software
+ * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
 
 
-#include <config.h>
+#ifdef HAVE_CONFIG_H
+#  include <config.h>
+#endif
 
 #include <signal.h>
 #include "libguile/_scm.h"
@@ -238,6 +240,7 @@ scm_i_queue_async_cell (SCM c, scm_i_thread *t)
 
   if (sleep_fd >= 0)
     {
+      size_t count; (void) count;
       char dummy = 0;
 
       /* Likewise, T might already been done with sleeping here, but
@@ -245,7 +248,7 @@ scm_i_queue_async_cell (SCM c, scm_i_thread *t)
 	 not yet have started sleeping, but this is no problem either
 	 since the data written to a pipe will not be lost, unlike a
 	 condition variable signal.  */
-      write (sleep_fd, &dummy, 1);
+      count = write (sleep_fd, &dummy, 1);
     }
 
   /* This is needed to protect sleep_mutex.

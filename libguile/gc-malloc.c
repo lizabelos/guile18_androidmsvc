@@ -11,13 +11,15 @@
  * Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public
- * License with this library; if not, write to the Free Software
+ * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
 
 
-#include <config.h>
+#ifdef HAVE_CONFIG_H
+#  include <config.h>
+#endif
 
 #include <stdio.h>
 #include <errno.h>
@@ -103,7 +105,6 @@ void *
 scm_realloc (void *mem, size_t size)
 {
   void *ptr;
-
   SCM_SYSCALL (ptr = realloc (mem, size));
   if (ptr)
     return ptr;
@@ -112,7 +113,7 @@ scm_realloc (void *mem, size_t size)
   scm_gc_running_p = 1;
 
   scm_i_sweep_all_segments ("realloc");
-  
+
   SCM_SYSCALL (ptr = realloc (mem, size));
   if (ptr)
     { 
@@ -126,7 +127,7 @@ scm_realloc (void *mem, size_t size)
   
   scm_gc_running_p = 0;
   scm_i_pthread_mutex_unlock (&scm_i_sweep_mutex);
-  
+
   SCM_SYSCALL (ptr = realloc (mem, size));
   if (ptr)
     return ptr;
@@ -181,7 +182,6 @@ scm_strdup (const char *str)
 static void
 decrease_mtrigger (size_t size, const char * what)
 {
-    (void) what; /* unused */
   scm_i_pthread_mutex_lock (&scm_i_gc_admin_mutex);
 
   if (size > scm_mallocated)
@@ -190,7 +190,7 @@ decrease_mtrigger (size_t size, const char * what)
 	       "memory was unregistered\n"
 	       "via `scm_gc_unregister_collectable_memory ()' than "
 	       "registered.\n");
-      call_error_callback();
+      scm_abort ();
     }
 
   scm_mallocated -= size;
@@ -205,7 +205,7 @@ increase_mtrigger (size_t size, const char *what)
   int overflow = 0, triggered = 0;
 
   scm_i_pthread_mutex_lock (&scm_i_gc_admin_mutex);
-  if (ULONG_MAX - size < scm_mallocated)
+  if (ULLONG_MAX - size < scm_mallocated)
     overflow = 1;
   else
     {
@@ -265,8 +265,8 @@ increase_mtrigger (size_t size, const char *what)
 	  no_overflow_trigger /= (float)  (100.0 - scm_i_minyield_malloc);
 
 	  
-	  if (no_overflow_trigger >= (float) ULONG_MAX)
-	    scm_mtrigger = ULONG_MAX;
+	  if (no_overflow_trigger >= (float) ULLONG_MAX)
+	    scm_mtrigger = ULLONG_MAX;
 	  else
 	    scm_mtrigger =  (uint64_t) no_overflow_trigger;
 	  
@@ -284,7 +284,6 @@ increase_mtrigger (size_t size, const char *what)
 void
 scm_gc_register_collectable_memory (void *mem, size_t size, const char *what)
 {
-    (void) mem; /* unused */
   increase_mtrigger (size, what); 
 #ifdef GUILE_DEBUG_MALLOC
   if (mem)
@@ -296,7 +295,6 @@ scm_gc_register_collectable_memory (void *mem, size_t size, const char *what)
 void
 scm_gc_unregister_collectable_memory (void *mem, size_t size, const char *what)
 {
-    (void) mem; /* unused */
   decrease_mtrigger (size, what);
 #ifdef GUILE_DEBUG_MALLOC
   if (mem)
@@ -463,7 +461,7 @@ scm_must_free (void *obj)
   else
     {
       fprintf (stderr,"freeing NULL pointer");
-      call_error_callback();
+      scm_abort ();
     }
 }
 #undef FUNC_NAME

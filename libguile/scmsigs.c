@@ -11,14 +11,16 @@
  * Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public
- * License with this library; if not, write to the Free Software
+ * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
 
 
 
-#include <config.h>
+#ifdef HAVE_CONFIG_H
+#  include <config.h>
+#endif
 
 #include <fcntl.h>      /* for mingw */
 #include <signal.h>
@@ -64,11 +66,14 @@
 
 /* SIGRETTYPE is the type that signal handlers return.  See <signal.h> */
 
-
-#define SIGRETTYPE void
-
-#if defined(_MSC_VER)
-#include <windows.h>
+#ifdef RETSIGTYPE
+# define SIGRETTYPE RETSIGTYPE
+#else
+# ifdef STDC_HEADERS
+#  define SIGRETTYPE void
+# else
+#  define SIGRETTYPE int
+# endif
 #endif
 
 
@@ -132,7 +137,7 @@ static int signal_pipe[2];
 static SIGRETTYPE
 take_signal (int signum)
 {
-  size_t count;
+  size_t count; (void) count;
   char sigbyte = signum;
 
   count = write (signal_pipe[1], &sigbyte, 1);
@@ -286,7 +291,6 @@ SCM_DEFINE (scm_sigaction_for_thread, "sigaction", 1, 3, 0,
 	    "structures.")
 #define FUNC_NAME s_scm_sigaction_for_thread
 {
-    (void)flags;
   int csig;
 #ifdef HAVE_SIGACTION
   struct sigaction action;
@@ -332,20 +336,13 @@ SCM_DEFINE (scm_sigaction_for_thread, "sigaction", 1, 3, 0,
   else if (scm_is_integer (handler))
     {
       int64_t handler_int = scm_to_int64 (handler);
-#if USE_64IMPL
+
       if (handler_int == (int64_t) SIG_DFL || handler_int == (int64_t) SIG_IGN)
-#else      
-      if (handler_int == (int64_t) SIG_DFL || handler_int == (int64_t) SIG_IGN)
-#endif      
 	{
 #ifdef HAVE_SIGACTION
 	  action.sa_handler = (SIGRETTYPE (*) (int)) handler_int;
 #else
-#if USE_64IMPL
-	  chandler = (SIGRETTYPE (*) (int))(int64_t) handler_int;
-#else    
 	  chandler = (SIGRETTYPE (*) (int)) handler_int;
-#endif    
 #endif
 	  install_handler (csig, SCM_BOOL_F, SCM_BOOL_F, async);
 	}
@@ -456,11 +453,7 @@ SCM_DEFINE (scm_sigaction_for_thread, "sigaction", 1, 3, 0,
 	orig_handlers[csig] = old_chandler;
     }
   if (old_chandler == SIG_DFL || old_chandler == SIG_IGN)
-#if USE_64IMPL
     old_handler = scm_from_int64 ((int64_t) old_chandler);
-#else    
-    old_handler = scm_from_int64 ((int64_t) old_chandler);
-#endif    
   SCM_CRITICAL_SECTION_END;
   return scm_cons (old_handler, scm_from_int (0));
 #endif
@@ -498,7 +491,6 @@ SCM_DEFINE (scm_restore_signals, "restore-signals", 0, 0, 0,
 }
 #undef FUNC_NAME
 
-#if 0
 SCM_DEFINE (scm_alarm, "alarm", 1, 0, 0,
            (SCM i),
 	    "Set a timer to raise a @code{SIGALRM} signal after the specified\n"
@@ -514,7 +506,6 @@ SCM_DEFINE (scm_alarm, "alarm", 1, 0, 0,
   return scm_from_uint (alarm (scm_to_uint (i)));
 }
 #undef FUNC_NAME
-#endif
 
 #ifdef HAVE_SETITIMER
 SCM_DEFINE (scm_setitimer, "setitimer", 5, 0, 0,
@@ -622,15 +613,7 @@ SCM_DEFINE (scm_sleep, "sleep", 1, 0, 0,
 	    "See also @code{usleep}.")
 #define FUNC_NAME s_scm_sleep
 {
-// Sleep for the given number of seconds. Must be compatible with MSVC and Linux.
-// Returns the number of seconds remaining.
-#if defined(_MSC_VER)
-    Sleep(scm_to_uint(i) * 1000);
-    return scm_from_uint(0);
-#else
-    return scm_from_uint(sleep(scm_to_uint(i)));
-#endif
-  //return scm_from_uint (scm_std_sleep (scm_to_uint (i)));
+  return scm_from_uint (scm_std_sleep (scm_to_uint (i)));
 }
 #undef FUNC_NAME
 
@@ -649,15 +632,7 @@ SCM_DEFINE (scm_usleep, "usleep", 1, 0, 0,
 	    "See also @code{sleep}.")
 #define FUNC_NAME s_scm_usleep
 {
-// Sleep for the given number of microseconds. Must be compatible with MSVC and Linux.
-// Returns the number of microseconds remaining.
-#if defined(_MSC_VER)
-    Sleep(scm_to_uint(i) / 1000);
-    return scm_from_uint(0);
-#else
-    return scm_from_uint(usleep(scm_to_uint(i)));
-#endif
-//  return scm_from_uint64 (scm_std_usleep (scm_to_uint64 (i)));
+  return scm_from_uint64 (scm_std_usleep (scm_to_ulong (i)));
 }
 #undef FUNC_NAME
 
@@ -699,13 +674,8 @@ scm_init_scmsigs ()
     }
 
   scm_c_define ("NSIG", scm_from_int64 (NSIG));
-#if USE_64IMPL
   scm_c_define ("SIG_IGN", scm_from_int64 ((int64_t) SIG_IGN));
   scm_c_define ("SIG_DFL", scm_from_int64 ((int64_t) SIG_DFL));
-#else  
-  scm_c_define ("SIG_IGN", scm_from_int64 ((int64_t) SIG_IGN));
-  scm_c_define ("SIG_DFL", scm_from_int64 ((int64_t) SIG_DFL));
-#endif
 #ifdef SA_NOCLDSTOP
   scm_c_define ("SA_NOCLDSTOP", scm_from_int64 (SA_NOCLDSTOP));
 #endif

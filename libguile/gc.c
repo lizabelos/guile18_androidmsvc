@@ -11,13 +11,15 @@
  * Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public
- * License with this library; if not, write to the Free Software
+ * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
 /* #define DEBUGINFO */
 
-#include <config.h>
+#ifdef HAVE_CONFIG_H
+#  include <config.h>
+#endif
 
 #include <stdio.h>
 #include <errno.h>
@@ -39,7 +41,6 @@
 #include "libguile/weaks.h"
 #include "libguile/hashtab.h"
 #include "libguile/tags.h"
-#include "libguile/gc.h"
 
 #include "libguile/private-gc.h"
 #include "libguile/validate.h"
@@ -100,7 +101,7 @@ scm_i_expensive_validation_check (SCM cell)
     {
       fprintf (stderr, "scm_assert_cell_valid: this object does not live in the heap: %lux\n",
 	       (uint64_t) SCM_UNPACK (cell));
-      call_error_callback();
+      scm_abort ();
     }
 
   /* If desired, perform additional garbage collections after a user
@@ -150,7 +151,7 @@ scm_assert_cell_valid (SCM cell)
 		   "It has been garbage-collected in the last GC run: "
 		   "%lux\n",
                    (uint64_t) SCM_UNPACK (cell));
-	  call_error_callback();
+	  scm_abort ();
 	}
 
       scm_i_cell_validation_already_running = 0;  /* re-enable */
@@ -252,7 +253,6 @@ unsigned scm_newcell2_count;
 static SCM
 tag_table_to_type_alist (void *closure, SCM key, SCM val, SCM acc)
 {
-    (void) closure;  /* unused */
   if (scm_is_integer (key))
     {
       int c_tag = scm_to_int (key);
@@ -321,9 +321,9 @@ SCM_DEFINE (scm_gc_stats, "gc-stats", 0, 0, 0,
     temporarily store the numbers, so as not to cause GC.
    */
  
-  bounds = malloc (sizeof (uint64_t)  * table_size * 2);
+  bounds = malloc (sizeof (uint64_t) * table_size * 2);
   if (!bounds)
-    call_error_callback();
+    scm_abort();
   for (i = table_size; i--; )
     {
       bounds[2*i] = (uint64_t)scm_i_heap_segment_table[i]->bounds[0];
@@ -386,9 +386,9 @@ SCM_DEFINE (scm_gc_stats, "gc-stats", 0, 0, 0,
 		scm_cons (sym_cells_swept,
 			  scm_from_double (local_scm_gc_cells_swept)),
 		scm_cons (sym_malloc_yield,
-			  scm_from_int64(local_scm_gc_malloc_yield_percentage)),
+              scm_from_int64(local_scm_gc_malloc_yield_percentage)),
 		scm_cons (sym_cell_yield,
-			  scm_from_int64 (local_scm_gc_cell_yield_percentage)),
+              scm_from_int64 (local_scm_gc_cell_yield_percentage)),
 		scm_cons (sym_protected_objects,
 			  scm_from_uint64 (local_protected_obj_count)),
 		scm_cons (sym_heap_segments, heap_segs),
@@ -493,22 +493,22 @@ scm_gc_for_newcell (scm_t_cell_type_statistics *freelist, SCM *free_cells)
 
   if (*free_cells == SCM_EOL)
     {
-
-	//with the advent of lazy sweep, GC yield is only known just
-    //	before doing the GC.
-
+      /*
+	with the advent of lazy sweep, GC yield is only known just
+	before doing the GC.
+      */
       scm_i_adjust_min_yield (freelist);
 
-
-	//out of fresh cells. Try to get some new ones.
-
+      /*
+	out of fresh cells. Try to get some new ones.
+       */
 
       did_gc = 1;
       scm_i_gc ("cells");
 
       *free_cells = scm_i_sweep_some_segments (freelist);
     }
-
+  
   if (*free_cells == SCM_EOL)
     {
       /*
@@ -519,7 +519,7 @@ scm_gc_for_newcell (scm_t_cell_type_statistics *freelist, SCM *free_cells)
     }
   
   if (*free_cells == SCM_EOL)
-    call_error_callback();
+    scm_abort ();
 
   cell = *free_cells;
 
@@ -585,7 +585,7 @@ scm_i_gc (const char *what)
 	       "scm_gc_sweep: Byte count of allocated objects has underflowed.\n"
 	       "This is probably because the GC hasn't been correctly informed\n"
 	       "about object sizes\n");
-      call_error_callback();
+      scm_abort ();
     }
   scm_mallocated -= scm_i_deprecated_memory_return;
 
@@ -777,7 +777,7 @@ scm_gc_unprotect_object (SCM obj)
   if (scm_gc_running_p)
     {
       fprintf (stderr, "scm_unprotect_object called during GC.\n");
-      call_error_callback();
+      scm_abort ();
     }
  
   handle = scm_hashq_get_handle (scm_protects, obj);
@@ -785,7 +785,7 @@ scm_gc_unprotect_object (SCM obj)
   if (scm_is_false (handle))
     {
       fprintf (stderr, "scm_unprotect_object called on unprotected object\n");
-      call_error_callback();
+      scm_abort ();
     }
   else
     {
@@ -806,11 +806,8 @@ void
 scm_gc_register_root (SCM *p)
 {
   SCM handle;
-#if USE_64IMPL
   SCM key = scm_from_uint64 ((uint64_t) p);
-#else
-  SCM key = scm_from_uint64 ((uint64_t) p);
-#endif
+
   /* This critical section barrier will be replaced by a mutex. */
   /* njrev: and again. */
   SCM_CRITICAL_SECTION_START;
@@ -827,11 +824,7 @@ void
 scm_gc_unregister_root (SCM *p)
 {
   SCM handle;
-#if USE_64IMPL
   SCM key = scm_from_uint64 ((uint64_t) p);
-#else
-  SCM key = scm_from_uint64 ((uint64_t) p);
-#endif
 
   /* This critical section barrier will be replaced by a mutex. */
   /* njrev: and again. */
@@ -842,7 +835,7 @@ scm_gc_unregister_root (SCM *p)
   if (scm_is_false (handle))
     {
       fprintf (stderr, "scm_gc_unregister_root called on unregistered root\n");
-      call_error_callback();
+      scm_abort ();
     }
   else
     {
@@ -1042,7 +1035,7 @@ scm_ia64_register_backing_store_base (void)
   while (pstat_getprocvm (&vm_status, sizeof (vm_status), 0, i++) == 1)
     if (vm_status.pst_type == PS_RSESTACK)
       return (void *) vm_status.pst_vaddr;
-  call_error_callback();
+  scm_abort ();
 }
 void *
 scm_ia64_ar_bsp (const void *ctx)

@@ -16,7 +16,7 @@
  * Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public
- * License with this library; if not, write to the Free Software
+ * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
@@ -25,14 +25,13 @@
 #include "libguile/__scm.h"
 
 #include "weaks.h"
-#include "hash.h"
 
 
 
 #define SCM_HASHTABLEF_WEAK_CAR SCM_WVECTF_WEAK_KEY
 #define SCM_HASHTABLEF_WEAK_CDR SCM_WVECTF_WEAK_VALUE
 
-extern scm_t_bits scm_tc16_hashtable;
+SCM_API scm_t_bits scm_tc16_hashtable;
 
 #define SCM_HASHTABLE_P(x)	   SCM_SMOB_PREDICATE (scm_tc16_hashtable, x)
 #define SCM_VALIDATE_HASHTABLE(pos, arg) \
@@ -69,12 +68,12 @@ extern scm_t_bits scm_tc16_hashtable;
 
 typedef struct scm_t_hashtable {
   int flags;			/* properties of table */
-  uint64_t n_items;	/* number of items in table */
-  uint64_t lower;		/* when to shrink */
-  uint64_t upper;		/* when to grow */
+  uint64_t n_items;	                /* number of items in table */
+  uint64_t lower;		        /* when to shrink */
+  uint64_t upper;		        /* when to grow */
   int size_index;		/* index into hashtable_size */
   int min_size_index;		/* minimum size_index */
-  uint64_t (*hash_fn) ();  /* for rehashing after a GC. */
+  uint64_t (*hash_fn) (SCM, uint64_t, void*);  /* for rehashing after a GC. */
 } scm_t_hashtable;
 
 
@@ -97,16 +96,32 @@ SCM_API SCM scm_weak_key_hash_table_p (SCM h);
 SCM_API SCM scm_weak_value_hash_table_p (SCM h);
 SCM_API SCM scm_doubly_weak_hash_table_p (SCM h);
 
-SCM_API void scm_i_rehash (SCM table, scm_t_hash_fn hash_fn, void *closure, const char*func_name);
+SCM_API void scm_i_rehash (SCM table,
+                           uint64_t (*hash_fn) (SCM, uint64_t, void*),
+                           void *closure, const char*func_name);
 SCM_API void scm_i_scan_weak_hashtables (void);
 
-SCM_API SCM scm_hash_fn_get_handle (SCM table, SCM obj, scm_t_hash_fn hash_fn, scm_t_assoc_fn assoc_fn, void * closure);
-SCM_API SCM scm_hash_fn_create_handle_x (SCM table, SCM obj, SCM init, scm_t_hash_fn hash_fn, scm_t_assoc_fn assoc_fn, void * closure);
-SCM_API SCM scm_hash_fn_ref (SCM table, SCM obj, SCM dflt, scm_t_hash_fn hash_fn, scm_t_assoc_fn assoc_fn, void * closure);
-SCM_API SCM scm_hash_fn_set_x (SCM table, SCM obj, SCM val, scm_t_hash_fn hash_fn, scm_t_assoc_fn assoc_fn, void * closure);
-SCM_API SCM scm_hash_fn_remove_x (SCM table, SCM obj, scm_t_hash_fn hash_fn, scm_t_assoc_fn assoc_fn, void * closure);
-SCM_API SCM scm_internal_hash_fold (SCM (*fn) (void *, SCM, SCM, SCM), void *closure, SCM init, SCM table);
-SCM_API void scm_internal_hash_for_each_handle (SCM (*fn) (void *, SCM), void *closure, SCM table);
+SCM_API SCM scm_hash_fn_get_handle (SCM table, SCM obj,
+                                    uint64_t (*hash_fn) (SCM, uint64_t, void*),
+                                    SCM (*assoc_fn) (SCM, SCM, void*), void * closure);
+SCM_API SCM scm_hash_fn_create_handle_x (SCM table, SCM obj, SCM init,
+                                         uint64_t (*hash_fn) (SCM, uint64_t, void*),
+                                         SCM (*assoc_fn) (SCM, SCM, void*), void * closure);
+SCM_API SCM scm_hash_fn_ref (SCM table, SCM obj, SCM dflt,
+                             uint64_t (*hash_fn) (SCM, uint64_t, void*),
+                             SCM (*assoc_fn) (SCM, SCM, void*),
+                             void * closure);
+SCM_API SCM scm_hash_fn_set_x (SCM table, SCM obj, SCM val,
+                               uint64_t (*hash_fn) (SCM, uint64_t, void*),
+                               SCM (*assoc_fn) (SCM, SCM, void*),
+                               void * closure);
+SCM_API SCM scm_hash_fn_remove_x (SCM table, SCM obj,
+                                  uint64_t (*hash_fn) (SCM, uint64_t, void*),
+                                  SCM (*assoc_fn) (SCM, SCM, void*), void * closure);
+SCM_API SCM scm_internal_hash_fold (SCM (*fn) (void*, SCM, SCM, SCM),
+				    void *closure, SCM init, SCM table);
+SCM_API void scm_internal_hash_for_each_handle (SCM (*fn) (void*, SCM),
+						void *closure, SCM table);
 SCM_API SCM scm_hash_clear_x (SCM table);
 
 SCM_API SCM scm_hashq_get_handle (SCM table, SCM obj);
@@ -135,8 +150,6 @@ SCM_API SCM scm_hash_for_each_handle (SCM proc, SCM hash);
 SCM_API SCM scm_hash_map_to_list (SCM proc, SCM hash);
 SCM_API void scm_hashtab_prehistory (void);
 SCM_API void scm_init_hashtab (void);
-
-SCM hashmap_assoc_fn_assq(SCM obj, SCM d, scm_t_ihashx_closure *closure);
 
 #endif  /* SCM_HASHTAB_H */
 

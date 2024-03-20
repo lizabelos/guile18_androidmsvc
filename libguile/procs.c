@@ -11,13 +11,17 @@
  * Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public
- * License with this library; if not, write to the Free Software
+ * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
 
 
-#include <config.h>
+#ifdef HAVE_CONFIG_H
+# include <config.h>
+#endif
+
+#include <assert.h>
 
 #include "libguile/_scm.h"
 
@@ -29,6 +33,7 @@
 
 #include "libguile/validate.h"
 #include "libguile/procs.h"
+
 
 
 
@@ -93,8 +98,8 @@ scm_free_subr_entry (SCM subr)
 }
 
 SCM
-scm_c_make_subr_with_generic (const char *name, 
-			      int64_t type, SCM (*fcn) (), SCM *gf)
+scm_c_make_subr_with_generic (const char *name,
+                              int64_t type, SCM (*fcn) (), SCM *gf)
 {
   SCM subr = scm_c_make_subr (name, type, fcn);
   SCM_SUBR_ENTRY(subr).generic = gf;
@@ -102,8 +107,8 @@ scm_c_make_subr_with_generic (const char *name,
 }
 
 SCM
-scm_c_define_subr_with_generic (const char *name, 
-				int64_t type, SCM (*fcn) (), SCM *gf)
+scm_c_define_subr_with_generic (const char *name,
+                                int64_t type, SCM (*fcn) (), SCM *gf)
 {
   SCM subr = scm_c_make_subr_with_generic (name, type, fcn, gf);
   scm_define (SCM_SUBR_ENTRY(subr).name, subr);
@@ -373,11 +378,11 @@ typedef struct scm_self_list {
 scm_self_list  *guile_self_list = NULL;
 
 SCM_fun SCM_SUBRF(SCM x) {
-    scm_self_list *new_self = (scm_self_list *) malloc(sizeof(scm_self_list));
-    new_self->self = x;
-    new_self->next = guile_self_list;
-    guile_self_list = new_self;
-    return (SCM(*)()) SCM_CELL_WORD_1 (x);
+scm_self_list *new_self = (scm_self_list *) malloc(sizeof(scm_self_list));
+new_self->self = x;
+new_self->next = guile_self_list;
+guile_self_list = new_self;
+return (SCM(*)()) SCM_CELL_WORD_1 (x);
 }
 
 void scm_append_self(SCM x) {

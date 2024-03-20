@@ -13,11 +13,13 @@
  * Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public
- * License with this library; if not, write to the Free Software
+ * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include <config.h>
+#ifdef HAVE_CONFIG_H
+#  include <config.h>
+#endif
 
 #include <string.h>
 #include <errno.h>
@@ -147,7 +149,7 @@ uvec_print (SCM uvec, SCM port, scm_print_state *pstate)
     case SCM_UVEC_C32: np.f32 = (float *) uptr; break;
     case SCM_UVEC_C64: np.f64 = (double *) uptr; break;
     default:
-      call_error_callback();			/* Sanity check.  */
+      scm_abort ();			/* Sanity check.  */
       break;
   }
 
@@ -179,7 +181,7 @@ uvec_print (SCM uvec, SCM port, scm_print_state *pstate)
 	  np.f64 += 2;
 	  break;
 	default:
-	  call_error_callback();			/* Sanity check.  */
+	  scm_abort ();			/* Sanity check.  */
 	  break;
 	}
       i++;
@@ -394,7 +396,7 @@ uvec_to_list (int type, SCM uvec)
   scm_t_array_handle handle;
   size_t len;
   ssize_t i, inc;
-  const void *elts;
+  const void *elts; (void) elts;
   SCM res = SCM_EOL;
 
   elts = uvec_elements (type, uvec, &handle, &len, &inc);
@@ -496,7 +498,6 @@ coerce_to_uvec (int type, SCM obj)
     }
   else
     scm_wrong_type_arg_msg (NULL, 0, obj, "list or generalized vector");
-  return SCM_UNSPECIFIED;
 }
 
 SCM_SYMBOL (scm_sym_a, "a");
@@ -655,7 +656,6 @@ scm_array_handle_uniform_element_size (scm_t_array_handle *h)
   if (scm_is_uniform_vector (vec))
     return uvec_sizes[SCM_UVEC_TYPE(vec)];
   scm_wrong_type_arg_msg (NULL, 0, h->array, "uniform array");
-  return 0;
 }
 
 #if SCM_ENABLE_DEPRECATED
@@ -696,7 +696,6 @@ scm_array_handle_uniform_writable_elements (scm_t_array_handle *h)
       return (void *) (elts + size*h->base);
     }
   scm_wrong_type_arg_msg (NULL, 0, h->array, "uniform array");
-  return NULL;
 }
 
 const void *

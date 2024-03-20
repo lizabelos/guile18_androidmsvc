@@ -11,7 +11,7 @@
  * Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public
- * License with this library; if not, write to the Free Software
+ * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
@@ -113,6 +113,7 @@ SCM_API short *gh_scm2shorts(SCM vector, short *result);
 SCM_API int64_t *gh_scm2longs(SCM vector, int64_t *result);
 SCM_API float *gh_scm2floats(SCM vector, float *result);
 SCM_API double *gh_scm2doubles(SCM vector, double *result);
+
 
 /* type predicates: tell you if an SCM object has a given type */
 SCM_API int gh_boolean_p(SCM val);

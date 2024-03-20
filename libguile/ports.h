@@ -16,7 +16,7 @@
  * Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public
- * License with this library; if not, write to the Free Software
+ * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
@@ -109,9 +109,9 @@ typedef struct
   size_t putback_buf_size;        /* allocated size of putback_buf.  */
 } scm_t_port;
 
-extern scm_t_port **scm_i_port_table;
-extern int64_t scm_i_port_table_size; /* Number of ports in scm_i_port_table.  */
-extern scm_i_pthread_mutex_t scm_i_port_table_mutex;
+SCM_API scm_t_port **scm_i_port_table;
+SCM_API int64_t scm_i_port_table_size; /* Number of ports in scm_i_port_table.  */
+SCM_API scm_i_pthread_mutex_t scm_i_port_table_mutex;
 
 #define SCM_READ_BUFFER_EMPTY_P(c_port) (c_port->read_pos >= c_port->read_end)
 
@@ -124,11 +124,11 @@ extern scm_i_pthread_mutex_t scm_i_port_table_mutex;
  * Note that we reserve the bits 1 << 24 and above for use by the
  * routines in the port's scm_ptobfuns structure.
  */
-#define SCM_OPN		(((int64_t)1)<<16) /* Is the port open? */
-#define SCM_RDNG	(((int64_t)2)<<16) /* Is it a readable port? */
-#define SCM_WRTNG	(((int64_t)4)<<16) /* Is it writable? */
-#define SCM_BUF0	(((int64_t)8)<<16) /* Is it unbuffered? */
-#define SCM_BUFLINE     (((int64_t)64)<<16) /* Is it line-buffered? */
+#define SCM_OPN		(((int64_t) 1L)<<16) /* Is the port open? */
+#define SCM_RDNG	(((int64_t) 2L)<<16) /* Is it a readable port? */
+#define SCM_WRTNG	(((int64_t) 4L)<<16) /* Is it writable? */
+#define SCM_BUF0	(((int64_t) 8L)<<16) /* Is it unbuffered? */
+#define SCM_BUFLINE     (((int64_t) 64L)<<16) /* Is it line-buffered? */
 
 #define SCM_PORTP(x) (!SCM_IMP (x) && (SCM_TYP7 (x) == scm_tc7_port))
 #define SCM_OPPORTP(x) (!SCM_IMP(x) && (((0x7f | SCM_OPN) & SCM_CELL_WORD_0(x))==(scm_tc7_port | SCM_OPN)))

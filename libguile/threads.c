@@ -11,13 +11,15 @@
  * Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public
- * License with this library; if not, write to the Free Software
+ * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
 
 
-#include <config.h>
+#ifdef HAVE_CONFIG_H
+# include <config.h>
+#endif
 
 #include "libguile/_scm.h"
 
@@ -140,8 +142,8 @@ thread_mark (SCM obj)
 static int
 thread_print (SCM exp, SCM port, scm_print_state *pstate SCM_UNUSED)
 {
-  /* On a Gnu system pthread_t is an uint64_t, but on mingw it's a
-     struct.  A cast like "(uint64_t) t->pthread" is a syntax error in
+  /* On a Gnu system pthread_t is an unsigned long, but on mingw it's a
+     struct.  A cast like "(unsigned long) t->pthread" is a syntax error in
      the struct case, hence we go via a union, and extract according to the
      size of pthread_t.  */
   union {
@@ -176,7 +178,7 @@ static size_t
 thread_free (SCM obj)
 {
   scm_i_thread *t = SCM_I_THREAD_DATA (obj);
-  //assert (t->exited);
+  assert (t->exited);
   scm_gc_free (t, sizeof (*t), "thread");
   return 0;
 }
@@ -446,8 +448,11 @@ guilify_self_1 (SCM_STACKITEM *base)
   t->sleep_object = SCM_BOOL_F;
   t->sleep_fd = -1;
 
-  //if (pipe (t->sleep_pipe) != 0)
-  //  call_error_callback();
+  if (pipe (t->sleep_pipe) != 0)
+    /* FIXME: Error conditions during the initialization phase are handled
+       gracelessly since public functions such as `scm_init_guile ()'
+       currently have type `void'.  */
+    scm_abort ();
 
   scm_i_pthread_mutex_init (&t->heap_mutex, NULL);
   t->clear_freelists_p = 0;
@@ -507,8 +512,8 @@ do_thread_exit (void *v)
   scm_i_scm_pthread_mutex_lock (&thread_admin_mutex);
 
   t->exited = 1;
-  //close (t->sleep_pipe[0]);
-  //close (t->sleep_pipe[1]);
+  close (t->sleep_pipe[0]);
+  close (t->sleep_pipe[1]);
   while (scm_is_true (unblock_from_queue (t->join_queue)))
     ;
 
@@ -582,14 +587,11 @@ int stack_direction(int *a)
     }
 }
 
+
 static int
 scm_i_init_thread_for_guile (SCM_STACKITEM *base, SCM parent)
 {
-
-    {
-        SCM_STACK_GROWS_UP = stack_direction(NULL);
-    }
-
+  SCM_STACK_GROWS_UP = stack_direction(NULL);
   scm_i_thread *t;
 
   scm_i_pthread_once (&init_thread_key_once, init_thread_key);
@@ -628,13 +630,13 @@ scm_i_init_thread_for_guile (SCM_STACKITEM *base, SCM parent)
          happen from anywhere on the stack, and in particular lower on the
          stack than when it was when this thread was first guilified.  Thus,
          `base' must be updated.  */
-if (SCM_STACK_GROWS_UP) {
-    if (base < t->base)
-        t->base = base;
-} else {
-    if (base > t->base)
-        t->base = base;
-}
+#if SCM_STACK_GROWS_UP
+      if (base < t->base)
+         t->base = base;
+#else
+      if (base > t->base)
+         t->base = base;
+#endif
 
       scm_enter_guile ((scm_t_guile_ticket) t);
       return 1;
@@ -647,12 +649,91 @@ if (SCM_STACK_GROWS_UP) {
     }
 }
 
-void
-scm_init_guile (SCM_STACKITEM *base, size_t stack_size)
+#if SCM_USE_PTHREAD_THREADS
+
+#if HAVE_PTHREAD_ATTR_GETSTACK && HAVE_PTHREAD_GETATTR_NP
+/* This method for GNU/Linux and perhaps some other systems.
+   It's not for MacOS X or Solaris 10, since pthread_getattr_np is not
+   available on them.  */
+#define HAVE_GET_THREAD_STACK_BASE
+
+static SCM_STACKITEM *
+get_thread_stack_base ()
 {
-    SCM_STACK_LIMIT = stack_size;
-  scm_i_init_thread_for_guile (base, scm_i_default_dynamic_state);
+  pthread_attr_t attr;
+  void *start, *end;
+  size_t size;
+
+  pthread_getattr_np (pthread_self (), &attr);
+  pthread_attr_getstack (&attr, &start, &size);
+  end = (char *)start + size;
+
+  /* XXX - pthread_getattr_np from LinuxThreads does not seem to work
+     for the main thread, but we can use scm_get_stack_base in that
+     case.
+  */
+
+#ifndef PTHREAD_ATTR_GETSTACK_WORKS
+  if ((void *)&attr < start || (void *)&attr >= end)
+    return scm_get_stack_base ();
+  else
+#endif
+    {
+#if SCM_STACK_GROWS_UP
+      return start;
+#else
+      return end;
+#endif
+    }
 }
+
+#elif HAVE_PTHREAD_GET_STACKADDR_NP
+/* This method for MacOS X.
+   It'd be nice if there was some documentation on pthread_get_stackaddr_np,
+   but as of 2006 there's nothing obvious at apple.com.  */
+#define HAVE_GET_THREAD_STACK_BASE
+static SCM_STACKITEM *
+get_thread_stack_base ()
+{
+  return pthread_get_stackaddr_np (pthread_self ());
+}
+
+#elif defined (__MINGW32__)
+/* This method for mingw.  In mingw the basic scm_get_stack_base can be used
+   in any thread.  We don't like hard-coding the name of a system, but there
+   doesn't seem to be a cleaner way of knowing scm_get_stack_base can
+   work.  */
+#define HAVE_GET_THREAD_STACK_BASE
+static SCM_STACKITEM *
+get_thread_stack_base ()
+{
+  return scm_get_stack_base ();
+}
+
+#endif /* pthread methods of get_thread_stack_base */
+
+#else /* !SCM_USE_PTHREAD_THREADS */
+
+#define HAVE_GET_THREAD_STACK_BASE
+
+static SCM_STACKITEM *
+get_thread_stack_base ()
+{
+  return scm_get_stack_base ();
+}
+
+#endif /* !SCM_USE_PTHREAD_THREADS */
+
+#ifdef HAVE_GET_THREAD_STACK_BASE
+
+void
+scm_init_guile ()
+{
+  scm_i_init_thread_for_guile (get_thread_stack_base (),
+			       scm_i_default_dynamic_state);
+}
+
+#endif
 
 void *
 scm_with_guile (void *(*func)(void *), void *data)
@@ -1343,21 +1424,75 @@ scm_threads_mark_stacks (void)
 
       scm_gc_mark (t->handle);
 
-      int test = stack_direction(NULL);
-
-        if (SCM_STACK_GROWS_UP) {
-            scm_mark_locations(t->base, t->top - t->base);
-        }
-        else {
-            scm_mark_locations(t->top, t->base - t->top);
-        }
-
-        scm_mark_locations ((void *) &t->regs,
-                            ((size_t) sizeof(t->regs)
-                             / sizeof (SCM_STACKITEM)));
+#if SCM_STACK_GROWS_UP
+      scm_mark_locations (t->base, t->top - t->base);
+#else
+      scm_mark_locations (t->top, t->base - t->top);
+#endif
+      scm_mark_locations ((void *) &t->regs,
+			  ((size_t) sizeof(t->regs)
+			   / sizeof (SCM_STACKITEM)));
     }
 
   SCM_MARK_BACKING_STORE ();
+}
+
+/*** Select */
+
+int
+scm_std_select (int nfds,
+		SELECT_TYPE *readfds,
+		SELECT_TYPE *writefds,
+		SELECT_TYPE *exceptfds,
+		struct timeval *timeout)
+{
+#if HAVE_UNISTD_H && HAVE_SYS_SELECT_H
+    fd_set my_readfds;
+  int res, eno, wakeup_fd;
+  scm_i_thread *t = SCM_I_CURRENT_THREAD;
+  scm_t_guile_ticket ticket;
+
+  if (readfds == NULL)
+    {
+      FD_ZERO (&my_readfds);
+      readfds = &my_readfds;
+    }
+
+  while (scm_i_setup_sleep (t, SCM_BOOL_F, NULL, t->sleep_pipe[1]))
+    SCM_TICK;
+
+  wakeup_fd = t->sleep_pipe[0];
+  ticket = scm_leave_guile ();
+  FD_SET (wakeup_fd, readfds);
+  if (wakeup_fd >= nfds)
+    nfds = wakeup_fd+1;
+  res = select (nfds, readfds, writefds, exceptfds, timeout);
+  t->sleep_fd = -1;
+  eno = errno;
+  scm_enter_guile (ticket);
+
+  scm_i_reset_sleep (t);
+
+  if (res > 0 && FD_ISSET (wakeup_fd, readfds))
+    {
+      char dummy;
+      size_t count; (void) count;
+
+      count = read (wakeup_fd, &dummy, 1);
+
+      FD_CLR (wakeup_fd, readfds);
+      res -= 1;
+      if (res == 0)
+	{
+	  eno = EINTR;
+	  res = -1;
+	}
+    }
+  errno = eno;
+  return res;
+#else
+  return -1;
+#endif
 }
 
 /* Convenience API for blocking while in guile mode. */
@@ -1407,6 +1542,26 @@ scm_pthread_cond_timedwait (scm_i_pthread_cond_t *cond,
 }
 
 #endif
+
+uint64_t
+scm_std_usleep (uint64_t usecs)
+{
+  struct timeval tv;
+  tv.tv_usec = usecs % 1000000;
+  tv.tv_sec = usecs / 1000000;
+  scm_std_select (0, NULL, NULL, NULL, &tv);
+  return tv.tv_sec * 1000000 + tv.tv_usec;
+}
+
+unsigned int
+scm_std_sleep (unsigned int secs)
+{
+  struct timeval tv;
+  tv.tv_usec = 0;
+  tv.tv_sec = secs;
+  scm_std_select (0, NULL, NULL, NULL, &tv);
+  return tv.tv_sec;
+}
 
 /*** Misc */
 

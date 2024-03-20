@@ -11,7 +11,7 @@
  * Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public
- * License with this library; if not, write to the Free Software
+ * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
@@ -26,7 +26,11 @@
    libraries which do not agree with the Spencer implementation may
    produce varying behavior.  Sigh. */
 
-#include <config.h>
+#ifdef HAVE_CONFIG_H
+#  include <config.h>
+#endif
+
+#if HAVE_REGEX_H
 
 #include <sys/types.h>
 
@@ -36,6 +40,7 @@
    POSIX regular expressions.  But we still put this in an #ifdef so
    the file is CPP'able (for dependency scanning) even on systems that
    don't have a <regex.h> header.  */
+#ifdef HAVE_REGCOMP
 #ifdef HAVE_REGEX_H
 #include <regex.h>
 #else
@@ -47,7 +52,7 @@
 #endif
 #endif
 #endif
-
+#endif
 
 #include "libguile/async.h"
 #include "libguile/smob.h"
@@ -312,4 +317,4 @@ scm_init_regex_posix ()
   c-file-style: "gnu"
   End:
 */
-
+#endif  /* HAVE_REGEX_H */

@@ -11,13 +11,15 @@
  * Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public
- * License with this library; if not, write to the Free Software
+ * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
 
 
-#include <config.h>
+#ifdef HAVE_CONFIG_H
+#  include <config.h>
+#endif
 
 #include <stdio.h>
 #include <errno.h>
@@ -130,13 +132,13 @@ scm_smob_print (SCM exp, SCM port, scm_print_state *pstate SCM_UNUSED)
  */
 
 #define SCM_SMOB_APPLY0(SMOB) \
-  SCM_SMOB_DESCRIPTOR (SMOB).apply (SMOB)
+  ((SCM (*) (SCM)) (SCM_SMOB_DESCRIPTOR (SMOB).apply)) (SMOB)
 #define SCM_SMOB_APPLY1(SMOB, A1) \
-  ((SCM (*) (SCM, SCM))SCM_SMOB_DESCRIPTOR (SMOB).apply) (SMOB, A1)
+  ((SCM (*) (SCM, SCM)) (SCM_SMOB_DESCRIPTOR (SMOB).apply)) (SMOB, A1)
 #define SCM_SMOB_APPLY2(SMOB, A1, A2) \
-  ((SCM (*) (SCM, SCM, SCM))SCM_SMOB_DESCRIPTOR (SMOB).apply) (SMOB, A1, A2)
+  ((SCM (*) (SCM, SCM, SCM)) (SCM_SMOB_DESCRIPTOR (SMOB).apply)) (SMOB, A1, A2)
 #define SCM_SMOB_APPLY3(SMOB, A1, A2, A3) \
-  ((SCM (*) (SCM, SCM, SCM, SCM))SCM_SMOB_DESCRIPTOR (SMOB).apply) (SMOB, A1, A2, A3)
+  ((SCM (*) (SCM, SCM, SCM, SCM)) (SCM_SMOB_DESCRIPTOR (SMOB).apply)) (SMOB, A1, A2, A3)
 
 static SCM
 scm_smob_apply_0_010 (SCM smob)
@@ -178,7 +180,6 @@ static SCM
 scm_smob_apply_0_error (SCM smob)
 {
   scm_wrong_num_args (smob);
-  return SCM_UNSPECIFIED;
 }
 
 static SCM
@@ -215,7 +216,6 @@ static SCM
 scm_smob_apply_1_error (SCM smob, SCM a1 SCM_UNUSED)
 {
   scm_wrong_num_args (smob);
-    return SCM_UNSPECIFIED;
 }
 
 static SCM
@@ -246,7 +246,6 @@ static SCM
 scm_smob_apply_2_error (SCM smob, SCM a1 SCM_UNUSED, SCM a2 SCM_UNUSED)
 {
   scm_wrong_num_args (smob);
-    return SCM_UNSPECIFIED;
 }
 
 static SCM
@@ -282,7 +281,6 @@ scm_smob_apply_3_error (SCM smob,
 			SCM rst SCM_UNUSED)
 {
   scm_wrong_num_args (smob);
-    return SCM_UNSPECIFIED;
 }
 
 
@@ -355,7 +353,7 @@ scm_set_smob_apply (scm_t_bits tc, SCM (*apply) (),
   if (rst > 1 || req + opt + rst > 3)
     {
       puts ("Unsupported smob application type");
-      call_error_callback();
+      scm_abort ();
     }
 
   switch (type)
@@ -480,7 +478,7 @@ free_print (SCM exp, SCM port, scm_print_state *pstate SCM_UNUSED)
   
 #if (SCM_DEBUG_CELL_ACCESSES == 1)
   if (scm_debug_cell_accesses_p)
-    call_error_callback();
+    scm_abort ();
 #endif
   
 

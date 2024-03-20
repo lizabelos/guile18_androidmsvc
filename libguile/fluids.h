@@ -16,7 +16,7 @@
  * Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public
- * License with this library; if not, write to the Free Software
+ * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
@@ -63,8 +63,10 @@ SCM_API size_t scm_i_fluid_num (SCM fl);
 SCM_API SCM scm_i_fast_fluid_ref (size_t n);
 SCM_API void scm_i_fast_fluid_set_x (size_t n, SCM val);
 
-SCM_API SCM scm_c_with_fluids (SCM fluids, SCM vals, SCM (*cproc)(void *), void *cdata);
-SCM_API SCM scm_c_with_fluid (SCM fluid, SCM val, SCM (*cproc)(void *), void *cdata);
+SCM_API SCM scm_c_with_fluids (SCM fluids, SCM vals,
+			       SCM (*cproc)(void *), void *cdata);
+SCM_API SCM scm_c_with_fluid (SCM fluid, SCM val,
+			      SCM (*cproc)(void *), void *cdata);
 SCM_API SCM scm_with_fluids (SCM fluids, SCM vals, SCM thunk);
 SCM_API SCM scm_with_fluid (SCM fluid, SCM val, SCM thunk);
 

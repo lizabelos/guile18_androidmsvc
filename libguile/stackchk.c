@@ -11,13 +11,15 @@
  * Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public
- * License with this library; if not, write to the Free Software
+ * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
 
 
-#include <config.h>
+#ifdef HAVE_CONFIG_H
+# include <config.h>
+#endif
 
 #include "libguile/_scm.h"
 #include "libguile/ports.h"
@@ -52,11 +54,11 @@ int64_t
 scm_stack_size (SCM_STACKITEM *start)
 {
   SCM_STACKITEM stack;
-if (SCM_STACK_GROWS_UP) {
-    return &stack - start;
-} else {
-    return start - &stack;
-}
+    if (SCM_STACK_GROWS_UP) {
+        return &stack - start;
+    } else {
+        return start - &stack;
+    }
 }
 
 
@@ -87,37 +89,6 @@ SCM_DEFINE (scm_sys_get_stack_size, "%get-stack-size", 0, 0, 0,
 }
 #undef FUNC_NAME
 
-#ifdef STACK_CHECKING
-
-int SCM_STACK_OVERFLOW_P(void *s)
-{
-    uint64_t stack_base = (uint64_t)SCM_I_CURRENT_THREAD->base;
-    int64_t stack_size = SCM_STACK_LIMIT;
-    uint64_t stack_ptr = (uint64_t)s;
-
-    if (SCM_STACK_GROWS_UP)
-    {
-        return (stack_ptr > (stack_base + stack_size));
-    }
-    else
-    {
-        return (stack_ptr < (stack_base - stack_size));
-    }
-}
-
-void SCM_CHECK_STACK(void)
-{
-    SCM_STACKITEM stack;
-    if (SCM_STACK_OVERFLOW_P(&stack) && scm_stack_checking_enabled_p)
-    {
-        scm_report_stack_overflow();
-    }
-}
-#else
-void SCM_CHECK_STACK(void)
-{
-}
-#endif /* STACK_CHECKING */
 
 void
 scm_init_stackchk ()

@@ -11,7 +11,7 @@
  * Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public
- * License with this library; if not, write to the Free Software
+ * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
@@ -21,7 +21,9 @@
 
 #define _LARGEFILE64_SOURCE      /* ask for stat64 etc */
 
-#include <config.h>
+#ifdef HAVE_CONFIG_H
+#  include <config.h>
+#endif
 
 #include <stdio.h>
 #include <errno.h>
@@ -123,7 +125,6 @@ end_input_default (SCM port SCM_UNUSED, int offset SCM_UNUSED)
 static size_t
 scm_port_free0 (SCM port)
 {
-    (void) port;
   return 0;
 }
 
@@ -291,7 +292,7 @@ size_t scm_take_from_input_buffers (SCM port, char *dest, size_t read_len)
 {
   scm_t_port *pt = SCM_PTAB_ENTRY (port);
   size_t chars_read = 0;
-  size_t from_buf = min (pt->read_end - pt->read_pos, (int64_t)read_len);
+  size_t from_buf = min (pt->read_end - pt->read_pos, read_len);
 
   if (from_buf > 0)
     {
@@ -305,7 +306,7 @@ size_t scm_take_from_input_buffers (SCM port, char *dest, size_t read_len)
   /* if putback was active, try the real input buffer too.  */
   if (pt->read_buf == pt->putback_buf)
     {
-      from_buf = min (pt->saved_read_end - pt->saved_read_pos, (int64_t)read_len);
+      from_buf = min (pt->saved_read_end - pt->saved_read_pos, read_len);
       if (from_buf > 0)
 	{
 	  memcpy (dest, pt->saved_read_pos, from_buf);
@@ -804,7 +805,7 @@ void
 scm_c_port_for_each (void (*proc)(void *data, SCM p), void *data)
 {
   int64_t i;
-    int64_t n;
+  size_t n;
   SCM ports;
 
   /* Even without pre-emptive multithreading, running arbitrary code
@@ -935,7 +936,7 @@ SCM_DEFINE (scm_flush_all_ports, "flush-all-ports", 0, 0, 0,
 	    "all open output ports.  The return value is unspecified.")
 #define FUNC_NAME s_scm_flush_all_ports
 {
-    int64_t i;
+  size_t i;
 
   scm_i_scm_pthread_mutex_lock (&scm_i_port_table_mutex);
   for (i = 0; i < scm_i_port_table_size; i++)
@@ -1084,7 +1085,7 @@ scm_c_read (SCM port, void *buffer, size_t size)
   /* Take bytes first from the port's read buffer. */
   if (pt->read_pos < pt->read_end)
     {
-      n_available = min ((int64_t)size, pt->read_end - pt->read_pos);
+      n_available = min (size, pt->read_end - pt->read_pos);
       memcpy (buffer, pt->read_pos, n_available);
       buffer = (char *) buffer + n_available;
       pt->read_pos += n_available;
@@ -1141,7 +1142,7 @@ scm_c_read (SCM port, void *buffer, size_t size)
 	 the same as they first set up. */
       while (size && (scm_fill_input (port) != EOF))
 	{
-	  n_available = min ((int64_t)size, pt->read_end - pt->read_pos);
+	  n_available = min (size, pt->read_end - pt->read_pos);
 	  memcpy (buffer, pt->read_pos, n_available);
 	  buffer = (char *) buffer + n_available;
 	  pt->read_pos += n_available;
@@ -1416,13 +1417,11 @@ SCM_DEFINE (scm_seek, "seek", 3, 0, 0,
   if (how != SEEK_SET && how != SEEK_CUR && how != SEEK_END)
     SCM_OUT_OF_RANGE (3, whence);
 
-#if USE_FILESYS
   if (SCM_OPFPORTP (fd_port))
     {
       /* go direct to fport code to allow 64-bit offsets */
       return scm_i_fport_seek (fd_port, offset, how);
     }
-#endif
   else if (SCM_OPPORTP (fd_port))
     {
       scm_t_ptob_descriptor *ptob = scm_ptobs + SCM_PTOBNUM (fd_port);
@@ -1452,44 +1451,28 @@ SCM_DEFINE (scm_seek, "seek", 3, 0, 0,
 #define O_BINARY 0
 #endif
 
-// use _chsize_s on Windows
-#if defined _WIN32 && ! defined __CYGWIN__ && ! defined __MINGW32__
-#include <sys/stat.h>
-int
-truncate (const char *file, off_t length) {
-    int fd;
-    _sopen_s(&fd, file, O_WRONLY | O_BINARY, _SH_DENYNO, _S_IREAD | _S_IWRITE);
-    int rv;
-    if (fd == -1)
-        return -1;
-    rv = _chsize_s (fd, length);
-    _close (fd);
-    return rv;
-}
+/* Mingw has ftruncate(), perhaps implemented above using chsize, but
+   doesn't have the filename version truncate(), hence this code.  */
+#if HAVE_FTRUNCATE && ! HAVE_TRUNCATE
+static int
+truncate (const char *file, off_t length)
+{
+  int ret, fdes;
 
-int
-truncate_fd (int fd, off_t length) {
-    int rv;
-    rv = _chsize_s (fd, length);
-    return rv;
-}
-#else
-int
-truncate (const char *file, off_t length) {
-    int fd = open (file, O_WRONLY | O_BINARY);
-    int rv;
-    if (fd == -1)
-        return -1;
-    rv = ftruncate (fd, length);
-    close (fd);
-    return rv;
-}
+  fdes = open (file, O_BINARY | O_WRONLY);
+  if (fdes == -1)
+    return -1;
 
-int
-truncate_fd (int fd, off_t length) {
-    int rv;
-    rv = ftruncate (fd, length);
-    return rv;
+  ret = ftruncate (fdes, length);
+  if (ret == -1)
+    {
+      int save_errno = errno;
+      close (fdes);
+      errno = save_errno;
+      return -1;
+    }
+
+  return close (fdes);
 }
 #endif /* HAVE_FTRUNCATE && ! HAVE_TRUNCATE */
 
@@ -1529,7 +1512,7 @@ SCM_DEFINE (scm_truncate_file, "truncate-file", 1, 1, 0,
   if (scm_is_integer (object))
     {
       off_t_or_off64_t c_length = scm_to_off_t_or_off64_t (length);
-      SCM_SYSCALL (rv = truncate_fd (scm_to_int (object),
+      SCM_SYSCALL (rv = ftruncate_or_ftruncate64 (scm_to_int (object),
                                                   c_length));
     }
   else if (SCM_OPOUTFPORTP (object))
@@ -1558,7 +1541,7 @@ SCM_DEFINE (scm_truncate_file, "truncate-file", 1, 1, 0,
       off_t_or_off64_t c_length = scm_to_off_t_or_off64_t (length);
       char *str = scm_to_locale_string (object);
       int eno;
-      SCM_SYSCALL (rv = truncate (str, c_length));
+      SCM_SYSCALL (rv = truncate_or_truncate64 (str, c_length));
       eno = errno;
       free (str);
       errno = eno;

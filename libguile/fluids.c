@@ -11,11 +11,13 @@
  * Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public
- * License with this library; if not, write to the Free Software
+ * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include <config.h>
+#ifdef HAVE_CONFIG_H
+# include <config.h>
+#endif
 
 #include <stdio.h>
 #include <string.h>
@@ -31,7 +33,6 @@
 #include "libguile/deprecation.h"
 #include "libguile/lang.h"
 #include "libguile/validate.h"
-#include "libguile/gc.h"
 
 #define FLUID_GROW 20
 
@@ -181,7 +182,6 @@ scan_dynamic_states_and_fluids (void *dummy1 SCM_UNUSED,
 static size_t
 fluid_free (SCM fluid)
 {
-    (void)fluid; /* unused */
   /* The real work is done in scan_dynamic_states_and_fluids.  We can
      not touch allocated_fluids etc here since a smob free routine can
      be run at any time, in any thread.
@@ -413,7 +413,8 @@ SCM_DEFINE (scm_with_fluids, "with-fluids*", 3, 0, 0,
 }
 #undef FUNC_NAME
 
-SCM scm_c_with_fluids (SCM fluids, SCM values, SCM (*cproc)(void *), void *cdata)
+SCM
+scm_c_with_fluids (SCM fluids, SCM values, SCM (*cproc) (void*), void *cdata)
 #define FUNC_NAME "scm_c_with_fluids"
 {
   SCM ans, data;
@@ -425,12 +426,15 @@ SCM scm_c_with_fluids (SCM fluids, SCM values, SCM (*cproc)(void *), void *cdata
     scm_out_of_range (s_scm_with_fluids, values);
 
   if (flen == 1)
-    return scm_c_with_fluid (SCM_CAR (fluids), SCM_CAR (values), cproc, cdata);
+    return scm_c_with_fluid (SCM_CAR (fluids), SCM_CAR (values),
+			     cproc, cdata);
   
   data = scm_cons (fluids, values);
   scm_dynwind_begin (SCM_F_DYNWIND_REWINDABLE);
-  scm_dynwind_rewind_handler_with_scm (swap_fluids, data, SCM_F_WIND_EXPLICITLY);
-  scm_dynwind_unwind_handler_with_scm (swap_fluids_reverse, data, SCM_F_WIND_EXPLICITLY);
+  scm_dynwind_rewind_handler_with_scm (swap_fluids, data,
+				     SCM_F_WIND_EXPLICITLY);
+  scm_dynwind_unwind_handler_with_scm (swap_fluids_reverse, data,
+				     SCM_F_WIND_EXPLICITLY);
   ans = cproc (cdata);
   scm_dynwind_end ();
   return ans;
@@ -449,7 +453,7 @@ SCM_DEFINE (scm_with_fluid, "with-fluid*", 3, 0, 0,
 #undef FUNC_NAME
 
 SCM
-scm_c_with_fluid (SCM fluid, SCM value, SCM (*cproc)(void *), void *cdata)
+scm_c_with_fluid (SCM fluid, SCM value, SCM (*cproc) (void*), void *cdata)
 #define FUNC_NAME "scm_c_with_fluid"
 {
   SCM ans;

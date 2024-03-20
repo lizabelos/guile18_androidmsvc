@@ -11,13 +11,15 @@
  * Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public
- * License with this library; if not, write to the Free Software
+ * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
 
 
-#include <config.h>
+#ifdef HAVE_CONFIG_H
+# include <config.h>
+#endif
 
 #include "libguile/_scm.h"
 #include "libguile/chars.h"
@@ -137,7 +139,7 @@ scm_hasher(SCM obj, uint64_t n, size_t d)
 	else
 	  {
 	    size_t i = len;
-	    uint64_t h = (n)-1;
+	    uint64_t h = (n) - 1;
 	    while (i--)
 	      {
 		SCM elt = SCM_SIMPLE_VECTOR_REF (obj, h % len);
@@ -165,9 +167,8 @@ scm_hasher(SCM obj, uint64_t n, size_t d)
 
 
 uint64_t
-scm_ihashq (SCM obj, uint64_t n, scm_t_ihashx_closure *c)
+scm_ihashq (SCM obj, uint64_t n)
 {
-    (void)c;
   return (SCM_UNPACK (obj) >> 1) % n;
 }
 
@@ -186,8 +187,8 @@ SCM_DEFINE (scm_hashq, "hashq", 2, 0, 0,
 	    "different values, since @code{foo} will be garbage collected.")
 #define FUNC_NAME s_scm_hashq
 {
-  uint64_t sz = scm_to_unsigned_integer (size, 1, ULONG_MAX);
-  return scm_from_uint64 (scm_ihashq (key, sz, NULL));
+  uint64_t sz = scm_to_unsigned_integer (size, 1, ULLONG_MAX);
+  return scm_from_uint64 (scm_ihashq (key, sz));
 }
 #undef FUNC_NAME
 
@@ -196,9 +197,8 @@ SCM_DEFINE (scm_hashq, "hashq", 2, 0, 0,
 
 
 uint64_t
-scm_ihashv (SCM obj, uint64_t n, scm_t_ihashx_closure *closure)
+scm_ihashv (SCM obj, uint64_t n)
 {
-    (void)closure;
   if (SCM_CHARP(obj))
     return ((uint64_t) (scm_c_downcase (SCM_CHAR (obj)))) % n; /* downcase!?!! */
 
@@ -223,8 +223,8 @@ SCM_DEFINE (scm_hashv, "hashv", 2, 0, 0,
 	    "different values, since @code{foo} will be garbage collected.")
 #define FUNC_NAME s_scm_hashv
 {
-  uint64_t sz = scm_to_unsigned_integer (size, 1, ULONG_MAX);
-  return scm_from_uint64 (scm_ihashv (key, sz, NULL));
+  uint64_t sz = scm_to_unsigned_integer (size, 1, ULLONG_MAX);
+  return scm_from_uint64 (scm_ihashv (key, sz));
 }
 #undef FUNC_NAME
 
@@ -233,9 +233,8 @@ SCM_DEFINE (scm_hashv, "hashv", 2, 0, 0,
 
 
 uint64_t
-scm_ihash (SCM obj, uint64_t n, scm_t_ihashx_closure *closure)
+scm_ihash (SCM obj, uint64_t n)
 {
-    (void)closure;
   return (uint64_t) scm_hasher (obj, n, 10);
 }
 
@@ -247,8 +246,8 @@ SCM_DEFINE (scm_hash, "hash", 2, 0, 0,
 	    "integer in the range 0 to @var{size} - 1.")
 #define FUNC_NAME s_scm_hash
 {
-  uint64_t sz = scm_to_unsigned_integer (size, 1, ULONG_MAX);
-  return scm_from_uint64 (scm_ihash (key, sz, NULL));
+  uint64_t sz = scm_to_unsigned_integer (size, 1, ULLONG_MAX);
+  return scm_from_uint64 (scm_ihash (key, sz));
 }
 #undef FUNC_NAME
 

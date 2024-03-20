@@ -11,11 +11,13 @@
  * Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public
- * License with this library; if not, write to the Free Software
+ * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include <config.h>
+#ifdef HAVE_CONFIG_H
+# include <config.h>
+#endif
 
 #include "libguile/__scm.h"
 
@@ -50,7 +52,7 @@ opendir (const char * name)
 
   dir = malloc (sizeof (DIR));
   dir->mask = file;
-  dir->fd = hnd;
+  dir->fd = (int) hnd;
   dir->data = malloc (sizeof (WIN32_FIND_DATA));
   dir->allocation = sizeof (WIN32_FIND_DATA);
   dir->size = dir->allocation;
@@ -100,7 +102,7 @@ rewinddir (DIR * dir)
 
   FindClose (hnd);
   hnd = FindFirstFile (dir->mask, find);
-  dir->fd = hnd;
+  dir->fd = (int) hnd;
   dir->filepos = 0;
 }
 
@@ -123,7 +125,7 @@ telldir (DIR * dir)
   return dir->filepos;
 }
 
-HANDLE
+int 
 dirfd (DIR * dir)
 {
   return dir->fd;

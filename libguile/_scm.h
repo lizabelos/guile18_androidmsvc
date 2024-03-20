@@ -16,7 +16,7 @@
  * Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public
- * License with this library; if not, write to the Free Software
+ * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
@@ -34,7 +34,9 @@
 # define __ia64__
 #endif
 
-#include <config.h>
+#if HAVE_CONFIG_H
+#  include <config.h>
+#endif
 
 /* Undefine HAVE_STRUCT_TIMESPEC, because the libguile C code doesn't
    need it anymore, and because on MinGW:
@@ -140,15 +142,8 @@
 #define scm_from_blkcnt_t_or_blkcnt64_t CHOOSE_LARGEFILE(scm_from_uint64,scm_from_uint64)
 #define scm_to_off_t_or_off64_t         CHOOSE_LARGEFILE(scm_to_off_t,scm_to_int64)
 
-//#if SIZEOF_OFF_T == 4
-//#  define scm_to_off_t    scm_to_int32
-//#  define scm_from_off_t  scm_from_int32
-//#elif SIZEOF_OFF_T == 8
 #  define scm_to_off_t    scm_to_int64
 #  define scm_from_off_t  scm_from_int64
-//#else
-//#  error sizeof(off_t) is not 4 or 8.
-//#endif
 #define scm_to_off64_t    scm_to_int64
 #define scm_from_off64_t  scm_from_int64
 

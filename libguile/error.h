@@ -16,7 +16,7 @@
  * Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public
- * License with this library; if not, write to the Free Software
+ * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
@@ -33,11 +33,12 @@ extern SCM scm_arg_type_key;
 extern SCM scm_memory_alloc_key;
 extern SCM scm_misc_error_key;
 
-
+
 
 void call_error_callback ();
 void set_error_callback(void (*callback)());
 
+SCM_API void scm_abort (void) SCM_NORETURN;
 SCM_API void scm_error (SCM key, const char *subr, const char *message,
 			SCM args, SCM rest) SCM_NORETURN;
 SCM_API SCM scm_error_scm (SCM key, SCM subr, SCM message,

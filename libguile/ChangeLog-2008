@@ -599,10 +599,10 @@
 	implementing `set-program-arguments'.
 
 	* filesys.c (scm_init_filesys): Use scm_from_int rather than
-	scm_from_int64 for O_RDONLY, O_WRONLY, O_RDWR, O_CREAT, O_EXCL,
+	scm_from_long for O_RDONLY, O_WRONLY, O_RDWR, O_CREAT, O_EXCL,
 	O_NOCTTY, O_TRUNC, O_APPEND, O_NONBLOCK, O_NDELAY, O_SYNC and
 	O_LARGEFILE.  These are all int not long, per arg to open().
-	(scm_init_filesys): Use scm_from_int rather than scm_from_int64 for
+	(scm_init_filesys): Use scm_from_int rather than scm_from_long for
 	F_DUPFD, F_GETFD, F_SETFD, F_GETFL, F_SETFL, F_GETOWN, F_SETOWN, these
 	are all ints (per command arg to fcntl).  Likewise FD_CLOEXEC which is
 	an int arg to fcntl.
@@ -1489,7 +1489,7 @@
 	platform.
 
 	* gc.c (scm_gc_stats): Bugfix: Measure size of the type we are
-	mallocating for (uint64_t *bounds).
+	mallocating for (unsigned long *bounds).
 
 	* hashtab.c (scm_i_rehash): Cast SCM_HASHTABLE_FLAGS (table) to
 	scm_t_bits before storing them in the type word.
@@ -2204,7 +2204,7 @@
 	that it's an scm_t_int32.  Otherwise gcc 3.4 says it's always false on
 	a 64-bit system.
 
-	* scmsigs.c (scm_sigaction_for_thread): Use scm_to_int64 for
+	* scmsigs.c (scm_sigaction_for_thread): Use scm_to_long for
 	sa_handler, needs to be a long on 64-bit systems where int is only 32
 	bits.
 
@@ -2746,8 +2746,8 @@
 	with "%", C99 says it's well-defined.
 
 	* socket.c (scm_from_ipv6): Just use mpz_import.  Don't bother trying
-	to fit scm_from_uint64, since that uses mpz_import anyway.  Don't
-	bother trying to fit scm_from_uint64, not really worth the trouble if
+	to fit scm_from_ulong_long, since that uses mpz_import anyway.  Don't
+	bother trying to fit scm_from_ulong, not really worth the trouble if
 	addresses are more than 4 bytes usually.
 
 2004-11-30  Kevin Ryde  <user42@zip.com.au>
@@ -3690,7 +3690,7 @@
 
 	* rdelim.c (scm_read_delimited_x): Avoid
 	SCM_VALIDATE_SUBSTRING_SPEC_COPY and use scm_from_size_t instead
-	of scm_from_int64 for the returned number of read characters.
+	of scm_from_long for the returned number of read characters.
 
 	* ioext.c (scm_fdopen): Use scm_i_fdes_to_port together with
 	scm_i_mode_bits to avoid accessing internals of SCM string from C.
@@ -3891,7 +3891,7 @@
 	
 	* posix.c (scm_setgroups): Enhance docstring, per doc/ref/posix.texi.
 
-	* simpos.c (scm_system_star): Change scm_from_int64 to scm_from_int on
+	* simpos.c (scm_system_star): Change scm_from_long to scm_from_int on
 	SIGINT and SIGQUIT, since those values are ints.
 
 2004-08-03  Marius Vollmer  <marius.vollmer@uni-dortmund.de>
@@ -3987,12 +3987,12 @@
 2004-07-29  Marius Vollmer  <marius.vollmer@uni-dortmund.de>
 
 	* numbers.h (scm_to_schar, scm_to_uchar, scm_to_char,
-	scm_to_short, scm_to_ushort, scm_to_int, scm_to_uint, scm_to_int64,
-	scm_to_uint64, scm_to_int64, scm_to_uint64, scm_to_intmax,
+	scm_to_short, scm_to_ushort, scm_to_int, scm_to_uint, scm_to_long,
+	scm_to_ulong, scm_to_long_long, scm_to_ulong_long, scm_to_intmax,
 	scm_to_uintmax, scm_to_size_t, scm_to_ssize_t scm_from_schar,
 	scm_from_uchar, scm_from_char, scm_from_short, scm_from_ushort,
-	scm_from_int, scm_from_uint, scm_from_int64, scm_from_uint64,
-	scm_from_int64, scm_from_uint64, scm_from_intmax,
+	scm_from_int, scm_from_uint, scm_from_long, scm_from_ulong,
+	scm_from_long_long, scm_from_ulong_long, scm_from_intmax,
 	scm_from_uintmax, scm_from_size_t, scm_from_ssize_t): No longer
 	defined in terms of scm_to_signed_integer, etc, but in terms of
 	scm_to_int8, etc.
@@ -4138,10 +4138,10 @@
 	* numbers.h (scm_to_short, scm_to_ushort): It's SHRT_MIN, etc, not
 	SHORT_MIN.
 	(scm_to_size_t): Use SIZE_MAX instead of cooking our own.
-	(scm_to_int64, scm_to_uint64, scm_to_int8, scm_to_uint8,
+	(scm_to_long_long, scm_to_ulong_long, scm_to_int8, scm_to_uint8,
 	scm_to_int16, scm_to_uint16, scm_to_int32, scm_to_uint32,
 	scm_to_int64, scm_to_uint64, scm_to_intmax, scm_to_uintmax,
-	scm_from_int64, scm_from_uint64, scm_from_int8,
+	scm_from_long_long, scm_from_ulong_long, scm_from_int8,
 	scm_from_uint8, scm_from_int16, scm_from_uint16, scm_from_int32,
 	scm_from_uint32, scm_from_int64, scm_from_uint64, scm_from_intmax,
 	scm_from_uintmax): New.
@@ -4163,10 +4163,10 @@
 	* numbers.h, numbers.c (scm_is_integer, scm_is_signed_integer,
 	scm_is_unsigned_integer, scm_to_signed_integer,
 	scm_to_unsigned_integer, scm_to_schar, scm_to_uchar, scm_to_char,
-	scm_to_short, scm_to_ushort, scm_to_int64, scm_to_uint64,
+	scm_to_short, scm_to_ushort, scm_to_long, scm_to_ulong,
 	scm_to_size_t, scm_to_ssize_t, scm_from_schar, scm_from_uchar,
 	scm_from_char, scm_from_short, scm_from_ushort, scm_from_int,
-	scm_from_uint, scm_from_int64, scm_from_uint64, scm_from_size_t,
+	scm_from_uint, scm_from_long, scm_from_ulong, scm_from_size_t,
 	scm_from_ssize_t, scm_is_real, scm_to_double, scm_from_double):
 	New.
 	
@@ -9771,7 +9771,7 @@
         declarations of {get,set}context() functions used in the ia64 port.
 
         * continuations.h, gc.c: `__libc_ia64_register_backing_store_base'
-        is meant to be a `uint64_t *'.
+        is meant to be a `unsigned long *'.
 
         * filesys.c: Include `direct.h' if possible.  Use local
 	`win32-dirent.h' for the native M$-Windows port.  Define S_IS*()
@@ -10001,10 +10001,10 @@
 	whether the integral type fits in a fixnum, not the compiler.
 	This removes a spurious compiler warning.  Also, honor the
 	NO_PREPRO_MAGIC flag to suppress any preprocessor tests.  This is
-	needed for `int64_t's.
+	needed for `long long's.
 
 	* numbers.c: Define NO_PREPRO_MAGOC when including
-	num2integral.c.i for `int64_t' and `int64_t'.
+	num2integral.c.i for `long long' and `signed long long'.
 
 2001-10-06  Mikael Djurfeldt  <mdj@linnaeus>
 
@@ -11258,7 +11258,7 @@
 
 	* tags.h: Include <stdint.h> when we have it.
 	(scm_bits_t): Changed to be a unsigned type.  Use uintptr_t when
-	available.  Else use "uint64_t".
+	available.  Else use "unsigned long".
 	(scm_signed_bits_t): New.
 
 	* numbers.h (SCM_SRS): Cast shiftee to scm_signed_bits_t.
@@ -11322,7 +11322,7 @@
 	bitvector base address using SCM_BITVECTOR_BASE.
 
 	* unif.h (SCM_BITVECTOR_BASE):  Return the base address as an
-	uint64_t*.
+	unsigned long*.
 
 2001-06-08  Dirk Herrmann  <D.Herrmann@tu-bs.de>
 
@@ -11731,13 +11731,13 @@
 	scm_subr_entry -> scm_subr_entry_t
 	the old name is deprecated, all in-Guile uses changed.
 
-	* options.h (scm_option_t.val): uint64_t -> scm_bits_t.
+	* options.h (scm_option_t.val): unsigned long -> scm_bits_t.
 	type renaming:
 	scm_option -> scm_option_t
 	the old name is deprecated, all in-Guile uses changed.
 
 	* objects.c: various long -> scm_bits_t changes.
-	(scm_i_make_class_object): flags: uint64_t -> scm_ubits_t
+	(scm_i_make_class_object): flags: unsigned long -> scm_ubits_t
 
 	* numbers.h (SCM_FIXNUM_BIT): deprecated, renamed to
 	SCM_I_FIXNUM_BIT.
@@ -11783,8 +11783,8 @@
 	(gh_{get,set}_substr): start: int -> scm_bits_t,
 	len: int -> size_t
 	(gh_<num>2scm): n: int -> scm_bits_t
-	(gh_*vector_length): return scm_[u]size_t, not uint64_t.
-	(gh_length): return scm_bits_t, not uint64_t.
+	(gh_*vector_length): return scm_[u]size_t, not unsigned long.
+	(gh_length): return scm_bits_t, not unsigned long.
 
 	* gc.[hc]: various small changes relating to many things stopping
 	being long and starting being scm_[u]bits_t instead.
