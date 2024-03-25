@@ -68,6 +68,10 @@
 #include <string.h>
 #endif
 
+#ifdef HAVE_SYS_TIME_H
+#include <sys/time.h>
+#endif
+
 #ifdef HAVE_SYS_TIMES_H
 # include <sys/times.h>
 #endif

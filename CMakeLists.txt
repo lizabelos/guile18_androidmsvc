@@ -211,16 +211,15 @@ if (dl)
     target_link_libraries(guile PUBLIC dl)
 endif ()
 
-# if we have intl, link it
-find_library(intl intl)
-if (intl)
-    target_link_libraries(guile PUBLIC intl)
+find_package(Intl)
+if (Intl_FOUND)
+    target_link_libraries(guile PUBLIC Intl::Intl)
+    target_compile_definitions(guile PUBLIC HAVE_INTL)
 endif ()
 
-# if we have ltdl, link it
-find_library(ltdl ltdl)
-if (ltdl)
-    target_link_libraries(guile PUBLIC ltdl)
+find_package(Ltdl)
+if (Ltdl_FOUND)
+    target_link_libraries(guile PUBLIC Ltdl::Ltdl)
     target_compile_definitions(guile PUBLIC HAVE_LTDL)
 endif ()
 
