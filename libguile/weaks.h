@@ -53,22 +53,22 @@
 
 
 
-SCM_API SCM scm_make_weak_vector (SCM k, SCM fill);
-SCM_API SCM scm_weak_vector (SCM l);
-SCM_API SCM scm_weak_vector_p (SCM x);
-SCM_API SCM scm_make_weak_key_alist_vector (SCM k);
-SCM_API SCM scm_make_weak_value_alist_vector (SCM k);
-SCM_API SCM scm_make_doubly_weak_alist_vector (SCM k);
-SCM_API SCM scm_weak_key_alist_vector_p (SCM x);
-SCM_API SCM scm_weak_value_alist_vector_p (SCM x);
-SCM_API SCM scm_doubly_weak_alist_vector_p (SCM x);
-SCM_API SCM scm_init_weaks_builtins (void);
-SCM_API void scm_init_weaks (void);
+SCM scm_make_weak_vector (SCM k, SCM fill);
+SCM scm_weak_vector (SCM l);
+SCM scm_weak_vector_p (SCM x);
+SCM scm_make_weak_key_alist_vector (SCM k);
+SCM scm_make_weak_value_alist_vector (SCM k);
+SCM scm_make_doubly_weak_alist_vector (SCM k);
+SCM scm_weak_key_alist_vector_p (SCM x);
+SCM scm_weak_value_alist_vector_p (SCM x);
+SCM scm_doubly_weak_alist_vector_p (SCM x);
+SCM scm_init_weaks_builtins (void);
+void scm_init_weaks (void);
 
-SCM_API void scm_i_init_weak_vectors_for_gc (void);
-SCM_API void scm_i_mark_weak_vector (SCM w);
-SCM_API int scm_i_mark_weak_vectors_non_weaks (void);
-SCM_API void scm_i_remove_weaks_from_weak_vectors (void);
+void scm_i_init_weak_vectors_for_gc (void);
+void scm_i_mark_weak_vector (SCM w);
+int scm_i_mark_weak_vectors_non_weaks (void);
+void scm_i_remove_weaks_from_weak_vectors (void);
 
 #endif  /* SCM_WEAKS_H */
 

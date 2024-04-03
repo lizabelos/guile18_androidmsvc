@@ -76,54 +76,54 @@
      an error for for strings that are not null-terminated.
 */
 
-SCM_API SCM scm_string_p (SCM x);
-SCM_API SCM scm_string (SCM chrs);
-SCM_API SCM scm_make_string (SCM k, SCM chr);
-SCM_API SCM scm_string_length (SCM str);
-SCM_API SCM scm_string_ref (SCM str, SCM k);
-SCM_API SCM scm_string_set_x (SCM str, SCM k, SCM chr);
-SCM_API SCM scm_substring (SCM str, SCM start, SCM end);
-SCM_API SCM scm_substring_read_only (SCM str, SCM start, SCM end);
-SCM_API SCM scm_substring_shared (SCM str, SCM start, SCM end);
-SCM_API SCM scm_substring_copy (SCM str, SCM start, SCM end);
-SCM_API SCM scm_string_append (SCM args);
+SCM scm_string_p (SCM x);
+SCM scm_string (SCM chrs);
+SCM scm_make_string (SCM k, SCM chr);
+SCM scm_string_length (SCM str);
+SCM scm_string_ref (SCM str, SCM k);
+SCM scm_string_set_x (SCM str, SCM k, SCM chr);
+SCM scm_substring (SCM str, SCM start, SCM end);
+SCM scm_substring_read_only (SCM str, SCM start, SCM end);
+SCM scm_substring_shared (SCM str, SCM start, SCM end);
+SCM scm_substring_copy (SCM str, SCM start, SCM end);
+SCM scm_string_append (SCM args);
 
-SCM_API SCM scm_c_make_string (size_t len, SCM chr);
-SCM_API size_t scm_c_string_length (SCM str);
-SCM_API size_t scm_c_symbol_length (SCM sym);
-SCM_API SCM scm_c_string_ref (SCM str, size_t pos);
-SCM_API void scm_c_string_set_x (SCM str, size_t pos, SCM chr);
-SCM_API SCM scm_c_substring (SCM str, size_t start, size_t end);
-SCM_API SCM scm_c_substring_read_only (SCM str, size_t start, size_t end);
-SCM_API SCM scm_c_substring_shared (SCM str, size_t start, size_t end);
-SCM_API SCM scm_c_substring_copy (SCM str, size_t start, size_t end);
+SCM scm_c_make_string (size_t len, SCM chr);
+size_t scm_c_string_length (SCM str);
+size_t scm_c_symbol_length (SCM sym);
+SCM scm_c_string_ref (SCM str, size_t pos);
+void scm_c_string_set_x (SCM str, size_t pos, SCM chr);
+SCM scm_c_substring (SCM str, size_t start, size_t end);
+SCM scm_c_substring_read_only (SCM str, size_t start, size_t end);
+SCM scm_c_substring_shared (SCM str, size_t start, size_t end);
+SCM scm_c_substring_copy (SCM str, size_t start, size_t end);
 
-SCM_API int scm_is_string (SCM x);
-SCM_API SCM scm_from_locale_string (const char *str);
-SCM_API SCM scm_from_locale_stringn (const char *str, size_t len);
-SCM_API SCM scm_take_locale_string (char *str);
-SCM_API SCM scm_take_locale_stringn (char *str, size_t len);
-SCM_API char *scm_to_locale_string (SCM str);
-SCM_API char *scm_to_locale_stringn (SCM str, size_t *lenp);
-SCM_API size_t scm_to_locale_stringbuf (SCM str, char *buf, size_t max_len);
+int scm_is_string (SCM x);
+SCM scm_from_locale_string (const char *str);
+SCM scm_from_locale_stringn (const char *str, size_t len);
+SCM scm_take_locale_string (char *str);
+SCM scm_take_locale_stringn (char *str, size_t len);
+char *scm_to_locale_string (SCM str);
+char *scm_to_locale_stringn (SCM str, size_t *lenp);
+size_t scm_to_locale_stringbuf (SCM str, char *buf, size_t max_len);
 
-SCM_API SCM scm_makfromstrs (int argc, char **argv);
+SCM scm_makfromstrs (int argc, char **argv);
 
 /* internal accessor functions.  Arguments must be valid. */
 
-SCM_API SCM scm_i_make_string (size_t len, char **datap);
-SCM_API SCM scm_i_substring (SCM str, size_t start, size_t end);
-SCM_API SCM scm_i_substring_read_only (SCM str, size_t start, size_t end);
-SCM_API SCM scm_i_substring_shared (SCM str, size_t start, size_t end);
-SCM_API SCM scm_i_substring_copy (SCM str, size_t start, size_t end);
-SCM_API size_t scm_i_string_length (SCM str);
-SCM_API const char *scm_i_string_chars (SCM str);
-SCM_API char *scm_i_string_writable_chars (SCM str);
-SCM_API void scm_i_string_stop_writing (void);
+SCM scm_i_make_string (size_t len, char **datap);
+SCM scm_i_substring (SCM str, size_t start, size_t end);
+SCM scm_i_substring_read_only (SCM str, size_t start, size_t end);
+SCM scm_i_substring_shared (SCM str, size_t start, size_t end);
+SCM scm_i_substring_copy (SCM str, size_t start, size_t end);
+size_t scm_i_string_length (SCM str);
+const char *scm_i_string_chars (SCM str);
+char *scm_i_string_writable_chars (SCM str);
+void scm_i_string_stop_writing (void);
 
 /* internal functions related to symbols. */
 
-SCM_API SCM scm_i_make_symbol (SCM name, scm_t_bits flags,
+SCM scm_i_make_symbol (SCM name, scm_t_bits flags,
                                uint64_t hash, SCM props);
 SCM_API SCM
 scm_i_c_make_symbol (const char *name, size_t len,
@@ -131,35 +131,35 @@ scm_i_c_make_symbol (const char *name, size_t len,
 SCM_API SCM
 scm_i_c_take_symbol (char *name, size_t len,
                      scm_t_bits flags, uint64_t hash, SCM props);
-SCM_API const char *scm_i_symbol_chars (SCM sym);
-SCM_API size_t scm_i_symbol_length (SCM sym);
-SCM_API SCM scm_i_symbol_substring (SCM sym, size_t start, size_t end);
+const char *scm_i_symbol_chars (SCM sym);
+size_t scm_i_symbol_length (SCM sym);
+SCM scm_i_symbol_substring (SCM sym, size_t start, size_t end);
 
 /* internal GC functions. */
 
-SCM_API SCM scm_i_string_mark (SCM str);
-SCM_API SCM scm_i_stringbuf_mark (SCM buf);
-SCM_API SCM scm_i_symbol_mark (SCM buf);
-SCM_API void scm_i_string_free (SCM str);
-SCM_API void scm_i_stringbuf_free (SCM buf);
-SCM_API void scm_i_symbol_free (SCM sym);
+SCM scm_i_string_mark (SCM str);
+SCM scm_i_stringbuf_mark (SCM buf);
+SCM scm_i_symbol_mark (SCM buf);
+void scm_i_string_free (SCM str);
+void scm_i_stringbuf_free (SCM buf);
+void scm_i_symbol_free (SCM sym);
 
 /* internal utility functions. */
 
-SCM_API char **scm_i_allocate_string_pointers (SCM list);
-SCM_API void scm_i_free_string_pointers (char **pointers);
-SCM_API void scm_i_get_substring_spec (size_t len,
+char **scm_i_allocate_string_pointers (SCM list);
+void scm_i_free_string_pointers (char **pointers);
+void scm_i_get_substring_spec (size_t len,
 				       SCM start, size_t *cstart,
 				       SCM end, size_t *cend);
-SCM_API SCM scm_i_take_stringbufn (char *str, size_t len);
+SCM scm_i_take_stringbufn (char *str, size_t len);
 
 /* deprecated stuff */
 
 #if SCM_ENABLE_DEPRECATED
 
-SCM_API int scm_i_deprecated_stringp (SCM obj);
-SCM_API char *scm_i_deprecated_string_chars (SCM str);
-SCM_API size_t scm_i_deprecated_string_length (SCM str);
+int scm_i_deprecated_stringp (SCM obj);
+char *scm_i_deprecated_string_chars (SCM str);
+size_t scm_i_deprecated_string_length (SCM str);
 
 #define SCM_STRINGP(x)       scm_i_deprecated_stringp(x)
 #define SCM_STRING_CHARS(x)  scm_i_deprecated_string_chars(x)
@@ -168,7 +168,7 @@ SCM_API size_t scm_i_deprecated_string_length (SCM str);
 
 #endif
 
-SCM_API void scm_init_strings (void);
+void scm_init_strings (void);
 
 #endif  /* SCM_STRINGS_H */
 

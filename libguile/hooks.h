@@ -55,17 +55,17 @@ typedef struct scm_t_c_hook {
   void *data;
 } scm_t_c_hook;
 
-SCM_API void scm_c_hook_init (scm_t_c_hook *hook,
+void scm_c_hook_init (scm_t_c_hook *hook,
 			      void *hook_data,
 			      scm_t_c_hook_type type);
-SCM_API void scm_c_hook_add (scm_t_c_hook *hook,
+void scm_c_hook_add (scm_t_c_hook *hook,
 			     scm_t_c_hook_function func,
 			     void *fn_data, 
 			     int appendp);
-SCM_API void scm_c_hook_remove (scm_t_c_hook *hook,
+void scm_c_hook_remove (scm_t_c_hook *hook,
 				scm_t_c_hook_function func,
 				void *fn_data);
-SCM_API void *scm_c_hook_run (scm_t_c_hook *hook, void *data);
+void *scm_c_hook_run (scm_t_c_hook *hook, void *data);
 
 /*
  * Scheme level hooks
@@ -78,16 +78,16 @@ SCM_API scm_t_bits scm_tc16_hook;
 #define SCM_HOOK_PROCEDURES(hook)	SCM_SMOB_OBJECT (hook)
 #define SCM_SET_HOOK_PROCEDURES(hook, procs) SCM_SET_SMOB_OBJECT ((hook), (procs))
 
-SCM_API SCM scm_make_hook (SCM n_args);
-SCM_API SCM scm_hook_p (SCM x);
-SCM_API SCM scm_hook_empty_p (SCM hook);
-SCM_API SCM scm_add_hook_x (SCM hook, SCM thunk, SCM appendp);
-SCM_API SCM scm_remove_hook_x (SCM hook, SCM thunk);
-SCM_API SCM scm_reset_hook_x (SCM hook);
-SCM_API SCM scm_run_hook (SCM hook, SCM args);
-SCM_API void scm_c_run_hook (SCM hook, SCM args);
-SCM_API SCM scm_hook_to_list (SCM hook);
-SCM_API void scm_init_hooks (void);
+SCM scm_make_hook (SCM n_args);
+SCM scm_hook_p (SCM x);
+SCM scm_hook_empty_p (SCM hook);
+SCM scm_add_hook_x (SCM hook, SCM thunk, SCM appendp);
+SCM scm_remove_hook_x (SCM hook, SCM thunk);
+SCM scm_reset_hook_x (SCM hook);
+SCM scm_run_hook (SCM hook, SCM args);
+void scm_c_run_hook (SCM hook, SCM args);
+SCM scm_hook_to_list (SCM hook);
+void scm_init_hooks (void);
 
 #endif  /* SCM_HOOKS_H */
 

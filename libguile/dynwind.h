@@ -29,18 +29,18 @@
 typedef void (*scm_t_guard) (void *);
 typedef SCM (*scm_t_inner) (void *);
 
-SCM_API SCM scm_dynamic_wind (SCM thunk1, SCM thunk2, SCM thunk3);
-SCM_API SCM scm_internal_dynamic_wind (scm_t_guard before,
+SCM scm_dynamic_wind (SCM thunk1, SCM thunk2, SCM thunk3);
+SCM scm_internal_dynamic_wind (scm_t_guard before,
 				       scm_t_inner inner,
 				       scm_t_guard after,
 				       void *inner_data,
 				       void *guard_data);
-SCM_API void scm_dowinds (SCM to, int64_t delta);
-SCM_API void scm_i_dowinds (SCM to, int64_t delta,
+void scm_dowinds (SCM to, int64_t delta);
+void scm_i_dowinds (SCM to, int64_t delta,
                             void (*turn_func) (void *), void *data);
-SCM_API void scm_init_dynwind (void);
+void scm_init_dynwind (void);
 
-SCM_API void scm_swap_bindings (SCM vars, SCM vals);
+void scm_swap_bindings (SCM vars, SCM vals);
 
 typedef enum {
   SCM_F_DYNWIND_REWINDABLE = (1 << 0)
@@ -50,23 +50,23 @@ typedef enum {
   SCM_F_WIND_EXPLICITLY = (1 << 0)
 } scm_t_wind_flags;
 
-SCM_API void scm_dynwind_begin (scm_t_dynwind_flags);
-SCM_API void scm_dynwind_end (void);
+void scm_dynwind_begin (scm_t_dynwind_flags);
+void scm_dynwind_end (void);
 
-SCM_API void scm_dynwind_unwind_handler (void (*func) (void *), void *data,
+void scm_dynwind_unwind_handler (void (*func) (void *), void *data,
 					 scm_t_wind_flags);
-SCM_API void scm_dynwind_rewind_handler (void (*func) (void *), void *data,
+void scm_dynwind_rewind_handler (void (*func) (void *), void *data,
 					 scm_t_wind_flags);
 
-SCM_API void scm_dynwind_unwind_handler_with_scm (void (*func) (SCM), SCM data,
+void scm_dynwind_unwind_handler_with_scm (void (*func) (SCM), SCM data,
 						  scm_t_wind_flags);
-SCM_API void scm_dynwind_rewind_handler_with_scm (void (*func) (SCM), SCM data,
+void scm_dynwind_rewind_handler_with_scm (void (*func) (SCM), SCM data,
 						  scm_t_wind_flags);
 
-SCM_API void scm_dynwind_free (void *mem);
+void scm_dynwind_free (void *mem);
 
 #ifdef GUILE_DEBUG
-SCM_API SCM scm_wind_chain (void);
+SCM scm_wind_chain (void);
 #endif /*GUILE_DEBUG*/
 
 #endif  /* SCM_DYNWIND_H */

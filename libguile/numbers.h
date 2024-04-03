@@ -174,133 +174,133 @@ typedef struct scm_t_complex
 
 
 
-SCM_API SCM scm_exact_p (SCM x);
-SCM_API SCM scm_odd_p (SCM n);
-SCM_API SCM scm_even_p (SCM n);
-SCM_API SCM scm_inf_p (SCM n);
-SCM_API SCM scm_nan_p (SCM n);
-SCM_API SCM scm_inf (void);
-SCM_API SCM scm_nan (void);
-SCM_API SCM scm_abs (SCM x);
-SCM_API SCM scm_quotient (SCM x, SCM y);
-SCM_API SCM scm_remainder (SCM x, SCM y);
-SCM_API SCM scm_modulo (SCM x, SCM y);
-SCM_API SCM scm_gcd (SCM x, SCM y);
-SCM_API SCM scm_lcm (SCM n1, SCM n2);
-SCM_API SCM scm_logand (SCM n1, SCM n2);
-SCM_API SCM scm_logior (SCM n1, SCM n2);
-SCM_API SCM scm_logxor (SCM n1, SCM n2);
-SCM_API SCM scm_logtest (SCM n1, SCM n2);
-SCM_API SCM scm_logbit_p (SCM n1, SCM n2);
-SCM_API SCM scm_lognot (SCM n);
-SCM_API SCM scm_modulo_expt (SCM n, SCM k, SCM m);
-SCM_API SCM scm_integer_expt (SCM z1, SCM z2);
-SCM_API SCM scm_ash (SCM n, SCM cnt);
-SCM_API SCM scm_bit_extract (SCM n, SCM start, SCM end);
-SCM_API SCM scm_logcount (SCM n);
-SCM_API SCM scm_integer_length (SCM n);
+SCM scm_exact_p (SCM x);
+SCM scm_odd_p (SCM n);
+SCM scm_even_p (SCM n);
+SCM scm_inf_p (SCM n);
+SCM scm_nan_p (SCM n);
+SCM scm_inf (void);
+SCM scm_nan (void);
+SCM scm_abs (SCM x);
+SCM scm_quotient (SCM x, SCM y);
+SCM scm_remainder (SCM x, SCM y);
+SCM scm_modulo (SCM x, SCM y);
+SCM scm_gcd (SCM x, SCM y);
+SCM scm_lcm (SCM n1, SCM n2);
+SCM scm_logand (SCM n1, SCM n2);
+SCM scm_logior (SCM n1, SCM n2);
+SCM scm_logxor (SCM n1, SCM n2);
+SCM scm_logtest (SCM n1, SCM n2);
+SCM scm_logbit_p (SCM n1, SCM n2);
+SCM scm_lognot (SCM n);
+SCM scm_modulo_expt (SCM n, SCM k, SCM m);
+SCM scm_integer_expt (SCM z1, SCM z2);
+SCM scm_ash (SCM n, SCM cnt);
+SCM scm_bit_extract (SCM n, SCM start, SCM end);
+SCM scm_logcount (SCM n);
+SCM scm_integer_length (SCM n);
 
-SCM_API size_t scm_iint2str (scm_t_intmax num, int rad, char *p);
-SCM_API size_t scm_iuint2str (scm_t_uintmax num, int rad, char *p);
-SCM_API SCM scm_number_to_string (SCM x, SCM radix);
-SCM_API int scm_print_real (SCM sexp, SCM port, scm_print_state *pstate);
-SCM_API int scm_print_complex (SCM sexp, SCM port, scm_print_state *pstate);
-SCM_API int scm_bigprint (SCM exp, SCM port, scm_print_state *pstate);
-SCM_API SCM scm_c_locale_stringn_to_number (const char *mem, size_t len,
+size_t scm_iint2str (scm_t_intmax num, int rad, char *p);
+size_t scm_iuint2str (scm_t_uintmax num, int rad, char *p);
+SCM scm_number_to_string (SCM x, SCM radix);
+int scm_print_real (SCM sexp, SCM port, scm_print_state *pstate);
+int scm_print_complex (SCM sexp, SCM port, scm_print_state *pstate);
+int scm_bigprint (SCM exp, SCM port, scm_print_state *pstate);
+SCM scm_c_locale_stringn_to_number (const char *mem, size_t len,
 					    unsigned int radix);
-SCM_API SCM scm_string_to_number (SCM str, SCM radix);
-SCM_API SCM scm_bigequal (SCM x, SCM y);
-SCM_API SCM scm_real_equalp (SCM x, SCM y);
-SCM_API SCM scm_complex_equalp (SCM x, SCM y);
-SCM_API SCM scm_number_p (SCM x);
-SCM_API SCM scm_complex_p (SCM x);
-SCM_API SCM scm_real_p (SCM x);
-SCM_API SCM scm_rational_p (SCM z);
-SCM_API SCM scm_integer_p (SCM x);
-SCM_API SCM scm_inexact_p (SCM x);
-SCM_API SCM scm_num_eq_p (SCM x, SCM y);
-SCM_API SCM scm_less_p (SCM x, SCM y);
-SCM_API SCM scm_gr_p (SCM x, SCM y);
-SCM_API SCM scm_leq_p (SCM x, SCM y);
-SCM_API SCM scm_geq_p (SCM x, SCM y);
-SCM_API SCM scm_zero_p (SCM z);
-SCM_API SCM scm_positive_p (SCM x);
-SCM_API SCM scm_negative_p (SCM x);
-SCM_API SCM scm_max (SCM x, SCM y);
-SCM_API SCM scm_min (SCM x, SCM y);
-SCM_API SCM scm_sum (SCM x, SCM y);
-SCM_API SCM scm_oneplus (SCM x);
-SCM_API SCM scm_difference (SCM x, SCM y);
-SCM_API SCM scm_oneminus (SCM x);
-SCM_API SCM scm_product (SCM x, SCM y);
-SCM_API SCM scm_divide (SCM x, SCM y);
-SCM_API SCM scm_floor (SCM x);
-SCM_API SCM scm_ceiling (SCM x);
-SCM_API double scm_asinh (double x);
-SCM_API double scm_acosh (double x);
-SCM_API double scm_atanh (double x);
-SCM_API double scm_c_truncate (double x);
-SCM_API double scm_c_round (double x);
-SCM_API SCM scm_truncate_number (SCM x);
-SCM_API SCM scm_round_number (SCM x);
-SCM_API SCM scm_sys_expt (SCM z1, SCM z2);
-SCM_API SCM scm_sys_atan2 (SCM z1, SCM z2);
-SCM_API SCM scm_make_rectangular (SCM z1, SCM z2);
-SCM_API SCM scm_make_polar (SCM z1, SCM z2);
-SCM_API SCM scm_real_part (SCM z);
-SCM_API SCM scm_imag_part (SCM z);
-SCM_API SCM scm_magnitude (SCM z);
-SCM_API SCM scm_angle (SCM z);
-SCM_API SCM scm_exact_to_inexact (SCM z);
-SCM_API SCM scm_inexact_to_exact (SCM z);
-SCM_API SCM scm_trunc (SCM x);
-SCM_API SCM scm_log (SCM z);
-SCM_API SCM scm_log10 (SCM z);
-SCM_API SCM scm_exp (SCM z);
-SCM_API SCM scm_sqrt (SCM z);
+SCM scm_string_to_number (SCM str, SCM radix);
+SCM scm_bigequal (SCM x, SCM y);
+SCM scm_real_equalp (SCM x, SCM y);
+SCM scm_complex_equalp (SCM x, SCM y);
+SCM scm_number_p (SCM x);
+SCM scm_complex_p (SCM x);
+SCM scm_real_p (SCM x);
+SCM scm_rational_p (SCM z);
+SCM scm_integer_p (SCM x);
+SCM scm_inexact_p (SCM x);
+SCM scm_num_eq_p (SCM x, SCM y);
+SCM scm_less_p (SCM x, SCM y);
+SCM scm_gr_p (SCM x, SCM y);
+SCM scm_leq_p (SCM x, SCM y);
+SCM scm_geq_p (SCM x, SCM y);
+SCM scm_zero_p (SCM z);
+SCM scm_positive_p (SCM x);
+SCM scm_negative_p (SCM x);
+SCM scm_max (SCM x, SCM y);
+SCM scm_min (SCM x, SCM y);
+SCM scm_sum (SCM x, SCM y);
+SCM scm_oneplus (SCM x);
+SCM scm_difference (SCM x, SCM y);
+SCM scm_oneminus (SCM x);
+SCM scm_product (SCM x, SCM y);
+SCM scm_divide (SCM x, SCM y);
+SCM scm_floor (SCM x);
+SCM scm_ceiling (SCM x);
+double scm_asinh (double x);
+double scm_acosh (double x);
+double scm_atanh (double x);
+double scm_c_truncate (double x);
+double scm_c_round (double x);
+SCM scm_truncate_number (SCM x);
+SCM scm_round_number (SCM x);
+SCM scm_sys_expt (SCM z1, SCM z2);
+SCM scm_sys_atan2 (SCM z1, SCM z2);
+SCM scm_make_rectangular (SCM z1, SCM z2);
+SCM scm_make_polar (SCM z1, SCM z2);
+SCM scm_real_part (SCM z);
+SCM scm_imag_part (SCM z);
+SCM scm_magnitude (SCM z);
+SCM scm_angle (SCM z);
+SCM scm_exact_to_inexact (SCM z);
+SCM scm_inexact_to_exact (SCM z);
+SCM scm_trunc (SCM x);
+SCM scm_log (SCM z);
+SCM scm_log10 (SCM z);
+SCM scm_exp (SCM z);
+SCM scm_sqrt (SCM z);
 
 /* bignum internal functions */
-SCM_API SCM scm_i_mkbig (void);
-SCM_API SCM scm_i_normbig (SCM x);
-SCM_API int scm_i_bigcmp (SCM a, SCM b);
-SCM_API SCM scm_i_dbl2big (double d);
-SCM_API SCM scm_i_dbl2num (double d);
-SCM_API double scm_i_big2dbl (SCM b);
-SCM_API SCM scm_i_long2big (long n);
-SCM_API SCM scm_i_ulong2big (unsigned long n);
-SCM_API SCM scm_i_int64_t2big (int64_t n);
-SCM_API SCM scm_i_uint64_t2big (uint64_t n);
-SCM_API SCM scm_i_clonebig (SCM src_big, int same_sign_p);
+SCM scm_i_mkbig (void);
+SCM scm_i_normbig (SCM x);
+int scm_i_bigcmp (SCM a, SCM b);
+SCM scm_i_dbl2big (double d);
+SCM scm_i_dbl2num (double d);
+double scm_i_big2dbl (SCM b);
+SCM scm_i_long2big (long n);
+SCM scm_i_ulong2big (unsigned long n);
+SCM scm_i_int64_t2big (int64_t n);
+SCM scm_i_uint64_t2big (uint64_t n);
+SCM scm_i_clonebig (SCM src_big, int same_sign_p);
 
 /* ratio functions */
-SCM_API SCM scm_rationalize (SCM x, SCM err);
-SCM_API SCM scm_numerator (SCM z);
-SCM_API SCM scm_denominator (SCM z);
+SCM scm_rationalize (SCM x, SCM err);
+SCM scm_numerator (SCM z);
+SCM scm_denominator (SCM z);
 
 /* fraction internal functions */
-SCM_API double scm_i_fraction2double (SCM z);
-SCM_API SCM scm_i_fraction_equalp (SCM x, SCM y);
-SCM_API int scm_i_print_fraction (SCM sexp, SCM port, scm_print_state *pstate);
+double scm_i_fraction2double (SCM z);
+SCM scm_i_fraction_equalp (SCM x, SCM y);
+int scm_i_print_fraction (SCM sexp, SCM port, scm_print_state *pstate);
 
 /* general internal functions */
-SCM_API void scm_i_print_double (double val, SCM port);
-SCM_API void scm_i_print_complex (double real, double imag, SCM port);
+void scm_i_print_double (double val, SCM port);
+void scm_i_print_complex (double real, double imag, SCM port);
 
 /* conversion functions for integers */
 
-SCM_API int scm_is_integer (SCM val);
-SCM_API int scm_is_signed_integer (SCM val,
+int scm_is_integer (SCM val);
+int scm_is_signed_integer (SCM val,
 				   scm_t_intmax min, scm_t_intmax max);
-SCM_API int scm_is_unsigned_integer (SCM val,
+int scm_is_unsigned_integer (SCM val,
 				     scm_t_uintmax min, scm_t_uintmax max);
 
-SCM_API SCM scm_from_signed_integer (scm_t_intmax val);
-SCM_API SCM scm_from_unsigned_integer (scm_t_uintmax val);
+SCM scm_from_signed_integer (scm_t_intmax val);
+SCM scm_from_unsigned_integer (scm_t_uintmax val);
 
-SCM_API scm_t_intmax scm_to_signed_integer (SCM val,
+scm_t_intmax scm_to_signed_integer (SCM val,
 					    scm_t_intmax min,
 					    scm_t_intmax max);
-SCM_API scm_t_uintmax scm_to_unsigned_integer (SCM val,
+scm_t_uintmax scm_to_unsigned_integer (SCM val,
 					       scm_t_uintmax min,
 					       scm_t_uintmax max);
 
@@ -314,22 +314,22 @@ SCM_API scm_t_int16  scm_to_int16    (SCM x);
 SCM_API SCM          scm_from_int16  (scm_t_int16 x);
 
 SCM_API scm_t_uint16 scm_to_uint16   (SCM x);
-SCM_API SCM          scm_from_uint16 (scm_t_uint16 x);
+SCM          scm_from_uint16 (scm_t_uint16 x);
 
 SCM_API scm_t_int32  scm_to_int32    (SCM x);
 SCM_API SCM          scm_from_int32  (scm_t_int32 x);
 
 SCM_API scm_t_uint32 scm_to_uint32   (SCM x);
-SCM_API SCM          scm_from_uint32 (scm_t_uint32 x);
+SCM          scm_from_uint32 (scm_t_uint32 x);
 
 SCM_API scm_t_int64  scm_to_int64    (SCM x);
 SCM_API SCM          scm_from_int64  (scm_t_int64 x);
 
 SCM_API scm_t_uint64 scm_to_uint64   (SCM x);
-SCM_API SCM          scm_from_uint64 (scm_t_uint64 x);
+SCM          scm_from_uint64 (scm_t_uint64 x);
 
-SCM_API void scm_to_mpz (SCM x, mpz_t rop);
-SCM_API SCM  scm_from_mpz (mpz_t rop);
+void scm_to_mpz (SCM x, mpz_t rop);
+SCM  scm_from_mpz (mpz_t rop);
 
 
 /* The conversion functions for other types are aliased to the
@@ -447,24 +447,24 @@ SCM_API SCM  scm_from_mpz (mpz_t rop);
 
 /* conversion functions for double */
 
-SCM_API int scm_is_real (SCM val);
-SCM_API int scm_is_rational (SCM val);
-SCM_API double scm_to_double (SCM val);
-SCM_API SCM scm_from_double (double val);
+int scm_is_real (SCM val);
+int scm_is_rational (SCM val);
+double scm_to_double (SCM val);
+SCM scm_from_double (double val);
 
 /* conversion functions for complex */
 
-SCM_API int scm_is_complex (SCM val);
-SCM_API SCM scm_c_make_rectangular (double re, double im);
-SCM_API SCM scm_c_make_polar (double mag, double ang);
-SCM_API double scm_c_real_part (SCM z);
-SCM_API double scm_c_imag_part (SCM z);
-SCM_API double scm_c_magnitude (SCM z);
-SCM_API double scm_c_angle (SCM z);
+int scm_is_complex (SCM val);
+SCM scm_c_make_rectangular (double re, double im);
+SCM scm_c_make_polar (double mag, double ang);
+double scm_c_real_part (SCM z);
+double scm_c_imag_part (SCM z);
+double scm_c_magnitude (SCM z);
+double scm_c_angle (SCM z);
 
-SCM_API int scm_is_number (SCM val);
+int scm_is_number (SCM val);
 
-SCM_API void scm_init_numbers (void);
+void scm_init_numbers (void);
 
 #endif  /* SCM_NUMBERS_H */
 

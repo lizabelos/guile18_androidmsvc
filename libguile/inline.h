@@ -76,18 +76,18 @@
    "inline.c", when `inline' is not supported at all or when "extern inline"
    is used.  */
 
-SCM_API SCM scm_cell (scm_t_bits car, scm_t_bits cdr);
-SCM_API SCM scm_double_cell (scm_t_bits car, scm_t_bits cbr,
+SCM scm_cell (scm_t_bits car, scm_t_bits cdr);
+SCM scm_double_cell (scm_t_bits car, scm_t_bits cbr,
 			     scm_t_bits ccr, scm_t_bits cdr);
 
-SCM_API SCM scm_array_handle_ref (scm_t_array_handle *h, ssize_t pos);
-SCM_API void scm_array_handle_set (scm_t_array_handle *h, ssize_t pos, SCM val);
+SCM scm_array_handle_ref (scm_t_array_handle *h, ssize_t pos);
+void scm_array_handle_set (scm_t_array_handle *h, ssize_t pos, SCM val);
 
-SCM_API int scm_is_pair (SCM x);
+int scm_is_pair (SCM x);
 
-SCM_API int scm_getc (SCM port);
-SCM_API void scm_putc (char c, SCM port);
-SCM_API void scm_puts (const char *str_data, SCM port);
+int scm_getc (SCM port);
+void scm_putc (char c, SCM port);
+void scm_puts (const char *str_data, SCM port);
 
 #endif
 

@@ -29,8 +29,8 @@ extern SCM scm_values_vtable;
 #define SCM_VALUESP(x) (SCM_STRUCTP (x)\
                         && scm_is_eq (scm_struct_vtable (x), scm_values_vtable))
 
-SCM_API SCM scm_values (SCM args);
-SCM_API void scm_init_values (void);
+SCM scm_values (SCM args);
+void scm_init_values (void);
 
 #endif  /* SCM_VALUES_H */
 

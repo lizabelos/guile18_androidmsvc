@@ -26,11 +26,11 @@
 
 
 
-SCM_API SCM scm_object_properties (SCM obj);
-SCM_API SCM scm_set_object_properties_x (SCM obj, SCM plist);
-SCM_API SCM scm_object_property (SCM obj, SCM key);
-SCM_API SCM scm_set_object_property_x (SCM obj, SCM key, SCM val);
-SCM_API void scm_init_objprop (void);
+SCM scm_object_properties (SCM obj);
+SCM scm_set_object_properties_x (SCM obj, SCM plist);
+SCM scm_object_property (SCM obj, SCM key);
+SCM scm_set_object_property_x (SCM obj, SCM key, SCM val);
+void scm_init_objprop (void);
 
 #endif  /* SCM_OBJPROP_H */
 

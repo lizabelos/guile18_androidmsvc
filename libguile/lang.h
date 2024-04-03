@@ -30,7 +30,7 @@
 
 #define SCM_NILP(x) (scm_is_eq ((x), SCM_ELISP_NIL))
 
-SCM_API void scm_init_lang (void);
+void scm_init_lang (void);
 
 #else  /* ! SCM_ENABLE_ELISP */
 

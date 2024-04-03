@@ -63,52 +63,52 @@ SCM_API scm_t_bits scm_tc16_eval_closure;
 
 
 
-SCM_API SCM scm_current_module (void);
-SCM_API SCM scm_interaction_environment (void);
-SCM_API SCM scm_set_current_module (SCM module);
+SCM scm_current_module (void);
+SCM scm_interaction_environment (void);
+SCM scm_set_current_module (SCM module);
 
-SCM_API SCM scm_c_call_with_current_module (SCM module,
+SCM scm_c_call_with_current_module (SCM module,
 					    SCM (*func)(void *), void *data);
-SCM_API void scm_dynwind_current_module (SCM module);
+void scm_dynwind_current_module (SCM module);
 
-SCM_API SCM scm_c_lookup (const char *name);
-SCM_API SCM scm_c_define (const char *name, SCM val);
-SCM_API SCM scm_lookup (SCM symbol);
-SCM_API SCM scm_define (SCM symbol, SCM val);
+SCM scm_c_lookup (const char *name);
+SCM scm_c_define (const char *name, SCM val);
+SCM scm_lookup (SCM symbol);
+SCM scm_define (SCM symbol, SCM val);
 
-SCM_API SCM scm_c_module_lookup (SCM module, const char *name);
-SCM_API SCM scm_c_module_define (SCM module, const char *name, SCM val);
-SCM_API SCM scm_module_lookup (SCM module, SCM symbol);
-SCM_API SCM scm_module_define (SCM module, SCM symbol, SCM val);
-SCM_API SCM scm_module_reverse_lookup (SCM module, SCM variable);
+SCM scm_c_module_lookup (SCM module, const char *name);
+SCM scm_c_module_define (SCM module, const char *name, SCM val);
+SCM scm_module_lookup (SCM module, SCM symbol);
+SCM scm_module_define (SCM module, SCM symbol, SCM val);
+SCM scm_module_reverse_lookup (SCM module, SCM variable);
 
-SCM_API SCM scm_c_resolve_module (const char *name);
-SCM_API SCM scm_resolve_module (SCM name);
-SCM_API SCM scm_c_define_module (const char *name,
+SCM scm_c_resolve_module (const char *name);
+SCM scm_resolve_module (SCM name);
+SCM scm_c_define_module (const char *name,
 				 void (*init)(void *), void *data);
-SCM_API void scm_c_use_module (const char *name);
-SCM_API void scm_c_export (const char *name, ...);
+void scm_c_use_module (const char *name);
+void scm_c_export (const char *name, ...);
 
-SCM_API SCM scm_sym2var (SCM sym, SCM thunk, SCM definep);
+SCM scm_sym2var (SCM sym, SCM thunk, SCM definep);
 
-SCM_API SCM scm_module_import_interface (SCM module, SCM sym);
-SCM_API SCM scm_module_lookup_closure (SCM module);
-SCM_API SCM scm_module_transformer (SCM module);
-SCM_API SCM scm_current_module_lookup_closure (void);
-SCM_API SCM scm_current_module_transformer (void);
-SCM_API SCM scm_eval_closure_lookup (SCM eclo, SCM sym, SCM definep);
-SCM_API SCM scm_standard_eval_closure (SCM module);
-SCM_API SCM scm_standard_interface_eval_closure (SCM module);
-SCM_API SCM scm_get_pre_modules_obarray (void);
-SCM_API SCM scm_lookup_closure_module (SCM proc);
+SCM scm_module_import_interface (SCM module, SCM sym);
+SCM scm_module_lookup_closure (SCM module);
+SCM scm_module_transformer (SCM module);
+SCM scm_current_module_lookup_closure (void);
+SCM scm_current_module_transformer (void);
+SCM scm_eval_closure_lookup (SCM eclo, SCM sym, SCM definep);
+SCM scm_standard_eval_closure (SCM module);
+SCM scm_standard_interface_eval_closure (SCM module);
+SCM scm_get_pre_modules_obarray (void);
+SCM scm_lookup_closure_module (SCM proc);
 
-SCM_API SCM scm_env_top_level (SCM env);
-SCM_API SCM scm_env_module (SCM env);
-SCM_API SCM scm_top_level_env (SCM thunk);
-SCM_API SCM scm_system_module_env_p (SCM env);
+SCM scm_env_top_level (SCM env);
+SCM scm_env_module (SCM env);
+SCM scm_top_level_env (SCM thunk);
+SCM scm_system_module_env_p (SCM env);
 
-SCM_API void scm_modules_prehistory (void);
-SCM_API void scm_init_modules (void);
+void scm_modules_prehistory (void);
+void scm_init_modules (void);
 
 #endif  /* SCM_MODULES_H */
 

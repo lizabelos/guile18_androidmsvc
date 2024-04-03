@@ -73,9 +73,9 @@ SCM_API scm_t_bits scm_tc16_future;
 
 extern SCM *scm_loc_sys_thread_handler;
 
-SCM_API SCM scm_i_make_future (SCM thunk);
-SCM_API SCM scm_make_future (SCM thunk);
-SCM_API SCM scm_future_ref (SCM future);
+SCM scm_i_make_future (SCM thunk);
+SCM scm_make_future (SCM thunk);
+SCM scm_future_ref (SCM future);
 
 void scm_init_futures (void);
 

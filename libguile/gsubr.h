@@ -39,19 +39,19 @@
 
 extern SCM scm_f_gsubr_apply;
 
-SCM_API SCM scm_c_make_gsubr (const char *name, 
+SCM scm_c_make_gsubr (const char *name,
 			      int req, int opt, int rst, SCM (*fcn) ());
-SCM_API SCM scm_c_make_gsubr_with_generic (const char *name,
+SCM scm_c_make_gsubr_with_generic (const char *name,
 					   int req, int opt, int rst,
 					   SCM (*fcn) (), SCM *gf);
-SCM_API SCM scm_c_define_gsubr (const char *name, 
+SCM scm_c_define_gsubr (const char *name,
 				int req, int opt, int rst, SCM (*fcn) ());
-SCM_API SCM scm_c_define_gsubr_with_generic (const char *name,
+SCM scm_c_define_gsubr_with_generic (const char *name,
 					     int req, int opt, int rst,
 					     SCM (*fcn) (), SCM *gf);
 
-SCM_API SCM scm_gsubr_apply (SCM args);
-SCM_API void scm_init_gsubr (void);
+SCM scm_gsubr_apply (SCM args);
+void scm_init_gsubr (void);
 
 #endif  /* SCM_GSUBR_H */
 

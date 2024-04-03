@@ -26,20 +26,20 @@
 
 
 
-SCM_API SCM scm_sigaction (SCM signum, SCM handler, SCM flags);
-SCM_API SCM scm_sigaction_for_thread (SCM signum, SCM handler, SCM flags,
+SCM scm_sigaction (SCM signum, SCM handler, SCM flags);
+SCM scm_sigaction_for_thread (SCM signum, SCM handler, SCM flags,
 				      SCM thread);
-SCM_API SCM scm_restore_signals (void);
-SCM_API SCM scm_alarm (SCM i);
-SCM_API SCM scm_setitimer (SCM which_timer,
+SCM scm_restore_signals (void);
+SCM scm_alarm (SCM i);
+SCM scm_setitimer (SCM which_timer,
 			   SCM interval_seconds, SCM interval_microseconds,
 			   SCM value_seconds, SCM value_microseconds);
-SCM_API SCM scm_getitimer (SCM which_timer);
-SCM_API SCM scm_pause (void);
-SCM_API SCM scm_sleep (SCM i);
-SCM_API SCM scm_usleep (SCM i);
-SCM_API SCM scm_raise (SCM sig);
-SCM_API void scm_init_scmsigs (void);
+SCM scm_getitimer (SCM which_timer);
+SCM scm_pause (void);
+SCM scm_sleep (SCM i);
+SCM scm_usleep (SCM i);
+SCM scm_raise (SCM sig);
+void scm_init_scmsigs (void);
 
 #endif  /* SCM_SCMSIGS_H */
 

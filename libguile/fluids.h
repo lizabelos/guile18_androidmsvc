@@ -54,38 +54,38 @@
 #define SCM_FAST_FLUID_REF(n)        scm_i_fast_fluid_ref (n)
 #define SCM_FAST_FLUID_SET_X(n, val) scm_i_fast_fluid_set_x ((n),(val))
 
-SCM_API SCM scm_make_fluid (void);
-SCM_API int scm_is_fluid (SCM obj);
-SCM_API SCM scm_fluid_p (SCM fl);
-SCM_API SCM scm_fluid_ref (SCM fluid);
-SCM_API SCM scm_fluid_set_x (SCM fluid, SCM value);
-SCM_API size_t scm_i_fluid_num (SCM fl);
-SCM_API SCM scm_i_fast_fluid_ref (size_t n);
-SCM_API void scm_i_fast_fluid_set_x (size_t n, SCM val);
+SCM scm_make_fluid (void);
+int scm_is_fluid (SCM obj);
+SCM scm_fluid_p (SCM fl);
+SCM scm_fluid_ref (SCM fluid);
+SCM scm_fluid_set_x (SCM fluid, SCM value);
+size_t scm_i_fluid_num (SCM fl);
+SCM scm_i_fast_fluid_ref (size_t n);
+void scm_i_fast_fluid_set_x (size_t n, SCM val);
 
-SCM_API SCM scm_c_with_fluids (SCM fluids, SCM vals,
+SCM scm_c_with_fluids (SCM fluids, SCM vals,
 			       SCM (*cproc)(void *), void *cdata);
-SCM_API SCM scm_c_with_fluid (SCM fluid, SCM val,
+SCM scm_c_with_fluid (SCM fluid, SCM val,
 			      SCM (*cproc)(void *), void *cdata);
-SCM_API SCM scm_with_fluids (SCM fluids, SCM vals, SCM thunk);
-SCM_API SCM scm_with_fluid (SCM fluid, SCM val, SCM thunk);
+SCM scm_with_fluids (SCM fluids, SCM vals, SCM thunk);
+SCM scm_with_fluid (SCM fluid, SCM val, SCM thunk);
 
-SCM_API void scm_dynwind_fluid (SCM fluid, SCM value);
+void scm_dynwind_fluid (SCM fluid, SCM value);
 
-SCM_API SCM scm_make_dynamic_state (SCM parent);
-SCM_API SCM scm_dynamic_state_p (SCM obj);
-SCM_API int scm_is_dynamic_state (SCM obj);
-SCM_API SCM scm_current_dynamic_state (void);
-SCM_API SCM scm_set_current_dynamic_state (SCM state);
-SCM_API void scm_dynwind_current_dynamic_state (SCM state);
-SCM_API void *scm_c_with_dynamic_state (SCM state, 
+SCM scm_make_dynamic_state (SCM parent);
+SCM scm_dynamic_state_p (SCM obj);
+int scm_is_dynamic_state (SCM obj);
+SCM scm_current_dynamic_state (void);
+SCM scm_set_current_dynamic_state (SCM state);
+void scm_dynwind_current_dynamic_state (SCM state);
+void *scm_c_with_dynamic_state (SCM state,
 					void *(*func)(void *), void *data);
-SCM_API SCM scm_with_dynamic_state (SCM state, SCM proc);
+SCM scm_with_dynamic_state (SCM state, SCM proc);
 
-SCM_API SCM scm_i_make_initial_dynamic_state (void);
+SCM scm_i_make_initial_dynamic_state (void);
 
-SCM_API void scm_fluids_prehistory (void);
-SCM_API void scm_init_fluids (void);
+void scm_fluids_prehistory (void);
+void scm_init_fluids (void);
 
 #endif  /* SCM_FLUIDS_H */
 

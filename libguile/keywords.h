@@ -30,15 +30,15 @@ SCM_API scm_t_bits scm_tc16_keyword;
 
 
 
-SCM_API SCM scm_keyword_p (SCM obj);
-SCM_API SCM scm_symbol_to_keyword (SCM symbol);
-SCM_API SCM scm_keyword_to_symbol (SCM keyword);
+SCM scm_keyword_p (SCM obj);
+SCM scm_symbol_to_keyword (SCM symbol);
+SCM scm_keyword_to_symbol (SCM keyword);
 
-SCM_API int scm_is_keyword (SCM val);
-SCM_API SCM scm_from_locale_keyword (const char *str);
-SCM_API SCM scm_from_locale_keywordn (const char *str, size_t len);
+int scm_is_keyword (SCM val);
+SCM scm_from_locale_keyword (const char *str);
+SCM scm_from_locale_keywordn (const char *str, size_t len);
 
-SCM_API void scm_init_keywords (void);
+void scm_init_keywords (void);
 
 #endif  /* SCM_KEYWORDS_H */
 

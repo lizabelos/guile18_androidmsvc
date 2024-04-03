@@ -32,20 +32,20 @@
 
 
 
-SCM_API void scm_async_click (void);
-SCM_API void scm_switch (void);
-SCM_API SCM scm_async (SCM thunk);
-SCM_API SCM scm_async_mark (SCM a);
-SCM_API SCM scm_system_async_mark (SCM a);
-SCM_API SCM scm_system_async_mark_for_thread (SCM a, SCM thread);
-SCM_API void scm_i_queue_async_cell (SCM cell, scm_i_thread *);
-SCM_API int scm_i_setup_sleep (scm_i_thread *,
+void scm_async_click (void);
+void scm_switch (void);
+SCM scm_async (SCM thunk);
+SCM scm_async_mark (SCM a);
+SCM scm_system_async_mark (SCM a);
+SCM scm_system_async_mark_for_thread (SCM a, SCM thread);
+void scm_i_queue_async_cell (SCM cell, scm_i_thread *);
+int scm_i_setup_sleep (scm_i_thread *,
 			       SCM obj, scm_i_pthread_mutex_t *m, int fd);
-SCM_API void scm_i_reset_sleep (scm_i_thread *);
-SCM_API SCM scm_run_asyncs (SCM list_of_a);
-SCM_API SCM scm_noop (SCM args);
-SCM_API SCM scm_call_with_blocked_asyncs (SCM proc);
-SCM_API SCM scm_call_with_unblocked_asyncs (SCM proc);
+void scm_i_reset_sleep (scm_i_thread *);
+SCM scm_run_asyncs (SCM list_of_a);
+SCM scm_noop (SCM args);
+SCM scm_call_with_blocked_asyncs (SCM proc);
+SCM scm_call_with_unblocked_asyncs (SCM proc);
 void *scm_c_call_with_blocked_asyncs (void *(*p) (void *d), void *d);
 void *scm_c_call_with_unblocked_asyncs (void *(*p) (void *d), void *d);
 void scm_dynwind_block_asyncs (void);
@@ -75,13 +75,13 @@ extern scm_i_pthread_mutex_t scm_i_critical_section_mutex;
     scm_async_click ();	\
   } while (0)
 
-SCM_API void scm_init_async (void);
+void scm_init_async (void);
 
 #if (SCM_ENABLE_DEPRECATED == 1)
 
-SCM_API SCM scm_system_async (SCM thunk);
-SCM_API SCM scm_unmask_signals (void);
-SCM_API SCM scm_mask_signals (void);
+SCM scm_system_async (SCM thunk);
+SCM scm_unmask_signals (void);
+SCM scm_mask_signals (void);
 
 #endif
 

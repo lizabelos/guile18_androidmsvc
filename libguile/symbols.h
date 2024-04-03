@@ -36,35 +36,35 @@
 
 
 #ifdef GUILE_DEBUG
-SCM_API SCM scm_sys_symbols (void);
+SCM scm_sys_symbols (void);
 #endif
 
-SCM_API SCM scm_symbol_p (SCM x);
-SCM_API SCM scm_symbol_interned_p (SCM sym);
-SCM_API SCM scm_make_symbol (SCM name);
-SCM_API SCM scm_symbol_to_string (SCM s);
-SCM_API SCM scm_string_to_symbol (SCM s);
-SCM_API SCM scm_string_ci_to_symbol (SCM s);
+SCM scm_symbol_p (SCM x);
+SCM scm_symbol_interned_p (SCM sym);
+SCM scm_make_symbol (SCM name);
+SCM scm_symbol_to_string (SCM s);
+SCM scm_string_to_symbol (SCM s);
+SCM scm_string_ci_to_symbol (SCM s);
 
-SCM_API SCM scm_symbol_fref (SCM s);
-SCM_API SCM scm_symbol_pref (SCM s);
-SCM_API SCM scm_symbol_fset_x (SCM s, SCM val);
-SCM_API SCM scm_symbol_pset_x (SCM s, SCM val);
+SCM scm_symbol_fref (SCM s);
+SCM scm_symbol_pref (SCM s);
+SCM scm_symbol_fset_x (SCM s, SCM val);
+SCM scm_symbol_pset_x (SCM s, SCM val);
 
-SCM_API SCM scm_symbol_hash (SCM s);
-SCM_API SCM scm_gensym (SCM prefix);
+SCM scm_symbol_hash (SCM s);
+SCM scm_gensym (SCM prefix);
 
-SCM_API SCM scm_from_locale_symbol (const char *str);
-SCM_API SCM scm_from_locale_symboln (const char *str, size_t len);
-SCM_API SCM scm_take_locale_symbol (char *sym);
-SCM_API SCM scm_take_locale_symboln (char *sym, size_t len);
+SCM scm_from_locale_symbol (const char *str);
+SCM scm_from_locale_symboln (const char *str, size_t len);
+SCM scm_take_locale_symbol (char *sym);
+SCM scm_take_locale_symboln (char *sym, size_t len);
 
 /* internal functions. */
 
 SCM_API uint64_t scm_i_hash_symbol (SCM obj, uint64_t n, void *closure);
 
-SCM_API void scm_symbols_prehistory (void);
-SCM_API void scm_init_symbols (void);
+void scm_symbols_prehistory (void);
+void scm_init_symbols (void);
 
 #endif  /* SCM_SYMBOLS_H */
 

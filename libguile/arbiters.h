@@ -26,10 +26,10 @@
 
 
 
-SCM_API SCM scm_make_arbiter (SCM name);
-SCM_API SCM scm_try_arbiter (SCM arb);
-SCM_API SCM scm_release_arbiter (SCM arb);
-SCM_API void scm_init_arbiters (void);
+SCM scm_make_arbiter (SCM name);
+SCM scm_try_arbiter (SCM arb);
+SCM scm_release_arbiter (SCM arb);
+void scm_init_arbiters (void);
 
 #endif  /* SCM_ARBITERS_H */
 

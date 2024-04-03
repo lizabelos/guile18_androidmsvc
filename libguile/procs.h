@@ -202,29 +202,29 @@ extern int64_t scm_subr_table_room;
 
 
 
-SCM_API void scm_mark_subr_table (void);
-SCM_API void scm_free_subr_entry (SCM subr);
-SCM_API SCM scm_c_make_subr (const char *name, int64_t type, SCM (*fcn)());
-SCM_API SCM scm_c_make_subr_with_generic (const char *name, int64_t type,
+void scm_mark_subr_table (void);
+void scm_free_subr_entry (SCM subr);
+SCM scm_c_make_subr (const char *name, int64_t type, SCM (*fcn)());
+SCM scm_c_make_subr_with_generic (const char *name, int64_t type,
                                           SCM (*fcn)(), SCM *gf);
-SCM_API SCM scm_c_define_subr (const char *name, int64_t type, SCM (*fcn)());
-SCM_API SCM scm_c_define_subr_with_generic (const char *name, int64_t type,
+SCM scm_c_define_subr (const char *name, int64_t type, SCM (*fcn)());
+SCM scm_c_define_subr_with_generic (const char *name, int64_t type,
                                             SCM (*fcn)(), SCM *gf);
-SCM_API SCM scm_makcclo (SCM proc, size_t len);
-SCM_API SCM scm_procedure_p (SCM obj);
-SCM_API SCM scm_closure_p (SCM obj);
-SCM_API SCM scm_thunk_p (SCM obj);
-SCM_API int scm_subr_p (SCM obj);
-SCM_API SCM scm_procedure_documentation (SCM proc);
-SCM_API SCM scm_procedure_with_setter_p (SCM obj);
-SCM_API SCM scm_make_procedure_with_setter (SCM procedure, SCM setter);
-SCM_API SCM scm_procedure (SCM proc);
-SCM_API SCM scm_setter (SCM proc);
-SCM_API void scm_init_subr_table (void);
-SCM_API void scm_init_procs (void);
+SCM scm_makcclo (SCM proc, size_t len);
+SCM scm_procedure_p (SCM obj);
+SCM scm_closure_p (SCM obj);
+SCM scm_thunk_p (SCM obj);
+int scm_subr_p (SCM obj);
+SCM scm_procedure_documentation (SCM proc);
+SCM scm_procedure_with_setter_p (SCM obj);
+SCM scm_make_procedure_with_setter (SCM procedure, SCM setter);
+SCM scm_procedure (SCM proc);
+SCM scm_setter (SCM proc);
+void scm_init_subr_table (void);
+void scm_init_procs (void);
 
 #ifdef GUILE_DEBUG
-SCM_API SCM scm_make_cclo (SCM proc, SCM len);
+SCM scm_make_cclo (SCM proc, SCM len);
 #endif /*GUILE_DEBUG*/
 
 #endif  /* SCM_PROCS_H */

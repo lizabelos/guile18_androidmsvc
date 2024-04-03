@@ -51,18 +51,18 @@
 
 
 SCM_API int64_t scm_c_get_internal_run_time (void);
-SCM_API SCM scm_get_internal_real_time (void);
-SCM_API SCM scm_get_internal_run_time (void);
-SCM_API SCM scm_current_time (void);
-SCM_API SCM scm_gettimeofday (void);
-SCM_API SCM scm_localtime (SCM time, SCM zone);
-SCM_API SCM scm_gmtime (SCM time);
-SCM_API SCM scm_mktime (SCM sbd_time, SCM zone);
-SCM_API SCM scm_tzset (void);
-SCM_API SCM scm_times (void);
-SCM_API SCM scm_strftime (SCM format, SCM stime);
-SCM_API SCM scm_strptime (SCM format, SCM string);
-SCM_API void scm_init_stime (void);
+SCM scm_get_internal_real_time (void);
+SCM scm_get_internal_run_time (void);
+SCM scm_current_time (void);
+SCM scm_gettimeofday (void);
+SCM scm_localtime (SCM time, SCM zone);
+SCM scm_gmtime (SCM time);
+SCM scm_mktime (SCM sbd_time, SCM zone);
+SCM scm_tzset (void);
+SCM scm_times (void);
+SCM scm_strftime (SCM format, SCM stime);
+SCM scm_strptime (SCM format, SCM string);
+void scm_init_stime (void);
 
 #endif  /* SCM_STIME_H */
 

@@ -65,78 +65,78 @@
    functions since existing code may take their addresses.
 */
 
-SCM_API SCM scm_short2num (short n);
-SCM_API SCM scm_ushort2num (unsigned short n);
-SCM_API SCM scm_int2num (int n);
-SCM_API SCM scm_uint2num (unsigned int n);
-SCM_API SCM scm_long2num (long n);
-SCM_API SCM scm_ulong2num (unsigned long n);
-SCM_API SCM scm_size2num (size_t n);
-SCM_API SCM scm_ptrdiff2num (scm_t_ptrdiff n);
-SCM_API SCM scm_ent2num (int64_t n);
-SCM_API SCM scm_nat2num (uint64_t n);
+SCM scm_short2num (short n);
+SCM scm_ushort2num (unsigned short n);
+SCM scm_int2num (int n);
+SCM scm_uint2num (unsigned int n);
+SCM scm_long2num (long n);
+SCM scm_ulong2num (unsigned long n);
+SCM scm_size2num (size_t n);
+SCM scm_ptrdiff2num (scm_t_ptrdiff n);
+SCM scm_ent2num (int64_t n);
+SCM scm_nat2num (uint64_t n);
 
-SCM_API short scm_num2short (SCM num, uint64_t pos,
+short scm_num2short (SCM num, uint64_t pos,
                              const char *s_caller);
-SCM_API unsigned short scm_num2ushort (SCM num, uint64_t pos,
+unsigned short scm_num2ushort (SCM num, uint64_t pos,
                                        const char *s_caller);
-SCM_API int scm_num2int (SCM num, uint64_t pos,
+int scm_num2int (SCM num, uint64_t pos,
                          const char *s_caller);
-SCM_API unsigned int scm_num2uint (SCM num, uint64_t pos,
+unsigned int scm_num2uint (SCM num, uint64_t pos,
                                    const char *s_caller);
-SCM_API long scm_num2long (SCM num, uint64_t pos,
+long scm_num2long (SCM num, uint64_t pos,
                            const char *s_caller);
-SCM_API unsigned long scm_num2ulong (SCM num, uint64_t pos,
+unsigned long scm_num2ulong (SCM num, uint64_t pos,
                                      const char *s_caller);
-SCM_API scm_t_ptrdiff scm_num2ptrdiff (SCM num, uint64_t pos,
+scm_t_ptrdiff scm_num2ptrdiff (SCM num, uint64_t pos,
                                        const char *s_caller);
-SCM_API size_t scm_num2size (SCM num, uint64_t pos,
+size_t scm_num2size (SCM num, uint64_t pos,
                              const char *s_caller);
 SCM_API int64_t scm_num2ent (SCM num, uint64_t pos,
                              const char *s_caller);
 SCM_API uint64_t scm_num2nat (SCM num, uint64_t pos,
                               const char *s_caller);
 
-SCM_API SCM scm_long_long2num (long long sl);
-SCM_API SCM scm_ulong_long2num (unsigned long long sl);
-SCM_API long long scm_num2long_long (SCM num, uint64_t pos,
+SCM scm_long_long2num (long long sl);
+SCM scm_ulong_long2num (unsigned long long sl);
+long long scm_num2long_long (SCM num, uint64_t pos,
 				     const char *s_caller);
-SCM_API unsigned long long scm_num2ulong_long (SCM num, uint64_t pos,
+unsigned long long scm_num2ulong_long (SCM num, uint64_t pos,
 					       const char *s_caller);
 
-SCM_API SCM scm_make_real (double x);
-SCM_API double scm_num2dbl (SCM a, const char * why);
-SCM_API SCM scm_float2num (float n);
-SCM_API SCM scm_double2num (double n);
+SCM scm_make_real (double x);
+double scm_num2dbl (SCM a, const char * why);
+SCM scm_float2num (float n);
+SCM scm_double2num (double n);
 
 /* The next two are implemented in numbers.c since they use features
    only available there.
 */
-SCM_API float scm_num2float (SCM num, uint64_t pos,
+float scm_num2float (SCM num, uint64_t pos,
                              const char *s_caller);
-SCM_API double scm_num2double (SCM num, uint64_t pos,
+double scm_num2double (SCM num, uint64_t pos,
                                const char *s_caller);
 
-SCM_API SCM scm_make_complex (double x, double y);
+SCM scm_make_complex (double x, double y);
 
 /* Discouraged because they don't make the encoding explicit.
  */
 
-SCM_API SCM scm_mem2symbol (const char *mem, size_t len);
-SCM_API SCM scm_mem2uninterned_symbol (const char *mem, size_t len);
-SCM_API SCM scm_str2symbol (const char *str);
+SCM scm_mem2symbol (const char *mem, size_t len);
+SCM scm_mem2uninterned_symbol (const char *mem, size_t len);
+SCM scm_str2symbol (const char *str);
 
-SCM_API SCM scm_take_str (char *s, size_t len);
-SCM_API SCM scm_take0str (char *s);
-SCM_API SCM scm_mem2string (const char *src, size_t len);
-SCM_API SCM scm_str2string (const char *src);
-SCM_API SCM scm_makfrom0str (const char *src);
-SCM_API SCM scm_makfrom0str_opt (const char *src);
+SCM scm_take_str (char *s, size_t len);
+SCM scm_take0str (char *s);
+SCM scm_mem2string (const char *src, size_t len);
+SCM scm_str2string (const char *src);
+SCM scm_makfrom0str (const char *src);
+SCM scm_makfrom0str_opt (const char *src);
 
 /* Discouraged because scm_c_make_string has a better name and is more
    consistent with make-string.
  */
-SCM_API SCM scm_allocate_string (size_t len);
+SCM scm_allocate_string (size_t len);
 
 /* Discouraged because scm_is_symbol has a better name,
  */
@@ -166,13 +166,13 @@ SCM_API SCM scm_allocate_string (size_t len);
 /* Discouraged because they are just strange.
  */
 
-SCM_API SCM scm_make_keyword_from_dash_symbol (SCM symbol);
-SCM_API SCM scm_keyword_dash_symbol (SCM keyword);
+SCM scm_make_keyword_from_dash_symbol (SCM symbol);
+SCM scm_keyword_dash_symbol (SCM keyword);
 
 /* Discouraged because it does not state what encoding S is in.
  */
 
-SCM_API SCM scm_c_make_keyword (const char *s);
+SCM scm_c_make_keyword (const char *s);
 
 /* Discouraged because the 'internal' and 'thread' moniker is
    confusing.

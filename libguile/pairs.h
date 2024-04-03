@@ -75,16 +75,16 @@
 
 
 #if (SCM_DEBUG_PAIR_ACCESSES == 1)
-SCM_API void scm_error_pair_access (SCM);
+void scm_error_pair_access (SCM);
 #endif
 
-SCM_API SCM scm_cons (SCM x, SCM y);
-SCM_API SCM scm_cons2 (SCM w, SCM x, SCM y);
-SCM_API SCM scm_pair_p (SCM x);
-SCM_API SCM scm_car (SCM x);
-SCM_API SCM scm_cdr (SCM x);
-SCM_API SCM scm_set_car_x (SCM pair, SCM value);
-SCM_API SCM scm_set_cdr_x (SCM pair, SCM value);
+SCM scm_cons (SCM x, SCM y);
+SCM scm_cons2 (SCM w, SCM x, SCM y);
+SCM scm_pair_p (SCM x);
+SCM scm_car (SCM x);
+SCM scm_cdr (SCM x);
+SCM scm_set_car_x (SCM pair, SCM value);
+SCM scm_set_cdr_x (SCM pair, SCM value);
 
 #define SCM_I_D_PAT    0x02 /* 00000010 */
 #define SCM_I_A_PAT    0x03 /* 00000011 */
@@ -117,7 +117,7 @@ SCM_API SCM scm_set_cdr_x (SCM pair, SCM value);
 #define SCM_I_AAAD_PAT 0xfe /* 11111110 */
 #define SCM_I_AAAA_PAT 0xff /* 11111111 */
 
-SCM_API SCM scm_i_chase_pairs (SCM x, scm_t_uint32 pattern);
+SCM scm_i_chase_pairs (SCM x, scm_t_uint32 pattern);
 
 #define scm_cddr(x)   scm_i_chase_pairs ((x), SCM_I_DD_PAT)
 #define scm_cdar(x)   scm_i_chase_pairs ((x), SCM_I_DA_PAT)
@@ -148,7 +148,7 @@ SCM_API SCM scm_i_chase_pairs (SCM x, scm_t_uint32 pattern);
 #define scm_caaadr(x) scm_i_chase_pairs ((x), SCM_I_AAAD_PAT)
 #define scm_caaaar(x) scm_i_chase_pairs ((x), SCM_I_AAAA_PAT)
 
-SCM_API void scm_init_pairs (void);
+void scm_init_pairs (void);
 
 #endif  /* SCM_PAIRS_H */
 

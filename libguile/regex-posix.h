@@ -32,10 +32,10 @@ extern scm_t_bits scm_tc16_regex;
 #define SCM_RGX(X)	((regex_t *) SCM_SMOB_DATA (X))
 #define SCM_RGXP(X)	(SCM_SMOB_PREDICATE (scm_tc16_regex, (X)))
 
-SCM_API SCM scm_make_regexp (SCM pat, SCM flags);
-SCM_API SCM scm_regexp_p (SCM x);
-SCM_API SCM scm_regexp_exec (SCM rx, SCM str, SCM start, SCM flags);
-SCM_API void scm_init_regex_posix (void);
+SCM scm_make_regexp (SCM pat, SCM flags);
+SCM scm_regexp_p (SCM x);
+SCM scm_regexp_exec (SCM rx, SCM str, SCM start, SCM flags);
+void scm_init_regex_posix (void);
 
 #endif  /* HAVE_REGEX_H */
 

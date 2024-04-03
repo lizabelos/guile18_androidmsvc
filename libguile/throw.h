@@ -30,7 +30,7 @@ typedef SCM (*scm_t_catch_body) (void *data);
 typedef SCM (*scm_t_catch_handler) (void *data,
                                     SCM tag, SCM throw_args);
 
-SCM_API SCM scm_c_catch (SCM tag,
+SCM scm_c_catch (SCM tag,
 			 scm_t_catch_body body,
 			 void *body_data,
 			 scm_t_catch_handler handler,
@@ -38,26 +38,26 @@ SCM_API SCM scm_c_catch (SCM tag,
 			 scm_t_catch_handler pre_unwind_handler,
 			 void *pre_unwind_handler_data);
 
-SCM_API SCM scm_c_with_throw_handler (SCM tag,
+SCM scm_c_with_throw_handler (SCM tag,
 				      scm_t_catch_body body,
 				      void *body_data,
 				      scm_t_catch_handler handler,
 				      void *handler_data,
 				      int lazy_catch_p);
 
-SCM_API SCM scm_internal_catch (SCM tag,
+SCM scm_internal_catch (SCM tag,
 				scm_t_catch_body body,
 				void *body_data,
 				scm_t_catch_handler handler,
 				void *handler_data);
 
-SCM_API SCM scm_internal_lazy_catch (SCM tag,
+SCM scm_internal_lazy_catch (SCM tag,
 				     scm_t_catch_body body,
 				     void *body_data,
 				     scm_t_catch_handler handler,
 				     void *handler_data);
 
-SCM_API SCM scm_internal_stack_catch (SCM tag,
+SCM scm_internal_stack_catch (SCM tag,
 				      scm_t_catch_body body,
 				      void *body_data,
 				      scm_t_catch_handler handler,
@@ -77,24 +77,24 @@ struct scm_body_thunk_data
   SCM body_proc;
 };
 
-SCM_API SCM scm_body_thunk (void *);
+SCM scm_body_thunk (void *);
 
 
-SCM_API SCM scm_handle_by_proc (void *, SCM, SCM);
-SCM_API SCM scm_handle_by_proc_catching_all (void *, SCM, SCM);
-SCM_API SCM scm_handle_by_message (void *, SCM, SCM);
-SCM_API SCM scm_handle_by_message_noexit (void *, SCM, SCM);
-SCM_API SCM scm_handle_by_throw (void *, SCM, SCM);
-SCM_API int scm_exit_status (SCM args);
+SCM scm_handle_by_proc (void *, SCM, SCM);
+SCM scm_handle_by_proc_catching_all (void *, SCM, SCM);
+SCM scm_handle_by_message (void *, SCM, SCM);
+SCM scm_handle_by_message_noexit (void *, SCM, SCM);
+SCM scm_handle_by_throw (void *, SCM, SCM);
+int scm_exit_status (SCM args);
 
-SCM_API SCM scm_catch_with_pre_unwind_handler (SCM tag, SCM thunk, SCM handler, SCM lazy_handler);
-SCM_API SCM scm_catch (SCM tag, SCM thunk, SCM handler);
-SCM_API SCM scm_with_throw_handler (SCM tag, SCM thunk, SCM handler);
-SCM_API SCM scm_lazy_catch (SCM tag, SCM thunk, SCM handler);
-SCM_API SCM scm_ithrow (SCM key, SCM args, int noreturn);
+SCM scm_catch_with_pre_unwind_handler (SCM tag, SCM thunk, SCM handler, SCM lazy_handler);
+SCM scm_catch (SCM tag, SCM thunk, SCM handler);
+SCM scm_with_throw_handler (SCM tag, SCM thunk, SCM handler);
+SCM scm_lazy_catch (SCM tag, SCM thunk, SCM handler);
+SCM scm_ithrow (SCM key, SCM args, int noreturn);
 
-SCM_API SCM scm_throw (SCM key, SCM args);
-SCM_API void scm_init_throw (void);
+SCM scm_throw (SCM key, SCM args);
+void scm_init_throw (void);
 
 #endif  /* SCM_THROW_H */
 

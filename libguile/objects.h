@@ -180,34 +180,34 @@ extern SCM scm_metaclass_standard;
 extern SCM scm_metaclass_operator;
 
 /* Goops functions. */
-SCM_API SCM scm_make_extended_class (char const *type_name, int applicablep);
-SCM_API void scm_i_inherit_applicable (SCM c);
-SCM_API void scm_make_port_classes (int64_t ptobnum, char *type_name);
-SCM_API void scm_change_object_class (SCM, SCM, SCM);
-SCM_API SCM scm_memoize_method (SCM x, SCM args);
+SCM scm_make_extended_class (char const *type_name, int applicablep);
+void scm_i_inherit_applicable (SCM c);
+void scm_make_port_classes (int64_t ptobnum, char *type_name);
+void scm_change_object_class (SCM, SCM, SCM);
+SCM scm_memoize_method (SCM x, SCM args);
 
-SCM_API SCM scm_mcache_lookup_cmethod (SCM cache, SCM args);
-SCM_API SCM scm_mcache_compute_cmethod (SCM cache, SCM args);
+SCM scm_mcache_lookup_cmethod (SCM cache, SCM args);
+SCM scm_mcache_compute_cmethod (SCM cache, SCM args);
 /* The following are declared in __scm.h
-SCM_API SCM scm_call_generic_0 (SCM gf);
-SCM_API SCM scm_call_generic_1 (SCM gf, SCM a1);
-SCM_API SCM scm_call_generic_2 (SCM gf, SCM a1, SCM a2);
-SCM_API SCM scm_apply_generic (SCM gf, SCM args);
+SCM scm_call_generic_0 (SCM gf);
+SCM scm_call_generic_1 (SCM gf, SCM a1);
+SCM scm_call_generic_2 (SCM gf, SCM a1, SCM a2);
+SCM scm_apply_generic (SCM gf, SCM args);
 */
-SCM_API SCM scm_call_generic_3 (SCM gf, SCM a1, SCM a2, SCM a3);
-SCM_API SCM scm_entity_p (SCM obj);
-SCM_API SCM scm_operator_p (SCM obj);
-SCM_API SCM scm_valid_object_procedure_p (SCM proc);
-SCM_API SCM scm_set_object_procedure_x (SCM obj, SCM proc);
+SCM scm_call_generic_3 (SCM gf, SCM a1, SCM a2, SCM a3);
+SCM scm_entity_p (SCM obj);
+SCM scm_operator_p (SCM obj);
+SCM scm_valid_object_procedure_p (SCM proc);
+SCM scm_set_object_procedure_x (SCM obj, SCM proc);
 #ifdef GUILE_DEBUG
-SCM_API SCM scm_object_procedure (SCM obj);
+SCM scm_object_procedure (SCM obj);
 #endif
-SCM_API SCM scm_make_class_object (SCM metaclass, SCM layout);
-SCM_API SCM scm_make_subclass_object (SCM c, SCM layout);
+SCM scm_make_class_object (SCM metaclass, SCM layout);
+SCM scm_make_subclass_object (SCM c, SCM layout);
 
-SCM_API SCM scm_i_make_class_object (SCM metaclass, SCM layout_string,
+SCM scm_i_make_class_object (SCM metaclass, SCM layout_string,
                                      uint64_t flags);
-SCM_API void scm_init_objects (void);
+void scm_init_objects (void);
 
 #endif  /* SCM_OBJECTS_H */
 

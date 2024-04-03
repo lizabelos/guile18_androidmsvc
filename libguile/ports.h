@@ -199,96 +199,96 @@ extern int64_t scm_i_port_table_room;
 
 
 
-SCM_API SCM scm_markstream (SCM ptr);
-SCM_API scm_t_bits scm_make_port_type (char *name,
+SCM scm_markstream (SCM ptr);
+scm_t_bits scm_make_port_type (char *name,
 				       int (*fill_input) (SCM port),
 				       void (*write) (SCM port, 
 						      const void *data,
 						      size_t size));
-SCM_API void scm_set_port_mark (scm_t_bits tc, SCM (*mark) (SCM));
-SCM_API void scm_set_port_free (scm_t_bits tc, size_t (*free) (SCM));
-SCM_API void scm_set_port_print (scm_t_bits tc,
+void scm_set_port_mark (scm_t_bits tc, SCM (*mark) (SCM));
+void scm_set_port_free (scm_t_bits tc, size_t (*free) (SCM));
+void scm_set_port_print (scm_t_bits tc,
 				 int (*print) (SCM exp,
 					       SCM port,
 					       scm_print_state *pstate));
-SCM_API void scm_set_port_equalp (scm_t_bits tc, SCM (*equalp) (SCM, SCM));
-SCM_API void scm_set_port_close (scm_t_bits tc, int (*close) (SCM));
+void scm_set_port_equalp (scm_t_bits tc, SCM (*equalp) (SCM, SCM));
+void scm_set_port_close (scm_t_bits tc, int (*close) (SCM));
 
-SCM_API void scm_set_port_flush (scm_t_bits tc, 
+void scm_set_port_flush (scm_t_bits tc,
 				 void (*flush) (SCM port));
-SCM_API void scm_set_port_end_input (scm_t_bits tc,
+void scm_set_port_end_input (scm_t_bits tc,
 				     void (*end_input) (SCM port,
 							int offset));
-SCM_API void scm_set_port_seek (scm_t_bits tc,
+void scm_set_port_seek (scm_t_bits tc,
 				off_t (*seek) (SCM port,
 					       off_t OFFSET,
 					       int WHENCE));
-SCM_API void scm_set_port_truncate (scm_t_bits tc,
+void scm_set_port_truncate (scm_t_bits tc,
 				    void (*truncate) (SCM port,
 						      off_t length));
-SCM_API void scm_set_port_input_waiting (scm_t_bits tc, int (*input_waiting) (SCM));
-SCM_API SCM scm_char_ready_p (SCM port);
+void scm_set_port_input_waiting (scm_t_bits tc, int (*input_waiting) (SCM));
+SCM scm_char_ready_p (SCM port);
 size_t scm_take_from_input_buffers (SCM port, char *dest, size_t read_len);
-SCM_API SCM scm_drain_input (SCM port);
-SCM_API SCM scm_current_input_port (void);
-SCM_API SCM scm_current_output_port (void);
-SCM_API SCM scm_current_error_port (void);
-SCM_API SCM scm_current_load_port (void);
-SCM_API SCM scm_set_current_input_port (SCM port);
-SCM_API SCM scm_set_current_output_port (SCM port);
-SCM_API SCM scm_set_current_error_port (SCM port);
-SCM_API void scm_dynwind_current_input_port (SCM port);
-SCM_API void scm_dynwind_current_output_port (SCM port);
-SCM_API void scm_dynwind_current_error_port (SCM port);
-SCM_API SCM scm_new_port_table_entry (scm_t_bits tag);
-SCM_API void scm_remove_from_port_table (SCM port);
-SCM_API void scm_grow_port_cbuf (SCM port, size_t requested);
-SCM_API SCM scm_pt_size (void);
-SCM_API SCM scm_pt_member (SCM member);
-SCM_API void scm_port_non_buffer (scm_t_port *pt);
-SCM_API int scm_revealed_count (SCM port);
-SCM_API SCM scm_port_revealed (SCM port);
-SCM_API SCM scm_set_port_revealed_x (SCM port, SCM rcount);
+SCM scm_drain_input (SCM port);
+SCM scm_current_input_port (void);
+SCM scm_current_output_port (void);
+SCM scm_current_error_port (void);
+SCM scm_current_load_port (void);
+SCM scm_set_current_input_port (SCM port);
+SCM scm_set_current_output_port (SCM port);
+SCM scm_set_current_error_port (SCM port);
+void scm_dynwind_current_input_port (SCM port);
+void scm_dynwind_current_output_port (SCM port);
+void scm_dynwind_current_error_port (SCM port);
+SCM scm_new_port_table_entry (scm_t_bits tag);
+void scm_remove_from_port_table (SCM port);
+void scm_grow_port_cbuf (SCM port, size_t requested);
+SCM scm_pt_size (void);
+SCM scm_pt_member (SCM member);
+void scm_port_non_buffer (scm_t_port *pt);
+int scm_revealed_count (SCM port);
+SCM scm_port_revealed (SCM port);
+SCM scm_set_port_revealed_x (SCM port, SCM rcount);
 SCM_API int64_t scm_mode_bits (char *modes);
-SCM_API SCM scm_port_mode (SCM port);
-SCM_API SCM scm_close_input_port (SCM port);
-SCM_API SCM scm_close_output_port (SCM port);
-SCM_API SCM scm_close_port (SCM port);
-SCM_API SCM scm_port_for_each (SCM proc);
-SCM_API void scm_c_port_for_each (void (*proc)(void *data, SCM p), void *data);
-SCM_API SCM scm_input_port_p (SCM x);
-SCM_API SCM scm_output_port_p (SCM x);
-SCM_API SCM scm_port_p (SCM x);
-SCM_API SCM scm_port_closed_p (SCM port);
-SCM_API SCM scm_eof_object_p (SCM x);
-SCM_API SCM scm_force_output (SCM port);
-SCM_API SCM scm_flush_all_ports (void);
-SCM_API SCM scm_read_char (SCM port);
-SCM_API size_t scm_c_read (SCM port, void *buffer, size_t size);
-SCM_API void scm_c_write (SCM port, const void *buffer, size_t size);
-SCM_API void scm_lfwrite (const char *ptr, size_t size, SCM port);
-SCM_API void scm_flush (SCM port);
-SCM_API void scm_end_input (SCM port);
-SCM_API int scm_fill_input (SCM port);
-SCM_API void scm_ungetc (int c, SCM port);
-SCM_API void scm_ungets (const char *s, int n, SCM port);
-SCM_API SCM scm_peek_char (SCM port);
-SCM_API SCM scm_unread_char (SCM cobj, SCM port);
-SCM_API SCM scm_unread_string (SCM str, SCM port);
-SCM_API SCM scm_seek (SCM object, SCM offset, SCM whence);
-SCM_API SCM scm_truncate_file (SCM object, SCM length);
-SCM_API SCM scm_port_line (SCM port);
-SCM_API SCM scm_set_port_line_x (SCM port, SCM line);
-SCM_API SCM scm_port_column (SCM port);
-SCM_API SCM scm_set_port_column_x (SCM port, SCM line);
-SCM_API SCM scm_port_filename (SCM port);
-SCM_API SCM scm_set_port_filename_x (SCM port, SCM filename);
-SCM_API int scm_port_print (SCM exp, SCM port, scm_print_state *);
-SCM_API void scm_print_port_mode (SCM exp, SCM port);
-SCM_API void scm_ports_prehistory (void);
-SCM_API SCM scm_void_port (char * mode_str);
-SCM_API SCM scm_sys_make_void_port (SCM mode);
-SCM_API void scm_init_ports (void);
+SCM scm_port_mode (SCM port);
+SCM scm_close_input_port (SCM port);
+SCM scm_close_output_port (SCM port);
+SCM scm_close_port (SCM port);
+SCM scm_port_for_each (SCM proc);
+void scm_c_port_for_each (void (*proc)(void *data, SCM p), void *data);
+SCM scm_input_port_p (SCM x);
+SCM scm_output_port_p (SCM x);
+SCM scm_port_p (SCM x);
+SCM scm_port_closed_p (SCM port);
+SCM scm_eof_object_p (SCM x);
+SCM scm_force_output (SCM port);
+SCM scm_flush_all_ports (void);
+SCM scm_read_char (SCM port);
+size_t scm_c_read (SCM port, void *buffer, size_t size);
+void scm_c_write (SCM port, const void *buffer, size_t size);
+void scm_lfwrite (const char *ptr, size_t size, SCM port);
+void scm_flush (SCM port);
+void scm_end_input (SCM port);
+int scm_fill_input (SCM port);
+void scm_ungetc (int c, SCM port);
+void scm_ungets (const char *s, int n, SCM port);
+SCM scm_peek_char (SCM port);
+SCM scm_unread_char (SCM cobj, SCM port);
+SCM scm_unread_string (SCM str, SCM port);
+SCM scm_seek (SCM object, SCM offset, SCM whence);
+SCM scm_truncate_file (SCM object, SCM length);
+SCM scm_port_line (SCM port);
+SCM scm_set_port_line_x (SCM port, SCM line);
+SCM scm_port_column (SCM port);
+SCM scm_set_port_column_x (SCM port, SCM line);
+SCM scm_port_filename (SCM port);
+SCM scm_set_port_filename_x (SCM port, SCM filename);
+int scm_port_print (SCM exp, SCM port, scm_print_state *);
+void scm_print_port_mode (SCM exp, SCM port);
+void scm_ports_prehistory (void);
+SCM scm_void_port (char * mode_str);
+SCM scm_sys_make_void_port (SCM mode);
+void scm_init_ports (void);
 
 
 #if SCM_ENABLE_DEPRECATED==1
@@ -296,14 +296,14 @@ SCM_API scm_t_port * scm_add_to_port_table (SCM port);
 #endif
 
 #ifdef GUILE_DEBUG
-SCM_API SCM scm_pt_size (void);
-SCM_API SCM scm_pt_member (SCM member);
+SCM scm_pt_size (void);
+SCM scm_pt_member (SCM member);
 #endif /* GUILE_DEBUG */
 
 /* internal */
 
 SCM_API int64_t scm_i_mode_bits (SCM modes);
-SCM_API void scm_i_dynwind_current_load_port (SCM port);
+void scm_i_dynwind_current_load_port (SCM port);
 
 
 #endif  /* SCM_PORTS_H */

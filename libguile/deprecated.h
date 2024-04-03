@@ -95,18 +95,18 @@ extern const char scm_s_formals[];
 
 #define scm_sizet size_t
 
-SCM_API SCM scm_wta (SCM arg, const char *pos, const char *s_subr);
+SCM scm_wta (SCM arg, const char *pos, const char *s_subr);
 
 #define SCM_WNA 		8
 #define SCM_OUTOFRANGE         10
 #define SCM_NALLOC             11
 
-SCM_API void scm_register_module_xxx (char *module_name, void *init_func);
-SCM_API SCM scm_registered_modules (void);
-SCM_API SCM scm_clear_registered_modules (void);
+void scm_register_module_xxx (char *module_name, void *init_func);
+SCM scm_registered_modules (void);
+SCM scm_clear_registered_modules (void);
 
-SCM_API SCM scm_protect_object (SCM obj);
-SCM_API SCM scm_unprotect_object (SCM obj);
+SCM scm_protect_object (SCM obj);
+SCM scm_unprotect_object (SCM obj);
 
 #define SCM_SETAND_CAR(x, y) \
   (SCM_SETCAR ((x), SCM_PACK (SCM_UNPACK (SCM_CAR (x)) & (y))))
@@ -123,18 +123,18 @@ SCM_API SCM scm_unprotect_object (SCM obj);
 #define SCM_CLRGC8MARK(x) SCM_CLEAR_GC_MARK (x)
 #define SCM_GCTYP16(x) SCM_TYP16 (x)
 #define SCM_GCCDR(x) SCM_CDR (x)
-SCM_API void scm_remember (SCM * ptr);
+void scm_remember (SCM * ptr);
 
-SCM_API SCM scm_the_root_module (void);
-SCM_API SCM scm_make_module (SCM name);
-SCM_API SCM scm_ensure_user_module (SCM name);
-SCM_API SCM scm_load_scheme_module (SCM name);
+SCM scm_the_root_module (void);
+SCM scm_make_module (SCM name);
+SCM scm_ensure_user_module (SCM name);
+SCM scm_load_scheme_module (SCM name);
 
 #define scm_port scm_t_port
 #define scm_ptob_descriptor scm_t_ptob_descriptor
 #define scm_port_rw_active scm_t_port_rw_active
 
-SCM_API SCM scm_close_all_ports_except (SCM ports);
+SCM scm_close_all_ports_except (SCM ports);
 
 #define scm_rstate scm_t_rstate
 #define scm_rng scm_t_rng
@@ -146,25 +146,25 @@ SCM_API SCM scm_close_all_ports_except (SCM ports);
 #define scm_tc7_msymbol		scm_tc7_symbol
 #define scm_tcs_symbols         scm_tc7_symbol
 
-SCM_API SCM scm_makstr (size_t len, int);
-SCM_API SCM scm_makfromstr (const char *src, size_t len, int);
+SCM scm_makstr (size_t len, int);
+SCM scm_makfromstr (const char *src, size_t len, int);
 
-SCM_API SCM scm_variable_set_name_hint (SCM var, SCM hint);
-SCM_API SCM scm_builtin_variable (SCM name);
+SCM scm_variable_set_name_hint (SCM var, SCM hint);
+SCM scm_builtin_variable (SCM name);
 
-SCM_API SCM scm_internal_with_fluids (SCM fluids, SCM vals,
+SCM scm_internal_with_fluids (SCM fluids, SCM vals,
 				      SCM (*cproc)(void *), void *cdata);
 
-SCM_API SCM scm_make_gsubr (const char *name, int req, int opt, int rst,
+SCM scm_make_gsubr (const char *name, int req, int opt, int rst,
 			    SCM (*fcn)());
-SCM_API SCM scm_make_gsubr_with_generic (const char *name,
+SCM scm_make_gsubr_with_generic (const char *name,
 					 int req,
 					 int opt,
 					 int rst,
 					 SCM (*fcn)(),
 					 SCM *gf);
 
-SCM_API SCM scm_create_hook (const char* name, int n_args);
+SCM scm_create_hook (const char* name, int n_args);
 
 #define SCM_LIST0 SCM_EOL
 #define SCM_LIST1(e0) scm_cons ((e0), SCM_EOL)
@@ -186,27 +186,27 @@ SCM_API SCM scm_create_hook (const char* name, int n_args);
 
 #define scm_listify scm_list_n
 
-SCM_API SCM scm_sloppy_memq (SCM x, SCM lst);
-SCM_API SCM scm_sloppy_memv (SCM x, SCM lst);
-SCM_API SCM scm_sloppy_member (SCM x, SCM lst);
+SCM scm_sloppy_memq (SCM x, SCM lst);
+SCM scm_sloppy_memv (SCM x, SCM lst);
+SCM scm_sloppy_member (SCM x, SCM lst);
 
-SCM_API SCM scm_read_and_eval_x (SCM port);
+SCM scm_read_and_eval_x (SCM port);
 
 #define scm_subr_entry scm_t_subr_entry
 
 #define SCM_SUBR_DOC(x) SCM_BOOL_F
 
-SCM_API SCM scm_make_subr (const char *name, int type, SCM (*fcn) ());
-SCM_API SCM scm_make_subr_with_generic (const char *name,
+SCM scm_make_subr (const char *name, int type, SCM (*fcn) ());
+SCM scm_make_subr_with_generic (const char *name,
 					int type,
 					SCM (*fcn) (),
 					SCM *gf);
-SCM_API SCM scm_make_subr_opt (const char *name, 
+SCM scm_make_subr_opt (const char *name,
 			       int type, 
 			       SCM (*fcn) (),
 			       int set);
 
-SCM_API SCM scm_call_catching_errors (SCM (*thunk)(), SCM (*err_filter)(),
+SCM scm_call_catching_errors (SCM (*thunk)(), SCM (*err_filter)(),
 				      void * closure);
 
 SCM_API int64_t scm_make_smob_type_mfpe (char *name, size_t size,
@@ -216,17 +216,17 @@ SCM_API int64_t scm_make_smob_type_mfpe (char *name, size_t size,
 						   scm_print_state*),
                                          SCM (*equalp) (SCM, SCM));
 
-SCM_API void scm_set_smob_mfpe (int64_t tc,
+void scm_set_smob_mfpe (int64_t tc,
                                 SCM (*mark) (SCM),
                                 size_t (*free) (SCM),
                                 int (*print) (SCM, SCM, scm_print_state*),
                                 SCM (*equalp) (SCM, SCM));
 
-SCM_API SCM scm_strprint_obj (SCM obj);
-SCM_API SCM scm_read_0str (char *expr);
-SCM_API SCM scm_eval_0str (const char *expr);
+SCM scm_strprint_obj (SCM obj);
+SCM scm_read_0str (char *expr);
+SCM scm_eval_0str (const char *expr);
 
-SCM_API char *scm_i_object_chars (SCM);
+char *scm_i_object_chars (SCM);
 
 #define SCM_CHARS(x)   scm_i_object_chars(x)
 #define SCM_UCHARS(x)  ((unsigned char *)SCM_CHARS(x))
@@ -237,25 +237,25 @@ SCM_API int64_t scm_i_object_length (SCM);
 
 #define scm_strhash(str, len, n) (scm_string_hash ((str), (len)) % (n))
 
-SCM_API SCM scm_sym2ovcell_soft (SCM sym, SCM obarray);
-SCM_API SCM scm_sym2ovcell (SCM sym, SCM obarray);
-SCM_API SCM scm_intern_obarray_soft (const char *name, size_t len,
+SCM scm_sym2ovcell_soft (SCM sym, SCM obarray);
+SCM scm_sym2ovcell (SCM sym, SCM obarray);
+SCM scm_intern_obarray_soft (const char *name, size_t len,
 				     SCM obarray, unsigned int softness);
-SCM_API SCM scm_intern_obarray (const char *name, size_t len, SCM obarray);
-SCM_API SCM scm_symbol_value0 (const char *name);
+SCM scm_intern_obarray (const char *name, size_t len, SCM obarray);
+SCM scm_symbol_value0 (const char *name);
 
-SCM_API SCM scm_string_to_obarray_symbol (SCM o, SCM s, SCM softp);
-SCM_API SCM scm_intern_symbol (SCM o, SCM s);
-SCM_API SCM scm_unintern_symbol (SCM o, SCM s);
-SCM_API SCM scm_symbol_binding (SCM o, SCM s);
+SCM scm_string_to_obarray_symbol (SCM o, SCM s, SCM softp);
+SCM scm_intern_symbol (SCM o, SCM s);
+SCM scm_unintern_symbol (SCM o, SCM s);
+SCM scm_symbol_binding (SCM o, SCM s);
 #if 0
 /* This name has been reused for real uninterned symbols. */
-SCM_API SCM scm_symbol_interned_p (SCM o, SCM s);
+SCM scm_symbol_interned_p (SCM o, SCM s);
 #endif
-SCM_API SCM scm_symbol_bound_p (SCM o, SCM s);
-SCM_API SCM scm_symbol_set_x (SCM o, SCM s, SCM v);
+SCM scm_symbol_bound_p (SCM o, SCM s);
+SCM scm_symbol_set_x (SCM o, SCM s, SCM v);
 
-SCM_API SCM scm_gentemp (SCM prefix, SCM obarray);
+SCM scm_gentemp (SCM prefix, SCM obarray);
 
 #define SCM_OPDIRP(x) (SCM_DIRP (x) && (SCM_DIR_OPEN_P (x)))
 #define scm_fport scm_t_fport
@@ -308,9 +308,9 @@ SCM_API SCM scm_gentemp (SCM prefix, SCM obarray);
 /* Users shouldn't know about INUMs.
  */
 
-SCM_API SCM scm_i_makinum (scm_t_signed_bits val);
-SCM_API int scm_i_inump (SCM obj);
-SCM_API scm_t_signed_bits scm_i_inum (SCM obj);
+SCM scm_i_makinum (scm_t_signed_bits val);
+int scm_i_inump (SCM obj);
+scm_t_signed_bits scm_i_inum (SCM obj);
 
 #define SCM_MAKINUM(x)   scm_i_makinum(x)
 #define SCM_INUM(x)      scm_i_inum(x)
@@ -403,7 +403,7 @@ SCM_API scm_t_signed_bits scm_i_inum (SCM obj);
    copies the complete contents of OBJ, and sets *LENP to the length of the
    scheme string (if LENP is non-null).  
 */
-SCM_API char *scm_c_string2str (SCM obj, char *str, size_t *lenp);
+char *scm_c_string2str (SCM obj, char *str, size_t *lenp);
 
 /* XXX - buggy interface, you don't know how many bytes have been copied.
 
@@ -415,15 +415,15 @@ SCM_API char *scm_c_string2str (SCM obj, char *str, size_t *lenp);
    region to fit the string.  If truncation occurs, the corresponding
    area of STR is left unchanged.  
 */
-SCM_API char *scm_c_substring2str (SCM obj, char *str, size_t start, size_t len);
+char *scm_c_substring2str (SCM obj, char *str, size_t start, size_t len);
 
-SCM_API char *scm_c_symbol2str (SCM obj, char *str, size_t *lenp);
+char *scm_c_symbol2str (SCM obj, char *str, size_t *lenp);
 
 /* Deprecated because the names belong to what is now
    scm_truncate_number and scm_round_number.
 */
-SCM_API double scm_truncate (double x);
-SCM_API double scm_round (double x);
+double scm_truncate (double x);
+double scm_round (double x);
 
 /* Deprecated because we don't want people to access the internal
    representation of strings directly.
@@ -457,8 +457,8 @@ SCM_API double scm_round (double x);
    symbols directly.
 */
 
-SCM_API char *scm_i_deprecated_symbol_chars (SCM sym);
-SCM_API size_t scm_i_deprecated_symbol_length (SCM sym);
+char *scm_i_deprecated_symbol_chars (SCM sym);
+size_t scm_i_deprecated_symbol_length (SCM sym);
 
 #define SCM_SYMBOL_CHARS(x)  scm_i_deprecated_symbol_chars(x)
 #define SCM_SYMBOL_LENGTH(x) scm_i_deprecated_symbol_length(x)
@@ -467,8 +467,8 @@ SCM_API size_t scm_i_deprecated_symbol_length (SCM sym);
    than once and because the symbol of a keyword now has no dash.
 */
 
-SCM_API int scm_i_keywordp (SCM obj);
-SCM_API SCM scm_i_keywordsym (SCM keyword);
+int scm_i_keywordp (SCM obj);
+SCM scm_i_keywordsym (SCM keyword);
 
 #define SCM_KEYWORDP(x)   scm_i_keywordp(x)
 #define SCM_KEYWORDSYM(x) scm_i_keywordsym(x)
@@ -478,13 +478,13 @@ SCM_API SCM scm_i_keywordsym (SCM keyword);
 
 #define SCM_VECTOR_MAX_LENGTH ((((int64_t) 1L) << 24) - 1)
 
-SCM_API int scm_i_vectorp (SCM x);
+int scm_i_vectorp (SCM x);
 SCM_API uint64_t scm_i_vector_length (SCM x);
-SCM_API const SCM *scm_i_velts (SCM x);
-SCM_API SCM *scm_i_writable_velts (SCM x);
-SCM_API SCM scm_i_vector_ref (SCM x, size_t idx);
-SCM_API void scm_i_vector_set (SCM x, size_t idx, SCM val);
-SCM_API SCM scm_vector_equal_p (SCM x, SCM y);
+const SCM *scm_i_velts (SCM x);
+SCM *scm_i_writable_velts (SCM x);
+SCM scm_i_vector_ref (SCM x, size_t idx);
+void scm_i_vector_set (SCM x, size_t idx, SCM val);
+SCM scm_vector_equal_p (SCM x, SCM y);
 
 #define SCM_VECTORP(x)         scm_i_vectorp(x)
 #define SCM_VECTOR_LENGTH(x)   scm_i_vector_length(x)
@@ -495,13 +495,13 @@ SCM_API SCM scm_vector_equal_p (SCM x, SCM y);
 
 typedef scm_i_t_array scm_t_array;
 
-SCM_API int scm_i_arrayp (SCM a);
-SCM_API size_t scm_i_array_ndim (SCM a);
-SCM_API int scm_i_array_contp (SCM a);
-SCM_API scm_t_array *scm_i_array_mem (SCM a);
-SCM_API SCM scm_i_array_v (SCM a);
-SCM_API size_t scm_i_array_base (SCM a);
-SCM_API scm_t_array_dim *scm_i_array_dims (SCM a);
+int scm_i_arrayp (SCM a);
+size_t scm_i_array_ndim (SCM a);
+int scm_i_array_contp (SCM a);
+scm_t_array *scm_i_array_mem (SCM a);
+SCM scm_i_array_v (SCM a);
+size_t scm_i_array_base (SCM a);
+scm_t_array_dim *scm_i_array_dims (SCM a);
 
 #define SCM_ARRAYP(a)      scm_i_arrayp(a)
 #define SCM_ARRAY_NDIM(a)  scm_i_array_ndim(a)
@@ -524,19 +524,19 @@ SCM_API scm_t_array_dim *scm_i_array_dims (SCM a);
 #define scm_last_debug_frame  scm_i_deprecated_last_debug_frame ()
 #define scm_stack_base        scm_i_stack_base ()
 
-SCM_API SCM scm_i_cur_inp (void);
-SCM_API SCM scm_i_cur_outp (void);
-SCM_API SCM scm_i_cur_errp (void);
-SCM_API SCM scm_i_cur_loadp (void);
-SCM_API SCM scm_i_progargs (void);
-SCM_API SCM scm_i_deprecated_dynwinds (void);
-SCM_API scm_t_debug_frame *scm_i_deprecated_last_debug_frame (void);
-SCM_API SCM_STACKITEM *scm_i_stack_base (void);
+SCM scm_i_cur_inp (void);
+SCM scm_i_cur_outp (void);
+SCM scm_i_cur_errp (void);
+SCM scm_i_cur_loadp (void);
+SCM scm_i_progargs (void);
+SCM scm_i_deprecated_dynwinds (void);
+scm_t_debug_frame *scm_i_deprecated_last_debug_frame (void);
+SCM_STACKITEM *scm_i_stack_base (void);
 
 /* Deprecated because it evaluates its argument twice.
  */
 #define SCM_FLUIDP(x) scm_i_fluidp (x)
-SCM_API int scm_i_fluidp (SCM x);
+int scm_i_fluidp (SCM x);
 
 /* In the old days, SCM_CRITICAL_SECTION_START stopped signal handlers
    from running, since in those days the handler directly ran scheme
@@ -564,7 +564,7 @@ SCM_API int scm_i_fluidp (SCM x);
    similar DEFER/ALLOW region.
 */
 
-SCM_API void scm_i_defer_ints_etc (void);
+void scm_i_defer_ints_etc (void);
 #define SCM_DEFER_INTS scm_i_defer_ints_etc ()
 #define SCM_ALLOW_INTS scm_i_defer_ints_etc ()
 #define SCM_REDEFER_INTS scm_i_defer_ints_etc ()
@@ -572,14 +572,14 @@ SCM_API void scm_i_defer_ints_etc (void);
 
 /* Deprecated since they are unnecessary and had not been documented.
  */
-SCM_API SCM scm_guard (SCM guardian, SCM obj, int throw_p);
-SCM_API SCM scm_get_one_zombie (SCM guardian);
+SCM scm_guard (SCM guardian, SCM obj, int throw_p);
+SCM scm_get_one_zombie (SCM guardian);
 
 /* Deprecated since guardians no longer have these special features.
  */
-SCM_API SCM scm_destroy_guardian_x (SCM guardian);
-SCM_API SCM scm_guardian_greedy_p (SCM guardian);
-SCM_API SCM scm_guardian_destroyed_p (SCM guardian);
+SCM scm_destroy_guardian_x (SCM guardian);
+SCM scm_guardian_greedy_p (SCM guardian);
+SCM scm_guardian_destroyed_p (SCM guardian);
 
 void scm_i_init_deprecated (void);
 

@@ -26,15 +26,15 @@
 
 
 
-SCM_API SCM scm_gethost (SCM host);
-SCM_API SCM scm_getnet (SCM name);
-SCM_API SCM scm_getproto (SCM name);
-SCM_API SCM scm_getserv (SCM name, SCM proto);
-SCM_API SCM scm_sethost (SCM arg);
-SCM_API SCM scm_setnet (SCM arg);
-SCM_API SCM scm_setproto (SCM arg);
-SCM_API SCM scm_setserv (SCM arg);
-SCM_API void scm_init_net_db (void);
+SCM scm_gethost (SCM host);
+SCM scm_getnet (SCM name);
+SCM scm_getproto (SCM name);
+SCM scm_getserv (SCM name, SCM proto);
+SCM scm_sethost (SCM arg);
+SCM scm_setnet (SCM arg);
+SCM scm_setproto (SCM arg);
+SCM scm_setserv (SCM arg);
+void scm_init_net_db (void);
 
 #endif  /* SCM_NET_DB_H */
 

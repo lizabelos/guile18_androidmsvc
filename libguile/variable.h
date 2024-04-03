@@ -36,16 +36,16 @@
 
 
 
-SCM_API SCM scm_make_variable (SCM init);
-SCM_API SCM scm_make_undefined_variable (void);
-SCM_API SCM scm_variable_p (SCM obj);
-SCM_API SCM scm_variable_ref (SCM var);
-SCM_API SCM scm_variable_set_x (SCM var, SCM val);
-SCM_API SCM scm_variable_bound_p (SCM var);
+SCM scm_make_variable (SCM init);
+SCM scm_make_undefined_variable (void);
+SCM scm_variable_p (SCM obj);
+SCM scm_variable_ref (SCM var);
+SCM scm_variable_set_x (SCM var, SCM val);
+SCM scm_variable_bound_p (SCM var);
 
-SCM_API void scm_i_variable_print (SCM var, SCM port, scm_print_state *pstate);
+void scm_i_variable_print (SCM var, SCM port, scm_print_state *pstate);
 
-SCM_API void scm_init_variable (void);
+void scm_init_variable (void);
 
 #endif  /* SCM_VARIABLE_H */
 

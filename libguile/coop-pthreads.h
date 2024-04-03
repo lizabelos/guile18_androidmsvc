@@ -70,7 +70,7 @@ SCM_API int scm_i_switch_counter;
 #define SCM_SET_THREAD_LOCAL_DATA(ptr) (scm_i_copt_set_thread_data (ptr))
 
 SCM_API void *scm_i_copt_thread_data;
-SCM_API void scm_i_copt_set_thread_data (void *data);
+void scm_i_copt_set_thread_data (void *data);
 
 #endif  /* SCM_COOP_PTHREAD_H */
 

@@ -32,12 +32,12 @@ extern SCM scm_sym_system_procedure;
 
 
 
-SCM_API SCM scm_i_procedure_arity (SCM proc);
-SCM_API SCM scm_procedure_properties (SCM proc);
-SCM_API SCM scm_set_procedure_properties_x (SCM proc, SCM new_val);
-SCM_API SCM scm_procedure_property (SCM p, SCM k);
-SCM_API SCM scm_set_procedure_property_x (SCM p, SCM k, SCM v);
-SCM_API void scm_init_procprop (void);
+SCM scm_i_procedure_arity (SCM proc);
+SCM scm_procedure_properties (SCM proc);
+SCM scm_set_procedure_properties_x (SCM proc, SCM new_val);
+SCM scm_procedure_property (SCM p, SCM k);
+SCM scm_set_procedure_property_x (SCM p, SCM k, SCM v);
+void scm_init_procprop (void);
 
 #endif  /* SCM_PROCPROP_H */
 

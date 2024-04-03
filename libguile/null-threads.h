@@ -60,7 +60,7 @@
 
 /* Condition variables
  */
-SCM_API int null_thread_cond_wait_abort (void);
+int null_thread_cond_wait_abort (void);
 #define SCM_I_PTHREAD_COND_INITIALIZER      0
 #define scm_i_pthread_cond_t                int
 #define scm_i_pthread_cond_init(c,a)        (*(c) = 0)
@@ -86,7 +86,7 @@ typedef struct scm_i_pthread_key_t {
   void (*destr_func) (void *);
 } scm_i_pthread_key_t;
 
-SCM_API int scm_i_pthread_key_create (scm_i_pthread_key_t *key,
+int scm_i_pthread_key_create (scm_i_pthread_key_t *key,
 				      void (*destr_func) (void *));
 #define scm_i_pthread_setspecific(k,p)      ((k).value = (p))
 #define scm_i_pthread_getspecific(k)        ((k).value)

@@ -26,23 +26,23 @@
 
 
 
-SCM_API SCM scm_acons (SCM w, SCM x, SCM y);
-SCM_API SCM scm_sloppy_assq (SCM x, SCM alist);
-SCM_API SCM scm_sloppy_assv (SCM x, SCM alist);
-SCM_API SCM scm_sloppy_assoc (SCM x, SCM alist);
-SCM_API SCM scm_assq (SCM x, SCM alist);
-SCM_API SCM scm_assv (SCM x, SCM alist);
-SCM_API SCM scm_assoc (SCM x, SCM alist);
-SCM_API SCM scm_assq_ref (SCM alist, SCM key);
-SCM_API SCM scm_assv_ref (SCM alist, SCM key);
-SCM_API SCM scm_assoc_ref (SCM alist, SCM key);
-SCM_API SCM scm_assq_set_x (SCM alist, SCM key, SCM val);
-SCM_API SCM scm_assv_set_x (SCM alist, SCM key, SCM val);
-SCM_API SCM scm_assoc_set_x (SCM alist, SCM key, SCM val);
-SCM_API SCM scm_assq_remove_x (SCM alist, SCM key);
-SCM_API SCM scm_assv_remove_x (SCM alist, SCM key);
-SCM_API SCM scm_assoc_remove_x (SCM alist, SCM key);
-SCM_API void scm_init_alist (void);
+SCM scm_acons (SCM w, SCM x, SCM y);
+SCM scm_sloppy_assq (SCM x, SCM alist);
+SCM scm_sloppy_assv (SCM x, SCM alist);
+SCM scm_sloppy_assoc (SCM x, SCM alist);
+SCM scm_assq (SCM x, SCM alist);
+SCM scm_assv (SCM x, SCM alist);
+SCM scm_assoc (SCM x, SCM alist);
+SCM scm_assq_ref (SCM alist, SCM key);
+SCM scm_assv_ref (SCM alist, SCM key);
+SCM scm_assoc_ref (SCM alist, SCM key);
+SCM scm_assq_set_x (SCM alist, SCM key, SCM val);
+SCM scm_assv_set_x (SCM alist, SCM key, SCM val);
+SCM scm_assoc_set_x (SCM alist, SCM key, SCM val);
+SCM scm_assq_remove_x (SCM alist, SCM key);
+SCM scm_assv_remove_x (SCM alist, SCM key);
+SCM scm_assoc_remove_x (SCM alist, SCM key);
+void scm_init_alist (void);
 
 static inline SCM
 scm_sloppy_assoc_var (SCM obj1, SCM obj2, void* closure)

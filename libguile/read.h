@@ -63,16 +63,16 @@ extern scm_t_option scm_read_opts[];
 
 extern SCM scm_sym_dot;
 
-SCM_API SCM scm_read_options (SCM setting);
-SCM_API SCM scm_read (SCM port);
-SCM_API size_t scm_read_token (int ic, SCM * tok_buf, SCM port, int weird);
-SCM_API SCM scm_read_hash_extend (SCM chr, SCM proc);
+SCM scm_read_options (SCM setting);
+SCM scm_read (SCM port);
+size_t scm_read_token (int ic, SCM * tok_buf, SCM port, int weird);
+SCM scm_read_hash_extend (SCM chr, SCM proc);
 
-SCM_API void scm_i_input_error (const char *func, SCM port,
+void scm_i_input_error (const char *func, SCM port,
 				const char *message, SCM arg)
   SCM_NORETURN;
 
-SCM_API void scm_init_read (void);
+void scm_init_read (void);
 
 #endif  /* SCM_READ_H */
 

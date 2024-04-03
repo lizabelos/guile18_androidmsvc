@@ -128,13 +128,13 @@ typedef struct scm_i_thread {
 #define SCM_VALIDATE_CONDVAR(pos, a) \
   scm_assert_smob_type (scm_tc16_condvar, (a))
 
-SCM_API SCM scm_spawn_thread (scm_t_catch_body body, void *body_data,
+SCM scm_spawn_thread (scm_t_catch_body body, void *body_data,
 			      scm_t_catch_handler handler, void *handler_data);
 
-SCM_API void *scm_without_guile (void *(*func)(void *), void *data);
-SCM_API void *scm_with_guile (void *(*func)(void *), void *data);
+void *scm_without_guile (void *(*func)(void *), void *data);
+void *scm_with_guile (void *(*func)(void *), void *data);
 
-SCM_API void *scm_i_with_guile_and_parent (void *(*func)(void *), void *data,
+void *scm_i_with_guile_and_parent (void *(*func)(void *), void *data,
 					   SCM parent);
 
 
@@ -147,10 +147,10 @@ void scm_i_thread_sleep_for_gc (void);
 
 void scm_threads_prehistory (SCM_STACKITEM *);
 void scm_threads_init_first_thread (void);
-SCM_API void scm_threads_mark_stacks (void);
-SCM_API void scm_init_threads (void);
-SCM_API void scm_init_thread_procs (void);
-SCM_API void scm_init_threads_default_dynamic_state (void);
+void scm_threads_mark_stacks (void);
+void scm_init_threads (void);
+void scm_init_thread_procs (void);
+void scm_init_threads_default_dynamic_state (void);
 
 
 #define SCM_THREAD_SWITCHING_CODE \
@@ -159,31 +159,31 @@ do { \
     scm_i_thread_sleep_for_gc (); \
 } while (0)
 
-SCM_API SCM scm_call_with_new_thread (SCM thunk, SCM handler);
-SCM_API SCM scm_yield (void);
-SCM_API SCM scm_join_thread (SCM t);
+SCM scm_call_with_new_thread (SCM thunk, SCM handler);
+SCM scm_yield (void);
+SCM scm_join_thread (SCM t);
 
-SCM_API SCM scm_make_mutex (void);
-SCM_API SCM scm_make_recursive_mutex (void);
-SCM_API SCM scm_lock_mutex (SCM m);
-SCM_API void scm_dynwind_lock_mutex (SCM mutex);
-SCM_API SCM scm_try_mutex (SCM m);
-SCM_API SCM scm_unlock_mutex (SCM m);
+SCM scm_make_mutex (void);
+SCM scm_make_recursive_mutex (void);
+SCM scm_lock_mutex (SCM m);
+void scm_dynwind_lock_mutex (SCM mutex);
+SCM scm_try_mutex (SCM m);
+SCM scm_unlock_mutex (SCM m);
 
-SCM_API SCM scm_make_condition_variable (void);
-SCM_API SCM scm_wait_condition_variable (SCM cond, SCM mutex);
-SCM_API SCM scm_timed_wait_condition_variable (SCM cond, SCM mutex,
+SCM scm_make_condition_variable (void);
+SCM scm_wait_condition_variable (SCM cond, SCM mutex);
+SCM scm_timed_wait_condition_variable (SCM cond, SCM mutex,
 					       SCM abstime);
-SCM_API SCM scm_signal_condition_variable (SCM cond);
-SCM_API SCM scm_broadcast_condition_variable (SCM cond);
+SCM scm_signal_condition_variable (SCM cond);
+SCM scm_broadcast_condition_variable (SCM cond);
 
-SCM_API SCM scm_current_thread (void);
-SCM_API SCM scm_all_threads (void);
+SCM scm_current_thread (void);
+SCM scm_all_threads (void);
 
-SCM_API int scm_c_thread_exited_p (SCM thread);
-SCM_API SCM scm_thread_exited_p (SCM thread);
+int scm_c_thread_exited_p (SCM thread);
+SCM scm_thread_exited_p (SCM thread);
 
-SCM_API void scm_dynwind_critical_section (SCM mutex);
+void scm_dynwind_critical_section (SCM mutex);
 
 #define SCM_I_CURRENT_THREAD \
   ((scm_i_thread *) scm_i_pthread_getspecific (scm_i_thread_key))
@@ -202,11 +202,11 @@ extern scm_i_pthread_mutex_t scm_i_misc_mutex;
 */
 
 #if SCM_USE_PTHREAD_THREADS
-SCM_API int scm_pthread_mutex_lock (pthread_mutex_t *mutex);
-SCM_API void scm_dynwind_pthread_mutex_lock (pthread_mutex_t *mutex);
-SCM_API int scm_pthread_cond_wait (pthread_cond_t *cond,
+int scm_pthread_mutex_lock (pthread_mutex_t *mutex);
+void scm_dynwind_pthread_mutex_lock (pthread_mutex_t *mutex);
+int scm_pthread_cond_wait (pthread_cond_t *cond,
 				   pthread_mutex_t *mutex);
-SCM_API int scm_pthread_cond_timedwait (pthread_cond_t *cond,
+int scm_pthread_cond_timedwait (pthread_cond_t *cond,
 					pthread_mutex_t *mutex,
 					const scm_t_timespec *abstime);
 #endif
@@ -214,7 +214,7 @@ SCM_API int scm_pthread_cond_timedwait (pthread_cond_t *cond,
 /* More convenience functions.
  */
 
-SCM_API unsigned int scm_std_sleep (unsigned int);
+unsigned int scm_std_sleep (unsigned int);
 SCM_API uint64_t scm_std_usleep (uint64_t);
 
 #endif  /* SCM_THREADS_H */

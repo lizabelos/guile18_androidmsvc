@@ -47,15 +47,15 @@ extern SCM scm_sys_protects[];
 
 
 
-SCM_API SCM scm_internal_cwdr (scm_t_catch_body body,
+SCM scm_internal_cwdr (scm_t_catch_body body,
 			       void *body_data,
 			       scm_t_catch_handler handler,
 			       void *handler_data,
 			       SCM_STACKITEM *stack_start);
-SCM_API SCM scm_call_with_dynamic_root (SCM thunk, SCM handler);
-SCM_API SCM scm_dynamic_root (void);
-SCM_API SCM scm_apply_with_dynamic_root (SCM proc, SCM a1, SCM args, SCM handler);
-SCM_API void scm_init_root (void);
+SCM scm_call_with_dynamic_root (SCM thunk, SCM handler);
+SCM scm_dynamic_root (void);
+SCM scm_apply_with_dynamic_root (SCM proc, SCM a1, SCM args, SCM handler);
+void scm_init_root (void);
 
 #endif  /* SCM_ROOT_H */
 

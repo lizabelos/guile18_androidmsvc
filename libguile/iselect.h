@@ -57,7 +57,7 @@
 
 #endif /* no FD_SET */
 
-SCM_API int scm_std_select (int fds,
+int scm_std_select (int fds,
 			    SELECT_TYPE *rfds,
 			    SELECT_TYPE *wfds,
 			    SELECT_TYPE *efds,

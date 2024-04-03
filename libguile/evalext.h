@@ -26,9 +26,9 @@
 
 
 
-SCM_API SCM scm_defined_p (SCM sym, SCM env);
-SCM_API SCM scm_self_evaluating_p (SCM obj);
-SCM_API void scm_init_evalext (void);
+SCM scm_defined_p (SCM sym, SCM env);
+SCM scm_self_evaluating_p (SCM obj);
+void scm_init_evalext (void);
 
 #if (SCM_ENABLE_DEPRECATED == 1)
 

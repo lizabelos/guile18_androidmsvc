@@ -65,24 +65,24 @@ typedef struct scm_t_i_rstate {
 
 /* Though this returns an unsigned long, it's only 32 bits of randomness. */
 SCM_API uint64_t scm_i_uniform32 (scm_t_i_rstate *);
-SCM_API void scm_i_init_rstate (scm_t_i_rstate *, const char *seed, int n);
-SCM_API scm_t_i_rstate *scm_i_copy_rstate (scm_t_i_rstate *);
+void scm_i_init_rstate (scm_t_i_rstate *, const char *seed, int n);
+scm_t_i_rstate *scm_i_copy_rstate (scm_t_i_rstate *);
 
 
 /*
  * Random number library functions
  */
-SCM_API scm_t_rstate *scm_c_make_rstate (const char *, int);
-SCM_API scm_t_rstate *scm_c_default_rstate (void);
+scm_t_rstate *scm_c_make_rstate (const char *, int);
+scm_t_rstate *scm_c_default_rstate (void);
 #define scm_c_uniform32(RSTATE) scm_the_rng.random_bits (RSTATE)
-SCM_API double scm_c_uniform01 (scm_t_rstate *);
-SCM_API double scm_c_normal01 (scm_t_rstate *);
-SCM_API double scm_c_exp1 (scm_t_rstate *);
+double scm_c_uniform01 (scm_t_rstate *);
+double scm_c_normal01 (scm_t_rstate *);
+double scm_c_exp1 (scm_t_rstate *);
 /* Though this returns an unsigned long, it's only 32 bits of randomness. */
 SCM_API uint64_t scm_c_random (scm_t_rstate *, uint64_t m);
 /* This one returns 64 bits of randomness. */
 SCM_API scm_t_uint64 scm_c_random64 (scm_t_rstate *state, scm_t_uint64 m);
-SCM_API SCM scm_c_random_bignum (scm_t_rstate *, SCM m);
+SCM scm_c_random_bignum (scm_t_rstate *, SCM m);
 
 
 /*
@@ -95,16 +95,16 @@ extern scm_t_bits scm_tc16_rstate;
 extern unsigned char scm_masktab[256];
 
 extern SCM scm_var_random_state;
-SCM_API SCM scm_random (SCM n, SCM state);
-SCM_API SCM scm_copy_random_state (SCM state);
-SCM_API SCM scm_seed_to_random_state (SCM seed);
-SCM_API SCM scm_random_uniform (SCM state);
-SCM_API SCM scm_random_solid_sphere_x (SCM v, SCM state);
-SCM_API SCM scm_random_hollow_sphere_x (SCM v, SCM state);
-SCM_API SCM scm_random_normal (SCM state);
-SCM_API SCM scm_random_normal_vector_x (SCM v, SCM state);
-SCM_API SCM scm_random_exp (SCM state);
-SCM_API void scm_init_random (void);
+SCM scm_random (SCM n, SCM state);
+SCM scm_copy_random_state (SCM state);
+SCM scm_seed_to_random_state (SCM seed);
+SCM scm_random_uniform (SCM state);
+SCM scm_random_solid_sphere_x (SCM v, SCM state);
+SCM scm_random_hollow_sphere_x (SCM v, SCM state);
+SCM scm_random_normal (SCM state);
+SCM scm_random_normal_vector_x (SCM v, SCM state);
+SCM scm_random_exp (SCM state);
+void scm_init_random (void);
 
 #endif  /* SCM_RANDOM_H */
 

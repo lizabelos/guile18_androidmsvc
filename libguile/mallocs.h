@@ -33,8 +33,8 @@ SCM_API scm_t_bits scm_tc16_malloc;
 
 
 
-SCM_API SCM scm_malloc_obj (size_t n);
-SCM_API void scm_init_mallocs (void);
+SCM scm_malloc_obj (size_t n);
+void scm_init_mallocs (void);
 
 #endif  /* SCM_MALLOCS_H */
 

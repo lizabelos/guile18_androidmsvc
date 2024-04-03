@@ -155,13 +155,8 @@ int __scm_android_fprintf (FILE* stream, const char* format, ...);
    which should be exported or imported in the resulting dynamic link
    library (DLL) in the Win32 port. */
 
-#if defined (SCM_IMPORT)
-# define SCM_API __declspec (dllimport) extern
-#elif defined (SCM_EXPORT) || defined (DLL_EXPORT)
-# define SCM_API __declspec (dllexport) extern
-#else
 # define SCM_API extern
-#endif
+
 
 
 
@@ -532,7 +527,7 @@ do { \
  * like SCM_BOOL_F or SCM_UNDEFINED was chosen.
  */
 
-SCM_API SCM scm_call_generic_0 (SCM gf);
+SCM scm_call_generic_0 (SCM gf);
 
 #define SCM_WTA_DISPATCH_0(gf, subr)			        \
   return (SCM_UNPACK (gf)					\
@@ -542,7 +537,7 @@ SCM_API SCM scm_call_generic_0 (SCM gf);
   if (SCM_UNLIKELY(!(cond)))		\
     SCM_WTA_DISPATCH_0((gf), (subr))
 
-SCM_API SCM scm_call_generic_1 (SCM gf, SCM a1);
+SCM scm_call_generic_1 (SCM gf, SCM a1);
 
 #define SCM_WTA_DISPATCH_1(gf, a1, pos, subr)			\
   return (SCM_UNPACK (gf)					\
@@ -552,7 +547,7 @@ SCM_API SCM scm_call_generic_1 (SCM gf, SCM a1);
   if (SCM_UNLIKELY (!(cond)))			\
     SCM_WTA_DISPATCH_1((gf), (a1), (pos), (subr))
 
-SCM_API SCM scm_call_generic_2 (SCM gf, SCM a1, SCM a2);
+SCM scm_call_generic_2 (SCM gf, SCM a1, SCM a2);
 
 #define SCM_WTA_DISPATCH_2(gf, a1, a2, pos, subr)			\
   return (SCM_UNPACK (gf)						\
@@ -564,7 +559,7 @@ SCM_API SCM scm_call_generic_2 (SCM gf, SCM a1, SCM a2);
   if (SCM_UNLIKELY (!(cond)))			\
     SCM_WTA_DISPATCH_2((gf), (a1), (a2), (pos), (subr))
 
-SCM_API SCM scm_apply_generic (SCM gf, SCM args);
+SCM scm_apply_generic (SCM gf, SCM args);
 
 #define SCM_WTA_DISPATCH_n(gf, args, pos, subr)				  \
   return (SCM_UNPACK (gf)						  \

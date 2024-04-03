@@ -125,95 +125,95 @@ extern SCM scm_sym_args;
 
 
 
-SCM_API SCM * scm_ilookup (SCM iloc, SCM env);
-SCM_API SCM * scm_lookupcar (SCM vloc, SCM genv, int check);
-SCM_API SCM scm_eval_car (SCM pair, SCM env);
-SCM_API SCM scm_eval_body (SCM code, SCM env);
-SCM_API SCM scm_eval_args (SCM i, SCM env, SCM proc);
-SCM_API SCM scm_m_quote (SCM xorig, SCM env);
-SCM_API SCM scm_m_begin (SCM xorig, SCM env);
-SCM_API SCM scm_m_if (SCM xorig, SCM env);
-SCM_API SCM scm_m_set_x (SCM xorig, SCM env);
-SCM_API SCM scm_m_vref (SCM xorig, SCM env);
-SCM_API SCM scm_m_vset (SCM xorig, SCM env);
-SCM_API SCM scm_m_and (SCM xorig, SCM env);
-SCM_API SCM scm_m_or (SCM xorig, SCM env);
-SCM_API SCM scm_m_case (SCM xorig, SCM env);
-SCM_API SCM scm_m_cond (SCM xorig, SCM env);
-SCM_API SCM scm_m_lambda (SCM xorig, SCM env);
-SCM_API SCM scm_m_letstar (SCM xorig, SCM env);
-SCM_API SCM scm_m_do (SCM xorig, SCM env);
-SCM_API SCM scm_m_quasiquote (SCM xorig, SCM env);
-SCM_API SCM scm_m_delay (SCM xorig, SCM env);
-SCM_API SCM scm_m_generalized_set_x (SCM xorig, SCM env);
-SCM_API SCM scm_m_future (SCM xorig, SCM env);
-SCM_API SCM scm_m_define (SCM x, SCM env);
-SCM_API SCM scm_m_letrec (SCM xorig, SCM env);
-SCM_API SCM scm_m_let (SCM xorig, SCM env);
-SCM_API SCM scm_m_apply (SCM xorig, SCM env);
-SCM_API SCM scm_m_cont (SCM xorig, SCM env);
+SCM * scm_ilookup (SCM iloc, SCM env);
+SCM * scm_lookupcar (SCM vloc, SCM genv, int check);
+SCM scm_eval_car (SCM pair, SCM env);
+SCM scm_eval_body (SCM code, SCM env);
+SCM scm_eval_args (SCM i, SCM env, SCM proc);
+SCM scm_m_quote (SCM xorig, SCM env);
+SCM scm_m_begin (SCM xorig, SCM env);
+SCM scm_m_if (SCM xorig, SCM env);
+SCM scm_m_set_x (SCM xorig, SCM env);
+SCM scm_m_vref (SCM xorig, SCM env);
+SCM scm_m_vset (SCM xorig, SCM env);
+SCM scm_m_and (SCM xorig, SCM env);
+SCM scm_m_or (SCM xorig, SCM env);
+SCM scm_m_case (SCM xorig, SCM env);
+SCM scm_m_cond (SCM xorig, SCM env);
+SCM scm_m_lambda (SCM xorig, SCM env);
+SCM scm_m_letstar (SCM xorig, SCM env);
+SCM scm_m_do (SCM xorig, SCM env);
+SCM scm_m_quasiquote (SCM xorig, SCM env);
+SCM scm_m_delay (SCM xorig, SCM env);
+SCM scm_m_generalized_set_x (SCM xorig, SCM env);
+SCM scm_m_future (SCM xorig, SCM env);
+SCM scm_m_define (SCM x, SCM env);
+SCM scm_m_letrec (SCM xorig, SCM env);
+SCM scm_m_let (SCM xorig, SCM env);
+SCM scm_m_apply (SCM xorig, SCM env);
+SCM scm_m_cont (SCM xorig, SCM env);
 #if SCM_ENABLE_ELISP
-SCM_API SCM scm_m_nil_cond (SCM xorig, SCM env);
-SCM_API SCM scm_m_atfop (SCM xorig, SCM env);
+SCM scm_m_nil_cond (SCM xorig, SCM env);
+SCM scm_m_atfop (SCM xorig, SCM env);
 #endif /* SCM_ENABLE_ELISP */
-SCM_API SCM scm_m_atbind (SCM xorig, SCM env);
-SCM_API SCM scm_m_atslot_ref (SCM xorig, SCM env);
-SCM_API SCM scm_m_atslot_set_x (SCM xorig, SCM env);
-SCM_API SCM scm_m_atdispatch (SCM xorig, SCM env);
-SCM_API SCM scm_m_at_call_with_values (SCM xorig, SCM env);
-SCM_API int scm_badargsp (SCM formals, SCM args);
-SCM_API SCM scm_call_0 (SCM proc);
-SCM_API SCM scm_call_1 (SCM proc, SCM arg1);
-SCM_API SCM scm_call_2 (SCM proc, SCM arg1, SCM arg2);
-SCM_API SCM scm_call_3 (SCM proc, SCM arg1, SCM arg2, SCM arg3);
-SCM_API SCM scm_call_4 (SCM proc, SCM arg1, SCM arg2, SCM arg3, SCM arg4);
-SCM_API SCM scm_apply_0 (SCM proc, SCM args);
-SCM_API SCM scm_apply_1 (SCM proc, SCM arg1, SCM args);
-SCM_API SCM scm_apply_2 (SCM proc, SCM arg1, SCM arg2, SCM args);
-SCM_API SCM scm_apply_3 (SCM proc, SCM arg1, SCM arg2, SCM arg3, SCM args);
-SCM_API SCM scm_i_call_closure_0 (SCM proc);
+SCM scm_m_atbind (SCM xorig, SCM env);
+SCM scm_m_atslot_ref (SCM xorig, SCM env);
+SCM scm_m_atslot_set_x (SCM xorig, SCM env);
+SCM scm_m_atdispatch (SCM xorig, SCM env);
+SCM scm_m_at_call_with_values (SCM xorig, SCM env);
+int scm_badargsp (SCM formals, SCM args);
+SCM scm_call_0 (SCM proc);
+SCM scm_call_1 (SCM proc, SCM arg1);
+SCM scm_call_2 (SCM proc, SCM arg1, SCM arg2);
+SCM scm_call_3 (SCM proc, SCM arg1, SCM arg2, SCM arg3);
+SCM scm_call_4 (SCM proc, SCM arg1, SCM arg2, SCM arg3, SCM arg4);
+SCM scm_apply_0 (SCM proc, SCM args);
+SCM scm_apply_1 (SCM proc, SCM arg1, SCM args);
+SCM scm_apply_2 (SCM proc, SCM arg1, SCM arg2, SCM args);
+SCM scm_apply_3 (SCM proc, SCM arg1, SCM arg2, SCM arg3, SCM args);
+SCM scm_i_call_closure_0 (SCM proc);
 SCM_API scm_t_trampoline_0 scm_trampoline_0 (SCM proc);
 SCM_API scm_t_trampoline_1 scm_trampoline_1 (SCM proc);
 SCM_API scm_t_trampoline_2 scm_trampoline_2 (SCM proc);
-SCM_API SCM scm_nconc2last (SCM lst);
-SCM_API SCM scm_apply (SCM proc, SCM arg1, SCM args);
-SCM_API SCM scm_dapply (SCM proc, SCM arg1, SCM args);
-SCM_API SCM scm_map (SCM proc, SCM arg1, SCM args);
-SCM_API SCM scm_for_each (SCM proc, SCM arg1, SCM args);
-SCM_API SCM scm_closure (SCM code, SCM env);
-SCM_API SCM scm_makprom (SCM code);
-SCM_API SCM scm_force (SCM x);
-SCM_API SCM scm_promise_p (SCM x);
-SCM_API SCM scm_cons_source (SCM xorig, SCM x, SCM y);
-SCM_API SCM scm_copy_tree (SCM obj);
-SCM_API SCM scm_i_eval_x (SCM exp, SCM env);
-SCM_API SCM scm_i_eval (SCM exp, SCM env);
-SCM_API SCM scm_primitive_eval (SCM exp);
-SCM_API SCM scm_primitive_eval_x (SCM exp);
-SCM_API SCM scm_eval (SCM exp, SCM module);
-SCM_API SCM scm_eval_x (SCM exp, SCM module);
+SCM scm_nconc2last (SCM lst);
+SCM scm_apply (SCM proc, SCM arg1, SCM args);
+SCM scm_dapply (SCM proc, SCM arg1, SCM args);
+SCM scm_map (SCM proc, SCM arg1, SCM args);
+SCM scm_for_each (SCM proc, SCM arg1, SCM args);
+SCM scm_closure (SCM code, SCM env);
+SCM scm_makprom (SCM code);
+SCM scm_force (SCM x);
+SCM scm_promise_p (SCM x);
+SCM scm_cons_source (SCM xorig, SCM x, SCM y);
+SCM scm_copy_tree (SCM obj);
+SCM scm_i_eval_x (SCM exp, SCM env);
+SCM scm_i_eval (SCM exp, SCM env);
+SCM scm_primitive_eval (SCM exp);
+SCM scm_primitive_eval_x (SCM exp);
+SCM scm_eval (SCM exp, SCM module);
+SCM scm_eval_x (SCM exp, SCM module);
 
-SCM_API void scm_i_print_iloc (SCM /*iloc*/, SCM /*port*/);
-SCM_API void scm_i_print_isym (SCM /*isym*/, SCM /*port*/);
-SCM_API SCM scm_i_unmemocopy_expr (SCM expr, SCM env);
-SCM_API SCM scm_i_unmemocopy_body (SCM forms, SCM env);
-SCM_API void scm_init_eval (void);
+void scm_i_print_iloc (SCM /*iloc*/, SCM /*port*/);
+void scm_i_print_isym (SCM /*isym*/, SCM /*port*/);
+SCM scm_i_unmemocopy_expr (SCM expr, SCM env);
+SCM scm_i_unmemocopy_body (SCM forms, SCM env);
+void scm_init_eval (void);
 
 
 #if (SCM_ENABLE_DEPRECATED == 1)
 
-SCM_API SCM scm_m_undefine (SCM x, SCM env);
+SCM scm_m_undefine (SCM x, SCM env);
 
 /* Deprecated in guile 1.7.0 on 2003-11-09.  */
-SCM_API SCM scm_m_expand_body (SCM xorig, SCM env);
+SCM scm_m_expand_body (SCM xorig, SCM env);
 
 /* Deprecated in guile 1.7.0 on 2003-11-16.  */
-SCM_API SCM scm_unmemocar (SCM form, SCM env);
-SCM_API SCM scm_macroexp (SCM x, SCM env);
+SCM scm_unmemocar (SCM form, SCM env);
+SCM scm_macroexp (SCM x, SCM env);
 
 /* Deprecated in guile 1.7.0 on 2004-03-29.  */
-SCM_API SCM scm_ceval (SCM x, SCM env);
-SCM_API SCM scm_deval (SCM x, SCM env);
+SCM scm_ceval (SCM x, SCM env);
+SCM scm_deval (SCM x, SCM env);
 extern SCM (*scm_ceval_ptr) (SCM x, SCM env);
 
 #endif

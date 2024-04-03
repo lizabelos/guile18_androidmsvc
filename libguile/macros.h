@@ -36,20 +36,20 @@
 
 SCM_API scm_t_bits scm_tc16_macro;
 
-SCM_API SCM scm_i_makbimacro (SCM code);
-SCM_API SCM scm_makmmacro (SCM code);
-SCM_API SCM scm_makacro (SCM code);
-SCM_API SCM scm_macro_p (SCM obj);
-SCM_API SCM scm_macro_type (SCM m);
-SCM_API SCM scm_macro_name (SCM m);
-SCM_API SCM scm_macro_transformer (SCM m);
-SCM_API SCM scm_make_synt (const char *name,
+SCM scm_i_makbimacro (SCM code);
+SCM scm_makmmacro (SCM code);
+SCM scm_makacro (SCM code);
+SCM scm_macro_p (SCM obj);
+SCM scm_macro_type (SCM m);
+SCM scm_macro_name (SCM m);
+SCM scm_macro_transformer (SCM m);
+SCM scm_make_synt (const char *name,
 			   SCM (*macroizer) (SCM),
 			   SCM (*fcn) ());
-SCM_API void scm_init_macros (void);
+void scm_init_macros (void);
 
 #if SCM_ENABLE_DEPRECATED == 1
-SCM_API SCM scm_makmacro (SCM code);
+SCM scm_makmacro (SCM code);
 #endif
 
 #endif  /* SCM_MACROS_H */

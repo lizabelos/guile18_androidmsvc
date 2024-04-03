@@ -26,10 +26,10 @@
 
 
 
-SCM_API SCM scm_eq_p (SCM x, SCM y);
-SCM_API SCM scm_eqv_p (SCM x, SCM y);
-SCM_API SCM scm_equal_p (SCM x, SCM y);
-SCM_API void scm_init_eq (void);
+SCM scm_eq_p (SCM x, SCM y);
+SCM scm_eqv_p (SCM x, SCM y);
+SCM scm_equal_p (SCM x, SCM y);
+void scm_init_eq (void);
 
 #endif  /* SCM_EQ_H */
 

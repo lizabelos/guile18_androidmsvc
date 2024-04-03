@@ -24,13 +24,13 @@
 
 #include "libguile/__scm.h"
 
-SCM_API SCM scm_make_guardian (void);
+SCM scm_make_guardian (void);
 
-SCM_API void scm_i_init_guardians_for_gc (void);
-SCM_API void scm_i_identify_inaccessible_guardeds (void);
-SCM_API int scm_i_mark_inaccessible_guardeds (void);
+void scm_i_init_guardians_for_gc (void);
+void scm_i_identify_inaccessible_guardeds (void);
+int scm_i_mark_inaccessible_guardeds (void);
 
-SCM_API void scm_init_guardians (void);
+void scm_init_guardians (void);
 
 #endif  /* SCM_GUARDIANS_H */
 

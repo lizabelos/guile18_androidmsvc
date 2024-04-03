@@ -21,7 +21,7 @@ configure_file (${CMAKE_CURRENT_SOURCE_DIR}/cmake/libguile/version.h.cmake      
 configure_file (${CMAKE_CURRENT_SOURCE_DIR}/cmake/libguile/libpath.h.cmake       ${CMAKE_CURRENT_BINARY_DIR}/libguile/libpath.h)
 
 
-add_library(guile SHARED)
+add_library(guile STATIC)
 # use -fno-strict-aliasing
 target_compile_options(guile PUBLIC -fno-strict-aliasing)
 

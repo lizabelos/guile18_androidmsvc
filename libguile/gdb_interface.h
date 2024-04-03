@@ -104,7 +104,7 @@ SCM_API int gdb_output_length;
    In the "lisp/c" language mode, this is used to heuristically
    discriminate lisp values from C values during printing. */
 
-SCM_API int gdb_maybe_valid_type_p (GDB_TYPE value);
+int gdb_maybe_valid_type_p (GDB_TYPE value);
 
 /* Parse expression in string STR.  Store result in GDB_RESULT, then
    return 0 to indicate success.  On error, return -1 to indicate
@@ -113,7 +113,7 @@ SCM_API int gdb_maybe_valid_type_p (GDB_TYPE value);
    no message is passed.  Please note that the resulting value should
    be protected against garbage collection. */
 
-SCM_API int gdb_read (char *str);
+int gdb_read (char *str);
 
 /* Evaluate expression EXP.  Store result in GDB_RESULT, then return 0
    to indicate success.  On error, return -1 to indicate failure.  Any
@@ -122,7 +122,7 @@ SCM_API int gdb_read (char *str);
    if no output is passed.  Please note that the resulting lisp object
    should be protected against garbage collection. */
 
-SCM_API int gdb_eval (GDB_TYPE exp);
+int gdb_eval (GDB_TYPE exp);
 
 /* Print VALUE.  Store output in GDB_OUTPUT and GDB_OUTPUT_LENGTH.
    Return 0 to indicate success.  On error, return -1 to indicate
@@ -130,7 +130,7 @@ SCM_API int gdb_eval (GDB_TYPE exp);
    failure.  Note that this function should be robust against strange
    values.  It could in fact be passed any kind of value. */
 
-SCM_API int gdb_print (GDB_TYPE value);
+int gdb_print (GDB_TYPE value);
 
 /* Bind NAME to VALUE in interpreter.  (GDB has previously obtained
    NAME by passing a string to gdb_read.)  Return 0 to indicate
@@ -142,7 +142,7 @@ SCM_API int gdb_print (GDB_TYPE value);
    For scheme interpreters, this function should introduce top-level
    bindings. */
 
-SCM_API int gdb_binding (GDB_TYPE name, GDB_TYPE value);
+int gdb_binding (GDB_TYPE name, GDB_TYPE value);
 
 #endif  /* GDB_INTERFACE_H */
 

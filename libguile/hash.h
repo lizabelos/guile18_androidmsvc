@@ -29,12 +29,12 @@
 SCM_API uint64_t scm_string_hash (const unsigned char *str, size_t len);
 SCM_API uint64_t scm_hasher (SCM obj, uint64_t n, size_t d);
 SCM_API uint64_t scm_ihashq (SCM obj, uint64_t n);
-SCM_API SCM scm_hashq (SCM obj, SCM n);
+SCM scm_hashq (SCM obj, SCM n);
 SCM_API uint64_t scm_ihashv (SCM obj, uint64_t n);
-SCM_API SCM scm_hashv (SCM obj, SCM n);
+SCM scm_hashv (SCM obj, SCM n);
 SCM_API uint64_t scm_ihash (SCM obj, uint64_t n);
-SCM_API SCM scm_hash (SCM obj, SCM n);
-SCM_API void scm_init_hash (void);
+SCM scm_hash (SCM obj, SCM n);
+void scm_init_hash (void);
 
 static inline uint64_t
 scm_ihash_var (SCM obj, uint64_t n, void* closure)

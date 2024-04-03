@@ -47,22 +47,22 @@ extern scm_t_bits scm_tc16_fport;
 #define SCM_FDES_RANDOM_P(fdes) ((lseek (fdes, 0, SEEK_CUR) == -1) ? 0 : 1)
 
 
-SCM_API SCM scm_setbuf0 (SCM port);
-SCM_API SCM scm_setvbuf (SCM port, SCM mode, SCM size);
-SCM_API void scm_evict_ports (int fd);
-SCM_API SCM scm_open_file (SCM filename, SCM modes);
-SCM_API SCM scm_fdes_to_port (int fdes, char *mode, SCM name);
-SCM_API SCM scm_file_port_p (SCM obj);
-SCM_API void scm_init_fports (void);
+SCM scm_setbuf0 (SCM port);
+SCM scm_setvbuf (SCM port, SCM mode, SCM size);
+void scm_evict_ports (int fd);
+SCM scm_open_file (SCM filename, SCM modes);
+SCM scm_fdes_to_port (int fdes, char *mode, SCM name);
+SCM scm_file_port_p (SCM obj);
+void scm_init_fports (void);
 
 ssize_t scm_write_proxy(int fd, const void *buf, size_t count);
 void scm_set_log_function(void (*log_function)(const char *, int));
 
 /* internal functions */
 
-SCM_API SCM scm_i_fdes_to_port (int fdes, int64_t mode_bits, SCM name);
-SCM_API int scm_i_fport_truncate (SCM, SCM);
-SCM_API SCM scm_i_fport_seek (SCM, SCM, int);
+SCM scm_i_fdes_to_port (int fdes, int64_t mode_bits, SCM name);
+int scm_i_fport_truncate (SCM, SCM);
+SCM scm_i_fport_seek (SCM, SCM, int);
 
 
 #endif  /* SCM_FPORTS_H */

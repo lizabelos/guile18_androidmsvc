@@ -38,30 +38,30 @@ extern SCM scm_misc_error_key;
 void call_error_callback ();
 void set_error_callback(void (*callback)());
 
-SCM_API void scm_abort (void) SCM_NORETURN;
-SCM_API void scm_error (SCM key, const char *subr, const char *message,
+void scm_abort (void) SCM_NORETURN;
+void scm_error (SCM key, const char *subr, const char *message,
 			SCM args, SCM rest) SCM_NORETURN;
-SCM_API SCM scm_error_scm (SCM key, SCM subr, SCM message,
+SCM scm_error_scm (SCM key, SCM subr, SCM message,
 			   SCM args, SCM rest) SCM_NORETURN;
-SCM_API SCM scm_strerror (SCM err);
-SCM_API void scm_syserror (const char *subr) SCM_NORETURN;
-SCM_API void scm_syserror_msg (const char *subr, const char *message,
+SCM scm_strerror (SCM err);
+void scm_syserror (const char *subr) SCM_NORETURN;
+void scm_syserror_msg (const char *subr, const char *message,
 			       SCM args, int eno) SCM_NORETURN;
-SCM_API void scm_num_overflow (const char *subr) SCM_NORETURN;
-SCM_API void scm_out_of_range (const char *subr, SCM bad_value)
+void scm_num_overflow (const char *subr) SCM_NORETURN;
+void scm_out_of_range (const char *subr, SCM bad_value)
      SCM_NORETURN;
-SCM_API void scm_out_of_range_pos (const char *subr, SCM bad_value, SCM pos)
+void scm_out_of_range_pos (const char *subr, SCM bad_value, SCM pos)
      SCM_NORETURN;
-SCM_API void scm_wrong_num_args (SCM proc) SCM_NORETURN;
-SCM_API void scm_error_num_args_subr (const char* subr) SCM_NORETURN;
-SCM_API void scm_wrong_type_arg (const char *subr, int pos,
+void scm_wrong_num_args (SCM proc) SCM_NORETURN;
+void scm_error_num_args_subr (const char* subr) SCM_NORETURN;
+void scm_wrong_type_arg (const char *subr, int pos,
 				 SCM bad_value) SCM_NORETURN;
-SCM_API void scm_wrong_type_arg_msg (const char *subr, int pos,
+void scm_wrong_type_arg_msg (const char *subr, int pos,
 				     SCM bad_value, const char *sz) SCM_NORETURN;
-SCM_API void scm_memory_error (const char *subr) SCM_NORETURN;
-SCM_API void scm_misc_error (const char *subr, const char *message,
+void scm_memory_error (const char *subr) SCM_NORETURN;
+void scm_misc_error (const char *subr, const char *message,
 			     SCM args) SCM_NORETURN;
-SCM_API void scm_init_error (void);
+void scm_init_error (void);
 
 #endif  /* SCM_ERROR_H */
 

@@ -26,16 +26,16 @@
 
 
 
-SCM_API SCM scm_ftell (SCM object);
-SCM_API SCM scm_redirect_port (SCM into_pt, SCM from_pt);
-SCM_API SCM scm_dup_to_fdes (SCM fd_or_port, SCM newfd);
-SCM_API SCM scm_dup2 (SCM oldfd, SCM newfd);
-SCM_API SCM scm_fileno (SCM port);
-SCM_API SCM scm_isatty_p (SCM port);
-SCM_API SCM scm_fdopen (SCM fdes, SCM modes);
-SCM_API SCM scm_primitive_move_to_fdes (SCM port, SCM fd);
-SCM_API SCM scm_fdes_to_ports (SCM fd);
-SCM_API void scm_init_ioext (void);
+SCM scm_ftell (SCM object);
+SCM scm_redirect_port (SCM into_pt, SCM from_pt);
+SCM scm_dup_to_fdes (SCM fd_or_port, SCM newfd);
+SCM scm_dup2 (SCM oldfd, SCM newfd);
+SCM scm_fileno (SCM port);
+SCM scm_isatty_p (SCM port);
+SCM scm_fdopen (SCM fdes, SCM modes);
+SCM scm_primitive_move_to_fdes (SCM port, SCM fd);
+SCM scm_fdes_to_ports (SCM fd);
+void scm_init_ioext (void);
 
 #endif  /* SCM_IOEXT_H */
 

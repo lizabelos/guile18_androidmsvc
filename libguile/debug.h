@@ -148,29 +148,29 @@ extern scm_t_bits scm_tc16_memoized;
 
 
 
-SCM_API SCM scm_debug_object_p (SCM obj);
-SCM_API SCM scm_local_eval (SCM exp, SCM env);
-SCM_API SCM scm_reverse_lookup (SCM env, SCM data);
-SCM_API SCM scm_start_stack (SCM info_id, SCM exp, SCM env);
-SCM_API SCM scm_procedure_environment (SCM proc);
-SCM_API SCM scm_procedure_source (SCM proc);
-SCM_API SCM scm_procedure_name (SCM proc);
-SCM_API SCM scm_memoized_environment (SCM m);
-SCM_API SCM scm_make_memoized (SCM exp, SCM env);
-SCM_API SCM scm_memoized_p (SCM obj);
-SCM_API SCM scm_with_traps (SCM thunk);
-SCM_API SCM scm_evaluator_traps (SCM setting);
-SCM_API SCM scm_debug_options (SCM setting);
-SCM_API SCM scm_make_debugobj (scm_t_debug_frame *debug);
+SCM scm_debug_object_p (SCM obj);
+SCM scm_local_eval (SCM exp, SCM env);
+SCM scm_reverse_lookup (SCM env, SCM data);
+SCM scm_start_stack (SCM info_id, SCM exp, SCM env);
+SCM scm_procedure_environment (SCM proc);
+SCM scm_procedure_source (SCM proc);
+SCM scm_procedure_name (SCM proc);
+SCM scm_memoized_environment (SCM m);
+SCM scm_make_memoized (SCM exp, SCM env);
+SCM scm_memoized_p (SCM obj);
+SCM scm_with_traps (SCM thunk);
+SCM scm_evaluator_traps (SCM setting);
+SCM scm_debug_options (SCM setting);
+SCM scm_make_debugobj (scm_t_debug_frame *debug);
 
-SCM_API SCM scm_i_unmemoize_expr (SCM memoized);
-SCM_API void scm_init_debug (void);
+SCM scm_i_unmemoize_expr (SCM memoized);
+void scm_init_debug (void);
 
 #ifdef GUILE_DEBUG
-SCM_API SCM scm_memcons (SCM car, SCM cdr, SCM env);
-SCM_API SCM scm_mem_to_proc (SCM obj);
-SCM_API SCM scm_proc_to_mem (SCM obj);
-SCM_API SCM scm_debug_hang (SCM obj);
+SCM scm_memcons (SCM car, SCM cdr, SCM env);
+SCM scm_mem_to_proc (SCM obj);
+SCM scm_proc_to_mem (SCM obj);
+SCM scm_debug_hang (SCM obj);
 #endif /*GUILE_DEBUG*/
 
 #if SCM_ENABLE_DEPRECATED == 1

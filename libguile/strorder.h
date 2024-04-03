@@ -26,17 +26,17 @@
 
 
 
-SCM_API SCM scm_string_equal_p (SCM s1, SCM s2);
-SCM_API SCM scm_string_ci_equal_p (SCM s1, SCM s2);
-SCM_API SCM scm_string_less_p (SCM s1, SCM s2);
-SCM_API SCM scm_string_leq_p (SCM s1, SCM s2);
-SCM_API SCM scm_string_gr_p (SCM s1, SCM s2);
-SCM_API SCM scm_string_geq_p (SCM s1, SCM s2);
-SCM_API SCM scm_string_ci_less_p (SCM s1, SCM s2);
-SCM_API SCM scm_string_ci_leq_p (SCM s1, SCM s2);
-SCM_API SCM scm_string_ci_gr_p (SCM s1, SCM s2);
-SCM_API SCM scm_string_ci_geq_p (SCM s1, SCM s2);
-SCM_API void scm_init_strorder (void);
+SCM scm_string_equal_p (SCM s1, SCM s2);
+SCM scm_string_ci_equal_p (SCM s1, SCM s2);
+SCM scm_string_less_p (SCM s1, SCM s2);
+SCM scm_string_leq_p (SCM s1, SCM s2);
+SCM scm_string_gr_p (SCM s1, SCM s2);
+SCM scm_string_geq_p (SCM s1, SCM s2);
+SCM scm_string_ci_less_p (SCM s1, SCM s2);
+SCM scm_string_ci_leq_p (SCM s1, SCM s2);
+SCM scm_string_ci_gr_p (SCM s1, SCM s2);
+SCM scm_string_ci_geq_p (SCM s1, SCM s2);
+void scm_init_strorder (void);
 
 #endif  /* SCM_STRORDER_H */
 

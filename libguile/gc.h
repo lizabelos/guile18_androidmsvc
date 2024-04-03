@@ -309,50 +309,50 @@ SCM scm_map_free_list (void);
 #endif
 
 #if (SCM_ENABLE_DEPRECATED == 1) && defined (GUILE_DEBUG_FREELIST)
-SCM_API SCM scm_gc_set_debug_check_freelist_x (SCM flag);
+SCM scm_gc_set_debug_check_freelist_x (SCM flag);
 #endif
 
 
 #if (SCM_DEBUG_CELL_ACCESSES == 1)
-SCM_API void scm_assert_cell_valid (SCM);
+void scm_assert_cell_valid (SCM);
 #endif
 
-SCM_API SCM scm_set_debug_cell_accesses_x (SCM flag);
+SCM scm_set_debug_cell_accesses_x (SCM flag);
 
 
-SCM_API SCM scm_object_address (SCM obj);
-SCM_API SCM scm_gc_stats (void);
-SCM_API SCM scm_gc_live_object_stats (void);
-SCM_API SCM scm_gc (void);
-SCM_API void scm_gc_for_alloc (struct scm_t_cell_type_statistics *freelist);
-SCM_API SCM scm_gc_for_newcell (struct scm_t_cell_type_statistics *master, SCM *freelist);
-SCM_API void scm_i_gc (const char *what);
-SCM_API void scm_gc_mark (SCM p);
-SCM_API void scm_gc_mark_dependencies (SCM p);
-SCM_API void scm_mark_locations (SCM_STACKITEM x[], uint64_t n);
-SCM_API int scm_in_heap_p (SCM value);
-SCM_API void scm_gc_sweep (void);
+SCM scm_object_address (SCM obj);
+SCM scm_gc_stats (void);
+SCM scm_gc_live_object_stats (void);
+SCM scm_gc (void);
+void scm_gc_for_alloc (struct scm_t_cell_type_statistics *freelist);
+SCM scm_gc_for_newcell (struct scm_t_cell_type_statistics *master, SCM *freelist);
+void scm_i_gc (const char *what);
+void scm_gc_mark (SCM p);
+void scm_gc_mark_dependencies (SCM p);
+void scm_mark_locations (SCM_STACKITEM x[], uint64_t n);
+int scm_in_heap_p (SCM value);
+void scm_gc_sweep (void);
 
-SCM_API void *scm_malloc (size_t size);
-SCM_API void *scm_calloc (size_t size);
-SCM_API void *scm_realloc (void *mem, size_t size);
-SCM_API char *scm_strdup (const char *str);
-SCM_API char *scm_strndup (const char *str, size_t n);
-SCM_API void scm_gc_register_collectable_memory (void *mem, size_t size,
+void *scm_malloc (size_t size);
+void *scm_calloc (size_t size);
+void *scm_realloc (void *mem, size_t size);
+char *scm_strdup (const char *str);
+char *scm_strndup (const char *str, size_t n);
+void scm_gc_register_collectable_memory (void *mem, size_t size,
 						 const char *what);
-SCM_API void scm_gc_unregister_collectable_memory (void *mem, size_t size,
+void scm_gc_unregister_collectable_memory (void *mem, size_t size,
 						   const char *what);
-SCM_API void *scm_gc_calloc (size_t size, const char *what);
-SCM_API void *scm_gc_malloc (size_t size, const char *what);
-SCM_API void *scm_gc_realloc (void *mem, size_t old_size, 
+void *scm_gc_calloc (size_t size, const char *what);
+void *scm_gc_malloc (size_t size, const char *what);
+void *scm_gc_realloc (void *mem, size_t old_size,
 			      size_t new_size, const char *what);
-SCM_API void scm_gc_free (void *mem, size_t size, const char *what);
-SCM_API char *scm_gc_strdup (const char *str, const char *what);
-SCM_API char *scm_gc_strndup (const char *str, size_t n, const char *what);
+void scm_gc_free (void *mem, size_t size, const char *what);
+char *scm_gc_strdup (const char *str, const char *what);
+char *scm_gc_strndup (const char *str, size_t n, const char *what);
 
-SCM_API void scm_remember_upto_here_1 (SCM obj);
-SCM_API void scm_remember_upto_here_2 (SCM obj1, SCM obj2);
-SCM_API void scm_remember_upto_here (SCM obj1, ...);
+void scm_remember_upto_here_1 (SCM obj);
+void scm_remember_upto_here_2 (SCM obj1, SCM obj2);
+void scm_remember_upto_here (SCM obj1, ...);
 
 /* In GCC we can force a reference to an SCM by making it an input to an
    empty asm.  This avoids the code size and slowdown of an actual function
@@ -378,39 +378,39 @@ SCM_API void scm_remember_upto_here (SCM obj1, ...);
   } while (0)
 #endif
 
-SCM_API SCM scm_return_first (SCM elt, ...);
-SCM_API int scm_return_first_int (int x, ...);
-SCM_API SCM scm_permanent_object (SCM obj);
-SCM_API SCM scm_gc_protect_object (SCM obj);
-SCM_API SCM scm_gc_unprotect_object (SCM obj);
-SCM_API void scm_gc_register_root (SCM *p);
-SCM_API void scm_gc_unregister_root (SCM *p);
-SCM_API void scm_gc_register_roots (SCM *b, uint64_t n);
-SCM_API void scm_gc_unregister_roots (SCM *b, uint64_t n);
-SCM_API void scm_storage_prehistory (void);
-SCM_API int scm_init_storage (void);
-SCM_API void *scm_get_stack_base (void);
-SCM_API void scm_init_gc (void);
+SCM scm_return_first (SCM elt, ...);
+int scm_return_first_int (int x, ...);
+SCM scm_permanent_object (SCM obj);
+SCM scm_gc_protect_object (SCM obj);
+SCM scm_gc_unprotect_object (SCM obj);
+void scm_gc_register_root (SCM *p);
+void scm_gc_unregister_root (SCM *p);
+void scm_gc_register_roots (SCM *b, uint64_t n);
+void scm_gc_unregister_roots (SCM *b, uint64_t n);
+void scm_storage_prehistory (void);
+int scm_init_storage (void);
+void *scm_get_stack_base (void);
+void scm_init_gc (void);
 
 #if SCM_ENABLE_DEPRECATED == 1
 
-SCM_API SCM scm_deprecated_newcell (void);
-SCM_API SCM scm_deprecated_newcell2 (void);
+SCM scm_deprecated_newcell (void);
+SCM scm_deprecated_newcell2 (void);
 
 #define SCM_NEWCELL(_into) \
   do { _into = scm_deprecated_newcell (); } while (0)
 #define SCM_NEWCELL2(_into) \
   do { _into = scm_deprecated_newcell2 (); } while (0)
 
-SCM_API void * scm_must_malloc (size_t len, const char *what);
-SCM_API void * scm_must_realloc (void *where,
+void * scm_must_malloc (size_t len, const char *what);
+void * scm_must_realloc (void *where,
 				 size_t olen, size_t len,
 				 const char *what);
-SCM_API char *scm_must_strdup (const char *str);
-SCM_API char *scm_must_strndup (const char *str, size_t n);
-SCM_API void scm_done_malloc (int64_t size);
-SCM_API void scm_done_free (int64_t size);
-SCM_API void scm_must_free (void *obj);
+char *scm_must_strdup (const char *str);
+char *scm_must_strndup (const char *str, size_t n);
+void scm_done_malloc (int64_t size);
+void scm_done_free (int64_t size);
+void scm_must_free (void *obj);
 
 #endif
 

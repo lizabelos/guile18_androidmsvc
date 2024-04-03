@@ -24,13 +24,13 @@
 
 #include "libguile/__scm.h"
 
-SCM_API SCM scm_read_string_x_partial (SCM str, SCM port_or_fdes, SCM start,
+SCM scm_read_string_x_partial (SCM str, SCM port_or_fdes, SCM start,
 				       SCM end);
-SCM_API SCM scm_write_string_partial (SCM str, SCM port_or_fdes, SCM start,
+SCM scm_write_string_partial (SCM str, SCM port_or_fdes, SCM start,
 				      SCM end);
 
-SCM_API SCM scm_init_rw_builtins (void);
-SCM_API void scm_init_rw (void);
+SCM scm_init_rw_builtins (void);
+void scm_init_rw (void);
 
 #endif  /* SCM_RW_H */
 

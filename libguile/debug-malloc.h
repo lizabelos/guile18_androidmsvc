@@ -26,14 +26,14 @@
 
 
 
-SCM_API void scm_malloc_register (void *obj, const char *what);
-SCM_API void scm_malloc_unregister (void *obj);
-SCM_API void scm_malloc_reregister (void *obj, void *new, const char *what);
+void scm_malloc_register (void *obj, const char *what);
+void scm_malloc_unregister (void *obj);
+void scm_malloc_reregister (void *obj, void *new, const char *what);
 
-SCM_API SCM scm_malloc_stats (void);
+SCM scm_malloc_stats (void);
 
-SCM_API void scm_debug_malloc_prehistory (void);
-SCM_API void scm_init_debug_malloc (void);
+void scm_debug_malloc_prehistory (void);
+void scm_init_debug_malloc (void);
 
 #endif  /* SCM_DEBUG_MALLOC_H */
 

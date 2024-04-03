@@ -27,52 +27,52 @@
 
 
 
-SCM_API SCM scm_list_1 (SCM e1);
-SCM_API SCM scm_list_2 (SCM e1, SCM e2);
-SCM_API SCM scm_list_3 (SCM e1, SCM e2, SCM e3);
-SCM_API SCM scm_list_4 (SCM e1, SCM e2, SCM e3, SCM e4);
-SCM_API SCM scm_list_5 (SCM e1, SCM e2, SCM e3, SCM e4, SCM e5);
-SCM_API SCM scm_list_n (SCM elt, ...);
-SCM_API SCM scm_list (SCM objs);
-SCM_API SCM scm_list_head (SCM lst, SCM k);
-SCM_API SCM scm_make_list (SCM n, SCM init);
-SCM_API SCM scm_cons_star (SCM arg, SCM objs);
-SCM_API SCM scm_null_p (SCM x);
-SCM_API SCM scm_list_p (SCM x);
+SCM scm_list_1 (SCM e1);
+SCM scm_list_2 (SCM e1, SCM e2);
+SCM scm_list_3 (SCM e1, SCM e2, SCM e3);
+SCM scm_list_4 (SCM e1, SCM e2, SCM e3, SCM e4);
+SCM scm_list_5 (SCM e1, SCM e2, SCM e3, SCM e4, SCM e5);
+SCM scm_list_n (SCM elt, ...);
+SCM scm_list (SCM objs);
+SCM scm_list_head (SCM lst, SCM k);
+SCM scm_make_list (SCM n, SCM init);
+SCM scm_cons_star (SCM arg, SCM objs);
+SCM scm_null_p (SCM x);
+SCM scm_list_p (SCM x);
 SCM_API int64_t scm_ilength (SCM sx);
-SCM_API SCM scm_length (SCM x);
-SCM_API SCM scm_append (SCM args);
-SCM_API SCM scm_append_x (SCM args);
-SCM_API SCM scm_reverse (SCM lst);
-SCM_API SCM scm_reverse_x (SCM lst, SCM newtail);
-SCM_API SCM scm_list_ref (SCM lst, SCM k);
-SCM_API SCM scm_list_set_x (SCM lst, SCM k, SCM val);
-SCM_API SCM scm_list_cdr_set_x (SCM lst, SCM k, SCM val);
-SCM_API SCM scm_last_pair (SCM sx);
-SCM_API SCM scm_list_tail (SCM lst, SCM k);
-SCM_API SCM scm_c_memq (SCM x, SCM lst);
-SCM_API SCM scm_memq (SCM x, SCM lst);
-SCM_API SCM scm_memv (SCM x, SCM lst);
-SCM_API SCM scm_member (SCM x, SCM lst);
-SCM_API SCM scm_delq_x (SCM item, SCM lst);
-SCM_API SCM scm_delv_x (SCM item, SCM lst);
-SCM_API SCM scm_delete_x (SCM item, SCM lst);
-SCM_API SCM scm_list_copy (SCM lst);
-SCM_API SCM scm_delq (SCM item, SCM lst);
-SCM_API SCM scm_delv (SCM item, SCM lst);
-SCM_API SCM scm_delete (SCM item, SCM lst);
-SCM_API SCM scm_delq1_x (SCM item, SCM lst);
-SCM_API SCM scm_delv1_x (SCM item, SCM lst);
-SCM_API SCM scm_delete1_x (SCM item, SCM lst);
-SCM_API SCM scm_filter (SCM pred, SCM list);
-SCM_API SCM scm_filter_x (SCM pred, SCM list);
+SCM scm_length (SCM x);
+SCM scm_append (SCM args);
+SCM scm_append_x (SCM args);
+SCM scm_reverse (SCM lst);
+SCM scm_reverse_x (SCM lst, SCM newtail);
+SCM scm_list_ref (SCM lst, SCM k);
+SCM scm_list_set_x (SCM lst, SCM k, SCM val);
+SCM scm_list_cdr_set_x (SCM lst, SCM k, SCM val);
+SCM scm_last_pair (SCM sx);
+SCM scm_list_tail (SCM lst, SCM k);
+SCM scm_c_memq (SCM x, SCM lst);
+SCM scm_memq (SCM x, SCM lst);
+SCM scm_memv (SCM x, SCM lst);
+SCM scm_member (SCM x, SCM lst);
+SCM scm_delq_x (SCM item, SCM lst);
+SCM scm_delv_x (SCM item, SCM lst);
+SCM scm_delete_x (SCM item, SCM lst);
+SCM scm_list_copy (SCM lst);
+SCM scm_delq (SCM item, SCM lst);
+SCM scm_delv (SCM item, SCM lst);
+SCM scm_delete (SCM item, SCM lst);
+SCM scm_delq1_x (SCM item, SCM lst);
+SCM scm_delv1_x (SCM item, SCM lst);
+SCM scm_delete1_x (SCM item, SCM lst);
+SCM scm_filter (SCM pred, SCM list);
+SCM scm_filter_x (SCM pred, SCM list);
 
 
 
 /* Guile internal functions */
 
-SCM_API SCM scm_i_finite_list_copy (SCM /* a list known to be finite */);
-SCM_API void scm_init_list (void);
+SCM scm_i_finite_list_copy (SCM /* a list known to be finite */);
+void scm_init_list (void);
 
 #endif  /* SCM_LIST_H */
 

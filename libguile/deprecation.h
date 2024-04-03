@@ -30,12 +30,12 @@
    internally, thus they are exported always, not depending on
    SCM_ENABLE_DEPRECATED.  */
 
-SCM_API void scm_c_issue_deprecation_warning (const char *msg);
-SCM_API void scm_c_issue_deprecation_warning_fmt (const char *msg, ...);
-SCM_API SCM scm_issue_deprecation_warning (SCM msgs);
+void scm_c_issue_deprecation_warning (const char *msg);
+void scm_c_issue_deprecation_warning_fmt (const char *msg, ...);
+SCM scm_issue_deprecation_warning (SCM msgs);
 
-SCM_API SCM scm_include_deprecated_features (void);
-SCM_API void scm_init_deprecation (void);
+SCM scm_include_deprecated_features (void);
+void scm_init_deprecation (void);
 
 #endif  /* SCM_DEPRECATION_H */
 

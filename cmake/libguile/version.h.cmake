@@ -30,12 +30,12 @@
 #define SCM_MINOR_VERSION @GUILE_MINOR_VERSION@
 #define SCM_MICRO_VERSION @GUILE_MICRO_VERSION@
 
-SCM_API SCM scm_major_version (void);
-SCM_API SCM scm_minor_version (void);
-SCM_API SCM scm_micro_version (void);
-SCM_API SCM scm_effective_version (void);
-SCM_API SCM scm_version (void);
-SCM_API void scm_init_version (void);
+SCM scm_major_version (void);
+SCM scm_minor_version (void);
+SCM scm_micro_version (void);
+SCM scm_effective_version (void);
+SCM scm_version (void);
+void scm_init_version (void);
 
 #endif  /* SCM_VERSION_H */
 

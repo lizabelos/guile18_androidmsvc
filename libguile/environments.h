@@ -101,29 +101,29 @@ extern scm_t_bits scm_tc16_observer;
 
 extern SCM scm_system_environment;
 
-SCM_API void scm_error_environment_unbound (const char *, SCM, SCM) SCM_NORETURN;
-SCM_API void scm_error_environment_immutable_binding (const char *, SCM, SCM) SCM_NORETURN;
-SCM_API void scm_error_environment_immutable_location (const char *, SCM, SCM) SCM_NORETURN;
+void scm_error_environment_unbound (const char *, SCM, SCM) SCM_NORETURN;
+void scm_error_environment_immutable_binding (const char *, SCM, SCM) SCM_NORETURN;
+void scm_error_environment_immutable_location (const char *, SCM, SCM) SCM_NORETURN;
 
-SCM_API SCM scm_make_environment (void *type);
-SCM_API SCM scm_environment_p (SCM env);
-SCM_API SCM scm_environment_bound_p (SCM env, SCM sym);
-SCM_API SCM scm_environment_ref (SCM env, SCM sym);
-SCM_API SCM scm_c_environment_ref (SCM env, SCM sym);
-SCM_API SCM scm_environment_fold (SCM env, SCM proc, SCM init);
-SCM_API SCM scm_c_environment_fold (SCM env, scm_environment_folder proc, SCM data, SCM init);
-SCM_API SCM scm_environment_define (SCM env, SCM sym, SCM val);
-SCM_API SCM scm_environment_undefine (SCM env, SCM sym);
-SCM_API SCM scm_environment_set_x (SCM env, SCM sym, SCM val);
-SCM_API SCM scm_environment_cell (SCM env, SCM sym, SCM for_write);
-SCM_API SCM scm_c_environment_cell (SCM env, SCM sym, int for_write);
-SCM_API SCM scm_environment_observe (SCM env, SCM proc);
-SCM_API SCM scm_environment_observe_weak (SCM env, SCM proc);
-SCM_API SCM scm_c_environment_observe (SCM env, scm_environment_observer proc, SCM data, int weak_p);
-SCM_API SCM scm_environment_unobserve (SCM token);
+SCM scm_make_environment (void *type);
+SCM scm_environment_p (SCM env);
+SCM scm_environment_bound_p (SCM env, SCM sym);
+SCM scm_environment_ref (SCM env, SCM sym);
+SCM scm_c_environment_ref (SCM env, SCM sym);
+SCM scm_environment_fold (SCM env, SCM proc, SCM init);
+SCM scm_c_environment_fold (SCM env, scm_environment_folder proc, SCM data, SCM init);
+SCM scm_environment_define (SCM env, SCM sym, SCM val);
+SCM scm_environment_undefine (SCM env, SCM sym);
+SCM scm_environment_set_x (SCM env, SCM sym, SCM val);
+SCM scm_environment_cell (SCM env, SCM sym, SCM for_write);
+SCM scm_c_environment_cell (SCM env, SCM sym, int for_write);
+SCM scm_environment_observe (SCM env, SCM proc);
+SCM scm_environment_observe_weak (SCM env, SCM proc);
+SCM scm_c_environment_observe (SCM env, scm_environment_observer proc, SCM data, int weak_p);
+SCM scm_environment_unobserve (SCM token);
 
-SCM_API void scm_environments_prehistory (void);
-SCM_API void scm_init_environments (void);
+void scm_environments_prehistory (void);
+void scm_init_environments (void);
 
 
 
@@ -133,8 +133,8 @@ extern void *scm_type_leaf_environment;
   (SCM_ENVIRONMENT_P (env) \
    && SCM_ENVIRONMENT_FUNCS (env) == scm_type_leaf_environment)
 
-SCM_API SCM scm_make_leaf_environment (void);
-SCM_API SCM scm_leaf_environment_p (SCM env);
+SCM scm_make_leaf_environment (void);
+SCM scm_leaf_environment_p (SCM env);
 
 
 
@@ -144,12 +144,12 @@ extern void *scm_type_eval_environment;
   (SCM_ENVIRONMENT_P (env) \
    && SCM_ENVIRONMENT_FUNCS (env) == scm_type_eval_environment)
 
-SCM_API SCM scm_make_eval_environment (SCM local, SCM imported);
-SCM_API SCM scm_eval_environment_p (SCM env);
-SCM_API SCM scm_eval_environment_local (SCM env);
-SCM_API SCM scm_eval_environment_set_local_x (SCM env, SCM local);
-SCM_API SCM scm_eval_environment_imported (SCM env);
-SCM_API SCM scm_eval_environment_set_imported_x (SCM env, SCM imported);
+SCM scm_make_eval_environment (SCM local, SCM imported);
+SCM scm_eval_environment_p (SCM env);
+SCM scm_eval_environment_local (SCM env);
+SCM scm_eval_environment_set_local_x (SCM env, SCM local);
+SCM scm_eval_environment_imported (SCM env);
+SCM scm_eval_environment_set_imported_x (SCM env, SCM imported);
 
 
 
@@ -159,10 +159,10 @@ extern void *scm_type_import_environment;
   (SCM_ENVIRONMENT_P (env) \
    && SCM_ENVIRONMENT_FUNCS (env) == scm_type_import_environment)
 
-SCM_API SCM scm_make_import_environment (SCM imports, SCM conflict_proc);
-SCM_API SCM scm_import_environment_p (SCM env);
-SCM_API SCM scm_import_environment_imports (SCM env);
-SCM_API SCM scm_import_environment_set_imports_x (SCM env, SCM imports);
+SCM scm_make_import_environment (SCM imports, SCM conflict_proc);
+SCM scm_import_environment_p (SCM env);
+SCM scm_import_environment_imports (SCM env);
+SCM scm_import_environment_set_imports_x (SCM env, SCM imports);
 
 
 
@@ -172,12 +172,12 @@ extern void *scm_type_export_environment;
   (SCM_ENVIRONMENT_P (env) \
    && SCM_ENVIRONMENT_FUNCS (env) == scm_type_export_environment)
 
-SCM_API SCM scm_make_export_environment (SCM private, SCM signature);
-SCM_API SCM scm_export_environment_p (SCM env);
-SCM_API SCM scm_export_environment_private (SCM env);
-SCM_API SCM scm_export_environment_set_private_x (SCM env, SCM private);
-SCM_API SCM scm_export_environment_signature (SCM env);
-SCM_API SCM scm_export_environment_set_signature_x (SCM env, SCM signature);
+SCM scm_make_export_environment (SCM private, SCM signature);
+SCM scm_export_environment_p (SCM env);
+SCM scm_export_environment_private (SCM env);
+SCM scm_export_environment_set_private_x (SCM env, SCM private);
+SCM scm_export_environment_signature (SCM env);
+SCM scm_export_environment_set_signature_x (SCM env, SCM signature);
 
 #endif  /* SCM_ENVIRONMENTS_H */
 

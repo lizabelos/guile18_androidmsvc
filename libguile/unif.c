@@ -161,8 +161,8 @@ singp (SCM obj)
     }
 }
 
-SCM_API int scm_i_inump (SCM obj);
-SCM_API scm_t_signed_bits scm_i_inum (SCM obj);
+int scm_i_inump (SCM obj);
+scm_t_signed_bits scm_i_inum (SCM obj);
 
 static SCM
 prototype_to_type (SCM proto)
