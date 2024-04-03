@@ -100,9 +100,6 @@ extern char *ttyname();
 
 #include <signal.h>
 
-#ifdef __MINGW64__
-__declspec (dllimport)
-#endif
 extern char ** environ;
 
 #ifdef HAVE_GRP_H
