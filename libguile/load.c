@@ -18,9 +18,7 @@
 
 
 
-#ifdef HAVE_CONFIG_H
-#  include <config.h>
-#endif
+#include <config.h>
 
 #include <string.h>
 #include <stdio.h>
@@ -77,6 +75,7 @@ SCM_DEFINE (scm_primitive_load, "primitive-load", 1, 0, 0,
 	    "documentation for @code{%load-hook} later in this section.")
 #define FUNC_NAME s_scm_primitive_load
 {
+
   SCM hook = *scm_loc_load_hook;
   SCM_VALIDATE_STRING (1, filename);
   if (scm_is_true (hook) && scm_is_false (scm_procedure_p (hook)))
@@ -112,6 +111,9 @@ SCM_DEFINE (scm_primitive_load, "primitive-load", 1, 0, 0,
     scm_dynwind_end ();
     scm_close_port (port);
   }
+   // scm_puts("done loading ", p);
+   // scm_display(filename, p);
+   // scm_newline(p);
   return SCM_UNSPECIFIED;
 }
 #undef FUNC_NAME
@@ -205,18 +207,15 @@ scm_init_load_path ()
   char *env;
   SCM path = SCM_EOL;
 
-#ifdef SCM_LIBRARY_DIR
-  path = scm_list_5 (scm_from_locale_string (SCM_SITE_DIR),
-		     scm_from_locale_string (SCM_LIBRARY_DIR),
-		     scm_from_locale_string (SCM_PKGDATA_DIR),
-                     scm_from_locale_string("."),
-                     scm_from_locale_string("..")
-             );
-#endif /* SCM_LIBRARY_DIR */
+  //path = scm_list_1 (scm_from_locale_string ("./guile"));
+  path = scm_list_3 (scm_from_locale_string ("./guile"),
+                     scm_from_locale_string ("."),
+                     scm_from_locale_string (".."));
 
   env = getenv ("GUILE_LOAD_PATH");
-  if (env)
-    path = scm_parse_path (scm_from_locale_string (env), path);
+  if (env) {
+      path = scm_parse_path(scm_from_locale_string(env), path);
+  }
 
   *scm_loc_load_path = path;
 }
