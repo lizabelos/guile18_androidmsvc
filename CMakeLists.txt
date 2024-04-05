@@ -204,8 +204,6 @@ find_library(regex regex)
 if (regex)
     target_compile_definitions(guile PUBLIC HAVE_REGCOMP)
     target_link_libraries(guile PUBLIC regex)
-else ()
-    message(FATAL_ERROR "regex not found (on msys2, install  pacman -S $MINGW_PACKAGE_PREFIX-libsystre)")
 endif ()
 
 # if we have dl, link it
