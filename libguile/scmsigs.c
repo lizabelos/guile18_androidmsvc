@@ -613,7 +613,7 @@ SCM_DEFINE (scm_sleep, "sleep", 1, 0, 0,
 	    "See also @code{usleep}.")
 #define FUNC_NAME s_scm_sleep
 {
-  return scm_from_uint (scm_std_sleep (scm_to_uint (i)));
+  return scm_from_uint (usleep(scm_to_uint (i)));
 }
 #undef FUNC_NAME
 
@@ -632,7 +632,7 @@ SCM_DEFINE (scm_usleep, "usleep", 1, 0, 0,
 	    "See also @code{sleep}.")
 #define FUNC_NAME s_scm_usleep
 {
-  return scm_from_uint64 (scm_std_usleep (scm_to_ulong (i)));
+  return scm_from_uint64 (usleep(scm_to_ulong (i)));
 }
 #undef FUNC_NAME
 

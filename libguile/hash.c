@@ -187,7 +187,7 @@ SCM_DEFINE (scm_hashq, "hashq", 2, 0, 0,
 	    "different values, since @code{foo} will be garbage collected.")
 #define FUNC_NAME s_scm_hashq
 {
-  uint64_t sz = scm_to_unsigned_integer (size, 1, ULLONG_MAX);
+  uint64_t sz = scm_to_unsigned_integer (size, 1, ULONG_MAX);
   return scm_from_uint64 (scm_ihashq (key, sz));
 }
 #undef FUNC_NAME

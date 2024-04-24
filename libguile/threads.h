@@ -16,7 +16,7 @@
  * Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public
- * License along with this library; if not, write to the Free Software
+ * License with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
@@ -41,9 +41,9 @@
 
 
 /* smob tags for the thread datatypes */
-SCM_API scm_t_bits scm_tc16_thread;
-SCM_API scm_t_bits scm_tc16_mutex;
-SCM_API scm_t_bits scm_tc16_condvar;
+extern scm_t_bits scm_tc16_thread;
+extern scm_t_bits scm_tc16_mutex;
+extern scm_t_bits scm_tc16_condvar;
 
 typedef struct scm_i_thread {
   struct scm_i_thread *next_thread;
@@ -128,13 +128,13 @@ typedef struct scm_i_thread {
 #define SCM_VALIDATE_CONDVAR(pos, a) \
   scm_assert_smob_type (scm_tc16_condvar, (a))
 
-SCM scm_spawn_thread (scm_t_catch_body body, void *body_data,
+SCM_API SCM scm_spawn_thread (scm_t_catch_body body, void *body_data,
 			      scm_t_catch_handler handler, void *handler_data);
 
-void *scm_without_guile (void *(*func)(void *), void *data);
-void *scm_with_guile (void *(*func)(void *), void *data);
+SCM_API void *scm_without_guile (void *(*func)(void *), void *data);
+SCM_API void *scm_with_guile (void *(*func)(void *), void *data);
 
-void *scm_i_with_guile_and_parent (void *(*func)(void *), void *data,
+SCM_API void *scm_i_with_guile_and_parent (void *(*func)(void *), void *data,
 					   SCM parent);
 
 
@@ -147,10 +147,10 @@ void scm_i_thread_sleep_for_gc (void);
 
 void scm_threads_prehistory (SCM_STACKITEM *);
 void scm_threads_init_first_thread (void);
-void scm_threads_mark_stacks (void);
-void scm_init_threads (void);
-void scm_init_thread_procs (void);
-void scm_init_threads_default_dynamic_state (void);
+SCM_API void scm_threads_mark_stacks (void);
+SCM_API void scm_init_threads (void);
+SCM_API void scm_init_thread_procs (void);
+SCM_API void scm_init_threads_default_dynamic_state (void);
 
 
 #define SCM_THREAD_SWITCHING_CODE \
@@ -215,7 +215,7 @@ int scm_pthread_cond_timedwait (pthread_cond_t *cond,
  */
 
 unsigned int scm_std_sleep (unsigned int);
-SCM_API uint64_t scm_std_usleep (uint64_t);
+uint64_t scm_std_usleep (uint64_t);
 
 #endif  /* SCM_THREADS_H */
 
